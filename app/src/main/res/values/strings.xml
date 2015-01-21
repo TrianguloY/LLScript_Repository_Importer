@@ -14,13 +14,10 @@
     <!-- app strings -->
     <string name="title_activity_webviewer">Repository Importer</string>
     <string name="action_mainPage">Main Page</string>
-    <string name="managerNotFound">The manager is not yet loaded in the launcher or couldn\'t be found.\n
-\n
-    Please go to Lightning Launcher and load the script from the script menu:\n
-    -Open lightning menu (long click on background by default)\n
-    -Choose scripts…\n
-    -Choose Load a script…\n
-    -Select Repository importer</string>
+    <string name="managerNotFound">The manager is not yet loaded in the launcher or couldn\'t be found.\n\nPlease click the Button below.\n
+Merge the upcoming template into your setup.\n
+Do not import the wallpaper.\n
+Please be aware that the launcher restarts in the process.</string>
     <string name="import_button">Import script</string>
     <string name="script_name_alert">Name:</string>
     <string name="Script_code_alert">Source Code:</string>
@@ -39,5 +36,11 @@
     <string name="manager_loaded">Script manager loaded correctly. Now navigate to a script\'s page and click the Import button when available</string>
     <string name="imported_done">Script imported correctly and available in the launcher</string>
     <string name="button_import">Import script</string>
+    <string name="button_inject_script">Inject Script into launcher</string>
+
+    <string name="dialog_ll_not_here_ttl">Unable to apply this template</string>
+    <string name="dialog_ll_not_here_msg">Neither Lightning Launcher nor Lightning Launcher eXtreme is ready to apply this template. Either LL is not installed or it need to be updated.\n\nWould you like to get it from the application store ?</string>
+    <string name="dialog_ll_not_here_ll">Get LL</string>
+    <string name="dialog_ll_not_here_llx">Get LLX</string>
 
 </resources>

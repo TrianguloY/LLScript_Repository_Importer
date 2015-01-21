@@ -23,6 +23,8 @@ import android.widget.CheckBox;
 import android.widget.EditText;
 import android.widget.Toast;
 
+import net.pierrox.lightning_launcher.template.ApplyTemplates;
+
 import org.apache.http.HttpResponse;
 import org.apache.http.client.HttpClient;
 import org.apache.http.client.methods.HttpGet;
@@ -134,6 +136,11 @@ public class webviewer extends Activity {
         //Download button clicked
         DownloadTask task = new DownloadTask();
         task.execute(webView.getUrl());
+    }
+
+    public void buttonInjectOnClick(View v){
+        Intent intent = new Intent(this,ApplyTemplates.class);
+        startActivity(intent);
     }
 
 

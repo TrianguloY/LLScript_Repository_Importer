@@ -67,12 +67,7 @@ public class ApplyTemplate extends Activity{
                 out.close();
                 template.setReadable(true, false);
                 sendToLL(template.getAbsolutePath());
-                new Timer().schedule(new TimerTask() {
-                    @Override
-                    public void run() {
-                        template.delete();
-                    }
-                },120000);
+                template.deleteOnExit();
             } finally {
                 inCode.close();
                 in.close();

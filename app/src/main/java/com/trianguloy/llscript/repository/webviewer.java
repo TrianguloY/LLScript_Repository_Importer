@@ -16,6 +16,7 @@ import android.view.KeyEvent;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.view.ViewGroup;
 import android.webkit.WebView;
 import android.webkit.WebViewClient;
 import android.widget.Button;
@@ -23,48 +24,43 @@ import android.widget.CheckBox;
 import android.widget.EditText;
 import android.widget.Toast;
 
-import net.pierrox.lightning_launcher.template.ApplyTemplates;
+import com.app.lukas.template.ApplyTemplate;
 
 import org.apache.http.HttpResponse;
 import org.apache.http.client.HttpClient;
 import org.apache.http.client.methods.HttpGet;
 import org.apache.http.impl.client.DefaultHttpClient;
 import org.apache.http.util.EntityUtils;
-import org.json.JSONArray;
-import org.json.JSONObject;
 
 import java.io.IOException;
 import java.util.Timer;
 import java.util.TimerTask;
 
+
 public class webviewer extends Activity {
 
-    WebView webView; //webview element
-    Button button; //button element
-    Boolean close=false; //if pressing back will close
+    private WebView webView; //webview element
+    private Button button; //button element
+    private Boolean close=false; //if pressing back will close
 
-    int id = -2; //scipt manager id
-    String previousUrl="";//to avoid duplicated checks
-
-    //Playerprefs
-    SharedPreferences sharedPref;
+    private int id = -2; //scipt manager id
+    private String previousUrl="";//to avoid duplicated checks
 
     //Script data
-    String content = "";
-    String name = "Script Name";
-    int flags = 0;
+    private String content = "";
+    private String name = "Script Name";
+    private int flags = 0;
 
     //Where to search in the HTML source
-    String[] begining = {"class=\"brush: javascript\">","class=\"brush: javascript;\">","class=\"code\">"};
-    String ending = "</pre>";
+    private final String[] beginning = {"class=\"brush: javascript\">","class=\"brush: javascript;\">","class=\"code\">"};
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
         //initialize variables
-        sharedPref = getPreferences(Context.MODE_PRIVATE);
-        id=sharedPref.getInt("id",Constants.notId);
+        SharedPreferences sharedPref = getPreferences(Context.MODE_PRIVATE);
+        id= sharedPref.getInt("id", Constants.notId);
 
         //Get the intent and data
         Intent intent=getIntent();
@@ -73,7 +69,7 @@ public class webviewer extends Activity {
 
         if(getid!=Constants.notId && getid!=id){
             //new manager loaded
-            sharedPref.edit().putInt("id",getid).commit();//id of the manager script
+            sharedPref.edit().putInt("id",getid).apply();//id of the manager script
             id=getid;
             //Toast.makeText(getApplicationContext(),"Manager script loaded correctly",Toast.LENGTH_LONG).show();
             AlertDialog alertDialog = new AlertDialog.Builder(this).create();
@@ -111,10 +107,10 @@ public class webviewer extends Activity {
 
                 @Override
                 public void onPageStarted(WebView view, String url, Bitmap favicon) {
-                    if (previousUrl != url) {
+                    if (!previousUrl.equals(url)) {
                         previousUrl = url;
                         //Check the page
-                        onPageChange(view, url);
+                        onPageChange(url);
                     }
 
                 }
@@ -131,15 +127,16 @@ public class webviewer extends Activity {
 
 
 
-
+    @SuppressWarnings({"unused","unusedParameter"})
     public void buttonOnClick(View v) {
         //Download button clicked
         DownloadTask task = new DownloadTask();
         task.execute(webView.getUrl());
     }
 
+    @SuppressWarnings({"unused","unusedParameter"})
     public void buttonInjectOnClick(View v){
-        Intent intent = new Intent(this,ApplyTemplates.class);
+        Intent intent = new Intent(this,ApplyTemplate.class);
         startActivity(intent);
     }
 
@@ -150,7 +147,7 @@ public class webviewer extends Activity {
 
 
 
-    public void onPageChange(WebView view, final String url){
+    void onPageChange(final String url){
         if(url.equals(Constants.pageMain)){
             //main page
             button.setVisibility(View.GONE);
@@ -183,7 +180,7 @@ public class webviewer extends Activity {
 
 
 
-    public void showAndConfirm(String html){
+    void showAndConfirm(String html){
         //called from download task
 
         //initialize variables
@@ -195,13 +192,14 @@ public class webviewer extends Activity {
 
 
         //search the code
-        for (int t=0;t<begining.length;++t){
-            beg=html.indexOf(begining[t]);
-            if(beg!=-1){
-                beg+=begining[t].length();
+        for (String aBeginning : beginning) {
+            beg = html.indexOf(aBeginning);
+            if (beg != -1) {
+                beg += aBeginning.length();
                 break;
             }
         }
+        String ending = "</pre>";
         int end = html.indexOf(ending,beg);
 
         //TODO search the name
@@ -215,15 +213,14 @@ public class webviewer extends Activity {
             //apply the finds
             String[] lines=html.substring(beg,end).split("\n");
             content="";
-            for (int t = 0; t < lines.length ; t++) {
-                content+=Html.fromHtml(lines[t]).toString()+"\n";
+            for (String line : lines) {
+                content += Html.fromHtml(line).toString() + "\n";
             }
-            content.substring(0,content.length()-1);
             name = webView.getUrl().substring(Constants.pagePrefix.length());
             flags = 0;
 
             //the alert
-            View layout = getLayoutInflater().inflate(R.layout.confirm_alert, null);
+            View layout = getLayoutInflater().inflate(R.layout.confirm_alert, (ViewGroup)findViewById(R.id.webView).getRootView(),false);
             final EditText contentText = ((EditText) layout.findViewById(R.id.editText2));
                     contentText.setText(content);
             final EditText nameText = ((EditText) layout.findViewById(R.id.editText));
@@ -288,7 +285,7 @@ public class webviewer extends Activity {
     }
 
     @Override
-    public boolean onKeyDown(int keyCode, KeyEvent event) {
+    public boolean onKeyDown(int keyCode,KeyEvent event) {
         //edited from http://stackoverflow.com/questions/6077141/how-to-go-back-to-previous-page-if-back-button-is-pressed-in-webview
         if(event.getAction() == KeyEvent.ACTION_DOWN){
             switch(keyCode)
@@ -328,15 +325,13 @@ public class webviewer extends Activity {
     //From http://stackoverflow.com/questions/16994777/android-get-html-from-web-page-as-string-with-httpclient-not-working
     @Override
     protected String doInBackground(String... urls) {
-        HttpResponse response = null;
-        HttpGet httpGet = null;
-        HttpClient mHttpClient = null;
+        HttpResponse response;
+        HttpGet httpGet;
+        HttpClient mHttpClient;
         String s = "";
 
         try {
-            if(mHttpClient == null){
-                mHttpClient = new DefaultHttpClient();
-            }
+            mHttpClient = new DefaultHttpClient();
 
 
             httpGet = new HttpGet(urls[0]);

@@ -21,7 +21,7 @@ import java.util.zip.ZipOutputStream;
 
 /**
  * Created by Lukas on 25.01.2015.
- * Creates a template containing the script.js and asks lightning to install it
+ * Creates a template containing the script and asks lightning to install it
  */
 public class ApplyTemplate extends Activity{
 
@@ -30,15 +30,15 @@ public class ApplyTemplate extends Activity{
         setContentView(R.layout.apply_templates);
 
         File directory = getExternalCacheDir();
-        JSONObject script = new JSONObject(); //the script.js in JSON form, as needed in a template
+        JSONObject script = new JSONObject(); //the script in JSON form, as needed in a template
         try {
             //put general information
             script.put("flags",0);
             script.put("name","Repository Importer");
             script.put("id",2);
-            final File template = File.createTempFile("Template", "", directory);//temporary file for the new template with the updated script.js
-            InputStream inCode = getResources().openRawResource(R.raw.script);//script.js code stream
-            ZipInputStream in = new ZipInputStream(getResources().openRawResource(R.raw.template));//stream from the template without updated script.js
+            final File template = File.createTempFile("Template", "", directory);//temporary file for the new template with the updated script
+            InputStream inCode = getResources().openRawResource(R.raw.script);//script code stream
+            ZipInputStream in = new ZipInputStream(getResources().openRawResource(R.raw.template));//stream from the template without updated script
             ZipOutputStream out = new ZipOutputStream(new FileOutputStream(template));//stream to the new template
 
             //initialize used temp vars, buffer
@@ -48,7 +48,7 @@ public class ApplyTemplate extends Activity{
             ZipEntry entry;
 
             try {
-                //read in the script.js code
+                //read in the script code
                 while ((read = inCode.read(buff))>0){
                     builder.append(new String(buff, 0, read));
                 }
@@ -64,7 +64,7 @@ public class ApplyTemplate extends Activity{
                             out.write(buff, 0, read);
                         }
                     }
-                    //script.js entry, replace with script.js JSON object
+                    //script entry, replace with script JSON object
                     else out.write(script.toString().getBytes());
                     in.closeEntry();
                     out.closeEntry();

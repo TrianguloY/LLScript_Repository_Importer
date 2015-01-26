@@ -71,7 +71,7 @@ public class webViewer extends Activity {
 
         if(getId!=Constants.notId && getId!=id){
             //new manager loaded
-            sharedPref.edit().putInt("id",getId).apply();//id of the manager script.js
+            sharedPref.edit().putInt("id",getId).apply();//id of the manager script
             id=getId;
             AlertDialog alertDialog = new AlertDialog.Builder(this).create();
             alertDialog.setTitle("");
@@ -137,7 +137,7 @@ public class webViewer extends Activity {
 
     @SuppressWarnings({"unused","unusedParameter"})
     public void buttonInjectOnClick(View v){
-        //start the script.js injection process
+        //start the script injection process
         Intent intent = new Intent(this,ApplyTemplate.class);
         startActivity(intent);
     }
@@ -154,7 +154,7 @@ public class webViewer extends Activity {
             //main page
             button.setVisibility(View.GONE);
         }else if( url.startsWith(Constants.pagePrefix)){
-            // script.js page
+            // script page
             button.setVisibility(View.VISIBLE);
         } else {
             //external page
@@ -235,7 +235,7 @@ public class webViewer extends Activity {
 
             alertDialog.setButton(AlertDialog.BUTTON_POSITIVE,getString(R.string.button_import), new DialogInterface.OnClickListener() {
                 public void onClick(DialogInterface dialog, int which) {
-                    // let's import the script.js
+                    // let's import the script
                     code =contentText.getText().toString();
                     name=nameText.getText().toString();
                     flags=(flagsBoxes[0].isChecked()?Constants.FLAG_APP_MENU:0)+

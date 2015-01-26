@@ -20,14 +20,13 @@
             android:textAlignment="gravity"
             android:gravity="center_vertical|left"
             android:padding="10sp"
-            android:layout_above="@+id/button2"
-            android:layout_alignParentTop="true"
             android:layout_margin="10dp" />
 
         <LinearLayout
             android:orientation="horizontal"
             android:layout_width="fill_parent"
-            android:layout_height="match_parent">
+            android:layout_height="match_parent"
+            android:baselineAligned="false">
 
             <LinearLayout
                 android:orientation="vertical"
@@ -88,9 +87,6 @@
                     android:id="@+id/button2"
                     android:text="@string/button_inject_from_template"
                     android:onClick="buttonInjectFromTemplate"
-                    android:layout_alignParentBottom="true"
-                    android:layout_alignParentLeft="true"
-                    android:layout_alignParentStart="true"
                     android:layout_gravity="bottom" />
             </LinearLayout>
         </LinearLayout>

@@ -35,6 +35,7 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.Timer;
 import java.util.TimerTask;
 
@@ -53,6 +54,8 @@ public class webViewer extends Activity {
     private String code = "";
     private String name = "Script Name";
     private int flags = 0;
+
+    private String repoHtml = "";
 
 
     @Override
@@ -119,6 +122,11 @@ public class webViewer extends Activity {
             webView.setWebViewClient(webViewClient);
             webView.loadUrl(Constants.pageMain);
 
+            //TODO: Merge loadUrl(pageMain) and RepoDownloadTask to reduce network usage
+
+            //pre-load the repository to get names from
+            new RepoDownloadTask().execute(Constants.pageMain);
+
         }
 
 
@@ -128,14 +136,14 @@ public class webViewer extends Activity {
 
 
 
-    @SuppressWarnings({"unused","unusedParameter"}) // ?????
+    @SuppressWarnings({"unused","unusedParameter"})
     public void buttonOnClick(View v) {
         //Download button clicked
         DownloadTask task = new DownloadTask();
         task.execute(webView.getUrl());
     }
 
-    @SuppressWarnings({"unused","unusedParameter"}) // ?????
+    @SuppressWarnings({"unused","unusedParameter"})
     public void buttonInjectFromTemplate(View v){
         //start the script injection process from template
         Intent intent = new Intent(this,ApplyTemplate.class);
@@ -143,6 +151,7 @@ public class webViewer extends Activity {
         finish();
     }
 
+    @SuppressWarnings({"unused","unusedParameter"})
     public void buttonInjectFromLauncher(View v){
         //start the script injection process from launcher
         Intent intent = new Intent(Intent.ACTION_VIEW);
@@ -190,90 +199,149 @@ public class webViewer extends Activity {
 
 
 
-    void showAndConfirm(String html){
+    void showAndConfirm(final String html){
         //called from download task
 
         //initialize variables
-        int beg =-1;
-        AlertDialog alertDialog = new AlertDialog.Builder(this).create();
+        int beg;
+        final ArrayList<Integer> starts = new ArrayList<>();//start indexes of all scripts
+        final ArrayList<Integer> ends = new ArrayList<>();//end indexes of all scripts
+        final ArrayList<String> names = new ArrayList<>();//names of all scripts
+
+        //alertDialog to import a script
+        final AlertDialog alertDialog = new AlertDialog.Builder(this).create();
         alertDialog.setTitle(getString(R.string.title_importer));
         alertDialog.setButton(AlertDialog.BUTTON_NEGATIVE,getString(R.string.button_exit), new DialogInterface.OnClickListener() {public void onClick(DialogInterface dialog, int which) {/* */}});
         alertDialog.setIcon(R.drawable.ic_launcher);
 
 
-        //search the code
+        //search the code block start(s)
         for (String aBeginning : Constants.beginning) {
-            beg = html.indexOf(aBeginning);
-            if (beg != -1) {
+            String temp = html;
+            beg = temp.indexOf(aBeginning);
+            int offset = 0;
+            while(beg != -1) {
                 beg += aBeginning.length();
-                break;
+                starts.add(beg + offset);
+                temp = temp.substring(beg + 1);
+                offset += beg + 1;
+                beg = temp.indexOf(aBeginning);
             }
         }
-        int end = html.indexOf(Constants.ending,beg);
-
-        //TODO search the name
 
         //TODO search the flags
 
 
-        if(beg!=-1){
+        if(starts.size()>0){
             //found something
-
-            //apply the finds
-            String[] lines=html.substring(beg,end).split("\n");
-            code ="";
-            for (String line : lines) {
-                code += Html.fromHtml(line).toString() + "\n";
+            for(int i=0;i<starts.size();i++){
+                //search for the code block end(s)
+                ends.add(html.substring(starts.get(i)).indexOf(Constants.ending)+starts.get(i));
+                //get name(s) from headers
+                int endIndex = starts.get(i);
+                int startIndex;
+                String scriptName;
+                do {
+                    endIndex = html.substring(0, endIndex).lastIndexOf("<");
+                    startIndex = html.substring(0,endIndex).lastIndexOf(">")+1;
+                    scriptName = html.substring(startIndex,endIndex);
+                }while (!scriptName.matches(".*\\w.*"));
+                names.add(scriptName);
             }
-            name = webView.getUrl().substring(Constants.pagePrefix.length());
-            flags = 0;
-
-            //the alert
-            View layout = getLayoutInflater().inflate(R.layout.confirm_alert, (ViewGroup)findViewById(R.id.webView).getRootView(),false);
-            final EditText contentText = ((EditText) layout.findViewById(R.id.editText2));
-                    contentText.setText(code);
-            final EditText nameText = ((EditText) layout.findViewById(R.id.editText));
-                    nameText.setText(name);
-            alertDialog.setView(layout);
-            final CheckBox[] flagsBoxes = {
-                    (CheckBox)layout.findViewById(R.id.checkBox),
-                    (CheckBox)layout.findViewById(R.id.checkBox2),
-                    (CheckBox)layout.findViewById(R.id.checkBox3)};
-
-            alertDialog.setButton(AlertDialog.BUTTON_POSITIVE,getString(R.string.button_import), new DialogInterface.OnClickListener() {
-                public void onClick(DialogInterface dialog, int which) {
-                    // let's import the script
-                    code =contentText.getText().toString();
-                    name=nameText.getText().toString();
-                    flags=(flagsBoxes[0].isChecked()?Constants.FLAG_APP_MENU:0)+
-                            (flagsBoxes[1].isChecked()?Constants.FLAG_ITEM_MENU:0)+
-                            (flagsBoxes[2].isChecked()?Constants.FLAG_CUSTOM_MENU:0);
-                    JSONObject data = new JSONObject();
-                    try {
-                        data.put("version",Constants.managerVersion);
-                        data.put("code",code);
-                        data.put("name",name);
-                        data.put("flags",flags);
-                    } catch (JSONException e) {
-                        e.printStackTrace();
-                        Toast.makeText(getApplicationContext(),"There was an error trying to pass the data to the manager",Toast.LENGTH_LONG).show();
-                        return;
-                    }
-                    Intent i = new Intent(Intent.ACTION_VIEW);
-                    i.setComponent(ComponentName.unflattenFromString(Constants.packageMain));
-                    i.putExtra("a",35);
-                    i.putExtra("d",id+"/"+data.toString());
-                    startActivity(i);
-
+            if(starts.size()>1){
+                //select one of the scripts to import
+                new AlertDialog.Builder(this)
+                        .setSingleChoiceItems(names.toArray(new String[names.size()]),android.R.layout.simple_list_item_single_choice,new DialogInterface.OnClickListener(){
+                            public void onClick(DialogInterface dialog, int which)
+                            {
+                                dialog.dismiss();
+                                downloadScript(html.substring(starts.get(which),ends.get(which)),names.get(which),alertDialog);
+                            }
+                        })
+                        .setNegativeButton("Cancel",new DialogInterface.OnClickListener() {
+                            @Override
+                            public void onClick(DialogInterface dialog, int which) {
+                                dialog.cancel();
+                            }
+                        })
+                        .setCancelable(true)
+                        .setTitle("Found more than one Script on this page, please choose one")
+                        .show();
+            }
+            //only one script, load directly
+            else {
+                //get the name from the repository
+                String url = webView.getUrl();
+                url = url.substring(url.indexOf("/")+2);
+                url = url.substring(url.indexOf("/"));
+                int index = repoHtml.indexOf(url);
+                String scriptName;
+                if(index!=-1) {
+                    String temp = repoHtml.substring(index);
+                    scriptName = temp.substring(temp.indexOf(">") + 1, temp.indexOf("<")).trim();
                 }
-            });
+                else scriptName = names.get(0);
+                downloadScript(html.substring(starts.get(0),ends.get(0)),scriptName,alertDialog);
+            }
         }else{
             //found nothing
             alertDialog.setMessage(getString(R.string.no_script_found));
+            alertDialog.show();
         }
 
+    }
+
+    void downloadScript(String rawCode,String scriptName,AlertDialog alertDialog){
+        //apply the finds
+        String[] lines=rawCode.split("\n");
+        code ="";
+        for (String line : lines) {
+            code += Html.fromHtml(line).toString() + "\n";
+        }
+        name = scriptName;
+        flags = 0;
+
+        //the alert
+        View layout = getLayoutInflater().inflate(R.layout.confirm_alert, (ViewGroup)findViewById(R.id.webView).getRootView(),false);
+        final EditText contentText = ((EditText) layout.findViewById(R.id.editText2));
+        contentText.setText(code);
+        final EditText nameText = ((EditText) layout.findViewById(R.id.editText));
+        nameText.setText(name);
+        alertDialog.setView(layout);
+        final CheckBox[] flagsBoxes = {
+                (CheckBox)layout.findViewById(R.id.checkBox),
+                (CheckBox)layout.findViewById(R.id.checkBox2),
+                (CheckBox)layout.findViewById(R.id.checkBox3)};
+
+        alertDialog.setButton(AlertDialog.BUTTON_POSITIVE,getString(R.string.button_import), new DialogInterface.OnClickListener() {
+            public void onClick(DialogInterface dialog, int which) {
+                // let's import the script
+                code =contentText.getText().toString();
+                name=nameText.getText().toString();
+                flags=(flagsBoxes[0].isChecked()?Constants.FLAG_APP_MENU:0)+
+                        (flagsBoxes[1].isChecked()?Constants.FLAG_ITEM_MENU:0)+
+                        (flagsBoxes[2].isChecked()?Constants.FLAG_CUSTOM_MENU:0);
+                JSONObject data = new JSONObject();
+                try {
+                    data.put("version",Constants.managerVersion);
+                    data.put("code",code);
+                    data.put("name",name);
+                    data.put("flags",flags);
+                } catch (JSONException e) {
+                    e.printStackTrace();
+                    Toast.makeText(getApplicationContext(),"There was an error trying to pass the data to the manager",Toast.LENGTH_LONG).show();
+                    return;
+                }
+                Intent i = new Intent(Intent.ACTION_VIEW);
+                i.setComponent(ComponentName.unflattenFromString(Constants.packageMain));
+                i.putExtra("a",35);
+                i.putExtra("d",id+"/"+data.toString());
+                startActivity(i);
+            }
+        });
         alertDialog.show();
     }
+
 
 
 
@@ -377,5 +445,10 @@ public class webViewer extends Activity {
 
     }
 }
-
+    private class RepoDownloadTask extends DownloadTask{
+        @Override
+        protected void onPostExecute(String result){
+            repoHtml = result;
+        }
+    }
 }

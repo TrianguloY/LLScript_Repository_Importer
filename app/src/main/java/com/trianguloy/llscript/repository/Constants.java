@@ -34,5 +34,5 @@ package com.trianguloy.llscript.repository;
 
     //Where to search in the HTML source
     static final String[] beginning = {"class=\"brush: javascript\">","class=\"brush: javascript;\">","class=\"code\">"};
-    static String ending = "</pre>";
+    static final String ending = "</pre>";
 }

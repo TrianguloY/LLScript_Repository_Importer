@@ -11,6 +11,7 @@ import android.graphics.Bitmap;
 import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Bundle;
+import android.support.annotation.NonNull;
 import android.text.Html;
 import android.view.KeyEvent;
 import android.view.Menu;
@@ -258,14 +259,14 @@ public class webViewer extends Activity {
                                 downloadScript(html.substring(starts.get(which),ends.get(which)),names.get(which),alertDialog);
                             }
                         })
-                        .setNegativeButton("Cancel",new DialogInterface.OnClickListener() {
+                        .setNegativeButton(getString(R.string.cancel),new DialogInterface.OnClickListener() {
                             @Override
                             public void onClick(DialogInterface dialog, int which) {
                                 dialog.cancel();
                             }
                         })
                         .setCancelable(true)
-                        .setTitle("Found more than one Script on this page, please choose one")
+                        .setTitle(getString(R.string.more_than_one_script))
                         .show();
             }
             //only one script, load directly
@@ -329,7 +330,7 @@ public class webViewer extends Activity {
                     data.put("flags",flags);
                 } catch (JSONException e) {
                     e.printStackTrace();
-                    Toast.makeText(getApplicationContext(),"There was an error trying to pass the data to the manager",Toast.LENGTH_LONG).show();
+                    Toast.makeText(getApplicationContext(),getString(R.string.manager_error_message),Toast.LENGTH_LONG).show();
                     return;
                 }
                 Intent i = new Intent(Intent.ACTION_VIEW);
@@ -377,7 +378,7 @@ public class webViewer extends Activity {
     }
 
     @Override
-    public boolean onKeyDown(int keyCode,KeyEvent event) {
+    public boolean onKeyDown(int keyCode, @NonNull KeyEvent event) {
         //edited from http://stackoverflow.com/questions/6077141/how-to-go-back-to-previous-page-if-back-button-is-pressed-in-webview
         if(event.getAction() == KeyEvent.ACTION_DOWN){
             switch(keyCode)

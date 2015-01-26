@@ -39,5 +39,9 @@
 
     <string name="instructions_load_from_launcher">-Click the button\n-Click \'Scripts…\'\n-Click \'Load a script…\'\n-Choose This app</string>
     <string name="instructions_load_from_template">-Click the button\n-Merge the upcoming template into your setup.\n-Do not import the wallpaper.\n-Please be aware that the launcher restarts in the process.</string>
+    <string name="reset">Reset</string>
+    <string name="manager_error_message">There was an error trying to pass the data to the manager</string>
+    <string name="more_than_one_script">Found more than one Script on this page, please choose one</string>
+    <string name="cancel">Cancel</string>
 
 </resources>

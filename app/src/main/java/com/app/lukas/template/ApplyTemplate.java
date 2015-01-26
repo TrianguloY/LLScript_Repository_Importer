@@ -73,7 +73,7 @@ public class ApplyTemplate extends Activity{
                 out.flush();
                 out.close();
                 //give read permissions to other apps
-                template.setReadable(true, false);
+                if(!template.setReadable(true, false))throw new IOException("Not able to modify file permissions of "+template.getAbsolutePath());
                 //notify LL to import the template
                 sendToLL(template.getAbsolutePath());
                 //delete the file on next restart

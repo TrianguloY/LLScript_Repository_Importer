@@ -7,12 +7,13 @@ import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
-import android.graphics.Bitmap;
 import android.net.Uri;
-import android.os.AsyncTask;
+import android.net.http.HttpResponseCache;
+import android.os.Build;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.text.Html;
+import android.util.Log;
 import android.view.KeyEvent;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -27,16 +28,13 @@ import android.widget.Toast;
 
 import com.app.lukas.template.ApplyTemplate;
 
-import org.apache.http.HttpResponse;
-import org.apache.http.client.HttpClient;
-import org.apache.http.client.methods.HttpGet;
-import org.apache.http.impl.client.DefaultHttpClient;
-import org.apache.http.util.EntityUtils;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Stack;
 import java.util.Timer;
 import java.util.TimerTask;
 
@@ -49,7 +47,6 @@ public class webViewer extends Activity {
 
     private Boolean close=false; //if pressing back will close
     private int id; //script manager id
-    private String previousUrl="";//to avoid duplicated checks
 
     //Script data
     private String code = "";
@@ -57,6 +54,12 @@ public class webViewer extends Activity {
     private int flags = 0;
 
     private String repoHtml = "";
+    private String currentHtml = "";
+
+    //page management values
+    private DownloadTask.Listener downloadTaskListener;
+    private Stack<String> BackStack;
+    private String currentUrl = "";
 
 
     @Override
@@ -66,6 +69,7 @@ public class webViewer extends Activity {
         //initialize variables
         sharedPref= getPreferences(Context.MODE_PRIVATE);
         id= sharedPref.getInt("id", Constants.notId);
+
 
         //Get the intent and data
         Intent intent=getIntent();
@@ -102,45 +106,88 @@ public class webViewer extends Activity {
             button = (Button) findViewById(R.id.button);
             webView = (WebView) findViewById(R.id.webView);
 
+            if(Build.VERSION.SDK_INT>=14) {
+                try {
+                    File httpCacheDir = new File(getCacheDir(), "http");
+                    long httpCacheSize = 5 * 1024 * 1024; // 5 MiB
+                    HttpResponseCache.install(httpCacheDir, httpCacheSize);
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+            }
+
+
+            BackStack = new Stack<>();
+            currentUrl = Constants.pageMain;
+
             //properties assignation
             //webView.getSettings().setJavaScriptEnabled(true);
             WebViewClient webViewClient = new WebViewClient() {
                 @Override
                 public boolean shouldOverrideUrlLoading(WebView view, String url) {
-                    return false;
-                }
-
-                @Override
-                public void onPageStarted(WebView view, String url, Bitmap favicon) {
-                    if (!previousUrl.equals(url)) {
-                        previousUrl = url;
-                        //Check the page
-                        onPageChange(url);
+                    //link clicked
+                    if (!currentUrl.equals(url)) {
+                        BackStack.push(currentUrl);
+                        currentUrl = url;
+                        changePage(url);
                     }
-
+                    return true;
                 }
             };
             webView.setWebViewClient(webViewClient);
-            webView.loadUrl(Constants.pageMain);
+            //webView.loadUrl(Constants.pageMain);
 
             //TODO: Merge loadUrl(pageMain) and RepoDownloadTask to reduce network usage
 
-            //pre-load the repository to get names from
-            new RepoDownloadTask().execute(Constants.pageMain);
+            //load and show the repository
+            new DownloadTask(new DownloadTask.Listener() {
+                @Override
+                public void onFinish(String result) {
+                    repoHtml = result;
+                    currentHtml = repoHtml;
+                    display();
+                }
+            }).execute(Constants.pageMain);
+
+            //default listener: show the page after loading it
+            downloadTaskListener = new DownloadTask.Listener() {
+                @Override
+                public void onFinish(String result) {
+                    currentHtml = result;
+                    display();
+                }
+            };
 
         }
 
 
     }
 
+    //display a page
+    void display(){
+        webView.loadDataWithBaseURL(Constants.pageRoot, currentHtml, "text/html", "utf-8", null);
+    }
 
+    protected void onStop() {
+        if(Build.VERSION.SDK_INT>=14) {
+            HttpResponseCache cache = HttpResponseCache.getInstalled();
+            if (cache != null) {
+                cache.flush();
+            }
+        }
+    }
 
 
 
     @SuppressWarnings({"unused","unusedParameter"})
     public void buttonOnClick(View v) {
         //Download button clicked
-        DownloadTask task = new DownloadTask();
+        DownloadTask task = new DownloadTask(new DownloadTask.Listener(){
+            @Override
+            public void onFinish(String result) {
+                showAndConfirm(result);
+            }
+        });
         task.execute(webView.getUrl());
     }
 
@@ -167,13 +214,16 @@ public class webViewer extends Activity {
 
 
 
-    void onPageChange(final String url){
+    void changePage(final String url){
         if(url.equals(Constants.pageMain)){
             //main page
             button.setVisibility(View.GONE);
+            currentHtml = repoHtml;
+            display();
         }else if( url.startsWith(Constants.pagePrefix)){
             // script page
             button.setVisibility(View.VISIBLE);
+            new DownloadTask(downloadTaskListener).execute(url);
         } else {
             //external page
             webView.stopLoading();
@@ -184,7 +234,6 @@ public class webViewer extends Activity {
             alertDialog.setMessage(getString(R.string.message_external_page));
             alertDialog.setButton(AlertDialog.BUTTON_POSITIVE,getString(R.string.button_ok), new DialogInterface.OnClickListener() {
                 public void onClick(DialogInterface dialog, int which) {
-                    // here you can add functions
                     Intent i = new Intent(Intent.ACTION_VIEW);
                     i.setData(Uri.parse(url));
                     startActivity(i);
@@ -267,6 +316,7 @@ public class webViewer extends Activity {
                         })
                         .setCancelable(true)
                         .setTitle(getString(R.string.more_than_one_script))
+                        .setIcon(R.drawable.ic_launcher)
                         .show();
             }
             //only one script, load directly
@@ -388,8 +438,11 @@ public class webViewer extends Activity {
                         finish();
                         return true;
                     }
-                    if(webView.canGoBack() && !webView.getUrl().equals(Constants.pageMain)){
-                        webView.goBack();
+                    if(!BackStack.empty())//not on the home page
+                    {
+                        currentUrl = BackStack.pop();
+                        Log.d("Back", currentUrl);
+                        changePage(currentUrl);
                     }else{
                         if(close){
                             finish();
@@ -414,42 +467,4 @@ public class webViewer extends Activity {
     }
 
 
-    private class DownloadTask extends AsyncTask<String, Void, String> {
-    //From http://stackoverflow.com/questions/16994777/android-get-html-from-web-page-as-string-with-httpclient-not-working
-    @Override
-    protected String doInBackground(String... urls) {
-        HttpResponse response;
-        HttpGet httpGet;
-        HttpClient mHttpClient;
-        String s = "";
-
-        try {
-            mHttpClient = new DefaultHttpClient();
-
-
-            httpGet = new HttpGet(urls[0]);
-
-
-            response = mHttpClient.execute(httpGet);
-            s = EntityUtils.toString(response.getEntity(), "UTF-8");
-
-
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-        return s;
-    }
-
-    @Override
-    protected void onPostExecute(String result){
-        showAndConfirm(result);
-
-    }
-}
-    private class RepoDownloadTask extends DownloadTask{
-        @Override
-        protected void onPostExecute(String result){
-            repoHtml = result;
-        }
-    }
 }

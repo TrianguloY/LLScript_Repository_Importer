@@ -23,6 +23,7 @@
         android:layout_centerHorizontal="true"
         android:onClick="buttonOnClick"
         android:visibility="gone"
-        android:textSize="35sp" />
+        android:textSize="35sp"
+        android:background="@android:drawable/btn_default" />
 
 </RelativeLayout>

@@ -10,7 +10,7 @@
         android:label="@string/app_name"
         android:allowBackup="true"
         android:supportsRtl="false"
-        android:theme="@android:style/Theme.Light">
+        android:theme="@style/Theme">
         <activity
         android:name=".loadInLauncher"
         android:exported="true"

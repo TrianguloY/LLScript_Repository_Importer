@@ -30,6 +30,7 @@ class DownloadTask extends AsyncTask<String, Void, String> {
                 BufferedReader reader = new BufferedReader(new InputStreamReader(connection.getInputStream()));
                 while ((line = reader.readLine()) != null) {
                     builder.append(line);
+                    builder.append('\n');
                 }
                 return builder.toString();
             }

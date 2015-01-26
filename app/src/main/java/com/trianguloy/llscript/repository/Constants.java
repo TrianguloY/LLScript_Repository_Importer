@@ -24,7 +24,7 @@ package com.trianguloy.llscript.repository;
 
 
     /* App constants */
-    static final int managerVersion = 4;
+    static final int managerVersion = 5; //TODO: get this version directly from the raw file
     static final int notId = -1;
     static final String pageMain = "http://www.pierrox.net/android/applications/lightning_launcher/wiki/doku.php?id=script_repository";
     static final String pageRoot = "http://www.pierrox.net";

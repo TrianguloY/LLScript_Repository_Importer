@@ -91,6 +91,22 @@ public class webViewer extends Activity {
             alertDialog.show();
 
 
+        }else if(intent.hasExtra("update")){
+            //Send the update to the manager to auto-update
+            JSONObject data = new JSONObject();
+            try {
+                data.put("update",ReadRawFile.getString(getApplicationContext(),R.raw.script));
+            } catch (JSONException e) {
+                e.printStackTrace();
+                Toast.makeText(getApplicationContext(),getString(R.string.manager_error_message),Toast.LENGTH_LONG).show();
+                return;
+            }
+            Intent i = new Intent(Intent.ACTION_VIEW);
+            i.setComponent(ComponentName.unflattenFromString(Constants.packageMain));
+            i.putExtra("a",35);
+            i.putExtra("d",id+"/"+data.toString());
+            startActivity(i);
+
         }
 
         //Application opened from icon
@@ -175,6 +191,7 @@ public class webViewer extends Activity {
                 cache.flush();
             }
         }
+        super.onStop();
     }
 
 
@@ -182,13 +199,7 @@ public class webViewer extends Activity {
     @SuppressWarnings({"unused","unusedParameter"})
     public void buttonOnClick(View v) {
         //Download button clicked
-        DownloadTask task = new DownloadTask(new DownloadTask.Listener(){
-            @Override
-            public void onFinish(String result) {
-                showAndConfirm(result);
-            }
-        });
-        task.execute(webView.getUrl());
+        showAndConfirm(currentHtml);
     }
 
     @SuppressWarnings({"unused","unusedParameter"})
@@ -267,16 +278,11 @@ public class webViewer extends Activity {
 
         //search the code block start(s)
         for (String aBeginning : Constants.beginning) {
-            String temp = html;
-            beg = temp.indexOf(aBeginning);
-            int offset = 0;
-            while(beg != -1) {
-                beg += aBeginning.length();
-                starts.add(beg + offset);
-                temp = temp.substring(beg + 1);
-                offset += beg + 1;
-                beg = temp.indexOf(aBeginning);
-            }
+            beg=-1;
+            do{
+                if(beg!=-1)starts.add(beg=beg+aBeginning.length());
+                beg=html.indexOf(aBeginning,beg);
+            }while(beg!=-1);
         }
 
         //TODO search the flags
@@ -322,7 +328,8 @@ public class webViewer extends Activity {
             //only one script, load directly
             else {
                 //get the name from the repository
-                String url = webView.getUrl();
+                String url = currentUrl;
+                Log.d("url",url);
                 url = url.substring(url.indexOf("/")+2);
                 url = url.substring(url.indexOf("/"));
                 int index = repoHtml.indexOf(url);
@@ -349,6 +356,7 @@ public class webViewer extends Activity {
         for (String line : lines) {
             code += Html.fromHtml(line).toString() + "\n";
         }
+        code.substring(0,code.length()-1);
         name = scriptName;
         flags = 0;
 

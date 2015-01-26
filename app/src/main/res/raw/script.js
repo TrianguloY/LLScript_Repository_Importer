@@ -3,68 +3,81 @@ Script necessary for the repository importer to work correctly. DO NOT delete it
 Don't change the name of this script, it will allow to update it without creating another one
 */
 
-//IMPORTANT: don't change this variables
-var version = 4;
-
+//IMPORTANT: don't change this variable
+var version = 5;
 
 var data=LL.getEvent().getData();
 if(data!=null)data=JSON.parse(data);
 
 var intent=new Intent("android.intent.action.MAIN");
 intent.setClassName("com.trianguloy.llscript.repository","com.trianguloy.llscript.repository.webViewer");
-
+intent.addFlags(Intent.FLAG_ACTIVITY_REORDER_TO_FRONT);
 
 if(data==null){
     //Send the id to the importer app
     intent.putExtra("id",LL.getCurrentScript().getId());
     LL.startActivity(intent);
     if(LL.getEvent().getSource()=="C_LOADED")deleteDesktop();
+    return;
 }
-else{
-    //Data received. Let's assume it is correct
-    if(data.version!=version){
-        //outdated version
-        if(confirm("The script manager is outdated. Do you wish to reimport it via template (The launcher will restart in this process)?\nAlternatively you can manually reimport it from the scripts menu")){
-            var applyIntent = new Intent("android.intent.action.MAIN");
-            applyIntent.setClassName("com.trianguloy.llscript.repository","com.app.lukas.template.ApplyTemplate");
-            LL.startActivity(applyIntent);
-        }
+
+
+//Data received. Let's assume it is correct
+if(data.update!=null){
+    //apply update of this script
+    var thisscript=LL.getCurrentScript();
+    thisscript.setText(data.update);
+    LL.runScript(thisscript.getName(),LL.getScriptTag());
+    LL.setScriptTag(null);
+    return;
+
+}else if(data.version!=version){
+//outdated version
+
+    if(data.fromupdate){
+        alert("WARNING! THE VERSION OF THE SCRIPT AND THE VERSION OF THE APP ARE NOT THE SAME. Contact the developer");
         return;
     }
+    data.fromupdate=true;
+    LL.setScriptTag(JSON.stringify(data));
+    intent.putExtra("update",true);
+    toast="Updating...";
 
-    //all ok, create script
+}else{
+//all ok, create script
+
     var toast="";
     var scripts=LL.getAllScriptMatching(Script.FLAG_ALL);
     var match=null;
     for(var t=0;t<scripts.getLength();++t){
-    if(scripts.getAt(t).getName()==data.name)match=scripts.getAt(t);
-    //if duplicated, only the last one (oldest in most cases)
+        if(scripts.getAt(t).getName()==data.name)match=scripts.getAt(t);
+        //if duplicated, only the last one (oldest in most cases)
     }
 
     if(match==null){
-        //Not found. Create
+    //Not found. Create
         LL.createScript(data.name,data.code,data.flags);
         toast="Script imported successfully.\nAvailable in the launcher";
     }else if(match.getText()==data.code){
-        //same name and code
+    //same name and code
         toast="Script already imported, nothing changed";
     }else{
-        //same name, different code
+    //same name, different code
         if(confirm("There is a script with the same name but different code. Do you want to update it?")){
-            //update
+        //update
             match.setText(data.code);
             toast="Script updated";
         }else{
-            //don't update
+        //don't update
             toast="Not imported";
         }
     }
 
-
-    Android.makeNewToast(toast, true).show();
-    intent.addFlags(Intent.FLAG_ACTIVITY_REORDER_TO_FRONT);
-    LL.startActivity(intent);
 }
+
+Android.makeNewToast(toast, true).show();
+LL.startActivity(intent);
+
 
 
 function deleteDesktop(){

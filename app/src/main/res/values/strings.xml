@@ -4,6 +4,10 @@
     <!-- This is the package name -->
     <string name="app_name">Repository importer</string>
 
+    <!-- This is the name displayed when browsing available script.js package -->
+    <string name="browse_name">Repository importer</string>
+    <!-- This is the name of the script.js once loaded in the launcher (visible in the script.js editor and the script.js menus) -->
+    <string name="script_name">Repository importer</string>
 
 
 

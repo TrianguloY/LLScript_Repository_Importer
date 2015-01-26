@@ -31,13 +31,15 @@ import org.apache.http.client.HttpClient;
 import org.apache.http.client.methods.HttpGet;
 import org.apache.http.impl.client.DefaultHttpClient;
 import org.apache.http.util.EntityUtils;
+import org.json.JSONException;
+import org.json.JSONObject;
 
 import java.io.IOException;
 import java.util.Timer;
 import java.util.TimerTask;
 
 
-public class webviewer extends Activity {
+public class webViewer extends Activity {
 
     private WebView webView; //webview element
     private Button button; //button element
@@ -47,7 +49,7 @@ public class webviewer extends Activity {
     private String previousUrl="";//to avoid duplicated checks
 
     //Script data
-    private String content = "";
+    private String code = "";
     private String name = "Script Name";
     private int flags = 0;
 
@@ -64,14 +66,13 @@ public class webviewer extends Activity {
 
         //Get the intent and data
         Intent intent=getIntent();
-        int getid = (int) intent.getDoubleExtra("id", Constants.notId); //-1=error other=ScriptId  TODO better returned code
+        int getId = (int) intent.getDoubleExtra("id", Constants.notId); //-1=error other=ScriptId  TODO better returned code
 
 
-        if(getid!=Constants.notId && getid!=id){
+        if(getId!=Constants.notId && getId!=id){
             //new manager loaded
-            sharedPref.edit().putInt("id",getid).apply();//id of the manager script
-            id=getid;
-            //Toast.makeText(getApplicationContext(),"Manager script loaded correctly",Toast.LENGTH_LONG).show();
+            sharedPref.edit().putInt("id",getId).apply();//id of the manager script.js
+            id=getId;
             AlertDialog alertDialog = new AlertDialog.Builder(this).create();
             alertDialog.setTitle("");
             alertDialog.setMessage(getString(R.string.manager_loaded));
@@ -136,6 +137,7 @@ public class webviewer extends Activity {
 
     @SuppressWarnings({"unused","unusedParameter"})
     public void buttonInjectOnClick(View v){
+        //start the script.js injection process
         Intent intent = new Intent(this,ApplyTemplate.class);
         startActivity(intent);
     }
@@ -152,7 +154,7 @@ public class webviewer extends Activity {
             //main page
             button.setVisibility(View.GONE);
         }else if( url.startsWith(Constants.pagePrefix)){
-            // script page
+            // script.js page
             button.setVisibility(View.VISIBLE);
         } else {
             //external page
@@ -212,9 +214,9 @@ public class webviewer extends Activity {
 
             //apply the finds
             String[] lines=html.substring(beg,end).split("\n");
-            content="";
+            code ="";
             for (String line : lines) {
-                content += Html.fromHtml(line).toString() + "\n";
+                code += Html.fromHtml(line).toString() + "\n";
             }
             name = webView.getUrl().substring(Constants.pagePrefix.length());
             flags = 0;
@@ -222,7 +224,7 @@ public class webviewer extends Activity {
             //the alert
             View layout = getLayoutInflater().inflate(R.layout.confirm_alert, (ViewGroup)findViewById(R.id.webView).getRootView(),false);
             final EditText contentText = ((EditText) layout.findViewById(R.id.editText2));
-                    contentText.setText(content);
+                    contentText.setText(code);
             final EditText nameText = ((EditText) layout.findViewById(R.id.editText));
                     nameText.setText(name);
             alertDialog.setView(layout);
@@ -233,18 +235,27 @@ public class webviewer extends Activity {
 
             alertDialog.setButton(AlertDialog.BUTTON_POSITIVE,getString(R.string.button_import), new DialogInterface.OnClickListener() {
                 public void onClick(DialogInterface dialog, int which) {
-                    // let's import the script
-                    content=contentText.getText().toString();
+                    // let's import the script.js
+                    code =contentText.getText().toString();
                     name=nameText.getText().toString();
                     flags=(flagsBoxes[0].isChecked()?Constants.FLAG_APP_MENU:0)+
                             (flagsBoxes[1].isChecked()?Constants.FLAG_ITEM_MENU:0)+
                             (flagsBoxes[2].isChecked()?Constants.FLAG_CUSTOM_MENU:0);
-
-                    String s = Constants.separator;
+                    JSONObject data = new JSONObject();
+                    try {
+                        data.put("version",Constants.managerVersion);
+                        data.put("code",code);
+                        data.put("name",name);
+                        data.put("flags",flags);
+                    } catch (JSONException e) {
+                        e.printStackTrace();
+                        Toast.makeText(getApplicationContext(),"There was an error trying to pass the data to the manager",Toast.LENGTH_LONG).show();
+                        return;
+                    }
                     Intent i = new Intent(Intent.ACTION_VIEW);
                     i.setComponent(ComponentName.unflattenFromString(Constants.packageName));
                     i.putExtra("a",35);
-                    i.putExtra("d",id+"/"+Constants.managerVersion+s+name+s+content+s+flags);
+                    i.putExtra("d",id+"/"+data.toString());
                     startActivity(i);
 
                 }

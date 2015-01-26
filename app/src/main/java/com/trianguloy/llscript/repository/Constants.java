@@ -19,10 +19,20 @@ package com.trianguloy.llscript.repository;
      * install some other scripts, and is no longer needed after this initial setup (default is false).
      */
 /*package*/ static final String INTENT_EXTRA_DELETE_AFTER_EXECUTION = "d";
+
+
+
+
     /* App constants */
     static final int managerVersion = 3;
     static final int notId = -1;
     static final String pageMain = "http://www.pierrox.net/android/applications/lightning_launcher/wiki/doku.php?id=script_repository";
     static final String pagePrefix = "http://www.pierrox.net/android/applications/lightning_launcher/wiki/doku.php?id=script_";
-    static final String packageName = "net.pierrox.lightning_launcher_extreme/net.pierrox.lightning_launcher.activities.Dashboard";
+    static final String packageMain = "net.pierrox.lightning_launcher_extreme/net.pierrox.lightning_launcher.activities.Dashboard";
+
+
+
+    //Where to search in the HTML source
+    static final String[] beginning = {"class=\"brush: javascript\">","class=\"brush: javascript;\">","class=\"code\">"};
+    static String ending = "</pre>";
 }

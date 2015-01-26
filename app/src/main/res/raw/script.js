@@ -4,9 +4,8 @@ Don't change the name of this script, it will allow to update it without creatin
 */
 
 //IMPORTANT: don't change this variables
-var version = 3;
+var version = 4;
 
-if(LL.getEvent().getSource()=="C_LOADED")LL.getCurrentDesktop().getProperties().edit().setEventHandler("load",EventHandler.UNSET,null).commit();
 
 var data=LL.getEvent().getData();
 if(data!=null)data=JSON.parse(data);
@@ -19,7 +18,7 @@ if(data==null){
     //Send the id to the importer app
     intent.putExtra("id",LL.getCurrentScript().getId());
     LL.startActivity(intent);
-    deleteDesktop();
+    if(LL.getEvent().getSource()=="C_LOADED")deleteDesktop();
 }
 else{
     //Data received. Let's assume it is correct
@@ -64,16 +63,19 @@ else{
 
     Android.makeNewToast(toast, true).show();
     intent.addFlags(Intent.FLAG_ACTIVITY_REORDER_TO_FRONT);
-LL.startActivity(intent);
+    LL.startActivity(intent);
 }
 
 
 function deleteDesktop(){
- LL.bindClass("java.io.FileReader");
+
+LL.bindClass("java.io.FileReader");
 LL.bindClass("java.io.BufferedReader");
 LL.bindClass("java.io.FileWriter");
 LL.bindClass("java.io.File");
 LL.bindClass("java.lang.System");
+
+LL.getCurrentDesktop().getProperties().edit().setEventHandler("load",EventHandler.UNSET,null).commit();
 
 //create the needed structure
 var d=LL.getDesktopByName("loadScript");

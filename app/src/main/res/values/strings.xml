@@ -14,10 +14,7 @@
     <!-- app strings -->
     <string name="title_activity_webviewer">Repository Importer</string>
     <string name="action_mainPage">Main Page</string>
-    <string name="managerNotFound">The manager is not yet loaded in the launcher or couldn\'t be found.\n\nPlease click the Button below.\n
-Merge the upcoming template into your setup.\n
-Do not import the wallpaper.\n
-Please be aware that the launcher restarts in the process.</string>
+    <string name="managerNotFound">The manager is not yet loaded in the launcher or couldn\'t be found.\n\nPlease click one of the Buttons below.\nThey are both two ways of import the Manager script.\nThe Launcher method requires more clicks, but don\'t need to restart the launcher.\nThe Template method is faster, but requires to restart the launcher.\n\nChoose one</string>
     <string name="import_button">Import script</string>
     <string name="script_name_alert">Name:</string>
     <string name="Script_code_alert">Source Code:</string>
@@ -35,8 +32,12 @@ Please be aware that the launcher restarts in the process.</string>
     <string name="back_to_close">Press back again to close</string>
     <string name="manager_loaded">Script manager loaded correctly. Now navigate to a script\'s page and click the Import button when available</string>
     <string name="button_import">Import script</string>
-    <string name="button_inject_script">Inject Script into launcher</string>
+    <string name="button_inject_from_template">Load from Template</string>
+    <string name="button_inyect_from_launcher">Load from Launcher</string>
 
     <string name="code_hint">Code here…</string>
+
+    <string name="instructions_load_from_launcher">-Click the button\n-Click \'Scripts…\'\n-Click \'Load a script…\'\n-Choose This app</string>
+    <string name="instructions_load_from_template">-Click the button\n-Merge the upcoming template into your setup.\n-Do not import the wallpaper.\n-Please be aware that the launcher restarts in the process.</string>
 
 </resources>

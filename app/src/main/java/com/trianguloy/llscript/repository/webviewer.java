@@ -41,11 +41,12 @@ import java.util.TimerTask;
 
 public class webViewer extends Activity {
 
-    private WebView webView; //webview element
+    private WebView webView; //webView element
     private Button button; //button element
-    private Boolean close=false; //if pressing back will close
+    private SharedPreferences sharedPref;
 
-    private int id = -2; //scipt manager id
+    private Boolean close=false; //if pressing back will close
+    private int id; //script manager id
     private String previousUrl="";//to avoid duplicated checks
 
     //Script data
@@ -53,15 +54,13 @@ public class webViewer extends Activity {
     private String name = "Script Name";
     private int flags = 0;
 
-    //Where to search in the HTML source
-    private final String[] beginning = {"class=\"brush: javascript\">","class=\"brush: javascript;\">","class=\"code\">"};
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
         //initialize variables
-        SharedPreferences sharedPref = getPreferences(Context.MODE_PRIVATE);
+        sharedPref= getPreferences(Context.MODE_PRIVATE);
         id= sharedPref.getInt("id", Constants.notId);
 
         //Get the intent and data
@@ -90,6 +89,7 @@ public class webViewer extends Activity {
         if(id==Constants.notId){
             //manager not loaded
             setContentView(R.layout.managernotfound);
+            //TODO put this as a new activity
         }else {
             //normal activity
             setContentView(R.layout.activity_webviewer);
@@ -128,21 +128,29 @@ public class webViewer extends Activity {
 
 
 
-    @SuppressWarnings({"unused","unusedParameter"})
+    @SuppressWarnings({"unused","unusedParameter"}) // ?????
     public void buttonOnClick(View v) {
         //Download button clicked
         DownloadTask task = new DownloadTask();
         task.execute(webView.getUrl());
     }
 
-    @SuppressWarnings({"unused","unusedParameter"})
-    public void buttonInjectOnClick(View v){
-        //start the script injection process
+    @SuppressWarnings({"unused","unusedParameter"}) // ?????
+    public void buttonInjectFromTemplate(View v){
+        //start the script injection process from template
         Intent intent = new Intent(this,ApplyTemplate.class);
         startActivity(intent);
+        finish();
     }
 
-
+    public void buttonInjectFromLauncher(View v){
+        //start the script injection process from launcher
+        Intent intent = new Intent(Intent.ACTION_VIEW);
+        intent.setComponent(ComponentName.unflattenFromString(Constants.packageMain));
+        intent.putExtra("a",7);
+        startActivity(intent);
+        finish();
+    }
 
 
 
@@ -194,15 +202,14 @@ public class webViewer extends Activity {
 
 
         //search the code
-        for (String aBeginning : beginning) {
+        for (String aBeginning : Constants.beginning) {
             beg = html.indexOf(aBeginning);
             if (beg != -1) {
                 beg += aBeginning.length();
                 break;
             }
         }
-        String ending = "</pre>";
-        int end = html.indexOf(ending,beg);
+        int end = html.indexOf(Constants.ending,beg);
 
         //TODO search the name
 
@@ -253,7 +260,7 @@ public class webViewer extends Activity {
                         return;
                     }
                     Intent i = new Intent(Intent.ACTION_VIEW);
-                    i.setComponent(ComponentName.unflattenFromString(Constants.packageName));
+                    i.setComponent(ComponentName.unflattenFromString(Constants.packageMain));
                     i.putExtra("a",35);
                     i.putExtra("d",id+"/"+data.toString());
                     startActivity(i);
@@ -276,6 +283,7 @@ public class webViewer extends Activity {
         if(id==Constants.notId) return true;
         getMenuInflater().inflate(R.menu.menu_webviewer, menu);
         menu.findItem(R.id.action_id).setTitle("Id: "+ (id!=Constants.notId?id:"not found"));
+        menu.findItem(R.id.action_reset).setEnabled(BuildConfig.DEBUG);
         return true;
     }
 
@@ -284,15 +292,20 @@ public class webViewer extends Activity {
         // Handle action bar item clicks here. The action bar will
         // automatically handle clicks on the Home/Up button, so long
         // as you specify a parent activity in AndroidManifest.xml.
-        int itemid = item.getItemId();
 
-        //noinspection SimplifiableIfStatement
-        if (itemid == R.id.action_mainPage) {
-            webView.loadUrl(Constants.pageMain);
-            return true;
+        switch (item.getItemId()){
+            case R.id.action_mainPage:
+                webView.loadUrl(Constants.pageMain);
+                break;
+            case R.id.action_reset:
+                sharedPref.edit().remove("id").apply();
+                finish();
+                break;
+            default:
+                return super.onOptionsItemSelected(item);
         }
 
-        return super.onOptionsItemSelected(item);
+        return true;
     }
 
     @Override

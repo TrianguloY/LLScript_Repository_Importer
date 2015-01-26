@@ -3,28 +3,97 @@
     android:orientation="vertical" android:layout_width="match_parent"
     android:layout_height="match_parent">
 
-    <TextView
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:textAppearance="?android:attr/textAppearanceMedium"
-        android:text="@string/managerNotFound"
-        android:id="@+id/textView2"
-        android:autoText="false"
-        android:background="#ffffffff"
-        android:textColor="#ff000000"
-        android:textAlignment="gravity"
-        android:gravity="center_vertical|left"
-        android:padding="10sp"
-        android:layout_above="@+id/button2"
-        android:layout_alignParentTop="true" />
+    <LinearLayout
+        android:orientation="vertical"
+        android:layout_width="fill_parent"
+        android:layout_height="fill_parent">
 
-    <Button
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:id="@+id/button2"
-        android:text="@string/button_inject_script"
-        android:onClick="buttonInjectOnClick"
-        android:layout_alignParentBottom="true"
-        android:layout_alignParentLeft="true"
-        android:layout_alignParentStart="true" />
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:textAppearance="?android:attr/textAppearanceMedium"
+            android:text="@string/managerNotFound"
+            android:id="@+id/textView2"
+            android:autoText="false"
+            android:background="#ffffffff"
+            android:textColor="#ff000000"
+            android:textAlignment="gravity"
+            android:gravity="center_vertical|left"
+            android:padding="10sp"
+            android:layout_above="@+id/button2"
+            android:layout_alignParentTop="true"
+            android:layout_margin="10dp" />
+
+        <LinearLayout
+            android:orientation="horizontal"
+            android:layout_width="fill_parent"
+            android:layout_height="match_parent">
+
+            <LinearLayout
+                android:orientation="vertical"
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_weight="1"
+                android:gravity="bottom">
+
+                <TextView
+                    android:layout_width="fill_parent"
+                    android:layout_height="0dp"
+                    android:text="@string/instructions_load_from_launcher"
+                    android:id="@+id/textView"
+                    android:layout_weight="1"
+                    android:background="#ffcbcbcb"
+                    android:layout_marginBottom="0dp"
+                    android:layout_marginLeft="10dp"
+                    android:layout_marginTop="10dp"
+                    android:layout_marginRight="10dp"
+                    android:autoText="false"
+                    android:gravity="center_vertical|left"
+                    android:textColor="#ff000000" />
+
+                <Button
+                    android:layout_width="fill_parent"
+                    android:layout_height="wrap_content"
+                    android:text="@string/button_inyect_from_launcher"
+                    android:id="@+id/button3"
+                    android:onClick="buttonInjectFromLauncher"
+                    android:layout_gravity="bottom" />
+
+            </LinearLayout>
+
+            <LinearLayout
+                android:orientation="vertical"
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_weight="1"
+                android:gravity="bottom">
+
+                <TextView
+                    android:layout_width="fill_parent"
+                    android:layout_height="0dp"
+                    android:text="@string/instructions_load_from_template"
+                    android:id="@+id/textView5"
+                    android:layout_weight="1"
+                    android:background="#ffcbcbcb"
+                    android:layout_marginBottom="0dp"
+                    android:layout_marginLeft="10dp"
+                    android:layout_marginTop="10dp"
+                    android:layout_marginRight="10dp"
+                    android:enabled="false"
+                    android:textColor="#ff000000" />
+
+                <Button
+                    android:layout_width="fill_parent"
+                    android:layout_height="wrap_content"
+                    android:id="@+id/button2"
+                    android:text="@string/button_inject_from_template"
+                    android:onClick="buttonInjectFromTemplate"
+                    android:layout_alignParentBottom="true"
+                    android:layout_alignParentLeft="true"
+                    android:layout_alignParentStart="true"
+                    android:layout_gravity="bottom" />
+            </LinearLayout>
+        </LinearLayout>
+
+    </LinearLayout>
 </RelativeLayout>

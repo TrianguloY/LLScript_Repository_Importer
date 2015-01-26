@@ -23,7 +23,7 @@ ADDED from AndroidManifest.xml:7:5
 		ADDED from AndroidManifest.xml:9:9
 	android:icon
 		ADDED from AndroidManifest.xml:8:9
-activity#com.trianguloy.llscript.repository.webviewer
+activity#com.trianguloy.llscript.repository.webViewer
 ADDED from AndroidManifest.xml:10:9
 	android:label
 		ADDED from AndroidManifest.xml:12:13

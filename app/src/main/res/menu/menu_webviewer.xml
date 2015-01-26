@@ -1,9 +1,12 @@
 <menu xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
-    tools:context="net.pierrox.lightning_launcher.llscript.samplellxscript.webviewer">
+    tools:context="trianguloy.llscript.repository/.webViewer">
     <item android:id="@+id/action_mainPage" android:title="@string/action_mainPage"
         android:orderInCategory="100" android:showAsAction="never" />
 
     <item android:id="@+id/action_id" android:title=""
-        android:orderInCategory="100" android:showAsAction="never" />
+        android:orderInCategory="100" android:showAsAction="never"/>
+
+    <item android:id="@+id/action_reset" android:title="Reset"
+        android:orderInCategory="100" android:showAsAction="never"/>
 </menu>

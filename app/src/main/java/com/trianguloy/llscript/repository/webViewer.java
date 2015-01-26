@@ -329,7 +329,6 @@ public class webViewer extends Activity {
             else {
                 //get the name from the repository
                 String url = currentUrl;
-                Log.d("url",url);
                 url = url.substring(url.indexOf("/")+2);
                 url = url.substring(url.indexOf("/"));
                 int index = repoHtml.indexOf(url);

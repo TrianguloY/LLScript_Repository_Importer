@@ -1,7 +1,9 @@
 package com.trianguloy.llscript.repository;
+
 import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
+
 public class loadInLauncher extends Activity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {

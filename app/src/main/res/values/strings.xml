@@ -3,45 +3,43 @@
 
     <!-- This is the package name -->
     <string name="app_name">Repository importer</string>
-
     <!-- This is the name displayed when browsing available script package -->
     <string name="browse_name">Repository importer</string>
     <!-- This is the name of the script once loaded in the launcher (visible in the script editor and the script menus) -->
     <string name="script_name">Repository importer</string>
 
-
-
-    <!-- app strings -->
-    <string name="title_activity_webviewer">Repository Importer</string>
-    <string name="action_mainPage">Main Page</string>
-    <string name="managerNotFound">The manager is not yet loaded in the launcher or couldn\'t be found.\n\nPlease click one of the Buttons below.\nThey are both two ways of import the Manager script.\nThe Launcher method requires more clicks, but don\'t need to restart the launcher.\nThe Template method is faster, but requires to restart the launcher.\n\nChoose one</string>
-    <string name="import_button">Import script</string>
-    <string name="script_name_alert">Name:</string>
-    <string name="Script_code_alert">Source Code:</string>
-
+    <!-- menu -->
+    <string name="action_main_page">Main Page</string>
+    <string name="action_reset">Reset</string>
+    <!-- buttons -->
+    <string name="button_cancel">@android:string/cancel</string>
+    <string name="button_exit">Exit</string>
+    <string name="button_no">@android:string/no</string>
+    <string name="button_ok">@android:string/ok</string>
+    <string name="button_inject_from_launcher">Load from Launcher</string>
+    <string name="button_inject_from_template">Load from Template</string>
+    <string name="button_import">Import script</string>
+    <!-- flags -->
     <string name="flag_alert_menu">Lightning menu</string>
     <string name="flag_alert_item">Item menu</string>
     <string name="flag_alert_custom">Custom menu</string>
-    <string name="no_script_found">No script found. If you know that there is one there contact the developer</string>
-    <string name="title_external_page">External page</string>
-    <string name="message_external_page">This page is not related to the repository. Do you want to open it with your normal browser?</string>
-    <string name="button_ok">@android:string/ok</string>
-    <string name="button_no">No</string>
-    <string name="button_exit">Exit</string>
-    <string name="title_importer">Script Importer</string>
-    <string name="back_to_close">Press back again to close</string>
-    <string name="manager_loaded">Script manager loaded correctly. Now navigate to a script\'s page and click the Import button when available</string>
-    <string name="button_import">Import script</string>
-    <string name="button_inject_from_template">Load from Template</string>
-    <string name="button_inyect_from_launcher">Load from Launcher</string>
-
-    <string name="code_hint">Code here…</string>
-
+    <!-- instructions -->
+    <string name="instructions">The manager is not yet loaded in the launcher or couldn\'t be found.\n\nPlease click one of the Buttons below.\nThey are both two ways of import the Manager script.\nThe Launcher method requires more clicks, but don\'t need to restart the launcher.\nThe Template method is faster, but requires to restart the launcher.\n\nChoose one</string>
     <string name="instructions_load_from_launcher">-Click the button\n-Click \'Scripts…\'\n-Click \'Load a script…\'\n-Choose This app</string>
     <string name="instructions_load_from_template">-Click the button\n-Merge the upcoming template into your setup.\n-Do not import the wallpaper.\n-Please be aware that the launcher restarts in the process.</string>
-    <string name="reset">Reset</string>
-    <string name="manager_error_message">There was an error trying to pass the data to the manager</string>
-    <string name="more_than_one_script">Found more than one Script on this page, please choose one</string>
-    <string name="cancel">Cancel</string>
+    <!-- messages -->
+    <string name="message_back_to_close">Press back again to close</string>
+    <string name="message_code_hint">Code should be here. Please contact the developer</string>
+    <string name="message_external_page">This page is not related to the repository. Do you want to open it with your normal browser?</string>
+    <string name="message_manager_loaded">Script manager loaded correctly. Now navigate to a script\'s page and click the Import button when available</string>
+    <string name="message_manager_error">There was an error trying to pass the data to the manager</string>
+    <string name="message_more_than_one_script">Found more than one Script on this page, please choose one</string>
+    <string name="message_no_script_found">No script found. If you know that there is one, contact the developer</string>
+    <!--texts and titles -->
+    <string name="text_script_name">Name:</string>
+    <string name="text_script_code">Source Code:</string>
+    <string name="title_activity">Repository Importer</string>
+    <string name="title_importer">Script Importer</string>
+    <string name="title_external_page">External page</string>
 
 </resources>

@@ -19,7 +19,7 @@
         style="@android:style/Widget.DeviceDefault.Button.Borderless"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="@string/import_button"
+        android:text="@string/button_import"
         android:id="@+id/button"
         android:onClick="buttonOnClick"
         android:visibility="gone"
@@ -29,6 +29,7 @@
         android:layout_alignParentBottom="true"
         android:layout_alignParentTop="false"
         android:layout_alignParentLeft="true"
-        android:textColor="@android:color/darker_gray" />
+        android:textColor="@android:color/darker_gray"
+        android:layout_margin="5dp" />
 
 </RelativeLayout>

@@ -13,7 +13,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:textAppearance="?android:attr/textAppearanceSmall"
-            android:text="@string/script_name_alert"
+            android:text="@string/text_script_name"
             android:id="@+id/textView3" />
 
         <EditText
@@ -52,13 +52,13 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:textAppearance="?android:attr/textAppearanceSmall"
-        android:text="@string/Script_code_alert"
+        android:text="@string/text_script_code"
         android:id="@+id/textView4" />
 
     <EditText
         android:layout_width="fill_parent"
         android:layout_height="fill_parent"
         android:id="@+id/editText2"
-        android:hint="@string/code_hint"/>
+        android:hint="@string/message_code_hint"/>
 
 </LinearLayout>

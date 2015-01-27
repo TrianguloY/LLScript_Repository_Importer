@@ -15,15 +15,18 @@ import java.net.URL;
 class DownloadTask extends AsyncTask<String, Void, String> {
     //From http://stackoverflow.com/questions/16994777/android-get-html-from-web-page-as-string-with-httpclient-not-working
     private final Listener listener;
-    public DownloadTask(Listener listener){
+
+    public DownloadTask(Listener listener) {
         this.listener = listener;
     }
+
     @Override
     protected String doInBackground(String... urls) {
         HttpURLConnection connection;
 
         try {
             connection = (HttpURLConnection) new URL(urls[0]).openConnection();
+            connection.setUseCaches(true);
             try {
                 String line;
                 StringBuilder builder = new StringBuilder();
@@ -33,24 +36,22 @@ class DownloadTask extends AsyncTask<String, Void, String> {
                     builder.append('\n');
                 }
                 return builder.toString();
-            }
-            finally {
+            } finally {
                 connection.disconnect();
             }
-        }
-        catch (IOException e) {
+        } catch (IOException e) {
             e.printStackTrace();
         }
         return null;
     }
 
     @Override
-    protected void onPostExecute(String result){
+    protected void onPostExecute(String result) {
         listener.onFinish(result);
 
     }
 
-    public interface Listener{
+    public interface Listener {
         public void onFinish(String result);
     }
 }

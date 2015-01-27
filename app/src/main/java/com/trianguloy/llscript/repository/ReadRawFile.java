@@ -9,11 +9,11 @@ import java.io.InputStreamReader;
 
 /**
  * Created by USUARIO on 26/01/2015.
+ * Reads a given Resource to a string
  */
-public class ReadRawFile {
+class ReadRawFile {
     //From http://stackoverflow.com/questions/4087674/android-read-text-raw-resource-file
-    public static String getString(Context ctx, int resId)
-    {
+    public static String getString(Context ctx, int resId) {
         InputStream inputStream = ctx.getResources().openRawResource(resId);
 
         InputStreamReader inputreader = new InputStreamReader(inputStream);
@@ -22,7 +22,7 @@ public class ReadRawFile {
         StringBuilder text = new StringBuilder();
 
         try {
-            while (( line = buffreader.readLine()) != null) {
+            while ((line = buffreader.readLine()) != null) {
                 text.append(line);
                 text.append('\n');
             }

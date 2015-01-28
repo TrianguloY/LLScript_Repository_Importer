@@ -7,7 +7,10 @@ import android.os.Bundle;
 import android.view.View;
 
 import com.app.lukas.template.ApplyTemplate;
-
+/**
+ * Activity launched when the script manager is not found.
+ * Asks the user to import the script into the launcher (from template or script)
+*/
 
 public class noManager extends Activity {
 

@@ -5,6 +5,7 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.widget.Toast;
 
+import com.trianguloy.llscript.repository.Constants;
 import com.trianguloy.llscript.repository.R;
 
 import org.json.JSONException;
@@ -34,7 +35,7 @@ public class ApplyTemplate extends Activity{
         try {
             //put general information
             script.put("flags",0);
-            script.put("name","Repository Importer");
+            script.put("name",getString(R.string.script_name));
             script.put("id",2);
             final File template = File.createTempFile("Template", "", directory);//temporary file for the new template with the updated script
             InputStream inCode = getResources().openRawResource(R.raw.script);//script code stream
@@ -87,14 +88,14 @@ public class ApplyTemplate extends Activity{
             }
         } catch (IOException | JSONException e) {
             e.printStackTrace();
-            Toast.makeText(this,"Something went wrong. If you see this message for the first time, try again. Otherwise load the Repository Importer from LL menu",Toast.LENGTH_LONG).show();
+            Toast.makeText(this,getString(R.string.message_template_error),Toast.LENGTH_LONG).show();
         }
 
     }
 
     private void sendToLL(String path) {
         //send intent to LL with path to the template
-        Intent intent = new Intent("net.pierrox.lightning_launcher.APPLY_TEMPLATE");
+        Intent intent = new Intent(Constants.packageTemplate);
         intent.putExtra("p", path);
         startActivity(intent);
     }

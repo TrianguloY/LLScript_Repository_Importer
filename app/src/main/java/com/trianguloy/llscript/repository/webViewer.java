@@ -13,7 +13,6 @@ import android.net.http.HttpResponseCache;
 import android.os.Build;
 import android.os.Bundle;
 import android.text.Html;
-import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -40,28 +39,29 @@ import java.util.Stack;
 import java.util.Timer;
 import java.util.TimerTask;
 
+/**
+ * Main activity: displays the webview used to load scripts
+ */
 
 public class webViewer extends Activity {
 
     private WebView webView; //webView element
     private Button button; //button element
-    private SharedPreferences sharedPref;
+    private SharedPreferences sharedPref;//user saved data (used to save the id of the script manager)
 
-    private Boolean close = false; //if pressing back will close
+    private Boolean close = false; //if pressing back will close or not
     private int id; //script manager id
 
-    //Script data
-    private String code = "";
-    private String name = "Script Name";
-    private int flags = 0;
+    //Web view data
+    private String repoHtml = "";//source code of the repository, used to get the name of the scripts
+    private String currentHtml = "";//source code of the current page
+    private String currentUrl = "";//The URL of the current page
+    private Stack<String> backStack;//contains the history of the views pages
+    private DownloadTask.Listener downloadTaskListener; //default downloadTaskListener
 
-    private String repoHtml = "";
-    private String currentHtml = "";
 
-    //page management values
-    private DownloadTask.Listener downloadTaskListener;
-    private Stack<String> BackStack;
-    private String currentUrl = "";
+    //TODO sort functions based on what they do
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -73,24 +73,28 @@ public class webViewer extends Activity {
 
         //Get the intent and data
         Intent intent = getIntent();
-        int getId = (int) intent.getDoubleExtra("id", Constants.notId); //-1=error other=ScriptId  TODO better returned code
+        int getId = (int) intent.getDoubleExtra("id", Constants.notId); //The returned id
 
         if (getId != Constants.notId && getId != id) {
             //new manager loaded
             sharedPref.edit().putInt("id", getId).apply();//id of the manager script
             id = getId;
             showLoadSuccessful();
-        }
-        else if (intent.hasExtra("update")) sendUpdate();
+            initializeWeb();
 
-        //Application opened from icon
-        //normal activity
-        if (id == Constants.notId) {
+        }else if (intent.hasExtra("update")) {
+            //The manager asks for the updated script
+            sendUpdate();
+            finish();
+
+        }else if (id == Constants.notId) {
             //manager not loaded
             startActivity(new Intent(this,noManager.class));
             finish();
-        }
-        else initializeWeb(); //normal activity
+
+        }else
+            //Normal activity
+            initializeWeb();
     }
 
     @Override
@@ -107,7 +111,6 @@ public class webViewer extends Activity {
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         // Inflate the menu; this adds items to the action bar if it is present.
-        if (id == Constants.notId) return true;
         getMenuInflater().inflate(R.menu.menu_webviewer, menu);
         menu.findItem(R.id.action_id).setTitle("Id: " + (id != Constants.notId ? id : "not found"));
         menu.findItem(R.id.action_reset).setEnabled(BuildConfig.DEBUG);
@@ -122,9 +125,11 @@ public class webViewer extends Activity {
 
         switch (item.getItemId()) {
             case R.id.action_mainPage:
-                webView.loadUrl(Constants.pageMain);
+                //load the main page
+                changePage(Constants.pageMain);
                 break;
             case R.id.action_reset:
+                //removes the saved id. For Debug purpose
                 sharedPref.edit().remove("id").apply();
                 finish();
                 break;
@@ -137,48 +142,55 @@ public class webViewer extends Activity {
 
     @Override
     public void onBackPressed(){
-        if (id == Constants.notId) finish();
-        else if (!BackStack.empty()) {//not on the home page
-            currentUrl = BackStack.pop();
+        if (!backStack.empty()) {
+            //not on the home page
+            currentUrl = backStack.pop();
             changePage(currentUrl);
-        }
-        else if (!close) {
+
+        }else if (!close) {
+            //Press back while the toast is still displayed to close
             Toast.makeText(getApplicationContext(), getString(R.string.message_back_to_close), Toast.LENGTH_SHORT).show();
+            close = true;
             new Timer().schedule(new TimerTask() {
                 @Override
                 public void run() {
-                    // this code will be executed after 2 seconds
+                    //when the toast disappear
                     close = false;
                 }
-            }, 2000);
-            close = true;
+            }, 2000);//2000ms is the default time for the TOAST_LENGTH_SHORT
         }
-        else finish();
+        else
+            finish();
     }
 
     @SuppressWarnings({"unused", "unusedParameter"})
     public void buttonOnClick(View v) {
         //Download button clicked
-        showAndConfirm(currentHtml);
+        ImportScripts(currentHtml);//TODO what about put here the code instead of new function?
     }
 
     void changePage(String url) {
+        //Change the page of the webview to the passed one
         if (url.equals(Constants.pageMain)) {
             //main page
-            button.setVisibility(View.GONE);
+            currentUrl = url;
             currentHtml = repoHtml;
+            backStack.clear();
             display();
         }
         else if (url.startsWith(Constants.pagePrefix)) {
             // script page
-            button.setVisibility(View.VISIBLE);
+            backStack.push(currentUrl);
+            currentUrl = url;
             new DownloadTask(downloadTaskListener).execute(url);
         }
-        else showExternalPageLinkClicked(url); //external page
+        else
+            //external page
+            showExternalPageLinkClicked(url);
     }
 
-    void showAndConfirm(final String html) {
-        //called from download task
+    void ImportScripts(final String html) {
+        //called from download task ** Is this still true?
 
         //initialize variables
         int beg;
@@ -199,8 +211,8 @@ public class webViewer extends Activity {
         for (String aBeginning : Constants.beginning) {
             beg = -1;
             do {
-                if (beg != -1) starts.add(beg = beg + aBeginning.length());
-                beg = html.indexOf(aBeginning, beg);
+                if (beg != -1) starts.add(beg = beg + aBeginning.length());//save found
+                beg = html.indexOf(aBeginning, beg);//search next
             } while (beg != -1);
         }
 
@@ -209,27 +221,29 @@ public class webViewer extends Activity {
 
         if (starts.size() > 0) {
             //found something
-            for (int i = 0; i < starts.size(); i++) {
-                int endIndex = starts.get(i);
+            for (int begIndex : starts) {
+                //search for the code block end(s)
+                ends.add(html.indexOf(Constants.ending,begIndex));
+
+                int endIndex=begIndex;
                 int startIndex;
                 String scriptName;
-                //search for the code block end(s)
-                ends.add(html.substring(endIndex).indexOf(Constants.ending) + endIndex);
+
                 //get name(s) from headers
                 do {
-                    endIndex = html.lastIndexOf("<", endIndex);
+                    endIndex = html.lastIndexOf("<", endIndex-1);
                     startIndex = html.lastIndexOf(">", endIndex) + 1;
                     scriptName = html.substring(startIndex, endIndex);
-                } while (!scriptName.matches(".*\\w.*"));
+                } while (!scriptName.matches(".*\\w.*"));//Can this makes a never-ending while loop if the script name is not found?
                 names.add(scriptName);
             }
             if (starts.size() > 1) {
-                //select one of the scripts to import
+                //More than one scrip found select one of them to import
                 new AlertDialog.Builder(this)
                         .setSingleChoiceItems(names.toArray(new String[names.size()]), android.R.layout.simple_list_item_single_choice, new DialogInterface.OnClickListener() {
                             public void onClick(DialogInterface dialog, int which) {
                                 dialog.dismiss();
-                                downloadScript(html.substring(starts.get(which), ends.get(which)), names.get(which), alertDialog);
+                                ImportScriptDialog(html.substring(starts.get(which), ends.get(which)), names.get(which), alertDialog);
                             }
                         })
                         .setNegativeButton(getString(R.string.button_cancel), new DialogInterface.OnClickListener() {
@@ -242,18 +256,21 @@ public class webViewer extends Activity {
                         .setTitle(getString(R.string.message_more_than_one_script))
                         .setIcon(R.drawable.ic_launcher)
                         .show();
-            }
-            //only one script, load directly
-            else {
+
+            } else {
+                //only one script, load directly
+
                 //get the name from the repository
                 String url = currentUrl;
-                url = url.substring(url.indexOf("/", 10));
+                url = url.substring(url.indexOf("/", 10));//Why 10?
                 int index = repoHtml.indexOf(url);
                 String scriptName;
                 if (index != -1) {
                     scriptName = repoHtml.substring(repoHtml.indexOf(">", index) + 1, repoHtml.indexOf("<", index)).trim();
-                } else scriptName = names.get(0);
-                downloadScript(html.substring(starts.get(0), ends.get(0)), scriptName, alertDialog);
+                } else
+                    scriptName = names.get(0);//Not sure about this one, why the first element of the array names?
+
+                ImportScriptDialog(html.substring(starts.get(0), ends.get(0)), scriptName, alertDialog);
             }
         } else {
             //found nothing
@@ -262,18 +279,19 @@ public class webViewer extends Activity {
         }
     }
 
-    void downloadScript(String rawCode, String scriptName, AlertDialog alertDialog) {
+    void ImportScriptDialog(String rawCode, String scriptName, AlertDialog alertDialog) {
         //apply the finds
         String[] lines = rawCode.split("\n");
         StringBuilder builder = new StringBuilder();
         for (String line : lines) {
-            builder.append(Html.fromHtml(line).toString()).append("\n");
+            builder.append(Html.fromHtml(line).toString()).append("\n");//Because Html.fromHtml() removes the line breaks
         }
-        code = new String(builder).trim();
-        name = scriptName;
-        flags = 0;
 
-        //the alert
+        String code = new String(builder).trim();
+        String name = scriptName;
+        int flags = 0;
+
+        //the alert dialog
         View layout = getLayoutInflater().inflate(R.layout.confirm_alert, (ViewGroup) findViewById(R.id.webView).getRootView(), false);
         final EditText contentText = ((EditText) layout.findViewById(R.id.editText2));
         contentText.setText(code);
@@ -287,40 +305,45 @@ public class webViewer extends Activity {
 
         alertDialog.setButton(AlertDialog.BUTTON_POSITIVE, getString(R.string.button_import), new DialogInterface.OnClickListener() {
             public void onClick(DialogInterface dialog, int which) {
-                // let's import the script
-                code = contentText.getText().toString();
-                name = nameText.getText().toString();
-                flags = (flagsBoxes[0].isChecked() ? Constants.FLAG_APP_MENU : 0) +
-                        (flagsBoxes[1].isChecked() ? Constants.FLAG_ITEM_MENU : 0) +
-                        (flagsBoxes[2].isChecked() ? Constants.FLAG_CUSTOM_MENU : 0);
-                JSONObject data = new JSONObject();
-                try {
-                    data.put("version", Constants.managerVersion);
-                    data.put("code", code);
-                    data.put("name", name);
-                    data.put("flags", flags);
-                } catch (JSONException e) {
-                    e.printStackTrace();
-                    Toast.makeText(getApplicationContext(), getString(R.string.message_manager_error), Toast.LENGTH_LONG).show();
-                    return;
-                }
-                Intent i = new Intent(Intent.ACTION_VIEW);
-                i.setComponent(ComponentName.unflattenFromString(Constants.packageMain));
-                i.putExtra("a", 35);
-                i.putExtra("d", id + "/" + data.toString());
-                startActivity(i);
+                SendScriptToLauncher(contentText, nameText, flagsBoxes);
             }
         });
         alertDialog.show();
     }
 
+    private void SendScriptToLauncher(EditText contentText, EditText nameText, CheckBox[] flagsBoxes) {
+        // let's import the script
+        String code = contentText.getText().toString();
+        String name = nameText.getText().toString();
+        int flags = (flagsBoxes[0].isChecked() ? Constants.FLAG_APP_MENU : 0) +
+                (flagsBoxes[1].isChecked() ? Constants.FLAG_ITEM_MENU : 0) +
+                (flagsBoxes[2].isChecked() ? Constants.FLAG_CUSTOM_MENU : 0);
+        JSONObject data = new JSONObject();
+        try {
+            data.put("version", Constants.managerVersion);
+            data.put("code", code);
+            data.put("name", name);
+            data.put("flags", flags);
+        } catch (JSONException e) {
+            e.printStackTrace();
+            Toast.makeText(getApplicationContext(), getString(R.string.message_manager_error), Toast.LENGTH_LONG).show();
+            return;
+        }
+        Intent i = new Intent(Intent.ACTION_VIEW);
+        i.setComponent(ComponentName.unflattenFromString(Constants.packageMain));
+        i.putExtra("a", 35);
+        i.putExtra("d", id + "/" + data.toString());
+        startActivity(i);
+    }
+
     void display() {
         //display a page
         webView.loadDataWithBaseURL(Constants.pageRoot, currentHtml, "text/html", "utf-8", null);
+        button.setVisibility(currentUrl==Constants.pageMain?View.GONE:View.VISIBLE);
     }
 
     void showLoadSuccessful(){
-        //notify user that import was successful
+        //notify user that import was successful. Run in onCreate when received the data
         new AlertDialog.Builder(this)
                 .setTitle("")
                 .setMessage(getString(R.string.message_manager_loaded))
@@ -334,6 +357,7 @@ public class webViewer extends Activity {
     }
 
     void showExternalPageLinkClicked(final String url){
+        //When the clicked page is not useful for this app
         new AlertDialog.Builder(this)
                 .setTitle(getString(R.string.title_external_page))
                 .setMessage(getString(R.string.message_external_page))
@@ -348,7 +372,8 @@ public class webViewer extends Activity {
                     public void onClick(DialogInterface dialog, int which) {
                         /* */
                     }
-                }).setIcon(R.drawable.ic_launcher)
+                })
+                .setIcon(R.drawable.ic_launcher)
                 .show();
     }
 
@@ -370,16 +395,18 @@ public class webViewer extends Activity {
     }
 
     void initializeWeb(){
+        //Main Activity. Run on onCreate when normal launch
         setContentView(R.layout.activity_webviewer);
 
         //initialize vars
         button = (Button) findViewById(R.id.button);
         webView = (WebView) findViewById(R.id.webView);
-        BackStack = new Stack<>();
+        backStack = new Stack<>();
         currentUrl = Constants.pageMain;
         downloadTaskListener = new DownloadTask.Listener() {
             @Override
-            public void onFinish(String result) {//default listener: show the page after loading it
+            public void onFinish(String result) {
+                //default listener: show the page after loading it
                 currentHtml = result;
                 display();
             }
@@ -388,9 +415,8 @@ public class webViewer extends Activity {
         webView.setWebViewClient(new WebViewClient() {
             @Override
             public boolean shouldOverrideUrlLoading(WebView view, String url) {
-                if (!currentUrl.equals(url)) {//link clicked
-                    BackStack.push(currentUrl);
-                    currentUrl = url;
+                if (!currentUrl.equals(url)) {
+                    //link clicked
                     changePage(url);
                 }
                 return true;

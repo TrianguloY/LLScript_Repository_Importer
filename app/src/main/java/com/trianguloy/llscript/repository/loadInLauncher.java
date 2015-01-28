@@ -3,7 +3,9 @@ package com.trianguloy.llscript.repository;
 import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
-
+/**
+ * Basic activity used by Lightning launcher to load the script
+ */
 public class loadInLauncher extends Activity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {

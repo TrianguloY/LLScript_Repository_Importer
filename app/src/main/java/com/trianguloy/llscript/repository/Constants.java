@@ -1,6 +1,9 @@
 package com.trianguloy.llscript.repository;
+/**
+ * Static constants used in the project (like R.strings, but also other types)
+ * */
+public class Constants {
 
-class Constants {
     //The script appears in the lighting app menu.
     static final int FLAG_APP_MENU = 2;
     // The script appears in the item menu.
@@ -22,15 +25,20 @@ class Constants {
      */
     static final String INTENT_EXTRA_DELETE_AFTER_EXECUTION = "d";
 
-    /* App constants */
-    static final int managerVersion = 5; //TODO: get this version directly from the raw file
+    //App constants
+    static final int managerVersion = 6; //TODO: get this version directly from the raw file
     static final int notId = -1;
+
+    //WebViewer constants
     static final String pageMain = "http://www.pierrox.net/android/applications/lightning_launcher/wiki/doku.php?id=script_repository";
     static final String pageRoot = "http://www.pierrox.net";
     static final String pagePrefix = "http://www.pierrox.net/android/applications/lightning_launcher/wiki/doku.php?id=script_";
-    static final String packageMain = "net.pierrox.lightning_launcher_extreme/net.pierrox.lightning_launcher.activities.Dashboard";
 
     //Where to search in the HTML source
     static final String[] beginning = {"class=\"brush: javascript\">", "class=\"brush: javascript;\">", "class=\"code\">"};
     static final String ending = "</pre>";
+
+    //package constants
+    static final String packageMain = "net.pierrox.lightning_launcher_extreme/net.pierrox.lightning_launcher.activities.Dashboard";
+    static public final String packageTemplate = "net.pierrox.lightning_launcher.APPLY_TEMPLATE";
 }

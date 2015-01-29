@@ -2,9 +2,8 @@ package com.trianguloy.llscript.repository;
 
 import android.os.AsyncTask;
 
-import java.io.BufferedReader;
+import java.io.BufferedInputStream;
 import java.io.IOException;
-import java.io.InputStreamReader;
 import java.net.HttpURLConnection;
 import java.net.URL;
 
@@ -28,14 +27,14 @@ class DownloadTask extends AsyncTask<String, Void, String> {
             connection = (HttpURLConnection) new URL(urls[0]).openConnection();
             connection.setUseCaches(true);
             try {
-                String line;
                 StringBuilder builder = new StringBuilder();
-                BufferedReader reader = new BufferedReader(new InputStreamReader(connection.getInputStream()));
-                while ((line = reader.readLine()) != null) {
-                    builder.append(line);
-                    builder.append('\n');
+                byte[] buff = new byte[2048];
+                BufferedInputStream input = new BufferedInputStream(connection.getInputStream());
+                int count;
+                while ((count = input.read(buff)) > 0) {
+                    builder.append(new String(buff, 0, count));
                 }
-                return builder.toString();
+                return builder.toString().trim();
             } finally {
                 connection.disconnect();
             }

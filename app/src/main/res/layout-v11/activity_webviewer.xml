@@ -10,13 +10,12 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:id="@+id/webView"
-        android:layout_centerVertical="true"
         android:layout_alignParentLeft="true"
         android:layout_alignParentStart="true"
-        android:layout_above="@+id/button"/>
+        android:layout_above="@+id/button"
+        android:layout_alignParentTop="true" />
 
-    <Button 
-        style="@android:style/Widget.Holo.Button.Borderless"
+    <Button
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:text="@string/button_import"
@@ -29,7 +28,17 @@
         android:layout_alignParentBottom="true"
         android:layout_alignParentTop="false"
         android:layout_alignParentLeft="true"
-        android:textColor="@android:color/darker_gray"
-        android:layout_margin="5dp" />
+        android:layout_margin="5dp"
+        style="?android:borderlessButtonStyle" />
+
+    <ProgressBar
+        style="?android:attr/progressBarStyleLarge"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/progressBar"
+        android:layout_alignParentRight="false"
+        android:layout_alignParentEnd="false"
+        android:visibility="visible"
+        android:layout_centerInParent="true" />
 
 </RelativeLayout>

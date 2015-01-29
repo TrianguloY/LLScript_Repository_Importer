@@ -88,15 +88,13 @@ LL.bindClass("java.io.FileWriter");
 LL.bindClass("java.io.File");
 LL.bindClass("java.lang.System");
 
-LL.getCurrentDesktop().getProperties().edit().setEventHandler("load",EventHandler.UNSET,null).commit();
-
 //create the needed structure
 var d=LL.getDesktopByName("loadScript");
 if(d==null)return;
 var file=new File("data/data/net.pierrox.lightning_launcher_extreme/files/config");//this file contains desktop properties
 var r=new BufferedReader(new FileReader(file));
 var s="";
-var dir=new File("data/data/net.pierrox.lightning_launcher_extreme/files/pages"+d.getId());
+var dir=new File("data/data/net.pierrox.lightning_launcher_extreme/files/pages/",d.getId());
 var cur=new File("data/data/net.pierrox.lightning_launcher_extreme/files/current");
 
 //read the file

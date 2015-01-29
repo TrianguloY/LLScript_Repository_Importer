@@ -23,6 +23,7 @@ import android.webkit.WebViewClient;
 import android.widget.Button;
 import android.widget.CheckBox;
 import android.widget.EditText;
+import android.widget.ProgressBar;
 import android.widget.Toast;
 
 import org.json.JSONException;
@@ -47,6 +48,7 @@ public class webViewer extends Activity {
 
     private WebView webView; //webView element
     private Button button; //button element
+    private ProgressBar progressBar;
     private SharedPreferences sharedPref;//user saved data (used to save the id of the script manager)
 
     private Boolean close = false; //if pressing back will close or not
@@ -182,6 +184,7 @@ public class webViewer extends Activity {
             // script page
             backStack.push(currentUrl);
             currentUrl = url;
+            progressBar.setVisibility(View.VISIBLE);
             new DownloadTask(downloadTaskListener).execute(url);
         }
         else
@@ -288,15 +291,13 @@ public class webViewer extends Activity {
         }
 
         String code = new String(builder).trim();
-        String name = scriptName;
-        int flags = 0;
 
         //the alert dialog
         View layout = getLayoutInflater().inflate(R.layout.confirm_alert, (ViewGroup) findViewById(R.id.webView).getRootView(), false);
         final EditText contentText = ((EditText) layout.findViewById(R.id.editText2));
         contentText.setText(code);
         final EditText nameText = ((EditText) layout.findViewById(R.id.editText));
-        nameText.setText(name);
+        nameText.setText(scriptName);
         alertDialog.setView(layout);
         final CheckBox[] flagsBoxes = {
                 (CheckBox) layout.findViewById(R.id.checkBox),
@@ -339,7 +340,7 @@ public class webViewer extends Activity {
     void display() {
         //display a page
         webView.loadDataWithBaseURL(Constants.pageRoot, currentHtml, "text/html", "utf-8", null);
-        button.setVisibility(currentUrl==Constants.pageMain?View.GONE:View.VISIBLE);
+        button.setVisibility(currentUrl.equals(Constants.pageMain) ? View.GONE : View.VISIBLE);
     }
 
     void showLoadSuccessful(){
@@ -401,6 +402,7 @@ public class webViewer extends Activity {
         //initialize vars
         button = (Button) findViewById(R.id.button);
         webView = (WebView) findViewById(R.id.webView);
+        progressBar = (ProgressBar)findViewById(R.id.progressBar);
         backStack = new Stack<>();
         currentUrl = Constants.pageMain;
         downloadTaskListener = new DownloadTask.Listener() {
@@ -408,6 +410,7 @@ public class webViewer extends Activity {
             public void onFinish(String result) {
                 //default listener: show the page after loading it
                 currentHtml = result;
+                progressBar.setVisibility(View.GONE);
                 display();
             }
         };
@@ -462,6 +465,7 @@ public class webViewer extends Activity {
             public void onFinish(String result) {
                 repoHtml = result;
                 currentHtml = repoHtml;
+                progressBar.setVisibility(View.GONE);
                 display();
             }
         }).execute(Constants.pageMain);

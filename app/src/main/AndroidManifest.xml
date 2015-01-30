@@ -45,6 +45,10 @@
             android:label="@string/title_activity"
             android:excludeFromRecents="true">
         </activity>
+        <activity android:name="com.app.lukas.template.RootScriptInstaller"
+            android:icon="@drawable/ic_launcher"
+            android:excludeFromRecents="true"
+            android:label="@string/title_activity"/>
     </application>
 
 </manifest>

@@ -1,4 +1,7 @@
 package com.trianguloy.llscript.repository;
+
+import android.annotation.SuppressLint;
+
 /**
  * Static constants used in the project (like R.strings, but also other types)
  * */
@@ -26,7 +29,7 @@ public class Constants {
     static final String INTENT_EXTRA_DELETE_AFTER_EXECUTION = "d";
 
     //App constants
-    static final int managerVersion = 6; //TODO: get this version directly from the raw file
+    static final int managerVersion = 7; //TODO: get this version directly from the raw file
     static final int notId = -1;
 
     //WebViewer constants
@@ -40,5 +43,7 @@ public class Constants {
 
     //package constants
     static final String packageMain = "net.pierrox.lightning_launcher_extreme/net.pierrox.lightning_launcher.activities.Dashboard";
+    @SuppressLint("SdCardPath")
+    static public final String scriptsPath = "/data/data/net.pierrox.lightning_launcher_extreme/files/scripts/";
     static public final String packageTemplate = "net.pierrox.lightning_launcher.APPLY_TEMPLATE";
 }

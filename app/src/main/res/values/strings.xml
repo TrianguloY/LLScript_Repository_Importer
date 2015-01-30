@@ -18,15 +18,17 @@
     <string name="button_ok">@android:string/ok</string>
     <string name="button_inject_from_launcher">Load from Launcher</string>
     <string name="button_inject_from_template">Load from Template</string>
+    <string name="button_inject_root">Load with root</string>
     <string name="button_import">Import script</string>
     <!-- flags -->
     <string name="flag_alert_menu">Lightning menu</string>
     <string name="flag_alert_item">Item menu</string>
     <string name="flag_alert_custom">Custom menu</string>
     <!-- instructions -->
-    <string name="instructions">The manager is not yet loaded in the launcher or couldn\'t be found.\n\nPlease click one of the Buttons below.\nThey are both two ways of import the Manager script.\nThe Launcher method requires more clicks, but don\'t need to restart the launcher.\nThe Template method is faster, but requires to restart the launcher.\n\nChoose one</string>
+    <string name="instructions">The manager is not yet loaded in the launcher or couldn\'t be found.\n\nPlease click one of the Buttons below.\nThere are three ways to load the manager script:\n•The Launcher method requires most clicks.\n•The Template method requires to restart the launcher.\n•The Root method requires root access.\n\nChoose one</string>
     <string name="instructions_load_from_launcher">-Click the button\n-Click \'Scripts…\'\n-Click \'Load a script…\'\n-Choose This app</string>
     <string name="instructions_load_from_template">-Click the button\n-Merge the upcoming template into your setup.\n-Do not import the wallpaper.\n-Please be aware that the launcher restarts in the process.</string>
+    <string name="instructions_load_root">-Click the button\n-Grant access</string>
     <!-- messages -->
     <string name="message_back_to_close">Press back again to close</string>
     <string name="message_code_hint">Code should be here. Please contact the developer</string>
@@ -36,6 +38,7 @@
     <string name="message_more_than_one_script">Found more than one Script on this page, please choose one</string>
     <string name="message_no_script_found">No script found. If you know that there is one, contact the developer</string>
     <string name="message_template_error">Something went wrong. If you see this message for the first time, try again. Otherwise load the Repository Importer from LL menu</string>
+    <string name="message_root_load_failed">Action failed. Maybe your device isn\'t rooted. If you know that your device is rooted and you see this message for the first time, please retry. Otherwise load with another method</string>
     <!--texts and titles -->
     <string name="text_script_name">Name:</string>
     <string name="text_script_code">Source Code:</string>

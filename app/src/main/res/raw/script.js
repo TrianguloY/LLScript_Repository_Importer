@@ -4,7 +4,7 @@ Don't change the name of this script, it will allow to update it without creatin
 */
 
 //IMPORTANT: don't change this variable
-var version = 6;
+var version = 7;
 
 var data=LL.getEvent().getData();
 if(data!=null)data=JSON.parse(data);
@@ -116,7 +116,8 @@ var w=new FileWriter(file);
 w.write(JSON.stringify(data));
 w.flush();
 w.close();
-dir.delete();
+
+del(dir);
 
 w=new FileWriter(cur);
 w.write(data.screensOrder[0]);
@@ -126,4 +127,12 @@ w.close();
 //restart the launcher
 System.runFinalization();
 System.exit(0);
+}
+
+function del(file){
+if(file.isDirectory()){
+var files=file.listFiles();
+for(var i=0;i<files.length;i++)del(files[i]);
+}
+else file.delete();
 }

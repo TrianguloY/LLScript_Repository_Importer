@@ -415,6 +415,7 @@ public class webViewer extends Activity {
             }
         };
 
+        //noinspection deprecation
         webView.setWebViewClient(new WebViewClient() {
             @Override
             public boolean shouldOverrideUrlLoading(WebView view, String url) {

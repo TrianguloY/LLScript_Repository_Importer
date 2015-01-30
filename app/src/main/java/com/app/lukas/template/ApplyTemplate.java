@@ -7,6 +7,7 @@ import android.widget.Toast;
 
 import com.trianguloy.llscript.repository.Constants;
 import com.trianguloy.llscript.repository.R;
+import com.trianguloy.llscript.repository.ReadRawFile;
 
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -14,7 +15,6 @@ import org.json.JSONObject;
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
-import java.io.InputStream;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipInputStream;
 import java.util.zip.ZipOutputStream;
@@ -28,7 +28,6 @@ public class ApplyTemplate extends Activity{
 
     protected void onCreate(Bundle savedInstanceState){
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.apply_templates);
 
         File directory = getExternalCacheDir();
         JSONObject script = new JSONObject(); //the script in JSON form, as needed in a template
@@ -38,22 +37,16 @@ public class ApplyTemplate extends Activity{
             script.put("name",getString(R.string.script_name));
             script.put("id",2);
             final File template = File.createTempFile("Template", "", directory);//temporary file for the new template with the updated script
-            InputStream inCode = getResources().openRawResource(R.raw.script);//script code stream
             ZipInputStream in = new ZipInputStream(getResources().openRawResource(R.raw.template));//stream from the template without updated script
             ZipOutputStream out = new ZipOutputStream(new FileOutputStream(template));//stream to the new template
 
             //initialize used temp vars, buffer
-            StringBuilder builder = new StringBuilder();
             byte[] buff = new byte[1024];
             int read;
             ZipEntry entry;
 
             try {
-                //read in the script code
-                while ((read = inCode.read(buff))>0){
-                    builder.append(new String(buff, 0, read));
-                }
-                script.put("text", new String(builder));
+                script.put("text", ReadRawFile.getString(this,R.raw.script));
 
                 //write the old template to the new one
                 while ((entry = in.getNextEntry())!=null)
@@ -81,7 +74,6 @@ public class ApplyTemplate extends Activity{
                 template.deleteOnExit();
             } finally {
                 //make sure all streams get closed even if sth goes wrong
-                inCode.close();
                 in.close();
                 out.close();
                 finish();

@@ -1,9 +1,14 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
-    package="com.trianguloy.llscript.repository" >
+    package="com.trianguloy.llscript.repository">
 
     <uses-permission android:name="android.permission.INTERNET" />
     <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
+    <permission android:name="net.pierrox.lightning_launcher.IMPORT_SCRIPTS"
+        android:description="@string/permission_description"
+        android:icon="@drawable/ic_launcher"
+        android:label="LL Import Scripts"
+        android:protectionLevel="dangerous"/>
 
     <application
         android:allowBackup="true"
@@ -49,6 +54,15 @@
             android:icon="@drawable/ic_launcher"
             android:excludeFromRecents="true"
             android:label="@string/title_activity"/>
+        <service android:name="com.app.lukas.template.ScriptImporter"
+            android:icon="@drawable/ic_launcher"
+            android:label="@string/title_activity"
+            android:excludeFromRecents="true"
+            android:exported="true">
+            <intent-filter>
+                <action android:name="net.pierrox.lightning_launcher.script.IMPORT"/>
+            </intent-filter>
+            </service>
     </application>
 
 </manifest>

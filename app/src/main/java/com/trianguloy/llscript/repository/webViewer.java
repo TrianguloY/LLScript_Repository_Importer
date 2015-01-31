@@ -7,11 +7,13 @@ import android.content.ComponentName;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.ServiceConnection;
 import android.content.SharedPreferences;
 import android.net.Uri;
 import android.net.http.HttpResponseCache;
 import android.os.Build;
 import android.os.Bundle;
+import android.os.IBinder;
 import android.text.Html;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -25,6 +27,8 @@ import android.widget.CheckBox;
 import android.widget.EditText;
 import android.widget.ProgressBar;
 import android.widget.Toast;
+
+import com.app.lukas.template.ScriptImporter;
 
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -52,7 +56,6 @@ public class webViewer extends Activity {
     private SharedPreferences sharedPref;//user saved data (used to save the id of the script manager)
 
     private Boolean close = false; //if pressing back will close or not
-    private int id; //script manager id
 
     //Web view data
     private String repoHtml = "";//source code of the repository, used to get the name of the scripts
@@ -71,16 +74,16 @@ public class webViewer extends Activity {
 
         //initialize variables
         sharedPref = getPreferences(Context.MODE_PRIVATE);
-        id = sharedPref.getInt("id", Constants.notId);
+        Constants.id = sharedPref.getInt("id", Constants.notId);
 
         //Get the intent and data
         Intent intent = getIntent();
-        int getId = (int) intent.getDoubleExtra("id", Constants.notId); //The returned id
+        int getid = (int) intent.getDoubleExtra("id", Constants.notId); //The returned id
 
-        if (getId != Constants.notId && getId != id) {
+        if (getid != Constants.notId && getid != Constants.id) {
             //new manager loaded
-            sharedPref.edit().putInt("id", getId).apply();//id of the manager script
-            id = getId;
+            sharedPref.edit().putInt("id", getid).apply();//id of the manager script
+            Constants.id = getid;
             showLoadSuccessful();
             initializeWeb();
 
@@ -89,7 +92,7 @@ public class webViewer extends Activity {
             sendUpdate();
             finish();
 
-        }else if (id == Constants.notId) {
+        }else if (Constants.id == Constants.notId) {
             //manager not loaded
             startActivity(new Intent(this,noManager.class));
             finish();
@@ -114,7 +117,7 @@ public class webViewer extends Activity {
     public boolean onCreateOptionsMenu(Menu menu) {
         // Inflate the menu; this adds items to the action bar if it is present.
         getMenuInflater().inflate(R.menu.menu_webviewer, menu);
-        menu.findItem(R.id.action_id).setTitle("Id: " + (id != Constants.notId ? id : "not found"));
+        menu.findItem(R.id.action_id).setTitle("id: " + (Constants.id != Constants.notId ? Constants.id : "not found"));
         menu.findItem(R.id.action_reset).setEnabled(BuildConfig.DEBUG);
         return true;
     }
@@ -314,27 +317,24 @@ public class webViewer extends Activity {
 
     private void SendScriptToLauncher(EditText contentText, EditText nameText, CheckBox[] flagsBoxes) {
         // let's import the script
-        String code = contentText.getText().toString();
-        String name = nameText.getText().toString();
-        int flags = (flagsBoxes[0].isChecked() ? Constants.FLAG_APP_MENU : 0) +
+        final String code = contentText.getText().toString();
+        final String scriptName = nameText.getText().toString();
+        final int flags = (flagsBoxes[0].isChecked() ? Constants.FLAG_APP_MENU : 0) +
                 (flagsBoxes[1].isChecked() ? Constants.FLAG_ITEM_MENU : 0) +
                 (flagsBoxes[2].isChecked() ? Constants.FLAG_CUSTOM_MENU : 0);
-        JSONObject data = new JSONObject();
-        try {
-            data.put("version", Constants.managerVersion);
-            data.put("code", code);
-            data.put("name", name);
-            data.put("flags", flags);
-        } catch (JSONException e) {
-            e.printStackTrace();
-            Toast.makeText(getApplicationContext(), getString(R.string.message_manager_error), Toast.LENGTH_LONG).show();
-            return;
-        }
-        Intent i = new Intent(Intent.ACTION_VIEW);
-        i.setComponent(ComponentName.unflattenFromString(Constants.packageMain));
-        i.putExtra("a", 35);
-        i.putExtra("d", id + "/" + data.toString());
-        startActivity(i);
+        bindService(new Intent(this,ScriptImporter.class), new ServiceConnection() {
+            @Override
+            public void onServiceConnected(ComponentName name, IBinder service) {
+                ScriptImporter importService = ((ScriptImporter.LocalBinder)service).getService(getApplicationContext());
+                importService.installScript(code,scriptName,flags,null);
+                unbindService(this);
+            }
+
+            @Override
+            public void onServiceDisconnected(ComponentName name) {
+                    /**/
+            }
+        }, BIND_AUTO_CREATE);
     }
 
     void display() {
@@ -391,7 +391,7 @@ public class webViewer extends Activity {
         Intent i = new Intent(Intent.ACTION_VIEW);
         i.setComponent(ComponentName.unflattenFromString(Constants.packageMain));
         i.putExtra("a", 35);
-        i.putExtra("d", id + "/" + data.toString());
+        i.putExtra("d",Constants.id + "/" + data.toString());
         startActivity(i);
     }
 

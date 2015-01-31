@@ -46,4 +46,6 @@
     <string name="title_importer">Script Importer</string>
     <string name="title_external_page">External page</string>
 
+    <string name="permission_description">Allows to import scripts into LL without User confirmation</string>
+
 </resources>

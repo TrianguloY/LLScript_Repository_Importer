@@ -4,7 +4,7 @@ Don't change the name of this script, it will allow to update it without creatin
 */
 
 //IMPORTANT: don't change this variable
-var version = 7;
+var version = 8;
 
 var data=LL.getEvent().getData();
 if(data!=null)data=JSON.parse(data);
@@ -21,6 +21,7 @@ if(data==null){
     return;
 }
 
+var loadAppAfterwards = true;
 
 //Data received. Let's assume it is correct
 if(data.update!=null){
@@ -72,11 +73,18 @@ if(data.update!=null){
             toast="Not imported";
         }
     }
+    if(data.returnId){
+        var serviceIntent = new Intent("android.intent.action.MAIN");
+        serviceIntent.setClassName("com.trianguloy.llscript.repository","com.app.lukas.template.ScriptImporter");
+        serviceIntent.putExtra("id",match.getId());
+        LL.getContext().startService(serviceIntent);
+        loadAppAfterwards = false;
+    }
 
 }
 
 Android.makeNewToast(toast, true).show();
-LL.startActivity(intent);
+if(loadAppAfterwards)LL.startActivity(intent);
 
 
 

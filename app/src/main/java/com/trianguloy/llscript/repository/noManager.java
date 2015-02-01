@@ -6,8 +6,8 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
 
-import com.app.lukas.template.ApplyTemplate;
-import com.app.lukas.template.RootScriptInstaller;
+import com.app.lukas.llscript.RootScriptInstaller;
+import com.stericson.RootTools.RootTools;
 
 /**
  * Activity launched when the script manager is not found.
@@ -19,19 +19,12 @@ public class noManager extends Activity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_nomanager);
+        if(RootTools.isRootAvailable())setContentView(R.layout.activity_nomanager_hasroot);
+        else setContentView(R.layout.activity_nomanager);
     }
 
     @Override
     public void onBackPressed() {
-        finish();
-    }
-
-    @SuppressWarnings({"unused", "unusedParameter"})
-    public void buttonInjectFromTemplate(View v) {
-        //start the script injection process from template
-        Intent intent = new Intent(this, ApplyTemplate.class);
-        startActivity(intent);
         finish();
     }
 

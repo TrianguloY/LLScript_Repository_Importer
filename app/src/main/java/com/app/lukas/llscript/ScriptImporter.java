@@ -1,4 +1,4 @@
-package com.app.lukas.template;
+package com.app.lukas.llscript;
 
 import android.app.Service;
 import android.content.ComponentName;
@@ -8,6 +8,7 @@ import android.widget.Toast;
 
 import com.trianguloy.llscript.repository.Constants;
 import com.trianguloy.llscript.repository.R;
+import com.trianguloy.llscript.repository.ReadRawFile;
 import com.trianguloy.llscript.repository.webViewer;
 
 import org.json.JSONException;
@@ -26,13 +27,15 @@ public class ScriptImporter extends Service{
 
     @Override
     public int onStartCommand(Intent intent, int flags, int startId) {
-        if(intent.hasExtra("code")&&intent.hasExtra("name")){
+        if(intent.hasExtra("update")&&intent.getBooleanExtra("update",false))updateManager();
+        else if(intent.hasExtra("code")&&intent.hasExtra("name")){
             ComponentName componentName = intent.hasExtra("receiver")?ComponentName.unflattenFromString(intent.getStringExtra("receiver")):null;
             if(componentName == null){
                 componentName = new ComponentName(this,webViewer.class);
             }
             installScript(intent.getStringExtra("code"),intent.getStringExtra("name"),intent.getIntExtra("flags",0),componentName);
         }
+        stopSelf();
         return super.onStartCommand(intent,flags,startId);
     }
 
@@ -51,6 +54,23 @@ public class ScriptImporter extends Service{
             Toast.makeText(getApplicationContext(), getString(R.string.message_manager_error), Toast.LENGTH_LONG).show();
             return;
         }
+        sendIntent(data);
+    }
+
+    void updateManager(){
+        //Send the update to the manager to auto-update
+        JSONObject data = new JSONObject();
+        try {
+            data.put("update", ReadRawFile.getString(getApplicationContext(), R.raw.script));
+        } catch (JSONException e) {
+            e.printStackTrace();
+            Toast.makeText(getApplicationContext(), getString(R.string.message_manager_error), Toast.LENGTH_LONG).show();
+            return;
+        }
+        sendIntent(data);
+    }
+
+    void sendIntent(JSONObject data){
         Intent i = new Intent(Intent.ACTION_VIEW);
         i.setComponent(ComponentName.unflattenFromString(Constants.packageMain));
         i.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);

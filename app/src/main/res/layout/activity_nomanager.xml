@@ -13,7 +13,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:textAppearance="?android:attr/textAppearanceMedium"
-        android:text="@string/instructions"
+        android:text="@string/instructions_no_root"
         android:id="@+id/textView2"
         android:autoText="false"
         android:background="#ffffffff"
@@ -25,7 +25,7 @@
 
     <TextView
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
+        android:layout_height="0dp"
         android:text="@string/instructions_load_from_launcher"
         android:id="@+id/textView"
         android:layout_weight="1"
@@ -45,49 +45,6 @@
         android:id="@+id/button3"
         android:onClick="buttonInjectFromLauncher"
         android:layout_gravity="bottom" />
-
-    <TextView
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:text="@string/instructions_load_from_template"
-        android:id="@+id/textView5"
-        android:layout_weight="1"
-        android:background="#ffcbcbcb"
-        android:layout_marginBottom="0dp"
-        android:layout_marginLeft="10dp"
-        android:layout_marginTop="10dp"
-        android:layout_marginRight="10dp"
-        android:enabled="false"
-        android:textColor="#ff000000" />
-
-    <Button
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:id="@+id/button2"
-        android:text="@string/button_inject_from_template"
-        android:onClick="buttonInjectFromTemplate"
-        android:layout_gravity="bottom" />
-
-    <TextView
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:text="@string/instructions_load_root"
-        android:id="@+id/textView6"
-        android:layout_weight="1"
-        android:background="#ffcbcbcb"
-        android:layout_marginBottom="0dp"
-        android:layout_marginLeft="10dp"
-        android:layout_marginTop="10dp"
-        android:layout_marginRight="10dp"
-        android:enabled="false"
-        android:textColor="#ff000000" />
-
-    <Button
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:text="@string/button_inject_root"
-        android:id="@+id/button4"
-        android:onClick="buttonInjectThroughRoot" />
 
 
 </LinearLayout>

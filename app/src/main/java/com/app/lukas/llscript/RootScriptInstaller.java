@@ -1,4 +1,4 @@
-package com.app.lukas.template;
+package com.app.lukas.llscript;
 
 import android.app.Activity;
 import android.app.AlertDialog;

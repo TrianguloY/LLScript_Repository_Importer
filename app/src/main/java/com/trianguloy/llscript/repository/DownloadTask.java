@@ -12,7 +12,6 @@ import java.net.URL;
  * Requests a Html page and return it to the listener passed in the constructor
  */
 class DownloadTask extends AsyncTask<String, Void, String> {
-    //From http://stackoverflow.com/questions/16994777/android-get-html-from-web-page-as-string-with-httpclient-not-working
     private final Listener listener;
 
     public DownloadTask(Listener listener) {

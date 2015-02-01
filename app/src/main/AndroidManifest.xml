@@ -7,7 +7,7 @@
     <permission android:name="net.pierrox.lightning_launcher.IMPORT_SCRIPTS"
         android:description="@string/permission_description"
         android:icon="@drawable/ic_launcher"
-        android:label="LL Import Scripts"
+        android:label="@string/permission_label"
         android:protectionLevel="dangerous"/>
 
     <application
@@ -37,29 +37,20 @@
             </intent-filter>
         </activity>
         <activity
-            android:name="com.app.lukas.template.ApplyTemplate"
-            android:excludeFromRecents="true"
-            android:icon="@drawable/ic_launcher"
-            android:label="@string/title_activity" >
-            <intent-filter>
-                <action android:name="android.intent.action.MAIN" />
-            </intent-filter>
-        </activity>
-        <activity
             android:name=".noManager"
             android:label="@string/title_activity"
             android:excludeFromRecents="true">
         </activity>
-        <activity android:name="com.app.lukas.template.RootScriptInstaller"
+        <activity android:name="com.app.lukas.llscript.RootScriptInstaller"
             android:icon="@drawable/ic_launcher"
             android:excludeFromRecents="true"
             android:label="@string/title_activity"/>
-        <service android:name="com.app.lukas.template.ScriptImporter"
+        <service android:name="com.app.lukas.llscript.ScriptImporter"
             android:icon="@drawable/ic_launcher"
             android:label="@string/title_activity"
             android:excludeFromRecents="true"
             android:exported="true"
-            android:permission="net.pierrox.lightning_launcher.IMPORT_SCRIPTS">
+            android:permission="@string/permission_name">
             <intent-filter>
                 <action android:name="net.pierrox.lightning_launcher.script.IMPORT"/>
                 <category android:name="android.intent.category.DEFAULT"/>

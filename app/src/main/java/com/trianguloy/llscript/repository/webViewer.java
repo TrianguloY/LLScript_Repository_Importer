@@ -3,7 +3,6 @@ package com.trianguloy.llscript.repository;
 import android.annotation.TargetApi;
 import android.app.Activity;
 import android.app.AlertDialog;
-import android.content.ComponentName;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
@@ -26,16 +25,12 @@ import android.widget.EditText;
 import android.widget.ProgressBar;
 import android.widget.Toast;
 
-import com.app.lukas.template.ScriptImporter;
-
-import org.json.JSONException;
-import org.json.JSONObject;
+import com.app.lukas.llscript.ScriptImporter;
 
 import java.io.File;
 import java.io.IOException;
 import java.net.HttpURLConnection;
 import java.net.MalformedURLException;
-import java.net.ResponseCache;
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.Stack;
@@ -43,7 +38,7 @@ import java.util.Timer;
 import java.util.TimerTask;
 
 /**
- * Main activity: displays the webview used to load scripts
+ * Main activity: displays the webView used to load scripts
  */
 
 public class webViewer extends Activity {
@@ -169,11 +164,69 @@ public class webViewer extends Activity {
     @SuppressWarnings({"unused", "unusedParameter"})
     public void buttonOnClick(View v) {
         //Download button clicked
-        ImportScripts(currentHtml);//TODO what about put here the code instead of new function?
+
+        //initialize variables
+        int beg;
+        final ArrayList<Integer> starts = new ArrayList<>();//start indexes of all scripts
+        final ArrayList<Integer> ends = new ArrayList<>();//end indexes of all scripts
+        final ArrayList<String> names = new ArrayList<>();//names of all scripts
+
+        //alertDialog to import a script
+
+
+        //search the code block start(s)
+        for (String aBeginning : Constants.beginning) {
+            beg = -1;
+            do {
+                if (beg != -1) starts.add(beg = beg + aBeginning.length());//save found
+                beg = currentHtml.indexOf(aBeginning, beg);//search next
+            } while (beg != -1);
+        }
+
+        //TODO search the flags
+
+
+        if (starts.size() > 0) {
+            //found something
+            for (int begIndex : starts) {
+                //search for the code block end(s)
+                ends.add(currentHtml.indexOf(Constants.ending, begIndex));
+
+                int endIndex=begIndex;
+                int startIndex;
+                String scriptName;
+
+                //get name(s) from headers
+                do {
+                    endIndex = currentHtml.lastIndexOf("<", endIndex-1);
+                    startIndex = currentHtml.lastIndexOf(">", endIndex) + 1;
+                    scriptName = currentHtml.substring(startIndex, endIndex);
+                } while (!scriptName.matches(".*\\w.*"));//Can this makes a never-ending while loop if the script name is not found?
+                names.add(scriptName);
+            }
+            if (starts.size() > 1)
+                showMoreThanOneScriptFound(names.toArray(new String[names.size()]), starts.toArray(new Integer[starts.size()]), ends.toArray(new Integer[ends.size()]));
+            else {
+                //only one script, load directly
+
+                //get the name from the repository
+                String url = currentUrl;
+                url = url.substring(url.indexOf("/", 10));//Why 10?
+                int index = repoHtml.indexOf(url);
+                String scriptName;
+                if (index != -1) {
+                    scriptName = repoHtml.substring(repoHtml.indexOf(">", index) + 1, repoHtml.indexOf("<", index)).trim();
+                } else
+                    //fallback if not found in repo
+                    scriptName = names.get(0);
+
+                showImportScript(currentHtml.substring(starts.get(0), ends.get(0)), scriptName);
+            }
+        } else showNoScriptFound();
     }
 
     void changePage(String url) {
-        //Change the page of the webview to the passed one
+        //Change the page of the webView to the passed one
         if (url.equals(Constants.pageMain)) {
             //main page
             currentUrl = url;
@@ -193,97 +246,8 @@ public class webViewer extends Activity {
             showExternalPageLinkClicked(url);
     }
 
-    void ImportScripts(final String html) {
-        //called from download task ** Is this still true?
 
-        //initialize variables
-        int beg;
-        final ArrayList<Integer> starts = new ArrayList<>();//start indexes of all scripts
-        final ArrayList<Integer> ends = new ArrayList<>();//end indexes of all scripts
-        final ArrayList<String> names = new ArrayList<>();//names of all scripts
-
-        //alertDialog to import a script
-        final AlertDialog alertDialog = new AlertDialog.Builder(this).create();
-        alertDialog.setTitle(getString(R.string.title_importer));
-        alertDialog.setButton(AlertDialog.BUTTON_NEGATIVE, getString(R.string.button_exit), new DialogInterface.OnClickListener() {
-            public void onClick(DialogInterface dialog, int which) {/* */}
-        });
-        alertDialog.setIcon(R.drawable.ic_launcher);
-
-
-        //search the code block start(s)
-        for (String aBeginning : Constants.beginning) {
-            beg = -1;
-            do {
-                if (beg != -1) starts.add(beg = beg + aBeginning.length());//save found
-                beg = html.indexOf(aBeginning, beg);//search next
-            } while (beg != -1);
-        }
-
-        //TODO search the flags
-
-
-        if (starts.size() > 0) {
-            //found something
-            for (int begIndex : starts) {
-                //search for the code block end(s)
-                ends.add(html.indexOf(Constants.ending,begIndex));
-
-                int endIndex=begIndex;
-                int startIndex;
-                String scriptName;
-
-                //get name(s) from headers
-                do {
-                    endIndex = html.lastIndexOf("<", endIndex-1);
-                    startIndex = html.lastIndexOf(">", endIndex) + 1;
-                    scriptName = html.substring(startIndex, endIndex);
-                } while (!scriptName.matches(".*\\w.*"));//Can this makes a never-ending while loop if the script name is not found?
-                names.add(scriptName);
-            }
-            if (starts.size() > 1) {
-                //More than one scrip found select one of them to import
-                new AlertDialog.Builder(this)
-                        .setSingleChoiceItems(names.toArray(new String[names.size()]), android.R.layout.simple_list_item_single_choice, new DialogInterface.OnClickListener() {
-                            public void onClick(DialogInterface dialog, int which) {
-                                dialog.dismiss();
-                                ImportScriptDialog(html.substring(starts.get(which), ends.get(which)), names.get(which), alertDialog);
-                            }
-                        })
-                        .setNegativeButton(getString(R.string.button_cancel), new DialogInterface.OnClickListener() {
-                            @Override
-                            public void onClick(DialogInterface dialog, int which) {
-                                dialog.cancel();
-                            }
-                        })
-                        .setCancelable(true)
-                        .setTitle(getString(R.string.message_more_than_one_script))
-                        .setIcon(R.drawable.ic_launcher)
-                        .show();
-
-            } else {
-                //only one script, load directly
-
-                //get the name from the repository
-                String url = currentUrl;
-                url = url.substring(url.indexOf("/", 10));//Why 10?
-                int index = repoHtml.indexOf(url);
-                String scriptName;
-                if (index != -1) {
-                    scriptName = repoHtml.substring(repoHtml.indexOf(">", index) + 1, repoHtml.indexOf("<", index)).trim();
-                } else
-                    scriptName = names.get(0);//Not sure about this one, why the first element of the array names?
-
-                ImportScriptDialog(html.substring(starts.get(0), ends.get(0)), scriptName, alertDialog);
-            }
-        } else {
-            //found nothing
-            alertDialog.setMessage(getString(R.string.message_no_script_found));
-            alertDialog.show();
-        }
-    }
-
-    void ImportScriptDialog(String rawCode, String scriptName, AlertDialog alertDialog) {
+    void showImportScript(String rawCode, String scriptName) {
         //apply the finds
         String[] lines = rawCode.split("\n");
         StringBuilder builder = new StringBuilder();
@@ -299,38 +263,56 @@ public class webViewer extends Activity {
         contentText.setText(code);
         final EditText nameText = ((EditText) layout.findViewById(R.id.editText));
         nameText.setText(scriptName);
-        alertDialog.setView(layout);
         final CheckBox[] flagsBoxes = {
                 (CheckBox) layout.findViewById(R.id.checkBox),
                 (CheckBox) layout.findViewById(R.id.checkBox2),
                 (CheckBox) layout.findViewById(R.id.checkBox3)};
 
-        alertDialog.setButton(AlertDialog.BUTTON_POSITIVE, getString(R.string.button_import), new DialogInterface.OnClickListener() {
-            public void onClick(DialogInterface dialog, int which) {
-                SendScriptToLauncher(contentText, nameText, flagsBoxes);
-            }
-        });
-        alertDialog.show();
+        new AlertDialog.Builder(this)
+                .setView(layout)
+                .setTitle(getString(R.string.title_importer))
+                .setNegativeButton(getString(R.string.button_exit), new DialogInterface.OnClickListener() {
+                    public void onClick(DialogInterface dialog, int which) {/* */}
+                })
+                .setIcon(R.drawable.ic_launcher)
+                .setPositiveButton(getString(R.string.button_import), new DialogInterface.OnClickListener() {
+                    public void onClick(DialogInterface dialog, int which) {
+                        SendScriptToLauncher(contentText, nameText, flagsBoxes);
+                    }
+                })
+                .show();
     }
 
-    private void SendScriptToLauncher(EditText contentText, EditText nameText, CheckBox[] flagsBoxes) {
-        // let's import the script
-        final String code = contentText.getText().toString();
-        final String scriptName = nameText.getText().toString();
-        final int flags = (flagsBoxes[0].isChecked() ? Constants.FLAG_APP_MENU : 0) +
-                (flagsBoxes[1].isChecked() ? Constants.FLAG_ITEM_MENU : 0) +
-                (flagsBoxes[2].isChecked() ? Constants.FLAG_CUSTOM_MENU : 0);
-        Intent intent = new Intent(this,ScriptImporter.class);
-        intent.putExtra("code",code);
-        intent.putExtra("name",scriptName);
-        intent.putExtra("flags",flags);
-        startService(intent);
+    void showNoScriptFound(){
+        new AlertDialog.Builder(this)
+                .setTitle(getString(R.string.title_importer))
+                .setNegativeButton(getString(R.string.button_exit), new DialogInterface.OnClickListener() {
+                    public void onClick(DialogInterface dialog, int which) {/* */}
+                })
+                .setIcon(R.drawable.ic_launcher)
+                .setMessage(R.string.message_no_script_found)
+                .show();
     }
 
-    void display() {
-        //display a page
-        webView.loadDataWithBaseURL(Constants.pageRoot, currentHtml, "text/html", "utf-8", null);
-        button.setVisibility(currentUrl.equals(Constants.pageMain) ? View.GONE : View.VISIBLE);
+    void showMoreThanOneScriptFound(final String[] names,final Integer[] starts, final Integer[] ends){
+        //More than one script found select one of them to import
+        new AlertDialog.Builder(this)
+                .setSingleChoiceItems(names, android.R.layout.simple_list_item_single_choice, new DialogInterface.OnClickListener() {
+                    public void onClick(DialogInterface dialog, int which) {
+                        dialog.dismiss();
+                        showImportScript(currentHtml.substring(starts[which], ends[which]), names[which]);
+                    }
+                })
+                .setNegativeButton(getString(R.string.button_cancel), new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        dialog.cancel();
+                    }
+                })
+                .setCancelable(true)
+                .setTitle(getString(R.string.message_more_than_one_script))
+                .setIcon(R.drawable.ic_launcher)
+                .show();
     }
 
     void showLoadSuccessful(){
@@ -368,21 +350,30 @@ public class webViewer extends Activity {
                 .show();
     }
 
+    void SendScriptToLauncher(EditText contentText, EditText nameText, CheckBox[] flagsBoxes) {
+        // let's import the script
+        final String code = contentText.getText().toString();
+        final String scriptName = nameText.getText().toString();
+        final int flags = (flagsBoxes[0].isChecked() ? Constants.FLAG_APP_MENU : 0) +
+                (flagsBoxes[1].isChecked() ? Constants.FLAG_ITEM_MENU : 0) +
+                (flagsBoxes[2].isChecked() ? Constants.FLAG_CUSTOM_MENU : 0);
+        Intent intent = new Intent(this,ScriptImporter.class);
+        intent.putExtra("code",code);
+        intent.putExtra("name",scriptName);
+        intent.putExtra("flags",flags);
+        startService(intent);
+    }
+
+    void display() {
+        //display a page
+        webView.loadDataWithBaseURL(Constants.pageRoot, currentHtml, "text/html", "utf-8", null);
+        button.setVisibility(currentUrl.equals(Constants.pageMain) ? View.GONE : View.VISIBLE);
+    }
+
     void sendUpdate(){
-        //Send the update to the manager to auto-update
-        JSONObject data = new JSONObject();
-        try {
-            data.put("update", ReadRawFile.getString(getApplicationContext(), R.raw.script));
-        } catch (JSONException e) {
-            e.printStackTrace();
-            Toast.makeText(getApplicationContext(), getString(R.string.message_manager_error), Toast.LENGTH_LONG).show();
-            return;
-        }
-        Intent i = new Intent(Intent.ACTION_VIEW);
-        i.setComponent(ComponentName.unflattenFromString(Constants.packageMain));
-        i.putExtra("a", 35);
-        i.putExtra("d",Constants.id + "/" + data.toString());
-        startActivity(i);
+        Intent intent = new Intent(this,ScriptImporter.class);
+        intent.putExtra("update",true);
+        startService(intent);
     }
 
     void initializeWeb(){
@@ -420,7 +411,7 @@ public class webViewer extends Activity {
             @Override
             public WebResourceResponse shouldInterceptRequest(final WebView view, final String url) {
                 //from http://stackoverflow.com/questions/12063937/can-i-use-the-android-4-httpresponsecache-with-a-webview-based-application/13596877#13596877
-                if (Build.VERSION.SDK_INT<14 || !(url.startsWith("http://") || url.startsWith("https://")) || ResponseCache.getDefault() == null) return null;
+                if (Build.VERSION.SDK_INT<14 || !(url.startsWith("http://") || url.startsWith("https://")) || HttpResponseCache.getInstalled() == null) return null;
                 try {
                     final HttpURLConnection connection = (HttpURLConnection) new URL(url).openConnection();
                     connection.connect();

@@ -4,7 +4,7 @@ Don't change the name of this script, it will allow to update it without creatin
 */
 
 //IMPORTANT: don't change this variable
-var version = 8;
+var version = 10;
 
 var data=LL.getEvent().getData();
 if(data!=null)data=JSON.parse(data);
@@ -20,8 +20,6 @@ if(data==null){
     if(LL.getEvent().getSource()=="C_LOADED")deleteDesktop();
     return;
 }
-
-var loadAppAfterwards = true;
 
 //Data received. Let's assume it is correct
 if(data.update!=null){
@@ -57,7 +55,7 @@ if(data.update!=null){
 
     if(match==null){
     //Not found. Create
-        LL.createScript(data.name,data.code,data.flags);
+        match = LL.createScript(data.name,data.code,data.flags);
         toast="Script imported successfully.\nAvailable in the launcher";
     }else if(match.getText()==data.code){
     //same name and code
@@ -73,18 +71,12 @@ if(data.update!=null){
             toast="Not imported";
         }
     }
-    if(data.returnId){
-        var serviceIntent = new Intent("android.intent.action.MAIN");
-        serviceIntent.setClassName("com.trianguloy.llscript.repository","com.app.lukas.template.ScriptImporter");
-        serviceIntent.putExtra("id",match.getId());
-        LL.getContext().startService(serviceIntent);
-        loadAppAfterwards = false;
-    }
-
+    intent.setComponent(ComponentName.unflattenFromString(data.returnTo));
+    intent.putExtra("loadedScriptId",match.getId());
 }
 
 Android.makeNewToast(toast, true).show();
-if(loadAppAfterwards)LL.startActivity(intent);
+LL.startActivity(intent);
 
 
 

@@ -2,17 +2,13 @@ package com.app.lukas.template;
 
 import android.app.Service;
 import android.content.ComponentName;
-import android.content.Context;
 import android.content.Intent;
-import android.content.pm.PackageManager;
-import android.os.Binder;
 import android.os.IBinder;
-import android.support.annotation.Nullable;
-import android.util.Log;
 import android.widget.Toast;
 
 import com.trianguloy.llscript.repository.Constants;
 import com.trianguloy.llscript.repository.R;
+import com.trianguloy.llscript.repository.webViewer;
 
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -23,48 +19,37 @@ import org.json.JSONObject;
  */
 public class ScriptImporter extends Service{
 
-    private final IBinder binder = new LocalBinder();
-    private Listener listener;
-
     @Override
     public IBinder onBind(Intent intent) {
-        return binder;
-    }
-
-    public class LocalBinder extends Binder {
-        public ScriptImporter getService(Context context){
-            if(context.getPackageName().equals(getApplicationContext().getPackageName()) ||
-                   context.checkCallingPermission("net.pierrox.lightning_launcher.IMPORT_SCRIPTS")== PackageManager.PERMISSION_GRANTED)
-                return ScriptImporter.this;
-            else throw new SecurityException("App is not allowed to import scripts into LL");
-        }
+        return null;
     }
 
     @Override
     public int onStartCommand(Intent intent, int flags, int startId) {
-        if(intent.hasExtra("id")&&listener!=null)listener.onFinish(intent.getIntExtra("id", -1));
-        Log.d("Importer","ID: "+intent.getIntExtra("id",-1));
-        return super.onStartCommand(intent, flags, startId);
+        if(intent.hasExtra("code")&&intent.hasExtra("name")){
+            ComponentName componentName = intent.hasExtra("receiver")?ComponentName.unflattenFromString(intent.getStringExtra("receiver")):null;
+            if(componentName == null){
+                componentName = new ComponentName(this,webViewer.class);
+            }
+            installScript(intent.getStringExtra("code"),intent.getStringExtra("name"),intent.getIntExtra("flags",0),componentName);
+        }
+        return super.onStartCommand(intent,flags,startId);
     }
 
-    /*
-    * listener gets called if import was successful or not.
-        * @returns: whether the import was successful or not.
-         */
-    public boolean installScript(String code,String name,int flags,@Nullable Listener listener) {
-        this.listener = listener;
-        if (Constants.id == -1) return false;
+
+    void installScript(String code, String name, int flags, ComponentName answerTo) {
+        if (Constants.id == -1) return;
         JSONObject data = new JSONObject();
         try {
             data.put("version", Constants.managerVersion);
             data.put("code", code);
             data.put("name", name);
             data.put("flags", flags);
-            data.put("returnId",listener!=null);
+            data.put("returnTo",answerTo.flattenToString());
         } catch (JSONException e) {
             e.printStackTrace();
             Toast.makeText(getApplicationContext(), getString(R.string.message_manager_error), Toast.LENGTH_LONG).show();
-            return false;
+            return;
         }
         Intent i = new Intent(Intent.ACTION_VIEW);
         i.setComponent(ComponentName.unflattenFromString(Constants.packageMain));
@@ -72,10 +57,5 @@ public class ScriptImporter extends Service{
         i.putExtra("a", 35);
         i.putExtra("d", Constants.id + "/" + data.toString());
         startActivity(i);
-        return true;
-    }
-
-    public interface Listener{
-        public void onFinish(int id);
     }
 }

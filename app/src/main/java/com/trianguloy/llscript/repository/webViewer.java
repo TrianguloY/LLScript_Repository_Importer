@@ -7,13 +7,11 @@ import android.content.ComponentName;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
-import android.content.ServiceConnection;
 import android.content.SharedPreferences;
 import android.net.Uri;
 import android.net.http.HttpResponseCache;
 import android.os.Build;
 import android.os.Bundle;
-import android.os.IBinder;
 import android.text.Html;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -322,19 +320,11 @@ public class webViewer extends Activity {
         final int flags = (flagsBoxes[0].isChecked() ? Constants.FLAG_APP_MENU : 0) +
                 (flagsBoxes[1].isChecked() ? Constants.FLAG_ITEM_MENU : 0) +
                 (flagsBoxes[2].isChecked() ? Constants.FLAG_CUSTOM_MENU : 0);
-        bindService(new Intent(this,ScriptImporter.class), new ServiceConnection() {
-            @Override
-            public void onServiceConnected(ComponentName name, IBinder service) {
-                ScriptImporter importService = ((ScriptImporter.LocalBinder)service).getService(getApplicationContext());
-                importService.installScript(code,scriptName,flags,null);
-                unbindService(this);
-            }
-
-            @Override
-            public void onServiceDisconnected(ComponentName name) {
-                    /**/
-            }
-        }, BIND_AUTO_CREATE);
+        Intent intent = new Intent(this,ScriptImporter.class);
+        intent.putExtra("code",code);
+        intent.putExtra("name",scriptName);
+        intent.putExtra("flags",flags);
+        startService(intent);
     }
 
     void display() {

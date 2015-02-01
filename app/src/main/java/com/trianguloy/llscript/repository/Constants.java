@@ -29,7 +29,7 @@ public class Constants {
     static final String INTENT_EXTRA_DELETE_AFTER_EXECUTION = "d";
 
     //App constants
-    public static final int managerVersion = 8; //TODO: get this version directly from the raw file
+    public static final int managerVersion = 10; //TODO: get this version directly from the raw file
     static final int notId = -1;
 
     //WebViewer constants

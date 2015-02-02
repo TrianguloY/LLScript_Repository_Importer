@@ -19,6 +19,7 @@
     <string name="button_exit">Exit</string>
     <string name="button_no">@android:string/no</string>
     <string name="button_ok">@android:string/ok</string>
+    <string name="button_retry">Retry</string>
     <string name="button_inject_from_launcher">Load from Launcher</string>
     <string name="button_inject_root">Load with root (Automatic)</string>
     <string name="button_import">Import into LL</string>

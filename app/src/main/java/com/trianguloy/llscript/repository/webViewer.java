@@ -339,7 +339,7 @@ public class webViewer extends Activity {
         new AlertDialog.Builder(this)
                 .setTitle(getString(R.string.title_noPageFound))
                 .setMessage(getString(R.string.message_noPageFound))
-                .setPositiveButton(getString(R.string.button_ok), new DialogInterface.OnClickListener() {
+                .setPositiveButton(R.string.button_retry, new DialogInterface.OnClickListener() {
                     public void onClick(DialogInterface dialog, int which) {
                         new DownloadTask(downloadTaskListener).execute(url);
                     }
@@ -528,12 +528,13 @@ public class webViewer extends Activity {
 
         //name
         text.append("//Name: ")
-                .append(nameText.getText().toString())
-                .append("\n");
+                .append(nameText.getText())
+                .append("\n")
+                .append(contentText.getText());
 
         Intent share = new Intent(Intent.ACTION_SEND);
         share.setType("text/plain");
-        share.putExtra(Intent.EXTRA_TEXT,contentText.getText().toString());
+        share.putExtra(Intent.EXTRA_TEXT,text.toString());
         startActivity(Intent.createChooser(share,"Send to..."));
     }
 

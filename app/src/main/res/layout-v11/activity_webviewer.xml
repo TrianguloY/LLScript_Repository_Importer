@@ -22,7 +22,7 @@
         android:id="@+id/button"
         android:onClick="startImport"
         android:visibility="gone"
-        android:textSize="35sp"
+        android:textSize="25sp"
         android:layout_alignParentRight="false"
         android:layout_alignParentEnd="true"
         android:layout_alignParentBottom="true"

@@ -30,17 +30,18 @@ public class ScriptImporter extends Service{
         if(intent.hasExtra("update")&&intent.getBooleanExtra("update",false))updateManager();
         else if(intent.hasExtra("code")&&intent.hasExtra("name")){
             ComponentName componentName = intent.hasExtra("receiver")?ComponentName.unflattenFromString(intent.getStringExtra("receiver")):null;
+            boolean forceUpdate = intent.getBooleanExtra("forceUpdate",false);
             if(componentName == null){
                 componentName = new ComponentName(this,webViewer.class);
             }
-            installScript(intent.getStringExtra("code"),intent.getStringExtra("name"),intent.getIntExtra("flags",0),componentName);
+            installScript(intent.getStringExtra("code"),intent.getStringExtra("name"),intent.getIntExtra("flags",0),componentName,forceUpdate);
         }
         stopSelf();
         return super.onStartCommand(intent,flags,startId);
     }
 
 
-    void installScript(String code, String name, int flags, ComponentName answerTo) {
+    void installScript(String code, String name, int flags, ComponentName answerTo,boolean forceUpdate) {
         if (Constants.id == -1) return;
         JSONObject data = new JSONObject();
         try {
@@ -49,6 +50,7 @@ public class ScriptImporter extends Service{
             data.put("name", name);
             data.put("flags", flags);
             data.put("returnTo",answerTo.flattenToString());
+            data.put("forceUpdate",forceUpdate);
         } catch (JSONException e) {
             e.printStackTrace();
             Toast.makeText(getApplicationContext(), getString(R.string.message_manager_error), Toast.LENGTH_LONG).show();

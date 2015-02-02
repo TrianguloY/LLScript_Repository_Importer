@@ -4,13 +4,13 @@ Don't change the name of this script, it will allow to update it without creatin
 */
 
 //IMPORTANT: don't change this variable
-var version = 11;
+var version = 13;
 
 var data=LL.getEvent().getData();
 if(data!=null)data=JSON.parse(data);
 
 var intent=new Intent("android.intent.action.MAIN");
-intent.setClassName("com.trianguloy.llscript.repository","com.trianguloy.llscript.repository.webViewer");
+intent.setComponent(ComponentName.unflattenFromString("com.trianguloy.llscript.repository/com.trianguloy.llscript.repository.webViewer"));
 intent.addFlags(Intent.FLAG_ACTIVITY_REORDER_TO_FRONT);
 
 if(data==null){
@@ -61,7 +61,7 @@ if(data.update!=null){
         toast="Script already imported, nothing changed";
     }else{
     //same name, different code
-        if(confirm("There is a script with the same name but different code. Do you want to update it?")){
+        if(data.forceUpdate || confirm("There is a script with the same name but different code. Do you want to update it?")){
         //update
             match.setText(data.code);
             toast="Script updated";

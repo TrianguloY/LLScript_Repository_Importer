@@ -25,17 +25,18 @@ class DownloadTask extends AsyncTask<String, Void, String> {
         try {
             connection = (HttpURLConnection) new URL(urls[0]).openConnection();
             connection.setUseCaches(true);
+            StringBuilder builder = new StringBuilder();
             try {
-                StringBuilder builder = new StringBuilder();
                 byte[] buff = new byte[2048];
                 BufferedInputStream input = new BufferedInputStream(connection.getInputStream());
                 int count;
                 while ((count = input.read(buff)) > 0) {
                     builder.append(new String(buff, 0, count));
                 }
-                return builder.toString().trim();
-            } finally {
+            } finally {//Is necessary a 'finally' statement here? 
                 connection.disconnect();
+                if(builder.length()==0)return null;
+                return builder.toString().trim();
             }
         } catch (IOException e) {
             e.printStackTrace();
@@ -45,11 +46,16 @@ class DownloadTask extends AsyncTask<String, Void, String> {
 
     @Override
     protected void onPostExecute(String result) {
-        listener.onFinish(result);
+        if(result!=null){
+            listener.onFinish(result);
+        }else{
+            listener.onError();
+        }
 
     }
 
     public interface Listener {
         public void onFinish(String result);
+        public void onError();//Note to Lukas from TrianguloY: I think I made this 'no page found' right, but all this code is advanced, please check it and change it if necessary
     }
 }

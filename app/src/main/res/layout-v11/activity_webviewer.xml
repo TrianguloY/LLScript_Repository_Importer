@@ -20,7 +20,7 @@
         android:layout_height="wrap_content"
         android:text="@string/button_import"
         android:id="@+id/button"
-        android:onClick="buttonOnClick"
+        android:onClick="startImport"
         android:visibility="gone"
         android:textSize="35sp"
         android:layout_alignParentRight="false"

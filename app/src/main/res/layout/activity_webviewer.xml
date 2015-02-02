@@ -14,15 +14,15 @@
         android:layout_alignParentStart="true"
         android:layout_above="@+id/button"
         android:layout_alignParentTop="true" />
-
+    <!-- Why the size of the button is not changed??? -->
     <Button
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:text="@string/button_import"
         android:id="@+id/button"
-        android:onClick="buttonOnClick"
-        android:visibility="gone"
-        android:textSize="35sp"
+        android:onClick="startImport"
+        android:visibility="visible"
+        android:textSize="25sp"
         android:layout_alignParentRight="false"
         android:layout_alignParentEnd="true"
         android:layout_alignParentBottom="true"

@@ -2,11 +2,21 @@
     xmlns:tools="http://schemas.android.com/tools"
     tools:context="trianguloy.llscript.repository/.webViewer">
     <item android:id="@+id/action_mainPage" android:title="@string/action_main_page"
-        android:orderInCategory="100" android:showAsAction="never" />
+        android:orderInCategory="100" android:showAsAction="always" android:icon="@drawable/ic_menu_home"/>
+
+    <item android:id="@+id/action_openInBrowser" android:title="@string/action_openInBrowser"
+        android:orderInCategory="100" android:showAsAction="never"/>
+
+    <item android:id="@+id/action_linkPlayStore" android:title="@string/action_linkPlayStore"
+        android:orderInCategory="100" android:showAsAction="never"/>
+
+    <item android:id="@+id/action_linkGooglePlus" android:title="@string/action_linkGooglePlus"
+        android:orderInCategory="100" android:showAsAction="never"/>
 
     <item android:id="@+id/action_id" android:title=""
         android:orderInCategory="100" android:showAsAction="never"/>
 
     <item android:id="@+id/action_reset" android:title="@string/action_reset"
         android:orderInCategory="100" android:showAsAction="never"/>
+
 </menu>

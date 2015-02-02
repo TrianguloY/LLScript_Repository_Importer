@@ -9,8 +9,11 @@
     <string name="script_name">Repository importer</string>
 
     <!-- menu -->
-    <string name="action_main_page">Main Page</string>
+    <string name="action_main_page">Repository Index</string>
     <string name="action_reset">Reset</string>
+    <string name="action_linkPlayStore">Play store page</string>
+    <string name="action_linkGooglePlus">Google+ post (help)</string>
+    <string name="action_openInBrowser">Open in browser</string>
     <!-- buttons -->
     <string name="button_cancel">@android:string/cancel</string>
     <string name="button_exit">Exit</string>
@@ -18,7 +21,7 @@
     <string name="button_ok">@android:string/ok</string>
     <string name="button_inject_from_launcher">Load from Launcher</string>
     <string name="button_inject_root">Load with root (Automatic)</string>
-    <string name="button_import">Import script</string>
+    <string name="button_import">Import into LL</string>
     <!-- flags -->
     <string name="flag_alert_menu">Lightning menu</string>
     <string name="flag_alert_item">Item menu</string>
@@ -36,6 +39,7 @@
     <string name="message_more_than_one_script">Found more than one Script on this page, please choose one</string>
     <string name="message_no_script_found">No script found. If you know that there is one, contact the developer</string>
     <string name="message_root_load_failed">Action failed. Maybe your device isn\'t rooted. If you know that your device is rooted and you see this message for the first time, please retry. Otherwise load with another method</string>
+    <string name="message_noPageFound">The page couldn\'t be loaded. Make sure you have an active conection and try again in some minutes</string>
     <!--texts and titles -->
     <string name="text_script_name">Name:</string>
     <string name="text_script_code">Source Code:</string>
@@ -43,10 +47,12 @@
     <string name="title_activity">Repository Importer</string>
     <string name="title_importer">Script Importer</string>
     <string name="title_external_page">External page</string>
+    <string name="title_noPageFound">No page found</string>
 
     <!-- permission strings -->
     <string name="permission_description">Allows to import scripts into LL without User confirmation</string>
     <string name="permission_name">net.pierrox.lightning_launcher.IMPORT_SCRIPTS</string>
     <string name="permission_label">LL Import Scripts</string>
+
 
 </resources>

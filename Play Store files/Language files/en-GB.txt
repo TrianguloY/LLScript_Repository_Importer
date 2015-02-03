@@ -1,0 +1,23 @@
+_Title_
+Repository Importer - LLScript
+
+
+
+_Short description_
+Utility to import scripts from the repository to Lightning Launcher with a click
+
+
+
+_Complete description_
+*********
+You need to have Lightning Launcher installed for this to work correctly.
+https://play.google.com/store/apps/details?id=net.pierrox.lightning_launcher_extreme
+*********
+
+This app consist of a web viewer that lets you navigate through the wiki script repository of Lightning Launcher. When you are on a script page, click the download button and import it (optionally send it as text)
+
+An app made by Lukas Morawietz and TrianguloY.
+[Insert Google+ link here]
+
+You can check the source code here: 
+https://github.com/TrianguloY/LLScript_Repository_Importer

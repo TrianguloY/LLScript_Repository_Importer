@@ -50,6 +50,6 @@ public class Constants {
 
 
     //other Html links (to set when published)
-    static final String linkPlaystore = "";
-    static final String linkGoogleplus = "";
+    static final String linkPlaystore = "https://play.google.com/store/apps/details?id=com.trianguloy.llscript.repository";
+    static final String linkGoogleplus = "https://plus.google.com/communities/109017480579703391739";
 }

@@ -59,7 +59,7 @@ public class webViewer extends Activity {
 
 
 
-    //Application functions: onCreate
+    //Application functions
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -151,7 +151,7 @@ public class webViewer extends Activity {
 
         }else if (!close) {
             //Press back while the toast is still displayed to close
-            Toast.makeText(getApplicationContext(), getString(R.string.message_back_to_close), Toast.LENGTH_SHORT).show();
+            Toast.makeText(getApplicationContext(),R.string.message_back_to_close, Toast.LENGTH_SHORT).show();
             close = true;
             new Timer().schedule(new TimerTask() {
                 @Override
@@ -194,7 +194,7 @@ public class webViewer extends Activity {
             public void onFinish(String result) {
                 //default listener: show the page after loading it
                 currentHtml = result;
-                if(currentUrl.equals(Constants.pageMain)&&repoHtml=="")repoHtml=result;
+                if(currentUrl.equals(Constants.pageMain)&& repoHtml.equals(""))repoHtml=result;
                 progressBar.setVisibility(View.GONE);
                 display();
             }
@@ -258,12 +258,8 @@ public class webViewer extends Activity {
         //notify user that import was successful. Run in onCreate when received the data
         new AlertDialog.Builder(this)
                 .setTitle("")
-                .setMessage(getString(R.string.message_manager_loaded))
-                .setNeutralButton(getString(R.string.button_ok), new DialogInterface.OnClickListener() {
-                    public void onClick(DialogInterface dialog, int which) {
-                        dialog.dismiss();
-                    }
-                })
+                .setMessage(R.string.message_manager_loaded)
+                .setNeutralButton(R.string.button_ok, null)
                 .setIcon(R.drawable.ic_launcher)
                 .show();
     }
@@ -305,7 +301,7 @@ public class webViewer extends Activity {
         //ets the visibility of the button and the title of the app
         if(currentUrl.equals(Constants.pageMain)){
             button.setVisibility(View.GONE);
-            setTitle(getString(R.string.action_main_page));
+            setTitle(R.string.action_main_page);
         }else{
             button.setVisibility(View.VISIBLE);
             setTitle(currentUrl.substring(Constants.pagePrefix.length()));
@@ -316,20 +312,16 @@ public class webViewer extends Activity {
     void showExternalPageLinkClicked(final String url){
         //When the clicked page is not useful for this app
         new AlertDialog.Builder(this)
-                .setTitle(getString(R.string.title_external_page))
-                .setMessage(getString(R.string.message_external_page))
-                .setPositiveButton(getString(R.string.button_ok), new DialogInterface.OnClickListener() {
+                .setTitle(R.string.title_external_page)
+                .setMessage(R.string.message_external_page)
+                .setPositiveButton(R.string.button_ok, new DialogInterface.OnClickListener() {
                     public void onClick(DialogInterface dialog, int which) {
                         Intent i = new Intent(Intent.ACTION_VIEW);
                         i.setData(Uri.parse(url));
                         startActivity(i);
                     }
                 })
-                .setNegativeButton(getString(R.string.button_no), new DialogInterface.OnClickListener() {
-                    public void onClick(DialogInterface dialog, int which) {
-                        /* */
-                    }
-                })
+                .setNegativeButton(R.string.button_no, null)
                 .setIcon(R.drawable.ic_launcher)
                 .show();
     }
@@ -337,14 +329,14 @@ public class webViewer extends Activity {
     void showNoPageLoaded(final String url){
         //When the page couldn't be loaded
         new AlertDialog.Builder(this)
-                .setTitle(getString(R.string.title_noPageFound))
-                .setMessage(getString(R.string.message_noPageFound))
+                .setTitle(R.string.title_noPageFound)
+                .setMessage(R.string.message_noPageFound)
                 .setPositiveButton(R.string.button_retry, new DialogInterface.OnClickListener() {
                     public void onClick(DialogInterface dialog, int which) {
                         new DownloadTask(downloadTaskListener).execute(url);
                     }
                 })
-                .setNegativeButton(getString(R.string.button_exit), new DialogInterface.OnClickListener() {
+                .setNegativeButton(R.string.button_exit, new DialogInterface.OnClickListener() {
                     public void onClick(DialogInterface dialog, int which) {
                         finish();
                     }
@@ -426,21 +418,15 @@ public class webViewer extends Activity {
     void showMoreThanOneScriptFound(final String[] names,final Integer[] starts, final Integer[] ends){
         //More than one script found select one of them to import
         new AlertDialog.Builder(this)
+                .setTitle(R.string.message_more_than_one_script)
+                .setIcon(R.drawable.ic_launcher)
                 .setSingleChoiceItems(names, android.R.layout.simple_list_item_single_choice, new DialogInterface.OnClickListener() {
                     public void onClick(DialogInterface dialog, int which) {
                         dialog.dismiss();
                         showImportScript(currentHtml.substring(starts[which], ends[which]), names[which]);
                     }
                 })
-                .setNegativeButton(getString(R.string.button_cancel), new DialogInterface.OnClickListener() {
-                    @Override
-                    public void onClick(DialogInterface dialog, int which) {
-                        dialog.cancel();
-                    }
-                })
-                .setCancelable(true)
-                .setTitle(getString(R.string.message_more_than_one_script))
-                .setIcon(R.drawable.ic_launcher)
+                .setNegativeButton(R.string.button_cancel, null)
                 .show();
     }
 
@@ -466,13 +452,10 @@ public class webViewer extends Activity {
                 (CheckBox) layout.findViewById(R.id.checkBox3)};
 
         new AlertDialog.Builder(this)
-                .setView(layout)
-                .setTitle(getString(R.string.title_importer))
-                .setNegativeButton(getString(R.string.button_exit), new DialogInterface.OnClickListener() {
-                    public void onClick(DialogInterface dialog, int which) {/* */}
-                })
+                .setTitle(R.string.title_importer)
                 .setIcon(R.drawable.ic_launcher)
-                .setPositiveButton(getString(R.string.button_import), new DialogInterface.OnClickListener() {
+                .setView(layout)
+                .setPositiveButton(R.string.button_import, new DialogInterface.OnClickListener() {
                     public void onClick(DialogInterface dialog, int which) {
                         sendScriptToLauncher(contentText, nameText, flagsBoxes);
                     }
@@ -482,15 +465,23 @@ public class webViewer extends Activity {
                         shareAsText(contentText,nameText,flagsBoxes);
                     }
                 })
+                .setNegativeButton(R.string.button_exit, null)
                 .show();
     }
 
     void showNoScriptFound(){
         //alert to show that no script is found
         new AlertDialog.Builder(this)
-                .setTitle(getString(R.string.title_importer))
-                .setNegativeButton(getString(R.string.button_exit), new DialogInterface.OnClickListener() {
-                    public void onClick(DialogInterface dialog, int which) {/* */}
+                .setTitle(R.string.title_importer)
+                .setNegativeButton(R.string.button_exit,null)/* new DialogInterface.OnClickListener() {
+                    public void onClick(DialogInterface dialog, int which) {}
+                })*/
+                .setPositiveButton(R.string.action_linkGooglePlus, new DialogInterface.OnClickListener() {
+                    public void onClick(DialogInterface dialog, int which) {
+                        Intent j = new Intent(Intent.ACTION_VIEW);
+                        j.setData(Uri.parse(Constants.linkGoogleplus));
+                        startActivity(j);
+                    }
                 })
                 .setIcon(R.drawable.ic_launcher)
                 .setMessage(R.string.message_no_script_found)

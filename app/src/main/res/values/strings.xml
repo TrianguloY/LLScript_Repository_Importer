@@ -40,7 +40,7 @@
     <string name="message_more_than_one_script">Found more than one Script on this page, please choose one</string>
     <string name="message_no_script_found">No script found. If you know that there is one, contact the developer</string>
     <string name="message_root_load_failed">Action failed. Maybe your device isn\'t rooted. If you know that your device is rooted and you see this message for the first time, please retry. Otherwise load with another method</string>
-    <string name="message_noPageFound">The page couldn\'t be loaded. Make sure you have an active conection and try again in some minutes</string>
+    <string name="message_noPageFound">The page couldn\'t be loaded. Make sure you have an active connection or try again in some minutes</string>
     <!--texts and titles -->
     <string name="text_script_name">Name:</string>
     <string name="text_script_code">Source Code:</string>
@@ -52,7 +52,6 @@
 
     <!-- permission strings -->
     <string name="permission_description">Allows to import scripts into LL without User confirmation</string>
-    <string name="permission_name">net.pierrox.lightning_launcher.IMPORT_SCRIPTS</string>
     <string name="permission_label">LL Import Scripts</string>
 
 

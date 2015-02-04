@@ -50,7 +50,7 @@
             android:label="@string/title_activity"
             android:excludeFromRecents="true"
             android:exported="true"
-            android:permission="@string/permission_name">
+            android:permission="net.pierrox.lightning_launcher.IMPORT_SCRIPTS">
             <intent-filter>
                 <action android:name="net.pierrox.lightning_launcher.script.IMPORT"/>
                 <category android:name="android.intent.category.DEFAULT"/>

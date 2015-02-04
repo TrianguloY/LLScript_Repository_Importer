@@ -98,8 +98,8 @@ public class webViewer extends Activity {
     public boolean onCreateOptionsMenu(Menu menu) {
         // Inflate the menu; this adds items to the action bar if it is present.
         getMenuInflater().inflate(R.menu.menu_webviewer, menu);
-        menu.findItem(R.id.action_id).setTitle("id: " + (Constants.id != Constants.notId ? Constants.id : "not found")).setEnabled(BuildConfig.DEBUG);
-        menu.findItem(R.id.action_reset).setEnabled(BuildConfig.DEBUG);
+        menu.findItem(R.id.action_id).setTitle("id: " + (Constants.id != Constants.notId ? Constants.id : "not found")).setVisible(BuildConfig.DEBUG);
+        menu.findItem(R.id.action_reset).setVisible(BuildConfig.DEBUG);
 
         return true;
     }
@@ -460,7 +460,7 @@ public class webViewer extends Activity {
                         sendScriptToLauncher(contentText, nameText, flagsBoxes);
                     }
                 })
-                .setNeutralButton("send", new DialogInterface.OnClickListener() {
+                .setNeutralButton(R.string.button_share, new DialogInterface.OnClickListener() {
                     public void onClick(DialogInterface dialog, int which) {
                         shareAsText(contentText,nameText,flagsBoxes);
                     }

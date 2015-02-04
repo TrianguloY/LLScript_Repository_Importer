@@ -23,6 +23,7 @@
     <string name="button_inject_from_launcher">Load from Launcher</string>
     <string name="button_inject_root">Load with root (Automatic)</string>
     <string name="button_import">Import into LL</string>
+    <string name="button_share">share</string>
     <!-- flags -->
     <string name="flag_alert_menu">Lightning menu</string>
     <string name="flag_alert_item">Item menu</string>

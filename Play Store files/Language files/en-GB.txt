@@ -12,12 +12,25 @@ _Complete description_
 *********
 You need to have Lightning Launcher installed for this to work correctly.
 https://play.google.com/store/apps/details?id=net.pierrox.lightning_launcher_extreme
+
 *********
 
-This app consist of a web viewer that lets you navigate through the wiki script repository of Lightning Launcher. When you are on a script page, click the download button and import it (optionally send it as text)
+This app consists of a web viewer that lets you navigate through the wiki script repository of Lightning Launcher. When you are on a script page, click the download button and import it (optionally send it as text)
 
 An app made by Lukas Morawietz and TrianguloY.
-[Insert Google+ link here]
+
+Google+ page of Lightning Launcher
+https://plus.google.com/communities/109017480579703391739
 
 You can check the source code here: 
 https://github.com/TrianguloY/LLScript_Repository_Importer
+
+
+
+_Changes_
+V 1.1 (not published yet)
+Remove the Debug items instead of disabling them
+'share' instead of 'send'
+
+V 1.0
+Published on Play Store

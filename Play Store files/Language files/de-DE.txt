@@ -4,7 +4,7 @@ Repository Importer - LLScript
 
 
 _Short description_
-Mit diesem Tool können sie Scripts mit nur einem Klick in Lightning Launcher importieren
+Importieren Sie Scripts mit nur einem Klick in Lightning Launcher
 
 
 

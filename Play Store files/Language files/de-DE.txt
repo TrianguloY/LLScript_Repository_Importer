@@ -31,7 +31,7 @@ _Changes_
 V 1.2
 WICHTIG: Durch eine Änderung an der internen Datenstruktur muss das Script erneut (wie beim ersten Mal) geladen werden
 Sie können nun Links auf das Wiki von außerhalb in der App öffnen
-Neu: Drücken Sie lange zurück, um ide App zu beenden
+Neu: Drücken Sie lange zurück, um die App zu beenden
 
 V 1.1
 Debug Menüpunkte versteckt statt deaktiviert

@@ -4,14 +4,13 @@ Don't change the name of this script, it will allow to update it without creatin
 */
 
 //IMPORTANT: don't change this variable
-var version = 13;
+var version = 14;
 
 var data=LL.getEvent().getData();
 if(data!=null)data=JSON.parse(data);
 
 var intent=new Intent("android.intent.action.MAIN");
 intent.setComponent(ComponentName.unflattenFromString("com.trianguloy.llscript.repository/com.trianguloy.llscript.repository.webViewer"));
-intent.addFlags(Intent.FLAG_ACTIVITY_REORDER_TO_FRONT);
 
 if(data==null){
     //Send the id to the importer app
@@ -43,7 +42,6 @@ if(data.update!=null){
 
 }else{
 //all ok, create script
-    intent.addFlags(Intent.FLAG_ACTIVITY_SINGLE_TOP);//To open the app without loading it again
     var toast="";
     var scripts=LL.getAllScriptMatching(Script.FLAG_ALL);
     var match=null;

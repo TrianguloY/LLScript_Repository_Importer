@@ -12,6 +12,7 @@ import android.net.http.HttpResponseCache;
 import android.os.Build;
 import android.os.Bundle;
 import android.text.Html;
+import android.view.KeyEvent;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -43,19 +44,24 @@ import java.util.TimerTask;
 
 public class webViewer extends Activity {
 
+    //Elements
     private WebView webView; //webView element
     private Button button; //button element
     private ProgressBar progressBar;
+
+    //User vars
     private SharedPreferences sharedPref;//user saved data (used to save the id of the script manager)
 
+    //Callbacks
     private Boolean close = false; //if pressing back will close or not
+    private Boolean finish = false; //Used in onNewIntent as a callback
 
     //Web view data
     private String repoHtml = "";//source code of the repository, used to get the name of the scripts
     private String currentHtml = "";//source code of the current page
     private String currentUrl = "";//The URL of the current page
     private Stack<String> backStack;//contains the history of the views pages
-    private DownloadTask.Listener downloadTaskListener; //default downloadTaskListener
+    private DownloadTask.Listener downloadTaskListener=null; //default downloadTaskListener
 
 
 
@@ -67,31 +73,55 @@ public class webViewer extends Activity {
         //initialize variables
         sharedPref = getPreferences(Context.MODE_PRIVATE);
         Constants.id = sharedPref.getInt("id", Constants.notId);
+        backStack = new Stack<>();
+        currentUrl = Constants.pageMain;
 
-        //Get the intent and data
-        Intent intent = getIntent();
-        int getid = (int) intent.getDoubleExtra("id", Constants.notId); //The returned id
+        //parse the Intent
+        onNewIntent(getIntent());
 
-        if (getid != Constants.notId && getid != Constants.id) {
-            //new manager loaded
-            sharedPref.edit().putInt("id", getid).apply();//id of the manager script
-            Constants.id = getid;
-            showLoadSuccessful();
+        if(finish){
+            finish();//Callback to finish the activity
+            return;
+        }
+
+        if (Constants.id == Constants.notId) {
+            //manager not loaded
+            startActivity(new Intent(this, noManager.class));
+            finish();
+        }else{
+            //Normal activity
             initializeWeb();
+        }
+    }
 
+    @Override
+    protected void onNewIntent(Intent intent){
+        //manages the received intent, run automatically when the activity is running and is called again
+        if (intent.hasExtra("id")) {
+            int getId = (int) intent.getDoubleExtra("id", Constants.notId); //The returned id
+            if(getId!=Constants.id){
+                //new manager loaded
+                sharedPref.edit().putInt("id", getId).apply();//id of the manager script
+                Constants.id = getId;
+                showLoadSuccessful();
+            }
         }else if (intent.hasExtra("update")) {
             //The manager asks for the updated script
             sendUpdate();
-            finish();
+        }else if (intent.getAction().equalsIgnoreCase(Intent.ACTION_VIEW)){
+            String getUrl=intent.getDataString();
+            if(getUrl.startsWith(Constants.pagePrefix)){
+                changePage(getUrl);
+            }else{
+                Toast.makeText(getApplicationContext(),getString(R.string.message_badString),Toast.LENGTH_LONG).show();
+                moveTaskToBack(true);
+                finish=true;
+            }
+        }
 
-        }else if (Constants.id == Constants.notId) {
-            //manager not loaded
-            startActivity(new Intent(this,noManager.class));
-            finish();
+        setIntent(new Intent(this,webViewer.class));
 
-        }else
-            //Normal activity
-            initializeWeb();
+        super.onNewIntent(intent);
     }
 
     @Override
@@ -144,10 +174,14 @@ public class webViewer extends Activity {
 
     @Override
     public void onBackPressed(){
-        if (!backStack.empty()) {
+        if (!currentUrl.equals(Constants.pageMain)) {
             //not on the home page
-            currentUrl = backStack.pop();
-            changePage(currentUrl);
+            if(!backStack.empty()){
+                currentUrl = backStack.pop();
+                changePage(currentUrl);
+            }else{
+                changePage(Constants.pageMain);
+            }
 
         }else if (!close) {
             //Press back while the toast is still displayed to close
@@ -166,6 +200,16 @@ public class webViewer extends Activity {
     }
 
     @Override
+    public boolean onKeyLongPress(int keyCode, KeyEvent event) {
+        if (keyCode == KeyEvent.KEYCODE_BACK)
+        {
+            finish();
+            return true;
+        }
+        return super.onKeyLongPress(keyCode, event);
+    }
+
+    @Override
     protected void onStop() {
         if (Build.VERSION.SDK_INT >= 14) {
             HttpResponseCache cache = HttpResponseCache.getInstalled();
@@ -177,7 +221,6 @@ public class webViewer extends Activity {
     }
 
 
-
     //Initialization
     void initializeWeb(){
         //Main Activity. Run on onCreate when normal launch
@@ -187,20 +230,27 @@ public class webViewer extends Activity {
         button = (Button) findViewById(R.id.button);
         webView = (WebView) findViewById(R.id.webView);
         progressBar = (ProgressBar)findViewById(R.id.progressBar);
-        backStack = new Stack<>();
-        currentUrl = Constants.pageMain;
         downloadTaskListener = new DownloadTask.Listener() {
             @Override
             public void onFinish(String result) {
                 //default listener: show the page after loading it
                 currentHtml = result;
-                if(currentUrl.equals(Constants.pageMain)&& repoHtml.equals(""))repoHtml=result;
+                if(currentUrl.equals(Constants.pageMain)&& repoHtml.equals("")){
+                    repoHtml=result;
+                    /* //Currently broken. It was a way to alert if the page was different. But the page has a custom backstack, so it makes false positives
+                    if(sharedPref.contains("repoHash")&&sharedPref.getInt("repoHash",0)!=result.hashCode()) {
+                        Toast.makeText(getApplicationContext(),"The repository Page has changed since your last visit",Toast.LENGTH_SHORT).show();
+                    }
+                    sharedPref.edit().putInt("repoHash",result.hashCode()).apply();
+                    */
+                }
                 progressBar.setVisibility(View.GONE);
                 display();
             }
 
             @Override
             public void onError(){
+                progressBar.setVisibility(View.GONE);
                 showNoPageLoaded(currentUrl);
             }
         };
@@ -250,12 +300,12 @@ public class webViewer extends Activity {
                 e.printStackTrace();
             }
         }
-        //load and show the repository
-        new DownloadTask(downloadTaskListener).execute(Constants.pageMain);
+
+        changePage(currentUrl);
     }
 
     void showLoadSuccessful(){
-        //notify user that import was successful. Run in onCreate when received the data
+        //notify user that import was successful.
         new AlertDialog.Builder(this)
                 .setTitle("")
                 .setMessage(R.string.message_manager_loaded)
@@ -275,16 +325,27 @@ public class webViewer extends Activity {
     //webView functions
     void changePage(String url) {
         //Change the page of the webView to the passed one
+        if(downloadTaskListener==null){
+            //The activity is not yet loaded. The url is kept as the currentUrl, so it gets loaded when the activity do so
+            currentUrl=url;
+            return;
+        }
+
         if (url.equals(Constants.pageMain)) {
             //main page
             currentUrl = url;
-            currentHtml = repoHtml;
             backStack.clear();
-            display();
+
+            if(repoHtml.equals("")){
+                new DownloadTask(downloadTaskListener).execute(url);
+            }else{
+                currentHtml = repoHtml;
+                display();
+            }
         }
         else if (url.startsWith(Constants.pagePrefix)) {
             // script page
-            backStack.push(currentUrl);
+            if(currentUrl!=url)backStack.push(currentUrl);
             currentUrl = url;
             progressBar.setVisibility(View.VISIBLE);
             new DownloadTask(downloadTaskListener).execute(url);
@@ -328,11 +389,13 @@ public class webViewer extends Activity {
 
     void showNoPageLoaded(final String url){
         //When the page couldn't be loaded
+        progressBar.setVisibility(View.GONE);
         new AlertDialog.Builder(this)
                 .setTitle(R.string.title_noPageFound)
                 .setMessage(R.string.message_noPageFound)
                 .setPositiveButton(R.string.button_retry, new DialogInterface.OnClickListener() {
                     public void onClick(DialogInterface dialog, int which) {
+                        progressBar.setVisibility(View.VISIBLE);
                         new DownloadTask(downloadTaskListener).execute(url);
                     }
                 })
@@ -342,6 +405,7 @@ public class webViewer extends Activity {
                     }
                 })
                 .setIcon(R.drawable.ic_launcher)
+                .setCancelable(false)
                 .show();
     }
 

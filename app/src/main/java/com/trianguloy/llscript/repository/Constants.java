@@ -30,7 +30,7 @@ public class Constants {
 
     //App constants
     static final int notId = -1;
-    static public final int managerVersion = 13; //TODO: get this version directly from the raw file
+    static public final int managerVersion = 14; //TODO: get this version directly from the raw file
 
     //WebViewer constants
     static final String pageMain = "http://www.pierrox.net/android/applications/lightning_launcher/wiki/doku.php?id=script_repository";

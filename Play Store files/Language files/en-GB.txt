@@ -28,7 +28,7 @@ https://github.com/TrianguloY/LLScript_Repository_Importer
 
 _Changes_
 V 1.2
-IMPORTANT: Due to a slighty different way of saving the data, the manager needs to be loaded again. Just follow the steps as the first time
+IMPORTANT: Due to a slightly different way of saving the data, the manager needs to be loaded again. Just follow the steps as the first time
 You can now open links related from the repository whith the app
 Added long-press back button to close
 

@@ -28,6 +28,11 @@ https://github.com/TrianguloY/LLScript_Repository_Importer
 
 
 _Changes_
+V 1.2
+IMPORTANTE: Debido a un ligero cambio en la manera en la que se guardan los datos, el Manager script necesita ser cargado de nuevo. Simplemente sigue los pasos como la primera vez
+Ahora puedes abrir enlaces relativos al repositorio directamente en la aplicación
+Añadida pulsación larga en el botón de atras para cerrar
+
 V 1.1
 Quitados los menus de desarrollo en lugar de inhabilitarlos
 'share' en lugar de 'send'

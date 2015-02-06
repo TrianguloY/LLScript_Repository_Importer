@@ -109,7 +109,7 @@ public class webViewer extends Activity {
         }else if (intent.hasExtra("update")) {
             //The manager asks for the updated script
             sendUpdate();
-        }else if (intent.getAction().equalsIgnoreCase(Intent.ACTION_VIEW)){
+        }else if (intent.getAction()!=null && intent.getAction().equalsIgnoreCase(Intent.ACTION_VIEW)){
             String getUrl=intent.getDataString();
             if(getUrl.startsWith(Constants.pagePrefix)){
                 changePage(getUrl);

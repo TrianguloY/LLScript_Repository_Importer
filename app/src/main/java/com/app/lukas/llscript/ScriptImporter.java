@@ -3,7 +3,9 @@ package com.app.lukas.llscript;
 import android.app.Service;
 import android.content.ComponentName;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.IBinder;
+import android.preference.PreferenceManager;
 import android.widget.Toast;
 
 import com.trianguloy.llscript.repository.Constants;
@@ -20,6 +22,8 @@ import org.json.JSONObject;
  */
 public class ScriptImporter extends Service{
 
+    private int id = -1;
+
     @Override
     public IBinder onBind(Intent intent) {
         return null;
@@ -27,6 +31,10 @@ public class ScriptImporter extends Service{
 
     @Override
     public int onStartCommand(Intent intent, int flags, int startId) {
+        //initialize variables
+        SharedPreferences sharedPref = PreferenceManager.getDefaultSharedPreferences(getApplicationContext());
+        id = sharedPref.getInt("id", Constants.notId);
+
         if(intent.hasExtra("update")&&intent.getBooleanExtra("update",false))updateManager();
         else if(intent.hasExtra("code")&&intent.hasExtra("name")){
             ComponentName componentName = intent.hasExtra("receiver")?ComponentName.unflattenFromString(intent.getStringExtra("receiver")):null;
@@ -42,7 +50,7 @@ public class ScriptImporter extends Service{
 
 
     void installScript(String code, String name, int flags, ComponentName answerTo,boolean forceUpdate) {
-        if (Constants.id == -1) return;
+        if (id == -1) return;
         JSONObject data = new JSONObject();
         try {
             data.put("version", Constants.managerVersion);
@@ -77,7 +85,7 @@ public class ScriptImporter extends Service{
         i.setComponent(ComponentName.unflattenFromString(Constants.packageMain));
         i.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
         i.putExtra("a", 35);
-        i.putExtra("d", Constants.id + "/" + data.toString());
+        i.putExtra("d", id + "/" + data.toString());
         startActivity(i);
     }
 }

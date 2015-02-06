@@ -35,9 +35,9 @@ class DownloadTask extends AsyncTask<String, Void, String> {
                 }
             } finally {//Is necessary a 'finally' statement here? 
                 connection.disconnect();
-                if(builder.length()==0)return null;
-                return builder.toString().trim();
             }
+            if(builder.length()==0)return null;
+            return builder.toString().trim();
         } catch (IOException e) {
             e.printStackTrace();
         }

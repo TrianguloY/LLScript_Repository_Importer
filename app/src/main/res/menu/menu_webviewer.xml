@@ -2,7 +2,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     tools:context="trianguloy.llscript.repository/.webViewer">
     <item android:id="@+id/action_mainPage" android:title="@string/action_main_page"
-        android:orderInCategory="100" android:showAsAction="always" android:icon="@drawable/ic_menu_home"/>
+        android:orderInCategory="100" android:showAsAction="ifRoom" android:icon="@drawable/ic_menu_home"/>
 
     <item android:id="@+id/action_openInBrowser" android:title="@string/action_openInBrowser"
         android:orderInCategory="100" android:showAsAction="never"/>

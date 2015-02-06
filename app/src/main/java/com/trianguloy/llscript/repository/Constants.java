@@ -29,7 +29,7 @@ public class Constants {
     static final String INTENT_EXTRA_DELETE_AFTER_EXECUTION = "d";
 
     //App constants
-    static final int notId = -1;
+    public static final int notId = -1;
     static public final int managerVersion = 14; //TODO: get this version directly from the raw file
 
     //WebViewer constants
@@ -45,8 +45,6 @@ public class Constants {
     @SuppressLint("SdCardPath")
     static public final String scriptsPath = "/data/data/net.pierrox.lightning_launcher_extreme/files/scripts/";
     static public final String packageMain = "net.pierrox.lightning_launcher_extreme/net.pierrox.lightning_launcher.activities.Dashboard";
-
-    /*editable*/static public int id = -1;
 
 
     //other Html links (to set when published)

@@ -3,7 +3,6 @@ package com.trianguloy.llscript.repository;
 import android.annotation.TargetApi;
 import android.app.Activity;
 import android.app.AlertDialog;
-import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
@@ -11,6 +10,7 @@ import android.net.Uri;
 import android.net.http.HttpResponseCache;
 import android.os.Build;
 import android.os.Bundle;
+import android.preference.PreferenceManager;
 import android.text.Html;
 import android.view.KeyEvent;
 import android.view.Menu;
@@ -51,6 +51,7 @@ public class webViewer extends Activity {
 
     //User vars
     private SharedPreferences sharedPref;//user saved data (used to save the id of the script manager)
+    private int id = -1;
 
     //Callbacks
     private Boolean close = false; //if pressing back will close or not
@@ -71,8 +72,8 @@ public class webViewer extends Activity {
         super.onCreate(savedInstanceState);
 
         //initialize variables
-        sharedPref = getPreferences(Context.MODE_PRIVATE);
-        Constants.id = sharedPref.getInt("id", Constants.notId);
+        sharedPref = PreferenceManager.getDefaultSharedPreferences(getApplicationContext());
+        id = sharedPref.getInt("id", Constants.notId);
         backStack = new Stack<>();
         currentUrl = Constants.pageMain;
 
@@ -84,7 +85,7 @@ public class webViewer extends Activity {
             return;
         }
 
-        if (Constants.id == Constants.notId) {
+        if (id == Constants.notId) {
             //manager not loaded
             startActivity(new Intent(this, noManager.class));
             finish();
@@ -99,10 +100,10 @@ public class webViewer extends Activity {
         //manages the received intent, run automatically when the activity is running and is called again
         if (intent.hasExtra("id")) {
             int getId = (int) intent.getDoubleExtra("id", Constants.notId); //The returned id
-            if(getId!=Constants.id){
+            if(getId!=id){
                 //new manager loaded
                 sharedPref.edit().putInt("id", getId).apply();//id of the manager script
-                Constants.id = getId;
+                id = getId;
                 showLoadSuccessful();
             }
         }else if (intent.hasExtra("update")) {
@@ -128,7 +129,7 @@ public class webViewer extends Activity {
     public boolean onCreateOptionsMenu(Menu menu) {
         // Inflate the menu; this adds items to the action bar if it is present.
         getMenuInflater().inflate(R.menu.menu_webviewer, menu);
-        menu.findItem(R.id.action_id).setTitle("id: " + (Constants.id != Constants.notId ? Constants.id : "not found")).setVisible(BuildConfig.DEBUG);
+        menu.findItem(R.id.action_id).setTitle("id: " + (id != Constants.notId ? id : "not found")).setVisible(BuildConfig.DEBUG);
         menu.findItem(R.id.action_reset).setVisible(BuildConfig.DEBUG);
 
         return true;
@@ -345,7 +346,7 @@ public class webViewer extends Activity {
         }
         else if (url.startsWith(Constants.pagePrefix)) {
             // script page
-            if(currentUrl!=url)backStack.push(currentUrl);
+            if(!currentUrl.equals(url))backStack.push(currentUrl);
             currentUrl = url;
             progressBar.setVisibility(View.VISIBLE);
             new DownloadTask(downloadTaskListener).execute(url);

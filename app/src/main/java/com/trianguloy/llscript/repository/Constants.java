@@ -50,4 +50,13 @@ public class Constants {
     //other Html links (to set when published)
     static final String linkPlaystore = "https://play.google.com/store/apps/details?id=com.trianguloy.llscript.repository";
     static final String linkGoogleplus = "https://plus.google.com/communities/109017480579703391739";
+
+    //sharedPrefs
+    static String keyRepoHash = "repoHash";
+    static String keyId = "id";
+    static String keyAbout = "aboutScript";
+
+    //Intent Extras
+    static String extraId = "id";
+    static String extraUpdate = "update";
 }

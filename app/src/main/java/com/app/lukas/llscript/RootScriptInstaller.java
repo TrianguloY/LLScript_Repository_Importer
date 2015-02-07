@@ -11,7 +11,7 @@ import com.stericson.RootShell.execution.Command;
 import com.stericson.RootTools.RootTools;
 import com.trianguloy.llscript.repository.Constants;
 import com.trianguloy.llscript.repository.R;
-import com.trianguloy.llscript.repository.ReadRawFile;
+import com.trianguloy.llscript.repository.StringFunctions;
 import com.trianguloy.llscript.repository.noManager;
 import com.trianguloy.llscript.repository.webViewer;
 
@@ -43,7 +43,7 @@ public class RootScriptInstaller extends Activity{
                     JSONObject script = new JSONObject();
                     script.put("flags",0);
                     script.put("name",getString(R.string.script_name));
-                    script.put("text", ReadRawFile.getString(this,R.raw.script));
+                    script.put("text", StringFunctions.getRawFile(this, R.raw.script));
                     //find the lowest free script id
                     int i=0;
                     while (RootTools.exists((Constants.scriptsPath+String.valueOf(i))))i++;

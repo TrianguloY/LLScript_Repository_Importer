@@ -73,7 +73,7 @@ public class webViewer extends Activity {
 
         //initialize variables
         sharedPref = PreferenceManager.getDefaultSharedPreferences(getApplicationContext());
-        id = sharedPref.getInt("id", Constants.notId);
+        id = sharedPref.getInt(Constants.keyId, Constants.notId);
         backStack = new Stack<>();
         currentUrl = Constants.pageMain;
 
@@ -98,15 +98,15 @@ public class webViewer extends Activity {
     @Override
     protected void onNewIntent(Intent intent){
         //manages the received intent, run automatically when the activity is running and is called again
-        if (intent.hasExtra("id")) {
-            int getId = (int) intent.getDoubleExtra("id", Constants.notId); //The returned id
+        if (intent.hasExtra(Constants.extraId)) {
+            int getId = (int) intent.getDoubleExtra(Constants.extraId, Constants.notId); //The returned id
             if(getId!=id){
                 //new manager loaded
-                sharedPref.edit().putInt("id", getId).apply();//id of the manager script
+                sharedPref.edit().putInt(Constants.keyId, getId).apply();//id of the manager script
                 id = getId;
                 showLoadSuccessful();
             }
-        }else if (intent.hasExtra("update")) {
+        }else if (intent.getBooleanExtra(Constants.extraUpdate, false)) {
             //The manager asks for the updated script
             sendUpdate();
         }else if (intent.getAction()!=null && intent.getAction().equalsIgnoreCase(Intent.ACTION_VIEW)){
@@ -148,7 +148,7 @@ public class webViewer extends Activity {
                 break;
             case R.id.action_reset:
                 //removes the saved id. For Debug purpose
-                sharedPref.edit().remove("id").apply();
+                sharedPref.edit().remove(Constants.keyId).apply();
                 finish();
                 break;
             case R.id.action_linkPlayStore:
@@ -165,6 +165,10 @@ public class webViewer extends Activity {
                 Intent k = new Intent(Intent.ACTION_VIEW);
                 k.setData(Uri.parse(currentUrl));
                 startActivity(k);
+                break;
+            case R.id.action_attachAbout:
+                    item.setChecked(!item.isChecked());
+                    sharedPref.edit().putBoolean(Constants.keyAbout,item.isChecked()).apply();
                 break;
             default:
                 return super.onOptionsItemSelected(item);
@@ -238,12 +242,17 @@ public class webViewer extends Activity {
                 currentHtml = result;
                 if(currentUrl.equals(Constants.pageMain)&& repoHtml.equals("")){
                     repoHtml=result;
-                    /* //Currently broken. It was a way to alert if the page was different. But the page has a custom backstack, so it makes false positives
-                    if(sharedPref.contains("repoHash")&&sharedPref.getInt("repoHash",0)!=result.hashCode()) {
-                        Toast.makeText(getApplicationContext(),"The repository Page has changed since your last visit",Toast.LENGTH_SHORT).show();
+
+                    //It detects if the page has changed since the last visit (the editing date is different)
+                    String newHash = StringFunctions.findBetween(result,"<div class=\"docInfo\">","</div>",-1,false).value;
+                    if(newHash!=null){
+
+                        if(sharedPref.contains(Constants.keyRepoHash) && sharedPref.getInt(Constants.keyRepoHash,0) != newHash.hashCode()){
+                            Toast.makeText(getApplicationContext(),"The repository Page has changed since your last visit\nNew Script?",Toast.LENGTH_SHORT).show();
+                        }
+                        sharedPref.edit().putInt(Constants.keyRepoHash,newHash.hashCode()).apply();
                     }
-                    sharedPref.edit().putInt("repoHash",result.hashCode()).apply();
-                    */
+
                 }
                 progressBar.setVisibility(View.GONE);
                 display();
@@ -418,51 +427,65 @@ public class webViewer extends Activity {
         //Download button clicked
 
         //initialize variables
-        int beg;
-        final ArrayList<Integer> starts = new ArrayList<>();//start indexes of all scripts
-        final ArrayList<Integer> ends = new ArrayList<>();//end indexes of all scripts
         final ArrayList<String> names = new ArrayList<>();//names of all scripts
+        final ArrayList<String> rawCodes = new ArrayList<>();//Founded scripts
+        String aboutScript;
 
+        //Starts searching all scripts
+        for(String aStart : Constants.beginning){
+            //starting found
+            StringFunctions.valueAndIndex found=new StringFunctions.valueAndIndex(null,-1,0);
+            do{
+                //searchs for a match
+                found = StringFunctions.findBetween(currentHtml, aStart, Constants.ending, found.to, false);
+                if(found.value!=null){
+                    //if it is found, it adds it to the list
+                    rawCodes.add(found.value.trim());
+                    //Assumes the script name is just before the code, and searchs for it
+                    StringFunctions.valueAndIndex name=new StringFunctions.valueAndIndex(null,found.from,-1);
+                    do {
+                        name=StringFunctions.findBetween(currentHtml,">","<",name.from,true);
+                        if(name.value==null) {names.add("Name not found");break;}//In theory this will never get executed ... in theory
+                        if(name.value.matches(".*\\w.*")){
+                            //when it is found (if not it will return another text not related
+                            names.add(name.value);
+                            break;
+                        }
+                    } while (true);
 
-        //search the code block start(s)
-        for (String aBeginning : Constants.beginning) {
-            beg = -1;
-            do {
-                if (beg != -1) starts.add(beg = beg + aBeginning.length());//save found
-                beg = currentHtml.indexOf(aBeginning, beg);//search next
-            } while (beg != -1);
+                }else{
+                    //if not found, another starting token
+                    break;
+                }
+            }while(true);
         }
 
         //TODO search the flags
 
+        //About script: purpose, author, link
+        aboutScript=StringFunctions.findBetween(currentHtml,"id=\"about_the_script\">","</ul>",-1,false).value;
+        if(aboutScript!=null){
+            aboutScript=
+                    "/* "+
+                    aboutScript
+                        .replaceAll("<[^>]*>","")//remove html tags
+                        .trim()
+                        .replaceAll("\n+","\n *  ")+//adds an asterisk at the beginning of each line & remove duplicated line breaks (all in one!)
+                    "\n */\n\n";
+        }
 
-        if (starts.size() > 0) {
-            //found something
-            for (int begIndex : starts) {
-                //search for the code block end(s)
-                ends.add(currentHtml.indexOf(Constants.ending, begIndex));
-
-                int endIndex=begIndex;
-                int startIndex;
-                String scriptName;
-
-                //get name(s) from headers
-                do {
-                    endIndex = currentHtml.lastIndexOf("<", endIndex-1);
-                    startIndex = currentHtml.lastIndexOf(">", endIndex) + 1;
-                    scriptName = currentHtml.substring(startIndex, endIndex);
-                } while (!scriptName.matches(".*\\w.*"));//Assumes the script name is just before the code
-                names.add(scriptName);
-            }
-            if (starts.size() > 1)
-                showMoreThanOneScriptFound(names.toArray(new String[names.size()]), starts.toArray(new Integer[starts.size()]), ends.toArray(new Integer[ends.size()]));
-            else {
-                oneScriptFound(names.get(0),starts.get(0),ends.get(0));
-            }
-        } else showNoScriptFound();
+        //switch based on the number of scripts found
+        if(rawCodes.size()>1){
+            //more than one script founds
+            showMoreThanOneScriptFound(names.toArray(new String[names.size()]),rawCodes.toArray(new String[rawCodes.size()]),aboutScript);
+        }else if(rawCodes.size()>0){
+            oneScriptFound(names.get(0),rawCodes.get(0),aboutScript);
+        }else{
+            showNoScriptFound();
+        }
     }
 
-    void oneScriptFound(String name,int start, int end){
+    void oneScriptFound(String name, String rawCode, String about){
         //only one script, load directly
 
         //get the name from the repository
@@ -476,26 +499,26 @@ public class webViewer extends Activity {
             //fallback if not found in repo
             scriptName = name;
 
-        showImportScript(currentHtml.substring(start, end), scriptName);
+        showImportScript(scriptName, rawCode, about);
 
     }
 
-    void showMoreThanOneScriptFound(final String[] names,final Integer[] starts, final Integer[] ends){
+    void showMoreThanOneScriptFound(final String[] names, final String[] rawCodes, final String about){
         //More than one script found select one of them to import
         new AlertDialog.Builder(this)
                 .setTitle(R.string.message_more_than_one_script)
                 .setIcon(R.drawable.ic_launcher)
                 .setSingleChoiceItems(names, android.R.layout.simple_list_item_single_choice, new DialogInterface.OnClickListener() {
                     public void onClick(DialogInterface dialog, int which) {
-                        dialog.dismiss();
-                        showImportScript(currentHtml.substring(starts[which], ends[which]), names[which]);
+                        dialog.dismiss();//Necessary, this is launched when clicking an item, not when clicking a button
+                        showImportScript(names[which],rawCodes[which],about);
                     }
                 })
                 .setNegativeButton(R.string.button_cancel, null)
                 .show();
     }
 
-    void showImportScript(String rawCode, String scriptName) {
+    void showImportScript(String scriptName, String rawCode,String aboutString) {
         //show the alert to import a single script
         String[] lines = rawCode.split("\n");
         StringBuilder builder = new StringBuilder();
@@ -503,7 +526,8 @@ public class webViewer extends Activity {
             builder.append(Html.fromHtml(line).toString()).append("\n");//Because Html.fromHtml() removes the line breaks
         }
 
-        String code = new String(builder).trim();
+        String code =new String(builder).trim();
+        if( sharedPref.getBoolean(Constants.keyAbout,true) ) code=aboutString+code;
 
         //the alert dialog
         View layout = getLayoutInflater().inflate(R.layout.confirm_alert, (ViewGroup) findViewById(R.id.webView).getRootView(), false);
@@ -587,6 +611,8 @@ public class webViewer extends Activity {
                 .append(nameText.getText())
                 .append("\n")
                 .append(contentText.getText());
+
+        text.append("\n");
 
         Intent share = new Intent(Intent.ACTION_SEND);
         share.setType("text/plain");

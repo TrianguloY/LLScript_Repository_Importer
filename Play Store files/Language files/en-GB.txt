@@ -27,6 +27,10 @@ https://github.com/TrianguloY/LLScript_Repository_Importer
 
 
 _Changes_
+V 1.3 {not yet published, (this text between the curly brackets is not necessary to translate)}
+New: Attach the 'About this script' at the beggining of the code, can be disabled, enabled by default
+New: Toast if the index has changed
+
 V 1.2.1
 Quick fix: Crash when opening from LL
 

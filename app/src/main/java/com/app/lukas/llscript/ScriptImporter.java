@@ -10,7 +10,7 @@ import android.widget.Toast;
 
 import com.trianguloy.llscript.repository.Constants;
 import com.trianguloy.llscript.repository.R;
-import com.trianguloy.llscript.repository.ReadRawFile;
+import com.trianguloy.llscript.repository.StringFunctions;
 import com.trianguloy.llscript.repository.webViewer;
 
 import org.json.JSONException;
@@ -71,7 +71,7 @@ public class ScriptImporter extends Service{
         //Send the update to the manager to auto-update
         JSONObject data = new JSONObject();
         try {
-            data.put("update", ReadRawFile.getString(getApplicationContext(), R.raw.script));
+            data.put("update", StringFunctions.getRawFile(getApplicationContext(), R.raw.script));
         } catch (JSONException e) {
             e.printStackTrace();
             Toast.makeText(getApplicationContext(), getString(R.string.message_manager_error), Toast.LENGTH_LONG).show();

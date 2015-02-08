@@ -6,7 +6,6 @@ import android.app.AlertDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
-import android.graphics.Typeface;
 import android.net.Uri;
 import android.net.http.HttpResponseCache;
 import android.os.Build;
@@ -64,8 +63,8 @@ public class webViewer extends Activity {
     private String currentUrl = "";//The URL of the current page
     private DownloadTask.Listener downloadTaskListener=null; //default downloadTaskListener
     private class backClass{
-        String url;
-        int posY;
+        final String url;
+        final int posY;
         backClass(String u,int p){
             url = u;
             posY = p;

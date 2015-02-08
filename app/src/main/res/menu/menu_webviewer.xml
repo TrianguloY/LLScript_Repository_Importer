@@ -13,10 +13,10 @@
     <item android:id="@+id/action_linkGooglePlus" android:title="@string/action_linkGooglePlus"
         android:orderInCategory="100" android:showAsAction="never"/>
 
-    <item android:id="@+id/action_attachAbout" android:title="Attach 'About Script'"
+    <item android:id="@+id/action_attachAbout" android:title="@string/action_attach_setting"
         android:orderInCategory="100" android:showAsAction="never" android:checkable="true" android:checked="true"/>
 
-    <item android:id="@+id/action_id" android:title="-id-"
+    <item android:id="@+id/action_id" android:title="@string/text_id"
         android:orderInCategory="100" android:showAsAction="never"/>
 
     <item android:id="@+id/action_reset" android:title="@string/action_reset"

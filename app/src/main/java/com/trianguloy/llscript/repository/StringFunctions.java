@@ -11,6 +11,7 @@ import java.io.InputStream;
  */
 public class StringFunctions {
     //From http://stackoverflow.com/questions/4087674/android-read-text-raw-resource-file
+    //resId is always R.raw.script : Why do we have an argument here?
     public static String getRawFile(Context ctx, int resId) {
         InputStream inputStream = ctx.getResources().openRawResource(resId);
         try{
@@ -36,9 +37,9 @@ public class StringFunctions {
 
 
     public static class valueAndIndex {
-        String value;
-        int from;
-        int to;
+        final String value;
+        final int from;
+        final int to;
         valueAndIndex(String v,int f,int t){
             value=v;
             from=f;

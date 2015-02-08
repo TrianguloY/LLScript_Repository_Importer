@@ -52,11 +52,11 @@ public class Constants {
     static final String linkGoogleplus = "https://plus.google.com/communities/109017480579703391739";
 
     //sharedPrefs
-    static String keyRepoHash = "repoHash";
-    static String keyId = "id";
-    static String keyAbout = "aboutScript";
+    static final String keyRepoHash = "repoHash";
+    static final String keyId = "id";
+    static final String keyAbout = "aboutScript";
 
     //Intent Extras
-    static String extraId = "id";
-    static String extraUpdate = "update";
+    static final String extraId = "id";
+    static final String extraUpdate = "update";
 }

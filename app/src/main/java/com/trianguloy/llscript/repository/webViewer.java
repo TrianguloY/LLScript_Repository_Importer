@@ -248,7 +248,7 @@ public class webViewer extends Activity {
                     if(newHash!=null){
 
                         if(sharedPref.contains(Constants.keyRepoHash) && sharedPref.getInt(Constants.keyRepoHash,0) != newHash.hashCode()){
-                            Toast.makeText(getApplicationContext(),"The repository Page has changed since your last visit\nNew Script?",Toast.LENGTH_SHORT).show();
+                            Toast.makeText(getApplicationContext(),R.string.message_repo_changed,Toast.LENGTH_SHORT).show();
                         }
                         sharedPref.edit().putInt(Constants.keyRepoHash,newHash.hashCode()).apply();
                     }
@@ -428,7 +428,7 @@ public class webViewer extends Activity {
 
         //initialize variables
         final ArrayList<String> names = new ArrayList<>();//names of all scripts
-        final ArrayList<String> rawCodes = new ArrayList<>();//Founded scripts
+        final ArrayList<String> rawCodes = new ArrayList<>();//Found scripts
         String aboutScript;
 
         //Starts searching all scripts

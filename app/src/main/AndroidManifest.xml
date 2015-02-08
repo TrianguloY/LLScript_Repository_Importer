@@ -54,6 +54,7 @@
         <activity android:name="com.app.lukas.llscript.RootScriptInstaller"
             android:icon="@drawable/ic_launcher"
             android:excludeFromRecents="true"
+            android:screenOrientation="locked"
             android:label="@string/title_activity"/>
         <service android:name="com.app.lukas.llscript.ScriptImporter"
             android:icon="@drawable/ic_launcher"

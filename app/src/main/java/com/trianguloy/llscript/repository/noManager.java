@@ -3,11 +3,15 @@ package com.trianguloy.llscript.repository;
 import android.app.Activity;
 import android.content.ComponentName;
 import android.content.Intent;
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.view.View;
 
 import com.app.lukas.llscript.RootScriptInstaller;
-import com.stericson.RootTools.RootTools;
+
+import java.util.List;
+
+import eu.chainfire.libsuperuser.Shell;
 
 /**
  * Activity launched when the script manager is not found.
@@ -16,11 +20,14 @@ import com.stericson.RootTools.RootTools;
 
 public class noManager extends Activity {
 
+    private Activity activity;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        if(RootTools.isRootAvailable())setContentView(R.layout.activity_nomanager_hasroot);
-        else setContentView(R.layout.activity_nomanager);
+        setContentView(R.layout.activity_nomanager);
+        activity = this;
+        testForRoot();
     }
 
     @Override
@@ -41,6 +48,46 @@ public class noManager extends Activity {
     public void buttonInjectThroughRoot(View v){
         startActivity(new Intent(this, RootScriptInstaller.class));
         finish();
+    }
+
+    private void testForRoot(){
+        new RootChecker().execute();
+    }
+
+    //checks if su binary is available
+    private class RootChecker extends AsyncTask<Void,Void,Void>{
+
+        @Override
+        protected Void doInBackground(Void... params) {
+            String[] paths = System.getenv("PATH").split(":");
+            try {
+                String[] command = new String[paths.length];
+                for(int i=0;i<paths.length;i++){
+                    String path = paths[i];
+                    if(!path.endsWith("/"))
+                    {
+                        path += "/";
+                    }
+                    command[i] = "stat "+path+"su";
+                }
+                List<String> output = Shell.SH.run(command);
+                for (String out:output){
+                    //apply matching layout if binary was found
+                    if(out.contains("File:")&&out.contains("su"))
+                        runOnUiThread(new Runnable() {
+                            @Override
+                            public void run() {
+                                activity.setContentView(R.layout.activity_nomanager_hasroot);
+                            }
+                        });
+                }
+
+            }
+            catch (Exception e){
+                e.printStackTrace();
+            }
+            return null;
+        }
     }
 
 }

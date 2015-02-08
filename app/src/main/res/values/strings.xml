@@ -18,7 +18,7 @@
     <string name="button_cancel">Cancel</string>
     <string name="button_exit">Exit</string>
     <string name="button_no">No</string>
-    <string name="button_ok">Ok</string>
+    <string name="button_ok">OK</string>
     <string name="button_retry">Retry</string>
     <string name="button_inject_from_launcher">Load from Launcher</string>
     <string name="button_inject_root">Load with root (Automatic)</string>
@@ -43,6 +43,7 @@
     <string name="message_root_load_failed">Action failed. Maybe your device isn\'t rooted. If you know that your device is rooted and you see this message for the first time, please retry. Otherwise load with another method</string>
     <string name="message_noPageFound">The page couldn\'t be loaded. Make sure you have an active connection or try again in some minutes</string>
     <string name="message_badString">The provided URL is not from a script of the Repository</string>
+    <string name="message_root">Trying to drop File via su.\nPlease wait…</string>
     <!--texts and titles -->
     <string name="text_script_name">Name:</string>
     <string name="text_script_code">Source Code:</string>
@@ -51,10 +52,12 @@
     <string name="title_importer">Script Importer</string>
     <string name="title_external_page">External page</string>
     <string name="title_noPageFound">No page found</string>
+    <string name="title_root">Root</string>
 
     <!-- permission strings -->
     <string name="permission_description">Allows to import scripts into LL without User confirmation</string>
     <string name="permission_label">LL Import Scripts</string>
+    <string name="message_repo_changed">The repository Page has changed since your last visit\nNew Script?</string>
 
 
 </resources>

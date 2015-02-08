@@ -31,7 +31,9 @@ _Changes_
 V 1.3
 Neu: 'About this script'-Abschnitt aus dem Wiki wird am Anfang des Scripts hinzugefügt (kann deaktiviert werden)
 Neu: Benachrichtigung wenn sich die Hauptseite verändert hat (z.B. wenn ein neues Script erstellt wurde)
+Verbessert: Position in der Seite wird wiederhergestellt
 Fix: Bug beim Laden mit Root
+Fix: Fehler wenn Script ohne Daten geladen
 
 V 1.2.1
 Hotfix: Crash wenn aus dem Launcher geöffnet

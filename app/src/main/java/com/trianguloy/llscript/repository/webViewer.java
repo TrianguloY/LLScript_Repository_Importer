@@ -6,6 +6,7 @@ import android.app.AlertDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.graphics.Typeface;
 import android.net.Uri;
 import android.net.http.HttpResponseCache;
 import android.os.Build;
@@ -61,9 +62,17 @@ public class webViewer extends Activity {
     private String repoHtml = "";//source code of the repository, used to get the name of the scripts
     private String currentHtml = "";//source code of the current page
     private String currentUrl = "";//The URL of the current page
-    private Stack<String> backStack;//contains the history of the views pages
     private DownloadTask.Listener downloadTaskListener=null; //default downloadTaskListener
-
+    private class backClass{
+        String url;
+        int posY;
+        backClass(String u,int p){
+            url = u;
+            posY = p;
+        }
+    }
+    private Stack<backClass> backStack;//contains the history of the views pages
+    private int webViewPositionY = 0;//Contains the positionY that will be applied when the webview finish loading a page
 
 
     //Application functions
@@ -182,8 +191,9 @@ public class webViewer extends Activity {
         if (!currentUrl.equals(Constants.pageMain)) {
             //not on the home page
             if(!backStack.empty()){
-                currentUrl = backStack.pop();
-                changePage(currentUrl);
+                backClass previous = backStack.pop();
+                currentUrl = previous.url;
+                changePage(currentUrl,previous.posY);
             }else{
                 changePage(Constants.pageMain);
             }
@@ -298,6 +308,12 @@ public class webViewer extends Activity {
                     return null;
                 }
             }
+
+            @Override
+            public void onPageFinished(WebView view, String url) {
+                super.onPageFinished(view, url);
+                webView.scrollTo(0, webViewPositionY);
+            }
         });
 
         //install cache
@@ -333,7 +349,8 @@ public class webViewer extends Activity {
 
 
     //webView functions
-    void changePage(String url) {
+    void changePage(String url){changePage(url,0);}
+    void changePage(String url,int positionY) {
         //Change the page of the webView to the passed one
         if(downloadTaskListener==null){
             //The activity is not yet loaded. The url is kept as the currentUrl, so it gets loaded when the activity do so
@@ -345,7 +362,7 @@ public class webViewer extends Activity {
             //main page
             currentUrl = url;
             backStack.clear();
-
+            webViewPositionY=positionY;
             if(repoHtml.equals("")){
                 new DownloadTask(downloadTaskListener).execute(url);
             }else{
@@ -355,8 +372,11 @@ public class webViewer extends Activity {
         }
         else if (url.startsWith(Constants.pagePrefix)) {
             // script page
-            if(!currentUrl.equals(url))backStack.push(currentUrl);
+            if(!currentUrl.equals(url)) {
+                backStack.push(new backClass(currentUrl, webView.getScrollY()));
+            }
             currentUrl = url;
+            webViewPositionY=positionY;
             progressBar.setVisibility(View.VISIBLE);
             new DownloadTask(downloadTaskListener).execute(url);
         }
@@ -369,14 +389,14 @@ public class webViewer extends Activity {
         //display a page
         webView.loadDataWithBaseURL(Constants.pageRoot, currentHtml, "text/html", "utf-8", null);
 
-        //ets the visibility of the button and the title of the app
+        //sets the visibility of the button and the title of the app
         if(currentUrl.equals(Constants.pageMain)){
             button.setVisibility(View.GONE);
             setTitle(R.string.action_main_page);
         }else{
             button.setVisibility(View.VISIBLE);
             setTitle(currentUrl.substring(Constants.pagePrefix.length()));
-            //Note: the name is the one of the URL (with _ ) to let the user
+            //Note: the name is the one of the URL (with _ ) for debug purpose
         }
     }
 
@@ -465,13 +485,20 @@ public class webViewer extends Activity {
         //About script: purpose, author, link
         aboutScript=StringFunctions.findBetween(currentHtml,"id=\"about_the_script\">","</ul>",-1,false).value;
         if(aboutScript!=null){
-            aboutScript=
-                    "/* "+
-                    aboutScript
-                        .replaceAll("<[^>]*>","")//remove html tags
-                        .trim()
-                        .replaceAll("\n+","\n *  ")+//adds an asterisk at the beginning of each line & remove duplicated line breaks (all in one!)
-                    "\n */\n\n";
+
+            //remove html tags
+            aboutScript=aboutScript.replaceAll("<[^>]*>", "");
+
+            String[] prov = aboutScript.split("\n+");//separate the text removing duplicated line breaks
+
+            //join the text adding an asterisk at the beginning of each line and converting the html string into normal code
+            aboutScript="";
+            for(int i=0;i<prov.length;++i){
+                aboutScript += ((i == 0) ? "" : "\n *  ") + Html.fromHtml(prov[i]).toString();
+            }
+
+            //adds the beggining and end comment block, and remove extra whitespaces at the beginning and end
+            aboutScript="/* "+aboutScript.trim()+"\n */\n\n";
         }
 
         //switch based on the number of scripts found

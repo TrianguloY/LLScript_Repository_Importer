@@ -33,19 +33,22 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="@string/flag_alert_menu"
-            android:id="@+id/checkBox" />
+            android:id="@+id/checkBox"
+            android:textSize="12sp" />
 
         <CheckBox
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="@string/flag_alert_item"
-            android:id="@+id/checkBox2" />
+            android:id="@+id/checkBox2"
+            android:textSize="12sp" />
 
         <CheckBox
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="@string/flag_alert_custom"
-            android:id="@+id/checkBox3" />
+            android:id="@+id/checkBox3"
+            android:textSize="12sp" />
     </LinearLayout>
 
     <TextView
@@ -59,6 +62,6 @@
         android:layout_width="fill_parent"
         android:layout_height="fill_parent"
         android:id="@+id/editText2"
-        android:hint="@string/message_code_hint"/>
+        android:hint="@string/message_code_hint" />
 
 </LinearLayout>

@@ -4,10 +4,14 @@ Don't change the name of this script, it will allow to update it without creatin
 */
 
 //IMPORTANT: don't change this variable
-var version = 14;
+var version = 15;
 
 var data=LL.getEvent().getData();
-if(data!=null)data=JSON.parse(data);
+try{
+    data=JSON.parse(data);
+}catch(e){
+    data=null;
+}
 
 var intent=new Intent("android.intent.action.MAIN");
 intent.setComponent(ComponentName.unflattenFromString("com.trianguloy.llscript.repository/com.trianguloy.llscript.repository.webViewer"));

@@ -31,6 +31,9 @@ _Changes_
 V 1.3
 Nuevo: Adjuntar el 'Acerca de este script' al principio del código, puede ser desactivado, activado por defecto
 Nuevo: Mensaje si el repositorio ha cambiado
+Mejorado: Recuerda la posición al volver
+Arreglado: Bug al importar via root
+Arreglado: error de JSON
 
 V 1.2.1
 Arreglado: crash al abrir desde LL

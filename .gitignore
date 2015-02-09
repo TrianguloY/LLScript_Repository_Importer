@@ -1,7 +1,8 @@
 .gradle
 /local.properties
 /.idea/workspace.xml
-.idea/libraries/support_annotations_20_0_0.xml
+.idea/libraries
+.idea/modules.xml
 /build
 
 app/app.iml

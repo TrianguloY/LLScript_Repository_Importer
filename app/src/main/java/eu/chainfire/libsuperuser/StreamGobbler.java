@@ -24,6 +24,7 @@ import java.util.List;
 
 /**
  * Thread utility class continuously reading from an InputStream
+ * Changed by Lukas
  */
 class StreamGobbler extends Thread {
 
@@ -33,14 +34,14 @@ class StreamGobbler extends Thread {
 
     /**
      * <p>StreamGobbler constructor</p>
-     * 
-     * <p>We use this class because shell STDOUT and STDERR should be read as quickly as 
+     * <p/>
+     * <p>We use this class because shell STDOUT should be read as quickly as
      * possible to prevent a deadlock from occurring, or Process.waitFor() never
      * returning (as the buffer is full, pausing the native process)</p>
-     * 
-     * @param shell Name of the shell
+     *
+     * @param shell       Name of the shell
      * @param inputStream InputStream to read from
-     * @param outputList List<String> to write to, or null
+     * @param outputList  List<String> to write to, or null
      */
     public StreamGobbler(String shell, InputStream inputStream, List<String> outputList) {
         this.shell = shell;

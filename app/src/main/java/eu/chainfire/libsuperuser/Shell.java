@@ -16,6 +16,8 @@
 
 package eu.chainfire.libsuperuser;
 
+import com.trianguloy.llscript.repository.BuildConfig;
+
 import java.io.DataOutputStream;
 import java.io.IOException;
 import java.util.ArrayList;
@@ -23,10 +25,9 @@ import java.util.Collections;
 import java.util.List;
 import java.util.Locale;
 
-import com.trianguloy.llscript.repository.BuildConfig;
-
 /**
  * Class providing functionality to execute commands in a (root) shell
+ * Changed by Lukas
  */
 public class Shell {
 
@@ -38,7 +39,7 @@ public class Shell {
      * <p>
      * Note that due to compatibility with older Android versions, wantSTDERR is
      * not implemented using redirectErrorStream, but rather appended to the
-     * output. STDOUT and STDERR are thus not guaranteed to be in the correct
+     * output. STDOUT is thus not guaranteed to be in the correct
      * order in the output.
      * </p>
      * <p>
@@ -51,14 +52,14 @@ public class Shell {
      * passed to and the output returned from the shell.
      * </p>
      * <p>
-     * Though this function uses background threads to gobble STDOUT and STDERR
+     * Though this function uses background threads to gobble STDOUT
      * so a deadlock does not occur if the shell produces massive output, the
      * output is still stored in a List&lt;String&gt;, and as such doing
      * something like <em>'ls -lR /'</em> will probably have you run out of
      * memory.
      * </p>
-     * 
-     * @param shell The shell to use for executing the commands
+     *
+     * @param shell    The shell to use for executing the commands
      * @param commands The commands to execute
      * @return Output of the commands, or null in case of an error
      */
@@ -69,8 +70,7 @@ public class Shell {
             // check if we're running in the main thread, and if so, crash if
             // we're in debug mode, to let the developer know attention is
             // needed here.
-
-            Debug.log();
+            Debug.logOnMainThreadException();
             throw new ShellOnMainThreadException();
         }
         Debug.logCommand(String.format("[%s%%] START", shellUpper));
@@ -79,8 +79,7 @@ public class Shell {
 
         try {
 
-            // setup our process, retrieve STDIN stream, and STDOUT/STDERR
-            // gobblers
+            // setup our process, retrieve STDIN stream, and STDOUT gobblers
             Process process = Runtime.getRuntime().exec(shell, null);
             DataOutputStream STDIN = new DataOutputStream(process.getOutputStream());
             StreamGobbler STDOUT = new StreamGobbler(shellUpper + "-", process.getInputStream(),
@@ -136,14 +135,14 @@ public class Shell {
         return res;
     }
 
-    private static final String[] availableTestCommands = new String[] {
+    private static final String[] availableTestCommands = new String[]{
             "echo -BOC-",
             "id"
     };
 
     /**
      * See if the shell is alive, and if so, check the UID
-     * 
+     *
      * @param ret Standard output from running availableTestCommands
      * @return true on success, false on error
      */
@@ -178,7 +177,7 @@ public class Shell {
 
         /**
          * Runs commands and return output
-         * 
+         *
          * @param commands The commands to run
          * @return Output of the commands, or null in case of an error
          */
@@ -196,10 +195,10 @@ public class Shell {
 
         /**
          * Runs command as root (if available) and return output
-         * 
+         *
          * @param command The command to run
          * @return Output of the command, or null if root isn't available or in
-         *         case of an error
+         * case of an error
          */
         public static List<String> run(String command) {
             return Shell.run("su", new String[]{
@@ -208,20 +207,18 @@ public class Shell {
         }
 
         /**
-         * Runs commands as root (if available) and return output
-         * 
+         * Runs test commands as root (if available) and return output
+         *
          * @return Output of the commands, or null if root isn't available or in
-         *         case of an error
+         * case of an error
          */
         public static List<String> run() {
             return Shell.run("su", Shell.availableTestCommands);
         }
 
         /**
-         * Detects whether or not superuser access is available, by checking the
-         * output of the "id" command if available, checking if a shell runs at
-         * all otherwise
-         * 
+         * checking if a shell runs at all
+         *
          * @return True if superuser access available
          */
         public static boolean available() {
@@ -233,7 +230,7 @@ public class Shell {
 
         /**
          * Attempts to deduce if the shell command refers to a su shell
-         * 
+         *
          * @param shell Shell command to run
          * @return Shell command appears to be su
          */

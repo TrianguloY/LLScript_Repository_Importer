@@ -23,6 +23,7 @@ import com.trianguloy.llscript.repository.BuildConfig;
 
 /**
  * Utility class for logging and debug features that (by default) does nothing when not in debug mode
+ * Changed by Lukas
  */
 class Debug {
 
@@ -38,36 +39,33 @@ class Debug {
 
     /**
      * <p>Log a message (internal)</p>
-     * 
-     * <p>Current debug and enabled logtypes decide what gets logged - 
-     * even if a custom callback is registered</p>  
-     * 
-     * @param type Type of message to log
+     * <p/>
+     * <p>Current debug and enabled logtypes decide what gets logged -
+     * even if a custom callback is registered</p>
+     *
+     * @param type          Type of message to log
      * @param typeIndicator String indicator for message type
-     * @param message The message to log
+     * @param message       The message to log
      */
     private static void logCommon(int type, String typeIndicator, String message) {
         int logTypes = LOG_ALL;
         if (BuildConfig.DEBUG && ((logTypes & type) == type)) {
-                Log.d(TAG, "[" + TAG + "][" + typeIndicator + "]" + (!message.startsWith("[") && !message.startsWith(" ") ? " " : "") + message);
+            Log.d(TAG, "[" + TAG + "][" + typeIndicator + "]" + (!message.startsWith("[") && !message.startsWith(" ") ? " " : "") + message);
         }
-    }	
+    }
 
     /**
-     * <p>Log a "general" message</p>
-     * 
-     * <p>These messages are infrequent and mostly occur at startup/shutdown or on error</p>
-     *
+     * <p>Log a ShellOnMainThreadException message</p>
      */
-    public static void log() {
+    public static void logOnMainThreadException() {
         logCommon(LOG_GENERAL, "G", ShellOnMainThreadException.EXCEPTION_COMMAND);
     }
 
     /**
      * <p>Log a "per-command" message</p>
-     * 
+     * <p/>
      * <p>This could produce a lot of output if the client runs many commands in the session</p>
-     * 
+     *
      * @param message The message to log
      */
     public static void logCommand(String message) {
@@ -76,9 +74,9 @@ class Debug {
 
     /**
      * <p>Log a line of stdout/stderr output</p>
-     * 
+     * <p/>
      * <p>This could produce a lot of output if the shell commands are noisy</p>
-     * 
+     *
      * @param message The message to log
      */
     public static void logOutput(String message) {
@@ -89,12 +87,11 @@ class Debug {
     // ----- SANITY CHECKS -----
 
 
-
     /**
      * <p>Are we running on the main thread ?</p>
-     * 
+     *
      * @return Running on main thread ?
-     */	
+     */
     public static boolean onMainThread() {
         return ((Looper.myLooper() != null) && (Looper.myLooper() == Looper.getMainLooper()));
     }

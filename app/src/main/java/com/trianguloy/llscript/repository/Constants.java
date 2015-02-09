@@ -4,7 +4,7 @@ import android.annotation.SuppressLint;
 
 /**
  * Static constants used in the project (like R.strings, but also other types)
- * */
+ */
 public class Constants {
 
     //The script appears in the lighting app menu.
@@ -29,7 +29,7 @@ public class Constants {
     static final String INTENT_EXTRA_DELETE_AFTER_EXECUTION = "d";
 
     //App constants
-    public static final int notId = -1;
+    static public final int notId = -1;
     static public final int managerVersion = 15; //TODO: get this version directly from the raw file
 
     //WebViewer constants
@@ -53,10 +53,30 @@ public class Constants {
 
     //sharedPrefs
     static final String keyRepoHash = "repoHash";
-    static final String keyId = "id";
+    static public final String keyId = "id";
     static final String keyAbout = "aboutScript";
 
     //Intent Extras
-    static final String extraId = "id";
-    static final String extraUpdate = "update";
+    static public final String extraId = "id";
+    static public final String extraUpdate = "update";
+    static public final String extraCode = "code";
+    static public final String extraFlags = "flags";
+    static public final String extraReceiver = "receiver";
+    static public final String extraName = "name";
+    static public final String extraForceUpdate = "forceUpdate";
+
+    //Script JSON names for direct drop
+    static public final String name = "name";
+    static public final String flags = "flags";
+    static public final String text = "text";
+    static public final String id = "id";
+
+    //Script JSON names for script drop
+    static public final String ScriptName = "name";
+    static public final String ScriptFlags = "flags";
+    static public final String ScriptUpdate = "update";
+    static public final String ScriptForceUpdate = "forceUpdate";
+    static public final String ScriptCode = "code";
+    static public final String ScriptVersion = "version";
+    static public final String ScriptReturnResultTo = "returnTo";
 }

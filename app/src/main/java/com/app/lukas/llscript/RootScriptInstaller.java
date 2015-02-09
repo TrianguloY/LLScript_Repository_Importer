@@ -22,18 +22,16 @@ import java.io.BufferedWriter;
 import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
-import java.util.List;
-
-import eu.chainfire.libsuperuser.Shell;
 
 /**
  * Created by Lukas on 30.01.2015.
  * Loads the script into the launcher by dropping it into the data folder
  */
-public class RootScriptInstaller extends Activity{
+public class RootScriptInstaller extends Activity {
 
     private Context context;
     private ProgressDialog dialog;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -41,7 +39,40 @@ public class RootScriptInstaller extends Activity{
         new Root().execute();
     }
 
-    private class Root extends AsyncTask<Void,Void,Void>{
+    private void onSuccessful(int id) {
+        dialog.dismiss();
+        //pass the id to webViewer
+        Intent intent = new Intent(this, webViewer.class);
+        intent.putExtra(Constants.extraId, (double) id);
+        startActivity(intent);
+        finish();
+    }
+
+    private void onNotSuccessful(final String exitMessage) {
+        dialog.dismiss();
+        runOnUiThread(new Runnable() {
+            @Override
+            public void run() {
+                //show a dialog because something failed
+                new AlertDialog.Builder(context)
+                        .setTitle("")
+                        .setMessage(getString(R.string.message_root_load_failed) + "\n\n" + getString(R.string.message_exit_message) + ":\n" + exitMessage)
+                        .setNeutralButton(getString(R.string.button_exit), new DialogInterface.OnClickListener() {
+                            public void onClick(DialogInterface dialog, int which) {
+                                dialog.dismiss();
+                                //return to the noManager screen
+                                Intent intent = new Intent(getApplicationContext(), noManager.class);
+                                startActivity(intent);
+                                finish();
+                            }
+                        })
+                        .setIcon(R.drawable.ic_launcher)
+                        .show();
+            }
+        });
+    }
+
+    private class Root extends AsyncTask<Void, Void, Void> {
 
         @Override
         protected void onPreExecute() {
@@ -58,84 +89,46 @@ public class RootScriptInstaller extends Activity{
         @Override
         protected Void doInBackground(Void... params) {
             BufferedWriter writer = null;
+            try {
+                if (RootFunctions.checkForRoot()) {
+                    //read the script into json
+                    JSONObject script = new JSONObject();
+                    script.put(Constants.flags, 0);
+                    script.put(Constants.name, getString(R.string.script_name));
+                    script.put(Constants.text, StringFunctions.getRawFile(getApplicationContext(), R.raw.script));
+                    //find the lowest free script id
+                    int i = 0;
+                    while (true) {
+                        if (RootFunctions.fileExists(context, Constants.scriptsPath + i)) break;
+                        i++;
+                    }
+                    script.put(Constants.id, i);
+                    //write script to temp file
+                    File file = File.createTempFile("script", "", getCacheDir());
+                    writer = new BufferedWriter(new FileWriter(file));
+                    writer.write(script.toString());
+                    writer.flush();
+                    //copy temp file to LLs directory
+                    RootFunctions.copyFile(file.getAbsolutePath(), Constants.scriptsPath + i);
+                    //check if file was created
+                    if (!RootFunctions.fileExists(context, Constants.scriptsPath + i))
+                        throw new IOException(getString(R.string.message_file_create_failure_at) + Constants.scriptsPath + i);
+                    //give LL access to the file TODO set LL as owner instead
+                    RootFunctions.permitReadWrite(Constants.scriptsPath + i);
+                    onSuccessful(i);
+                    file.deleteOnExit();
+                } else onNotSuccessful(getString(R.string.message_no_root));
+            } catch (IOException | JSONException e) {
+                e.printStackTrace();
+                onNotSuccessful(e.getMessage());
+            } finally {
                 try {
-                    if(Shell.SU.available()){
-                        //read the script into json
-                        JSONObject script = new JSONObject();
-                        script.put("flags",0);
-                        script.put("name",getString(R.string.script_name));
-                        script.put("text", StringFunctions.getRawFile(getApplicationContext(),R.raw.script));
-                        //find the lowest free script id
-                        int i=0;
-                        while (true){
-                            List<String> output =  Shell.SU.run("if [ -f " + Constants.scriptsPath + i + " ]\nthen\necho true\nelse\necho false\nfi");
-                            if(output==null)throw new IOException("Device Root is broken");
-                            if(!Boolean.parseBoolean(output.get(0)))break;
-                            i++;
-                        }
-                        script.put("id", i);
-                        //write script to temp file
-                        File file = File.createTempFile("script","",getCacheDir());
-                        writer = new BufferedWriter(new FileWriter(file));
-                        writer.write(script.toString());
-                        writer.flush();
-                        //copy temp file to LLs directory
-                        Shell.SU.run("cp -f "+file.getAbsolutePath()+" "+Constants.scriptsPath+i);
-                        //check if file was created
-                        List<String> output =  Shell.SU.run("if [ -f " + Constants.scriptsPath + i + " ]\nthen\necho true\nelse\necho false\nfi");
-                        if(output == null)throw new IOException("Device Root is broken");
-                        else if(!Boolean.parseBoolean(output.get(0)))throw new IOException("Failed to create file at "+Constants.scriptsPath+i);
-                        //give LL access to the file TODO set LL as owner instead
-                        Shell.SU.run("chmod 666 \""+ Constants.scriptsPath + i+ "\"");
-                        onSuccessful(i);
-                        file.deleteOnExit();
-                    }
-                    else onNotSuccessful();
-                } catch (IOException | JSONException e) {
+                    if (writer != null) writer.close();
+                } catch (IOException e) {
                     e.printStackTrace();
-                    onNotSuccessful();
                 }
-            finally {
-                    try {
-                        if (writer != null) writer.close();
-                    } catch (IOException e) {
-                        e.printStackTrace();
-                    }
-                }
+            }
             return null;
         }
-    }
-
-    private void onSuccessful(int id){
-        dialog.dismiss();
-        //pass the id to webViewer
-        Intent intent = new Intent(this,webViewer.class);
-        intent.putExtra("id",(double)id);
-        startActivity(intent);
-        finish();
-    }
-
-    private void onNotSuccessful(){
-        dialog.dismiss();
-        runOnUiThread(new Runnable() {
-            @Override
-            public void run() {
-                //show a dialog because something failed
-                new AlertDialog.Builder(context)
-                        .setTitle("")
-                        .setMessage(getString(R.string.message_root_load_failed))
-                        .setNeutralButton(getString(R.string.button_exit), new DialogInterface.OnClickListener() {
-                            public void onClick(DialogInterface dialog, int which) {
-                                dialog.dismiss();
-                                //return to the noManager screen
-                                Intent intent = new Intent(getApplicationContext(), noManager.class);
-                                startActivity(intent);
-                                finish();
-                            }
-                        })
-                        .setIcon(R.drawable.ic_launcher)
-                        .show();
-            }
-        });
     }
 }

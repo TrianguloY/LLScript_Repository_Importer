@@ -18,7 +18,8 @@ package eu.chainfire.libsuperuser;
 
 /**
  * Exception class used to crash application when shell commands are executed
- * from the main thread, and we are in debug mode. 
+ * from the main thread, and we are in debug mode.
+ * Changed by Lukas
  */
 @SuppressWarnings("serial")
 class ShellOnMainThreadException extends RuntimeException {

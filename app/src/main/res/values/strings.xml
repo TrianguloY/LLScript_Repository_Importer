@@ -60,6 +60,10 @@
     <string name="message_repo_changed">The repository Page has changed since your last visit\nNew Script?</string>
     <string name="action_attach_setting">Attach \'About Script\'</string>
     <string name="text_id">-id-</string>
+    <string name="message_unexpected_root_failure">Device Root is broken</string>
+    <string name="message_no_root">Root not available</string>
+    <string name="message_file_create_failure_at">"Failed to create file at "</string>
+    <string name="message_exit_message">Exit Message</string>
 
 
 </resources>

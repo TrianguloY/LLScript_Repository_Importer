@@ -18,9 +18,9 @@ import org.json.JSONObject;
 
 /**
  * Created by Lukas on 31.01.2015.
- * Imports a script into LL
+ * Imports a script into LL, can be called from outside of the app
  */
-public class ScriptImporter extends Service{
+public class ScriptImporter extends Service {
 
     private int id = -1;
 
@@ -33,32 +33,33 @@ public class ScriptImporter extends Service{
     public int onStartCommand(Intent intent, int flags, int startId) {
         //initialize variables
         SharedPreferences sharedPref = PreferenceManager.getDefaultSharedPreferences(getApplicationContext());
-        id = sharedPref.getInt("id", Constants.notId);
+        id = sharedPref.getInt(Constants.keyId, Constants.notId);
 
-        if(intent.hasExtra("update")&&intent.getBooleanExtra("update",false))updateManager();
-        else if(intent.hasExtra("code")&&intent.hasExtra("name")){
-            ComponentName componentName = intent.hasExtra("receiver")?ComponentName.unflattenFromString(intent.getStringExtra("receiver")):null;
-            boolean forceUpdate = intent.getBooleanExtra("forceUpdate",false);
-            if(componentName == null){
-                componentName = new ComponentName(this,webViewer.class);
+        if (intent.hasExtra(Constants.extraUpdate) && intent.getBooleanExtra(Constants.extraUpdate, false))
+            updateManager();
+        else if (intent.hasExtra(Constants.extraCode) && intent.hasExtra(Constants.extraName)) {
+            ComponentName componentName = intent.hasExtra(Constants.extraReceiver) ? ComponentName.unflattenFromString(intent.getStringExtra(Constants.extraReceiver)) : null;
+            boolean forceUpdate = intent.getBooleanExtra(Constants.extraForceUpdate, false);
+            if (componentName == null) {
+                componentName = new ComponentName(this, webViewer.class);
             }
-            installScript(intent.getStringExtra("code"),intent.getStringExtra("name"),intent.getIntExtra("flags",0),componentName,forceUpdate);
+            installScript(intent.getStringExtra(Constants.extraCode), intent.getStringExtra(Constants.extraName), intent.getIntExtra(Constants.extraFlags, 0), componentName, forceUpdate);
         }
         stopSelf();
-        return super.onStartCommand(intent,flags,startId);
+        return super.onStartCommand(intent, flags, startId);
     }
 
 
-    void installScript(String code, String name, int flags, ComponentName answerTo,boolean forceUpdate) {
+    void installScript(String code, String name, int flags, ComponentName answerTo, boolean forceUpdate) {
         if (id == -1) return;
         JSONObject data = new JSONObject();
         try {
-            data.put("version", Constants.managerVersion);
-            data.put("code", code);
-            data.put("name", name);
-            data.put("flags", flags);
-            data.put("returnTo",answerTo.flattenToString());
-            data.put("forceUpdate",forceUpdate);
+            data.put(Constants.ScriptVersion, Constants.managerVersion);
+            data.put(Constants.ScriptCode, code);
+            data.put(Constants.ScriptName, name);
+            data.put(Constants.ScriptFlags, flags);
+            data.put(Constants.ScriptReturnResultTo, answerTo.flattenToString());
+            data.put(Constants.ScriptForceUpdate, forceUpdate);
         } catch (JSONException e) {
             e.printStackTrace();
             Toast.makeText(getApplicationContext(), getString(R.string.message_manager_error), Toast.LENGTH_LONG).show();
@@ -67,11 +68,11 @@ public class ScriptImporter extends Service{
         sendIntent(data);
     }
 
-    void updateManager(){
+    void updateManager() {
         //Send the update to the manager to auto-update
         JSONObject data = new JSONObject();
         try {
-            data.put("update", StringFunctions.getRawFile(getApplicationContext(), R.raw.script));
+            data.put(Constants.ScriptUpdate, StringFunctions.getRawFile(getApplicationContext(), R.raw.script));
         } catch (JSONException e) {
             e.printStackTrace();
             Toast.makeText(getApplicationContext(), getString(R.string.message_manager_error), Toast.LENGTH_LONG).show();
@@ -80,7 +81,7 @@ public class ScriptImporter extends Service{
         sendIntent(data);
     }
 
-    void sendIntent(JSONObject data){
+    void sendIntent(JSONObject data) {
         Intent i = new Intent(Intent.ACTION_VIEW);
         i.setComponent(ComponentName.unflattenFromString(Constants.packageMain));
         i.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);

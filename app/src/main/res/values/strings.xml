@@ -12,7 +12,7 @@
     <string name="action_main_page">Repository Index</string>
     <string name="action_reset">Reset</string>
     <string name="action_linkPlayStore">Play store page</string>
-    <string name="action_linkGooglePlus">Google+ post (help)</string>
+    <string name="action_linkGooglePlus">Google+ Community</string>
     <string name="action_openInBrowser">Open in browser</string>
     <!-- buttons -->
     <string name="button_cancel">Cancel</string>
@@ -58,6 +58,8 @@
     <string name="permission_description">Allows to import scripts into LL without User confirmation</string>
     <string name="permission_label">LL Import Scripts</string>
     <string name="message_repo_changed">The repository Page has changed since your last visit\nNew Script?</string>
+
+    <!-- unsorted-->
     <string name="action_attach_setting">Attach \'About Script\'</string>
     <string name="text_id">-id-</string>
     <string name="message_unexpected_root_failure">Device Root is broken</string>

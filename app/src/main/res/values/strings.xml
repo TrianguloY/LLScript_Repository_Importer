@@ -64,6 +64,8 @@
     <string name="message_no_root">Root not available</string>
     <string name="message_file_create_failure_at">"Failed to create file at "</string>
     <string name="message_exit_message">Exit Message</string>
+    <string name="message_one_new_script">There is a new Script in the Repository:</string>
+    <string name="message_several_new_scripts">There are new Scripts in the Repository:</string>
 
 
 </resources>

@@ -55,6 +55,7 @@ public class Constants {
     static final String keyRepoHash = "repoHash";
     static public final String keyId = "id";
     static final String keyAbout = "aboutScript";
+    static final String keyScripts = "scripts";
 
     //Intent Extras
     static public final String extraId = "id";

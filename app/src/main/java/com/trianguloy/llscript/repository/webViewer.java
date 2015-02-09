@@ -34,6 +34,10 @@ import java.net.HttpURLConnection;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.ArrayList;
+import java.util.Collections;
+import java.util.HashSet;
+import java.util.Iterator;
+import java.util.Set;
 import java.util.Stack;
 import java.util.Timer;
 import java.util.TimerTask;
@@ -257,7 +261,9 @@ public class webViewer extends Activity {
                     if(newHash!=null){
 
                         if(sharedPref.contains(Constants.keyRepoHash) && sharedPref.getInt(Constants.keyRepoHash,0) != newHash.hashCode()){
-                            Toast.makeText(getApplicationContext(),R.string.message_repo_changed,Toast.LENGTH_SHORT).show();
+                            if (!showNewScriptsIfPossible())
+                                //fallback if either there is no old set, or API<11
+                                Toast.makeText(getApplicationContext(), R.string.message_repo_changed, Toast.LENGTH_SHORT).show();
                         }
                         sharedPref.edit().putInt(Constants.keyRepoHash,newHash.hashCode()).apply();
                     }
@@ -329,6 +335,45 @@ public class webViewer extends Activity {
         changePage(currentUrl);
     }
 
+    boolean showNewScriptsIfPossible() {
+        boolean isPossible = false;
+        if (Build.VERSION.SDK_INT >= 11) {
+            HashSet<String> currentScripts = new HashSet<>();
+            //find all scripts in the repository
+            String[] temp = repoHtml.split("title=\"script_");
+            for (int i = 1; i < temp.length; i++) {
+                String s = temp[i];
+                if (!s.startsWith("repository\"") && !s.startsWith("template\""))//exclude the repository itself and the script template
+                    currentScripts.add(s.substring(0, s.indexOf("\"")));
+            }
+            if (sharedPref.contains(Constants.keyScripts)) {
+                isPossible = true;
+                Set<String> oldScripts = sharedPref.getStringSet(Constants.keyScripts, Collections.<String>emptySet());
+                @SuppressWarnings("UnnecessaryLocalVariable") HashSet<String> newScripts = currentScripts;
+                newScripts.removeAll(oldScripts);
+                if (!newScripts.isEmpty()) {
+                    //found new Scripts
+                    sharedPref.edit().putStringSet(Constants.keyScripts, currentScripts).apply();
+                    Iterator<String> it = currentScripts.iterator();
+                    ArrayList<String> newScriptNames = new ArrayList<>();
+                    while (it.hasNext()) {
+                        String s = it.next();
+                        newScriptNames.add(StringFunctions.findBetween(repoHtml, s + "\">", "<", 0, false).value);
+                    }
+                    if (newScriptNames.size() == 1)
+                        Toast.makeText(this, getString(R.string.message_one_new_script) + "\n" + newScriptNames.get(0), Toast.LENGTH_LONG).show();
+                    else {
+                        String names = "";
+                        for (int i = 0; i < newScriptNames.size(); i++)
+                            names += "\n" + newScriptNames.get(i);
+                        Toast.makeText(this, getString(R.string.message_several_new_scripts) + names, Toast.LENGTH_LONG).show();
+                    }
+                }
+            } else sharedPref.edit().putStringSet(Constants.keyScripts, currentScripts).apply();
+        }
+        return isPossible;
+    }
+
     void showLoadSuccessful(){
         //notify user that import was successful.
         new AlertDialog.Builder(this)
@@ -341,7 +386,7 @@ public class webViewer extends Activity {
 
     void sendUpdate(){
         Intent intent = new Intent(this,ScriptImporter.class);
-        intent.putExtra("update",true);
+        intent.putExtra(Constants.extraUpdate, true);
         startService(intent);
     }
 
@@ -614,9 +659,9 @@ public class webViewer extends Activity {
                 (flagsBoxes[1].isChecked() ? Constants.FLAG_ITEM_MENU : 0) +
                 (flagsBoxes[2].isChecked() ? Constants.FLAG_CUSTOM_MENU : 0);
         Intent intent = new Intent(this,ScriptImporter.class);
-        intent.putExtra("code",code);
-        intent.putExtra("name", scriptName);
-        intent.putExtra("flags",flags);
+        intent.putExtra(Constants.extraCode, code);
+        intent.putExtra(Constants.extraName, scriptName);
+        intent.putExtra(Constants.extraFlags, flags);
         startService(intent);
     }
 

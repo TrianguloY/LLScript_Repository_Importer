@@ -349,7 +349,7 @@ public class webViewer extends Activity {
             if (sharedPref.contains(Constants.keyScripts)) {
                 isPossible = true;
                 Set<String> oldScripts = sharedPref.getStringSet(Constants.keyScripts, Collections.<String>emptySet());
-                @SuppressWarnings("UnnecessaryLocalVariable") HashSet<String> newScripts = currentScripts;
+                HashSet<String> newScripts = new HashSet<>(currentScripts);
                 newScripts.removeAll(oldScripts);
                 if (!newScripts.isEmpty()) {
                     //found new Scripts

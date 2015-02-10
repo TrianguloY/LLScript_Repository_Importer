@@ -67,6 +67,12 @@
                 <category android:name="android.intent.category.DEFAULT"/>
             </intent-filter>
             </service>
+        <service
+            android:name="com.app.lukas.llscript.ScriptUpdateService"
+            android:icon="@drawable/ic_launcher"
+            android:label="@string/title_activity"
+            android:excludeFromRecents="true"
+            android:exported="true" />
     </application>
 
 </manifest>

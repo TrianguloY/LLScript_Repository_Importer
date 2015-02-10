@@ -25,11 +25,6 @@ public class ScriptImporter extends Service {
     private int id = -1;
 
     @Override
-    public IBinder onBind(Intent intent) {
-        return null;
-    }
-
-    @Override
     public int onStartCommand(Intent intent, int flags, int startId) {
         //initialize variables
         SharedPreferences sharedPref = PreferenceManager.getDefaultSharedPreferences(getApplicationContext());
@@ -47,6 +42,11 @@ public class ScriptImporter extends Service {
         }
         stopSelf();
         return super.onStartCommand(intent, flags, startId);
+    }
+
+    @Override
+    public IBinder onBind(Intent intent) {
+        return null;
     }
 
 
@@ -68,6 +68,7 @@ public class ScriptImporter extends Service {
         sendIntent(data);
     }
 
+    @Deprecated
     void updateManager() {
         //Send the update to the manager to auto-update
         JSONObject data = new JSONObject();

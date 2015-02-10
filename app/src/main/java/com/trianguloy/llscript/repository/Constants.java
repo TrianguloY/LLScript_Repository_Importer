@@ -30,7 +30,7 @@ public class Constants {
 
     //App constants
     static public final int notId = -1;
-    static public final int managerVersion = 15; //TODO: get this version directly from the raw file
+    static public final int managerVersion = 16; //TODO: get this version directly from the raw file
 
     //WebViewer constants
     static final String pageMain = "http://www.pierrox.net/android/applications/lightning_launcher/wiki/doku.php?id=script_repository";
@@ -59,7 +59,6 @@ public class Constants {
 
     //Intent Extras
     static public final String extraId = "id";
-    static public final String extraUpdate = "update";
     static public final String extraCode = "code";
     static public final String extraFlags = "flags";
     static public final String extraReceiver = "receiver";
@@ -75,9 +74,14 @@ public class Constants {
     //Script JSON names for script drop
     static public final String ScriptName = "name";
     static public final String ScriptFlags = "flags";
-    static public final String ScriptUpdate = "update";
     static public final String ScriptForceUpdate = "forceUpdate";
     static public final String ScriptCode = "code";
     static public final String ScriptVersion = "version";
     static public final String ScriptReturnResultTo = "returnTo";
+
+
+    @Deprecated
+    static public final String extraUpdate = "update";
+    @Deprecated
+    static public final String ScriptUpdate = "update";
 }

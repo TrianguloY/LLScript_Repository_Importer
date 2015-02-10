@@ -384,6 +384,7 @@ public class webViewer extends Activity {
                 .show();
     }
 
+    @Deprecated
     void sendUpdate(){
         Intent intent = new Intent(this,ScriptImporter.class);
         intent.putExtra(Constants.extraUpdate, true);

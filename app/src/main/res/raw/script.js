@@ -4,7 +4,7 @@ Don't change the name of this script, it will allow to update it without creatin
 */
 
 //IMPORTANT: don't change this variable
-var version = 15;
+var version = 16;
 
 var data=LL.getEvent().getData();
 try{
@@ -24,15 +24,7 @@ if(data==null){
 }
 
 //Data received. Let's assume it is correct
-if(data.update!=null){
-    //apply update of this script
-    var thisscript=LL.getCurrentScript();
-    thisscript.setText(data.update);
-    LL.runScript(thisscript.getName(),LL.getScriptTag());
-    LL.setScriptTag(null);
-    return;
-
-}else if(data.version!=version){
+if(data.version!=version){
 //outdated version
 
     if(data.fromupdate){
@@ -41,8 +33,41 @@ if(data.update!=null){
     }
     data.fromupdate=true;
     LL.setScriptTag(JSON.stringify(data));
-    intent.putExtra("update",true);
-    toast="Updating...";
+    Android.makeNewToast("Updating...",true).show();
+
+    LL.bindClass("android.content.ServiceConnection");
+    LL.bindClass("android.os.Messenger");
+    LL.bindClass("android.os.Message");
+    LL.bindClass("android.os.Handler");
+    LL.bindClass("android.content.Context");
+
+    var conn = new ServiceConnection(){
+        onServiceConnected:function(className,service){
+            var serviceMessenger = new Messenger(service);
+            var messenger = new Messenger(new Handler(new Handler.Callback(){
+                handleMessage:function(msg){
+                    var thisscript=LL.getCurrentScript();
+                    thisscript.setText(msg.getData().getCharSequence("code",thisscript.getText()).toString());
+                    LL.runScript(thisscript.getName(),LL.getScriptTag());
+                    LL.setScriptTag(null);
+                    LL.getContext().unbindService(conn);
+                    return true;
+                }
+            }));
+            var message = Message.obtain();
+            message.replyTo = messenger;
+            serviceMessenger.send(message);
+            return;
+        },
+        onServiceDisconnected:function(className){
+            alert("WARNING! THE VERSION OF THE SCRIPT AND THE VERSION OF THE APP ARE NOT THE SAME. Contact the developer");
+            return;
+        }
+    };
+    var serviceIntent = new Intent();
+    serviceIntent.setComponent(ComponentName.unflattenFromString("com.trianguloy.llscript.repository/com.app.lukas.llscript.ScriptUpdateService"));
+    LL.getContext().bindService(serviceIntent,conn,Context.BIND_AUTO_CREATE);
+    return;
 
 }else{
 //all ok, create script

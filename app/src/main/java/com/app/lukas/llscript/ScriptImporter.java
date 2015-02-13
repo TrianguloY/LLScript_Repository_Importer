@@ -54,7 +54,7 @@ public class ScriptImporter extends Service {
         if (id == -1) return;
         JSONObject data = new JSONObject();
         try {
-            data.put(Constants.ScriptVersion, Constants.managerVersion);
+            //data.put(Constants.ScriptVersion, Constants.managerVersion);
             data.put(Constants.ScriptCode, code);
             data.put(Constants.ScriptName, name);
             data.put(Constants.ScriptFlags, flags);

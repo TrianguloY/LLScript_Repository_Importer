@@ -119,7 +119,7 @@ public class webViewer extends Activity {
                 showLoadSuccessful();
             }
         }else if (intent.getBooleanExtra(Constants.extraUpdate, false)) {
-            //The manager asks for the updated script
+            //The manager asks for the updated script (@Deprecated, used in old versions)
             sendUpdate();
         }else if (intent.getAction()!=null && intent.getAction().equalsIgnoreCase(Intent.ACTION_VIEW)){
             String getUrl=intent.getDataString();

@@ -6,6 +6,8 @@ Check a description of every file here:
 https://support.google.com/googleplay/android-developer/answer/1078870?hl=en
 
 Important:
-Title's maximum characters = 30
-Short description's maximum characters = 80
-Complete description's maximum characters = 4000
+	Title's maximum characters = 30
+	Short description's maximum characters = 80
+	Complete description's maximum characters = 4000
+
+Note that the Title is the one showed on the Play store, it is not translated in the app(apk).

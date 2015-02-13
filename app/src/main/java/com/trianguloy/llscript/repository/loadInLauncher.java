@@ -11,7 +11,7 @@ public class loadInLauncher extends Activity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         Intent data = new Intent();
-        data.putExtra(Constants.INTENT_EXTRA_SCRIPT_ID, R.raw.script);
+        data.putExtra(Constants.INTENT_EXTRA_SCRIPT_ID, R.raw.manager);
         data.putExtra(Constants.INTENT_EXTRA_SCRIPT_NAME, getString(R.string.script_name));
         data.putExtra(Constants.INTENT_EXTRA_SCRIPT_FLAGS, 0);
         data.putExtra(Constants.INTENT_EXTRA_EXECUTE_ON_LOAD, true);

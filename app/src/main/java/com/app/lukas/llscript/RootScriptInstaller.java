@@ -95,7 +95,7 @@ public class RootScriptInstaller extends Activity {
                     JSONObject script = new JSONObject();
                     script.put(Constants.flags, 0);
                     script.put(Constants.name, getString(R.string.script_name));
-                    script.put(Constants.text, StringFunctions.getRawFile(getApplicationContext(), R.raw.script));
+                    script.put(Constants.text, StringFunctions.getRawFile(getApplicationContext(), R.raw.manager));
                     //find the lowest free script id
                     int i = 0;
                     while (true) {

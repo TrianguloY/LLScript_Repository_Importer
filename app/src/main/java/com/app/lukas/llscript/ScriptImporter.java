@@ -73,7 +73,7 @@ public class ScriptImporter extends Service {
         //Send the update to the manager to auto-update
         JSONObject data = new JSONObject();
         try {
-            data.put(Constants.ScriptUpdate, StringFunctions.getRawFile(getApplicationContext(), R.raw.script));
+            data.put(Constants.ScriptUpdate, StringFunctions.getRawFile(getApplicationContext(), R.raw.manager));
         } catch (JSONException e) {
             e.printStackTrace();
             Toast.makeText(getApplicationContext(), getString(R.string.message_manager_error), Toast.LENGTH_LONG).show();
@@ -86,8 +86,8 @@ public class ScriptImporter extends Service {
         Intent i = new Intent(Intent.ACTION_VIEW);
         i.setComponent(ComponentName.unflattenFromString(Constants.packageMain));
         i.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-        i.putExtra("a", 35);
-        i.putExtra("d", id + "/" + data.toString());
+        i.putExtra(Constants.extraRunAction, 35);
+        i.putExtra(Constants.extraRunData, id + "/" + data.toString());
         startActivity(i);
     }
 }

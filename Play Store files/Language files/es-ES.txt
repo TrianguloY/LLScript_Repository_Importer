@@ -30,6 +30,11 @@ https://github.com/TrianguloY/LLScript_Repository_Importer
 
 
 _Changes_
+V 1.4
+Mejorado: El mensaje te dice qué script del repositorio ha cambiado
+Mejorado: Nuevo método de carga de scripts (sin cambios para el usuario)
+Archivos: Nuevo icono
+
 V 1.3
 Nuevo: Adjuntar el 'Acerca de este script' al principio del código, puede ser desactivado, activado por defecto
 Nuevo: Mensaje si el repositorio ha cambiado

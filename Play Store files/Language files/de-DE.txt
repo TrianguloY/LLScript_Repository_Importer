@@ -29,6 +29,11 @@ https://github.com/TrianguloY/LLScript_Repository_Importer
 
 
 _Changes_
+V 1.4
+Verbessert: Zeigt nun an welches Script neu hinzugekommen ist.
+Verbessert: Scripts werden mit neuer Methode geladen
+Anderes: Neues Icon
+
 V 1.3
 Neu: 'About this script'-Abschnitt aus dem Wiki wird am Anfang des Scripts hinzugefügt (kann deaktiviert werden)
 Neu: Benachrichtigung wenn sich die Hauptseite verändert hat (z.B. wenn ein neues Script erstellt wurde)

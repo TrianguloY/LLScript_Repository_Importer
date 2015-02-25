@@ -53,14 +53,18 @@
     <string name="title_external_page">External page</string>
     <string name="title_noPageFound">No page found</string>
     <string name="title_root">Root</string>
+    <string name="title_settings">Settings</string>
 
     <!-- permission strings -->
     <string name="permission_description">Allows to import scripts into LL without User confirmation</string>
     <string name="permission_label">LL Import Scripts</string>
     <string name="message_repo_changed">The repository Page has changed since your last visit\nNew Script?</string>
+    <!--preferences -->
+    <string name="pref_about_script">aboutScript</string>
+    <string name="linkPlayStore">https://play.google.com/store/apps/details?id=com.trianguloy.llscript.repository</string>
+    <string name="linkGooglePlus">https://plus.google.com/communities/109017480579703391739</string>
 
     <!-- unsorted-->
-    <string name="action_attach_setting">Attach \'About Script\'</string>
     <string name="text_id">-id-</string>
     <string name="message_unexpected_root_failure">Device Root is broken</string>
     <string name="message_no_root">Root not available</string>

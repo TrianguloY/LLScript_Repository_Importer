@@ -30,8 +30,6 @@ public class Constants {
 
     //App constants
     static public final int notId = -1;
-    @Deprecated //used in the previous manager version
-    static public final int managerVersion =-1;
 
     //WebViewer constants
     static final String pageMain = "http://www.pierrox.net/android/applications/lightning_launcher/wiki/doku.php?id=script_repository";
@@ -48,14 +46,9 @@ public class Constants {
     static public final String packageMain = "net.pierrox.lightning_launcher_extreme/net.pierrox.lightning_launcher.activities.Dashboard";
 
 
-    //other Html links (to set when published)
-    static final String linkPlaystore = "https://play.google.com/store/apps/details?id=com.trianguloy.llscript.repository";
-    static final String linkGoogleplus = "https://plus.google.com/communities/109017480579703391739";
-
     //sharedPrefs
     static final String keyRepoHash = "repoHash";
     static public final String keyId = "id";
-    static final String keyAbout = "aboutScript";
     static final String keyScripts = "scripts";
 
     //Intent Extras
@@ -79,7 +72,6 @@ public class Constants {
     static public final String ScriptFlags = "flags";
     static public final String ScriptForceUpdate = "forceUpdate";
     static public final String ScriptCode = "code";
-    static public final String ScriptVersion = "version";
     static public final String ScriptReturnResultTo = "returnTo";
 
 

@@ -1,0 +1,28 @@
+<PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <PreferenceCategory android:title="General">
+        <CheckBoxPreference
+            android:key="@string/pref_about_script"
+            android:title="Attach 'About Script'"
+            android:defaultValue="true" />
+    </PreferenceCategory>
+    <PreferenceCategory android:title="Links">
+        <Preference android:title="@string/action_linkPlayStore">
+            <intent
+                android:action="android.intent.action.VIEW"
+                android:data="@string/linkPlayStore" />
+        </Preference>
+
+        <Preference android:title="@string/action_linkGooglePlus">
+            <intent
+                android:action="android.intent.action.VIEW"
+                android:data="@string/linkGooglePlus" />
+        </Preference>
+    </PreferenceCategory>
+    <PreferenceCategory android:title="About">
+        <Preference
+            android:title="Authors"
+            android:summary="TrianguloY and Lukas Morawietz"
+            android:enabled="false" />
+    </PreferenceCategory>
+</PreferenceScreen>

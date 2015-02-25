@@ -4,11 +4,13 @@
 
     <uses-permission android:name="android.permission.INTERNET" />
     <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
-    <permission android:name="net.pierrox.lightning_launcher.IMPORT_SCRIPTS"
+
+    <permission
+        android:name="net.pierrox.lightning_launcher.IMPORT_SCRIPTS"
         android:description="@string/permission_description"
         android:icon="@drawable/ic_launcher"
         android:label="@string/permission_label"
-        android:protectionLevel="dangerous"/>
+        android:protectionLevel="dangerous" />
 
     <application
         android:allowBackup="true"
@@ -18,11 +20,11 @@
         android:theme="@style/Theme" >
         <activity
             android:name=".loadInLauncher"
+            android:excludeFromRecents="true"
             android:exported="true"
             android:icon="@drawable/ic_launcher"
-            android:label="@string/browse_name"
-            android:excludeFromRecents="true">
-            <intent-filter>
+            android:label="@string/browse_name">
+        <intent-filter>
                 <action android:name="net.pierrox.lightning_launcher.script.ENUMERATE" />
             </intent-filter>
         </activity>
@@ -33,40 +35,55 @@
             android:launchMode="singleInstance">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
+
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
             <intent-filter>
-                <action android:name="android.intent.action.VIEW"/>
+                <action android:name="android.intent.action.VIEW" />
+
                 <category android:name="android.intent.category.DEFAULT" />
                 <category android:name="android.intent.category.BROWSABLE" />
+
                 <data
-                    android:scheme="http"
                     android:host="www.pierrox.net"
-                    android:pathPattern="/android/applications/lightning_launcher/wiki/doku\\.php"/>
-                    <!-- \\?id\\=script\\_.* -->
+                    android:pathPattern="/android/applications/lightning_launcher/wiki/doku\\.php"
+                    android:scheme="http" />
+                <!-- \\?id\\=script\\_.* -->
             </intent-filter>
         </activity>
         <activity
             android:name=".noManager"
-            android:label="@string/title_activity"
-            android:excludeFromRecents="true">
-        </activity>
-        <activity android:name="com.app.lukas.llscript.RootScriptInstaller"
-            android:icon="@drawable/ic_launcher"
             android:excludeFromRecents="true"
-            android:screenOrientation="locked"
-            android:label="@string/title_activity"/>
-        <service android:name="com.app.lukas.llscript.ScriptImporter"
+            android:label="@string/title_activity" />
+        <activity
+            android:name="com.app.lukas.llscript.RootScriptInstaller"
+            android:excludeFromRecents="true"
             android:icon="@drawable/ic_launcher"
             android:label="@string/title_activity"
+            android:screenOrientation="locked" />
+
+        <service
+            android:name="com.app.lukas.llscript.ScriptImporter"
             android:excludeFromRecents="true"
             android:exported="true"
+            android:icon="@drawable/ic_launcher"
+            android:label="@string/title_activity"
             android:permission="net.pierrox.lightning_launcher.IMPORT_SCRIPTS">
             <intent-filter>
-                <action android:name="net.pierrox.lightning_launcher.script.IMPORT"/>
-                <category android:name="android.intent.category.DEFAULT"/>
+                <action android:name="net.pierrox.lightning_launcher.script.IMPORT" />
+
+                <category android:name="android.intent.category.DEFAULT" />
             </intent-filter>
-            </service>
+        </service>
+
+        <activity
+            android:name=".SettingsActivity"
+            android:label="@string/title_settings"
+            android:parentActivityName=".webViewer">
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value="com.trianguloy.llscript.repository.webViewer" />
+        </activity>
     </application>
 
 </manifest>

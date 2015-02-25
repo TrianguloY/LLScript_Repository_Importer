@@ -84,7 +84,7 @@ public class webViewer extends Activity {
         super.onCreate(savedInstanceState);
 
         //initialize variables
-        sharedPref = PreferenceManager.getDefaultSharedPreferences(getApplicationContext());
+        sharedPref = PreferenceManager.getDefaultSharedPreferences(this);
         id = sharedPref.getInt(Constants.keyId, Constants.notId);
         backStack = new Stack<>();
         currentUrl = Constants.pageMain;
@@ -163,24 +163,13 @@ public class webViewer extends Activity {
                 sharedPref.edit().remove(Constants.keyId).apply();
                 finish();
                 break;
-            case R.id.action_linkPlayStore:
-                Intent i = new Intent(Intent.ACTION_VIEW);
-                i.setData(Uri.parse(Constants.linkPlaystore));
-                startActivity(i);
-                break;
-            case R.id.action_linkGooglePlus:
-                Intent j = new Intent(Intent.ACTION_VIEW);
-                j.setData(Uri.parse(Constants.linkGoogleplus));
-                startActivity(j);
-                break;
             case R.id.action_openInBrowser:
                 Intent k = new Intent(Intent.ACTION_VIEW);
                 k.setData(Uri.parse(currentUrl));
                 startActivity(k);
                 break;
-            case R.id.action_attachAbout:
-                    item.setChecked(!item.isChecked());
-                    sharedPref.edit().putBoolean(Constants.keyAbout,item.isChecked()).apply();
+            case R.id.action_settings:
+                startActivity(new Intent(this, SettingsActivity.class));
                 break;
             default:
                 return super.onOptionsItemSelected(item);
@@ -599,7 +588,8 @@ public class webViewer extends Activity {
         }
 
         String code =new String(builder).trim();
-        if( sharedPref.getBoolean(Constants.keyAbout,true) ) code=aboutString+code;
+        if (sharedPref.getBoolean(getString(R.string.pref_about_script), true))
+            code = aboutString + code;
 
         //the alert dialog
         View layout = getLayoutInflater().inflate(R.layout.confirm_alert, (ViewGroup) findViewById(R.id.webView).getRootView(), false);
@@ -640,7 +630,7 @@ public class webViewer extends Activity {
                 .setPositiveButton(R.string.action_linkGooglePlus, new DialogInterface.OnClickListener() {
                     public void onClick(DialogInterface dialog, int which) {
                         Intent j = new Intent(Intent.ACTION_VIEW);
-                        j.setData(Uri.parse(Constants.linkGoogleplus));
+                        j.setData(Uri.parse(getString(R.string.linkPlayStore)));
                         startActivity(j);
                     }
                 })

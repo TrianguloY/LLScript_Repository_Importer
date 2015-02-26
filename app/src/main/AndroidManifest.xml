@@ -24,8 +24,8 @@
             android:exported="true"
             android:icon="@drawable/ic_launcher"
             android:label="@string/browse_name">
-        <intent-filter>
-                <action android:name="net.pierrox.lightning_launcher.script.ENUMERATE" />
+            <intent-filter>
+            <action android:name="net.pierrox.lightning_launcher.script.ENUMERATE" />
             </intent-filter>
         </activity>
         <activity
@@ -33,7 +33,7 @@
             android:configChanges="orientation|screenSize"
             android:label="@string/title_activity"
             android:launchMode="singleInstance">
-            <intent-filter>
+        <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
                 <category android:name="android.intent.category.LAUNCHER" />
@@ -69,7 +69,7 @@
             android:icon="@drawable/ic_launcher"
             android:label="@string/title_activity"
             android:permission="net.pierrox.lightning_launcher.IMPORT_SCRIPTS">
-            <intent-filter>
+        <intent-filter>
                 <action android:name="net.pierrox.lightning_launcher.script.IMPORT" />
 
                 <category android:name="android.intent.category.DEFAULT" />
@@ -80,9 +80,17 @@
             android:name=".SettingsActivity"
             android:label="@string/title_settings"
             android:parentActivityName=".webViewer">
-            <meta-data
+        <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value="com.trianguloy.llscript.repository.webViewer" />
+        </activity>
+        <activity
+            android:name=".SubscriptionsDialog"
+            android:label="@string/title_activity_subscriptions_dialog"
+            android:parentActivityName=".SettingsActivity">
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value="com.trianguloy.llscript.repository.SettingsActivity" />
         </activity>
     </application>
 

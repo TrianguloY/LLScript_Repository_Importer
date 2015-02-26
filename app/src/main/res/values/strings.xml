@@ -14,6 +14,8 @@
     <string name="action_linkPlayStore">Play store page</string>
     <string name="action_linkGooglePlus">Google+ Community</string>
     <string name="action_openInBrowser">Open in browser</string>
+    <string name="action_settings">Settings</string>
+    <string name="action_subscribe">Subscribe</string>
     <!-- buttons -->
     <string name="button_cancel">Cancel</string>
     <string name="button_exit">Exit</string>
@@ -44,17 +46,30 @@
     <string name="message_noPageFound">The page couldn\'t be loaded. Make sure you have an active connection or try again in some minutes</string>
     <string name="message_badString">The provided URL is not from a script of the Repository</string>
     <string name="message_root">Trying to drop File via su.\nPlease wait…</string>
+    <string name="message_remove">"Remove subscription to page "</string>
+    <string name="message_subscribe">Do you want to subscribe to this page?</string>
+    <string name="message_subscribe_successful">Successfully subscribed</string>
+    <string name="message_unexpected_root_failure">Device Root is broken</string>
+    <string name="message_no_root">Root not available</string>
+    <string name="message_file_create_failure_at">"Failed to create file at "</string>
+    <string name="message_exit_message">Exit Message</string>
+    <string name="message_one_new_script">There is a new Script in the Repository:</string>
+    <string name="message_several_new_scripts">There are new Scripts in the Repository:</string>
     <!--texts and titles -->
     <string name="text_script_name">Name:</string>
     <string name="text_script_code">Source Code:</string>
     <string name="text_or">or</string>
+    <string name="text_id">-id-</string>
     <string name="title_activity">Repository Importer</string>
     <string name="title_importer">Script Importer</string>
     <string name="title_external_page">External page</string>
     <string name="title_noPageFound">No page found</string>
     <string name="title_root">Root</string>
     <string name="title_settings">Settings</string>
-
+    <string name="title_remove">Remove</string>
+    <string name="title_updated_subs">Updated subscribed page(s)</string>
+    <string name="title_subscribe">Subscribe</string>
+    <string name="title_activity_subscriptions_dialog">Subscribed Pages</string>
     <!-- permission strings -->
     <string name="permission_description">Allows to import scripts into LL without User confirmation</string>
     <string name="permission_label">LL Import Scripts</string>
@@ -63,15 +78,7 @@
     <string name="pref_about_script">aboutScript</string>
     <string name="linkPlayStore">https://play.google.com/store/apps/details?id=com.trianguloy.llscript.repository</string>
     <string name="linkGooglePlus">https://plus.google.com/communities/109017480579703391739</string>
-
     <!-- unsorted-->
-    <string name="text_id">-id-</string>
-    <string name="message_unexpected_root_failure">Device Root is broken</string>
-    <string name="message_no_root">Root not available</string>
-    <string name="message_file_create_failure_at">"Failed to create file at "</string>
-    <string name="message_exit_message">Exit Message</string>
-    <string name="message_one_new_script">There is a new Script in the Repository:</string>
-    <string name="message_several_new_scripts">There are new Scripts in the Repository:</string>
 
 
 </resources>

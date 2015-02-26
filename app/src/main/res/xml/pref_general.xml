@@ -5,6 +5,14 @@
             android:key="@string/pref_about_script"
             android:title="Attach 'About Script'"
             android:defaultValue="true" />
+        <Preference
+            android:title="Subscriptions"
+            android:summary="Manage your subscriptions">
+            <intent
+                android:action="android.intent.action.VIEW"
+                android:targetClass="com.trianguloy.llscript.repository.SubscriptionsDialog"
+                android:targetPackage="com.trianguloy.llscript.repository" />
+        </Preference>
     </PreferenceCategory>
     <PreferenceCategory android:title="Links">
         <Preference android:title="@string/action_linkPlayStore">

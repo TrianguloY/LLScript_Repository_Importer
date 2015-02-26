@@ -12,6 +12,7 @@ import android.os.Build;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
 import android.text.Html;
+import android.util.Log;
 import android.view.KeyEvent;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -34,9 +35,10 @@ import java.net.HttpURLConnection;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.HashSet;
 import java.util.Iterator;
+import java.util.List;
+import java.util.Map;
 import java.util.Set;
 import java.util.Stack;
 import java.util.Timer;
@@ -76,6 +78,8 @@ public class webViewer extends Activity {
     }
     private Stack<backClass> backStack;//contains the history of the views pages
     private int webViewPositionY = 0;//Contains the positionY that will be applied when the webview finish loading a page
+    private int counter;
+    private Menu menu;
 
 
     //Application functions
@@ -104,7 +108,55 @@ public class webViewer extends Activity {
         }else{
             //Normal activity
             initializeWeb();
+            getChangedSubscriptions();
         }
+    }
+
+    private void getChangedSubscriptions() {
+        if (sharedPref.contains(Constants.keySubscriptions)) {
+            final Map<String, Integer> pages = StringFunctions.getMapFromPref(sharedPref, Constants.keySubscriptions);
+            if (pages.size() > 0) {
+                counter = pages.size();
+                final ArrayList<String> updated = new ArrayList<>();
+                for (final String page : pages.keySet()) {
+                    new DownloadTask(new DownloadTask.Listener() {
+                        final String p = page;
+
+                        @Override
+                        public void onFinish(String result) {
+                            counter--;
+                            int hash = StringFunctions.pageToHash(result);
+                            if (hash != -1 && hash != pages.get(p)) {
+                                updated.add(p);
+                                pages.put(p, hash);
+                            }
+                            if (counter == 0 && updated.size() > 0) {
+                                StringFunctions.saveMapToPref(sharedPref, Constants.keySubscriptions, pages);
+                                showChangedSubscriptions(updated);
+                            }
+                        }
+
+                        @Override
+                        public void onError() {
+                            Log.i("Subscriptions", "Ignored Error");
+                        }
+                    }).execute(page);
+                }
+            }
+        }
+    }
+
+    private void showChangedSubscriptions(List<String> updatedPages) {
+        String pages = "";
+        for (String s : updatedPages) {
+            pages += s.substring(s.indexOf("?id=") + 4) + "\n";
+        }
+        new AlertDialog.Builder(this)
+                .setTitle(getString(R.string.title_updated_subs))
+                        //TODO: show script names instead of page ids
+                .setMessage(pages)
+                .setNeutralButton(R.string.button_ok, null)
+                .show();
     }
 
     @Override
@@ -139,6 +191,7 @@ public class webViewer extends Activity {
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
+        this.menu = menu;
         // Inflate the menu; this adds items to the action bar if it is present.
         getMenuInflater().inflate(R.menu.menu_webviewer, menu);
         menu.findItem(R.id.action_id).setTitle("id: " + (id != Constants.notId ? id : "not found")).setVisible(BuildConfig.DEBUG);
@@ -171,11 +224,20 @@ public class webViewer extends Activity {
             case R.id.action_settings:
                 startActivity(new Intent(this, SettingsActivity.class));
                 break;
+            case R.id.action_subscribe:
+                subscribeToCurrent();
             default:
                 return super.onOptionsItemSelected(item);
         }
 
         return true;
+    }
+
+    private void subscribeToCurrent() {
+        Map<String, Integer> subs = StringFunctions.getMapFromPref(sharedPref, Constants.keySubscriptions);
+        subs.put(currentUrl, StringFunctions.pageToHash(currentHtml));
+        StringFunctions.saveMapToPref(sharedPref, Constants.keySubscriptions, subs);
+        Toast.makeText(this, getString(R.string.message_subscribe_successful), Toast.LENGTH_SHORT).show();
     }
 
     @Override
@@ -246,19 +308,21 @@ public class webViewer extends Activity {
                     repoHtml=result;
 
                     //It detects if the page has changed since the last visit (the editing date is different)
-                    String newHash = StringFunctions.findBetween(result,"<div class=\"docInfo\">","</div>",-1,false).value;
-                    if(newHash!=null){
+                    int newHash = StringFunctions.pageToHash(result);
+                    if (newHash != -1) {
 
-                        if(sharedPref.contains(Constants.keyRepoHash) && sharedPref.getInt(Constants.keyRepoHash,0) != newHash.hashCode()){
+                        if (sharedPref.contains(Constants.keyRepoHash) && sharedPref.getInt(Constants.keyRepoHash, 0) != newHash) {
                             if (!showNewScriptsIfPossible())
                                 //fallback if either there is no old set, or API<11
                                 Toast.makeText(getApplicationContext(), R.string.message_repo_changed, Toast.LENGTH_SHORT).show();
                         }
-                        sharedPref.edit().putInt(Constants.keyRepoHash,newHash.hashCode()).apply();
+                        sharedPref.edit().putInt(Constants.keyRepoHash, newHash).apply();
                     }
-
-                }
+                    menu.findItem(R.id.action_subscribe).setVisible(false);
+                } else
+                    menu.findItem(R.id.action_subscribe).setVisible(true);
                 progressBar.setVisibility(View.GONE);
+                onPrepareOptionsMenu(menu);
                 display();
             }
 
@@ -326,40 +390,38 @@ public class webViewer extends Activity {
 
     boolean showNewScriptsIfPossible() {
         boolean isPossible = false;
-        if (Build.VERSION.SDK_INT >= 11) {
-            HashSet<String> currentScripts = new HashSet<>();
-            //find all scripts in the repository
-            String[] temp = repoHtml.split("title=\"script_");
-            for (int i = 1; i < temp.length; i++) {
-                String s = temp[i];
-                if (!s.startsWith("repository\"") && !s.startsWith("template\""))//exclude the repository itself and the script template
-                    currentScripts.add(s.substring(0, s.indexOf("\"")));
-            }
-            if (sharedPref.contains(Constants.keyScripts)) {
-                isPossible = true;
-                Set<String> oldScripts = sharedPref.getStringSet(Constants.keyScripts, Collections.<String>emptySet());
-                HashSet<String> newScripts = new HashSet<>(currentScripts);
-                newScripts.removeAll(oldScripts);
-                if (!newScripts.isEmpty()) {
-                    //found new Scripts
-                    sharedPref.edit().putStringSet(Constants.keyScripts, currentScripts).apply();
-                    Iterator<String> it = currentScripts.iterator();
-                    ArrayList<String> newScriptNames = new ArrayList<>();
-                    while (it.hasNext()) {
-                        String s = it.next();
-                        newScriptNames.add(StringFunctions.findBetween(repoHtml, s + "\">", "<", 0, false).value);
-                    }
-                    if (newScriptNames.size() == 1)
-                        Toast.makeText(this, getString(R.string.message_one_new_script) + "\n" + newScriptNames.get(0), Toast.LENGTH_LONG).show();
-                    else {
-                        String names = "";
-                        for (int i = 0; i < newScriptNames.size(); i++)
-                            names += "\n" + newScriptNames.get(i);
-                        Toast.makeText(this, getString(R.string.message_several_new_scripts) + names, Toast.LENGTH_LONG).show();
-                    }
-                }
-            } else sharedPref.edit().putStringSet(Constants.keyScripts, currentScripts).apply();
+        HashSet<String> currentScripts = new HashSet<>();
+        //find all scripts in the repository
+        String[] temp = repoHtml.split("title=\"script_");
+        for (int i = 1; i < temp.length; i++) {
+            String s = temp[i];
+            if (!s.startsWith("repository\"") && !s.startsWith("template\""))//exclude the repository itself and the script template
+                currentScripts.add(s.substring(0, s.indexOf("\"")));
         }
+        if (sharedPref.contains(Constants.keyScripts)) {
+            isPossible = true;
+            Set<String> oldScripts = StringFunctions.getSetFromPref(sharedPref, Constants.keyScripts);
+            HashSet<String> newScripts = new HashSet<>(currentScripts);
+            newScripts.removeAll(oldScripts);
+            if (!newScripts.isEmpty()) {
+                //found new Scripts
+                StringFunctions.saveSetToPref(sharedPref, Constants.keyScripts, currentScripts);
+                Iterator<String> it = currentScripts.iterator();
+                ArrayList<String> newScriptNames = new ArrayList<>();
+                while (it.hasNext()) {
+                    String s = it.next();
+                    newScriptNames.add(StringFunctions.findBetween(repoHtml, s + "\">", "<", 0, false).value);
+                }
+                if (newScriptNames.size() == 1)
+                    Toast.makeText(this, getString(R.string.message_one_new_script) + "\n" + newScriptNames.get(0), Toast.LENGTH_LONG).show();
+                else {
+                    String names = "";
+                    for (int i = 0; i < newScriptNames.size(); i++)
+                        names += "\n" + newScriptNames.get(i);
+                    Toast.makeText(this, getString(R.string.message_several_new_scripts) + names, Toast.LENGTH_LONG).show();
+                }
+            }
+        } else StringFunctions.saveSetToPref(sharedPref, Constants.keyScripts, currentScripts);
         return isPossible;
     }
 
@@ -609,6 +671,8 @@ public class webViewer extends Activity {
                 .setPositiveButton(R.string.button_import, new DialogInterface.OnClickListener() {
                     public void onClick(DialogInterface dialog, int which) {
                         sendScriptToLauncher(contentText, nameText, flagsBoxes);
+                        if (!StringFunctions.getMapFromPref(sharedPref, Constants.keySubscriptions).keySet().contains(currentUrl))
+                            showSubscribe();
                     }
                 })
                 .setNeutralButton(R.string.button_share, new DialogInterface.OnClickListener() {
@@ -617,6 +681,20 @@ public class webViewer extends Activity {
                     }
                 })
                 .setNegativeButton(R.string.button_exit, null)
+                .show();
+    }
+
+    private void showSubscribe() {
+        new AlertDialog.Builder(this)
+                .setTitle(getString(R.string.title_subscribe))
+                .setMessage(getString(R.string.message_subscribe))
+                .setNegativeButton(R.string.button_cancel, null)
+                .setPositiveButton(R.string.button_ok, new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        subscribeToCurrent();
+                    }
+                })
                 .show();
     }
 

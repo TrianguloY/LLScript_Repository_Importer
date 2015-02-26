@@ -1,9 +1,21 @@
 package com.trianguloy.llscript.repository;
 
 import android.content.Context;
+import android.content.SharedPreferences;
+import android.os.Build;
+
+import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
 
 import java.io.IOException;
 import java.io.InputStream;
+import java.util.Collections;
+import java.util.HashMap;
+import java.util.HashSet;
+import java.util.Iterator;
+import java.util.Map;
+import java.util.Set;
 
 /**
  * Created by TrianguloY on 26/01/2015.
@@ -80,6 +92,58 @@ public class StringFunctions {
         }
 
         return new valueAndIndex(source.substring(start,end),start-beggining.length(),end+ending.length());
+    }
+
+    public static void saveSetToPref(SharedPreferences pref, String key, Set<String> set) {
+        if (Build.VERSION.SDK_INT >= 11) pref.edit().putStringSet(key, set).apply();
+        else pref.edit().putString(key, new JSONArray(set).toString()).apply();
+    }
+
+    public static Set<String> getSetFromPref(SharedPreferences pref, String key) {
+        if (pref.contains(key)) {
+            if (Build.VERSION.SDK_INT >= 11)
+                return pref.getStringSet(key, Collections.<String>emptySet());
+            HashSet<String> set = new HashSet<>();
+            JSONArray array;
+            try {
+                array = new JSONArray(pref.getString(key, ""));
+                for (int i = 0; i < array.length(); i++) {
+                    set.add(array.getString(i));
+                }
+                return set;
+            } catch (JSONException e) {
+                e.printStackTrace();
+            }
+        }
+        return Collections.emptySet();
+    }
+
+    public static void saveMapToPref(SharedPreferences pref, String key, Map<String, Integer> map) {
+        pref.edit().putString(key, new JSONObject(map).toString()).apply();
+    }
+
+    public static Map<String, Integer> getMapFromPref(SharedPreferences pref, String key) {
+        if (pref.contains(key)) {
+            try {
+                HashMap<String, Integer> map = new HashMap<>();
+                JSONObject object = new JSONObject(pref.getString(key, ""));
+                Iterator<String> iterator = object.keys();
+                while (iterator.hasNext()) {
+                    String k = iterator.next();
+                    map.put(k, (int) object.get(k));
+                }
+                return map;
+            } catch (JSONException e) {
+                e.printStackTrace();
+            }
+        }
+        return new HashMap<>();
+    }
+
+    public static int pageToHash(String html) {
+        String newHash = StringFunctions.findBetween(html, "<div class=\"docInfo\">", "</div>", -1, false).value;
+        if (newHash == null) return -1;
+        else return newHash.hashCode();
     }
 
 }

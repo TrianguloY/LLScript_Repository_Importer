@@ -320,7 +320,7 @@ public class webViewer extends Activity {
                     }
                     menu.findItem(R.id.action_subscribe).setVisible(false);
                 } else
-                    menu.findItem(R.id.action_subscribe).setVisible(true);
+                    menu.findItem(R.id.action_subscribe).setVisible(StringFunctions.getMapFromPref(sharedPref, Constants.keySubscriptions).containsKey(currentUrl));
                 progressBar.setVisibility(View.GONE);
                 onPrepareOptionsMenu(menu);
                 display();

@@ -23,7 +23,6 @@ import java.util.Set;
  */
 public class StringFunctions {
     //From http://stackoverflow.com/questions/4087674/android-read-text-raw-resource-file
-    //resId is always R.raw.script : Why do we have an argument here?
     public static String getRawFile(Context ctx, int resId) {
         InputStream inputStream = ctx.getResources().openRawResource(resId);
         try{
@@ -64,8 +63,8 @@ public class StringFunctions {
         }
     }
 
-    //This function returns the string between beggining and ending in source starting from index, and the position o the matches (including the searched strings). If backwards is true it uses lastIndexOf
-    public static valueAndIndex findBetween(String source, String beggining, String ending, int index, boolean backwards){
+    //This function returns the string between beginning and ending in source starting from index, and the position o the matches (including the searched strings). If backwards is true it uses lastIndexOf
+    public static valueAndIndex findBetween(String source, String beginning, String ending, int index, boolean backwards) {
         int start;
         int end;
         valueAndIndex notFound = new valueAndIndex();
@@ -73,9 +72,9 @@ public class StringFunctions {
 
         if(!backwards){
 
-            start = source.indexOf(beggining,index==-1?0:index);
+            start = source.indexOf(beginning, index == -1 ? 0 : index);
             if(start==-1) return notFound;
-            start+=beggining.length();
+            start += beginning.length();
 
             end = source.indexOf(ending,start);
             if(end==-1) return notFound;
@@ -85,13 +84,13 @@ public class StringFunctions {
             end = source.lastIndexOf(ending,index==-1?source.length():index);
             if(end==-1) return notFound;
 
-            start = source.lastIndexOf(beggining,end-beggining.length());
+            start = source.lastIndexOf(beginning, end - beginning.length());
             if(start==-1) return notFound;
-            start+=beggining.length();
+            start += beginning.length();
 
         }
 
-        return new valueAndIndex(source.substring(start,end),start-beggining.length(),end+ending.length());
+        return new valueAndIndex(source.substring(start, end), start - beginning.length(), end + ending.length());
     }
 
     public static void saveSetToPref(SharedPreferences pref, String key, Set<String> set) {

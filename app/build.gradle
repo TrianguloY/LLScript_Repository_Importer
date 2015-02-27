@@ -8,8 +8,8 @@ android {
         applicationId "com.trianguloy.llscript.repository"
         minSdkVersion 9
         targetSdkVersion 21
-        versionCode 14
-        versionName "1.4"
+        versionCode 15
+        versionName "1.5b"
     }
     buildTypes {
         release {

@@ -1,5 +1,6 @@
 package com.trianguloy.llscript.repository;
 
+import android.annotation.SuppressLint;
 import android.annotation.TargetApi;
 import android.app.Activity;
 import android.app.AlertDialog;
@@ -83,6 +84,7 @@ public class webViewer extends Activity {
 
 
     //Application functions
+    @SuppressLint("CommitPrefEdits")
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);

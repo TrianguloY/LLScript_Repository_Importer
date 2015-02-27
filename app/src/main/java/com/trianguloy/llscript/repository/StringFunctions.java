@@ -1,6 +1,5 @@
 package com.trianguloy.llscript.repository;
 
-import android.content.Context;
 import android.content.SharedPreferences;
 import android.os.Build;
 
@@ -8,8 +7,6 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
-import java.io.IOException;
-import java.io.InputStream;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.HashSet;
@@ -22,44 +19,22 @@ import java.util.Set;
  * Reads a given Resource to a string
  */
 public class StringFunctions {
-    //From http://stackoverflow.com/questions/4087674/android-read-text-raw-resource-file
-    public static String getRawFile(Context ctx, int resId) {
-        InputStream inputStream = ctx.getResources().openRawResource(resId);
-        try{
-        byte[] buff = new byte[1024];
-        int read;
-        StringBuilder text = new StringBuilder();
-        while ((read = inputStream.read(buff)) > 0) {
-            text.append(new String(buff, 0, read));
-        }
-        return text.toString();
-        } catch (IOException e) {
-            return null;
-        }
-        finally {
-            try {
-                inputStream.close();
-            } catch (IOException ignored) {
-            }
-        }
-    }
-
-
-
 
     public static class valueAndIndex {
         final String value;
         final int from;
         final int to;
-        valueAndIndex(String v,int f,int t){
-            value=v;
-            from=f;
-            to=t;
+
+        valueAndIndex(String v, int f, int t) {
+            value = v;
+            from = f;
+            to = t;
         }
-        valueAndIndex(){
-            value=null;
-            from=-1;
-            to=-1;
+
+        valueAndIndex() {
+            value = null;
+            from = -1;
+            to = -1;
         }
     }
 
@@ -70,22 +45,22 @@ public class StringFunctions {
         valueAndIndex notFound = new valueAndIndex();
 
 
-        if(!backwards){
+        if (!backwards) {
 
             start = source.indexOf(beginning, index == -1 ? 0 : index);
-            if(start==-1) return notFound;
+            if (start == -1) return notFound;
             start += beginning.length();
 
-            end = source.indexOf(ending,start);
-            if(end==-1) return notFound;
+            end = source.indexOf(ending, start);
+            if (end == -1) return notFound;
 
-        }else{
+        } else {
 
-            end = source.lastIndexOf(ending,index==-1?source.length():index);
-            if(end==-1) return notFound;
+            end = source.lastIndexOf(ending, index == -1 ? source.length() : index);
+            if (end == -1) return notFound;
 
             start = source.lastIndexOf(beginning, end - beginning.length());
-            if(start==-1) return notFound;
+            if (start == -1) return notFound;
             start += beginning.length();
 
         }

@@ -6,11 +6,9 @@ package com.trianguloy.llscript.repository;
  */
 public class Constants {
 
-    //The script appears in the lighting app menu.
+    //script flags
     static final int FLAG_APP_MENU = 2;
-    // The script appears in the item menu.
     static final int FLAG_ITEM_MENU = 4;
-    // The script appears in the custom menu.
     static final int FLAG_CUSTOM_MENU = 8;
 
 
@@ -35,27 +33,19 @@ public class Constants {
     //App constants
     static public final int managerId = -3;
 
-    //WebViewer constants
-    static final String pageMain = "http://www.pierrox.net/android/applications/lightning_launcher/wiki/doku.php?id=script_repository";
-    static final String pageRoot = "http://www.pierrox.net";
-    static final String pagePrefix = "http://www.pierrox.net/android/applications/lightning_launcher/wiki/doku.php?id=script_";
-
     //Where to search in the HTML source
     static final String[] beginning = {"class=\"brush: javascript\">", "class=\"brush: javascript;\">", "class=\"code\">"};
     static final String ending = "</pre>";
 
     //package constants
     static public final String packageMain = "net.pierrox.lightning_launcher_extreme/net.pierrox.lightning_launcher.activities.Dashboard";
-    static public String[] packages = new String[]{"net.pierrox.lightning_launcher_extreme","net.pierrox.lightning_launcher"};
+    static public final String[] packages = new String[]{"net.pierrox.lightning_launcher_extreme", "net.pierrox.lightning_launcher"};
     static public String installedPackage = "";
-    static public int minimumNecessaryVersion = 0;
+    static public final int minimumNecessaryVersion = 0;
 
     //sharedPrefs
-    static final String keyRepoHash = "repoHash";
     @Deprecated
     static public final String keyId = "id";
-    static final String keyScripts = "scripts";
-    static final String keySubscriptions = "subscriptions";
 
     //Intent Extras
     static public final String extraCode = "code";
@@ -68,12 +58,6 @@ public class Constants {
     static public final String RunActionExtra = "a";
     static public final String RunDataExtra = "d";
     static public final int RunActionKey = 35;
-
-    //Script JSON names for direct drop
-    static public final String name = "name";
-    static public final String flags = "flags";
-    static public final String text = "text";
-    static public final String id = "id";
 
     //Script JSON names for script drop
     static public final String ScriptName = "name";

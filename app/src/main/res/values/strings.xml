@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
 
-    <!-- This is the package name -->
+    <!-- package name -->
     <string name="app_name">Repository importer</string>
     <!-- This is the name displayed when browsing available script package -->
     <string name="browse_name">(deprecated) Repository importer</string>
@@ -10,75 +10,75 @@
 
     <!-- menu -->
     <string name="action_main_page">Repository Index</string>
-    <string name="action_reset">Reset</string>
-    <string name="action_linkPlayStore">Play store page</string>
-    <string name="action_linkGooglePlus">Google+ Community</string>
     <string name="action_openInBrowser">Open in browser</string>
     <string name="action_settings">Settings</string>
     <string name="action_subscribe">Subscribe</string>
+
     <!-- buttons -->
     <string name="button_cancel">Cancel</string>
     <string name="button_exit">Exit</string>
+    <string name="button_import">Import into LL</string>
     <string name="button_no">No</string>
     <string name="button_ok">OK</string>
     <string name="button_retry">Retry</string>
-    <string name="button_inject_from_launcher">Load from Launcher</string>
-    <string name="button_inject_root">Load with root (Automatic)</string>
-    <string name="button_import">Import into LL</string>
     <string name="button_share">share</string>
+
     <!-- flags -->
-    <string name="flag_alert_menu">Lightning menu</string>
-    <string name="flag_alert_item">Item menu</string>
     <string name="flag_alert_custom">Custom menu</string>
-    <!-- instructions -->
-    <string name="instructions_no_root">The manager is not yet loaded in the launcher or couldn\'t be found.\n\nPlease Follow the steps below.</string>
-    <string name="instructions_root">The manager is not yet loaded in the launcher or couldn\'t be found.\n\nPlease follow one of the setups below. Using root is the faster install method. However if you don\'t want to grant Root Access to this app, you can also choose the manual way.</string>
-    <string name="instructions_load_from_launcher">-Click the button\n-Click \'Scripts…\'\n-Click \'Load a script…\'\n-Choose This app</string>
+    <string name="flag_alert_item">Item menu</string>
+    <string name="flag_alert_menu">Lightning menu</string>
+
+    <!-- links -->
+    <string name="link_google_plus">https://plus.google.com/communities/109017480579703391739</string>
+    <string name="link_play_store">https://play.google.com/store/apps/details?id=com.trianguloy.llscript.repository</string>
+    <string name="link_repository">http://www.pierrox.net/android/applications/lightning_launcher/wiki/doku.php?id=script_repository</string>
+    <string name="link_server">http://www.pierrox.net</string>
+    <string name="link_script_page_prefix">http://www.pierrox.net/android/applications/lightning_launcher/wiki/doku.php?id=script_</string>
+
     <!-- messages -->
     <string name="message_back_to_close">Press back again to close\n(optionally long-press back to close anytime)</string>
+    <string name="message_badString">The provided URL is not from a script of the Repository</string>
     <string name="message_code_hint">Code should be here. Please contact the developer</string>
     <string name="message_external_page">This page is not related to the repository. Do you want to open it with your normal browser?</string>
-    <string name="message_manager_loaded">Script manager loaded correctly. Now navigate to a script\'s page and click the Import button when available</string>
     <string name="message_manager_error">There was an error trying to pass the data to the manager</string>
+    <string name="message_manager_loaded">Script manager loaded correctly. Now navigate to a script\'s page and click the Import button when available</string>
     <string name="message_more_than_one_script">Found more than one Script on this page, please choose one</string>
     <string name="message_no_script_found">No script found. If you know that there is one, contact the developer</string>
-    <string name="message_root_load_failed">Action failed. Maybe your device isn\'t rooted. If you know that your device is rooted and you see this message for the first time, please retry. Otherwise load with another method</string>
     <string name="message_noPageFound">The page couldn\'t be loaded. Make sure you have an active connection or try again in some minutes</string>
-    <string name="message_badString">The provided URL is not from a script of the Repository</string>
-    <string name="message_root">Trying to drop File via su.\nPlease wait…</string>
-    <string name="message_remove">"Remove subscription to page "</string>
-    <string name="message_subscribe">Do you want to subscribe to this page?</string>
-    <string name="message_subscribe_successful">Successfully subscribed</string>
-    <string name="message_unexpected_root_failure">Device Root is broken</string>
-    <string name="message_no_root">Root not available</string>
-    <string name="message_file_create_failure_at">"Failed to create file at "</string>
-    <string name="message_exit_message">Exit Message</string>
     <string name="message_one_new_script">There is a new Script in the Repository:</string>
+    <string name="message_remove">"Remove subscription to page "</string>
+    <string name="message_repo_changed">The repository Page has changed since your last visit\nNew Script?</string>
     <string name="message_several_new_scripts">There are new Scripts in the Repository:</string>
-    <!--texts and titles -->
-    <string name="text_script_name">Name:</string>
-    <string name="text_script_code">Source Code:</string>
-    <string name="text_or">or</string>
-    <string name="text_id">-id-</string>
-    <string name="title_activity">Repository Importer</string>
-    <string name="title_importer">Script Importer</string>
-    <string name="title_external_page">External page</string>
-    <string name="title_noPageFound">No page found</string>
-    <string name="title_root">Root</string>
-    <string name="title_settings">Settings</string>
-    <string name="title_remove">Remove</string>
-    <string name="title_updated_subs">Updated subscribed page(s)</string>
-    <string name="title_subscribe">Subscribe</string>
-    <string name="title_activity_subscriptions_dialog">Subscribed Pages</string>
+    <string name="message_subscribe_successful">Successfully subscribed</string>
+    <string name="message_subscribe">Do you want to subscribe to this page?</string>
+
     <!-- permission strings -->
     <string name="permission_description">Allows to import scripts into LL without User confirmation</string>
     <string name="permission_label">LL Import Scripts</string>
-    <string name="message_repo_changed">The repository Page has changed since your last visit\nNew Script?</string>
-    <!--preferences -->
-    <string name="pref_about_script">aboutScript</string>
-    <string name="linkPlayStore">https://play.google.com/store/apps/details?id=com.trianguloy.llscript.repository</string>
-    <string name="linkGooglePlus">https://plus.google.com/communities/109017480579703391739</string>
-    <!-- unsorted-->
 
+    <!--preference keys -->
+    <string name="pref_about_script">aboutScript</string>
+    <string name="pref_Scripts">scripts</string>
+    <string name="pref_repo_hash">repoHash</string>
+    <string name="pref_subs">subscriptions</string>
+
+    <!--texts -->
+    <string name="text_script_code">Source Code:</string>
+    <string name="text_script_name">Name:</string>
+    <string name="text_google_plus">Google+ Community</string>
+    <string name="text_play_store">Play store page</string>
+
+    <!-- titles -->
+    <string name="title_activity_subscriptions_dialog">Subscribed Pages</string>
+    <string name="title_activity">Repository Importer</string>
+    <string name="title_external_page">External page</string>
+    <string name="title_importer">Script Importer</string>
+    <string name="title_noPageFound">No page found</string>
+    <string name="title_remove">Remove</string>
+    <string name="title_settings">Settings</string>
+    <string name="title_subscribe">Subscribe</string>
+    <string name="title_updated_subs">Updated subscribed page(s)</string>
+
+    <!-- unsorted-->
 
 </resources>

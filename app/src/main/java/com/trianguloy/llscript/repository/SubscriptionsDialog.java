@@ -26,7 +26,7 @@ public class SubscriptionsDialog extends Activity implements ListView.OnItemClic
         setContentView(R.layout.activity_subscriptions_dialog);
         ListView subsList = (ListView) findViewById(R.id.sub_list);
         sharedPref = PreferenceManager.getDefaultSharedPreferences(this);
-        subsMap = StringFunctions.getMapFromPref(sharedPref, Constants.keySubscriptions);
+        subsMap = StringFunctions.getMapFromPref(sharedPref, getString(R.string.pref_subs));
         adapter = new ArrayAdapter<>(this, android.R.layout.simple_list_item_1);
         for (String s : subsMap.keySet()) {
             adapter.add(s.substring(s.indexOf("?id=") + 4));
@@ -49,7 +49,7 @@ public class SubscriptionsDialog extends Activity implements ListView.OnItemClic
                         for (String s : subsMap.keySet()) {
                             if (s.contains(p)) {
                                 subsMap.remove(s);
-                                StringFunctions.saveMapToPref(sharedPref, Constants.keySubscriptions, subsMap);
+                                StringFunctions.saveMapToPref(sharedPref, getString(R.string.pref_subs), subsMap);
                                 break;
                             }
                         }

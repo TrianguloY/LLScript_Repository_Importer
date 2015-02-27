@@ -98,7 +98,7 @@ public class webViewer extends Activity {
         //initialize variables
         sharedPref = PreferenceManager.getDefaultSharedPreferences(this);
         backStack = new Stack<>();
-        currentUrl = Constants.pageMain;
+        currentUrl = getString(R.string.link_repository);
 
         //parse the Intent
         onNewIntent(getIntent());
@@ -137,7 +137,7 @@ public class webViewer extends Activity {
         //manages the received intent, run automatically when the activity is running and is called again
         if (intent.getAction()!=null && intent.getAction().equalsIgnoreCase(Intent.ACTION_VIEW)){
             String getUrl=intent.getDataString();
-            if(getUrl.startsWith(Constants.pagePrefix)){
+            if (getUrl.startsWith(getString(R.string.link_script_page_prefix))) {
                 changePage(getUrl);
             }else{
                 Toast.makeText(getApplicationContext(),getString(R.string.message_badString),Toast.LENGTH_LONG).show();
@@ -169,7 +169,7 @@ public class webViewer extends Activity {
         switch (item.getItemId()) {
             case R.id.action_mainPage:
                 //load the main page
-                changePage(Constants.pageMain);
+                changePage(getString(R.string.link_repository));
                 break;
             case R.id.action_openInBrowser:
                 Intent k = new Intent(Intent.ACTION_VIEW);
@@ -190,14 +190,14 @@ public class webViewer extends Activity {
 
     @Override
     public void onBackPressed(){
-        if (!currentUrl.equals(Constants.pageMain)) {
+        if (!currentUrl.equals(getString(R.string.link_repository))) {
             //not on the home page
             if(!backStack.empty()){
                 backClass previous = backStack.pop();
                 currentUrl = previous.url;
                 changePage(currentUrl,previous.posY);
             }else{
-                changePage(Constants.pageMain);
+                changePage(getString(R.string.link_repository));
             }
 
         }else if (!close) {
@@ -252,23 +252,23 @@ public class webViewer extends Activity {
             public void onFinish(String result) {
                 //default listener: show the page after loading it
                 currentHtml = result;
-                if(currentUrl.equals(Constants.pageMain)&& repoHtml.equals("")){
+                if (currentUrl.equals(getString(R.string.link_repository)) && repoHtml.equals("")) {
                     repoHtml=result;
 
                     //It detects if the page has changed since the last visit (the editing date is different)
                     int newHash = StringFunctions.pageToHash(result);
                     if (newHash != -1) {
 
-                        if (sharedPref.contains(Constants.keyRepoHash) && sharedPref.getInt(Constants.keyRepoHash, 0) != newHash) {
+                        if (sharedPref.contains(getString(R.string.pref_repo_hash)) && sharedPref.getInt(getString(R.string.pref_repo_hash), 0) != newHash) {
                             if (!showNewScriptsIfPossible())
                                 //fallback if either there is no old set, or API<11
                                 Toast.makeText(getApplicationContext(), R.string.message_repo_changed, Toast.LENGTH_SHORT).show();
                         }
-                        sharedPref.edit().putInt(Constants.keyRepoHash, newHash).apply();
+                        sharedPref.edit().putInt(getString(R.string.pref_repo_hash), newHash).apply();
                     }
                     menu.findItem(R.id.action_subscribe).setVisible(false);
                 } else
-                    menu.findItem(R.id.action_subscribe).setVisible(StringFunctions.getMapFromPref(sharedPref, Constants.keySubscriptions).containsKey(currentUrl));
+                    menu.findItem(R.id.action_subscribe).setVisible(StringFunctions.getMapFromPref(sharedPref, getString(R.string.pref_subs)).containsKey(currentUrl));
                 progressBar.setVisibility(View.GONE);
                 onPrepareOptionsMenu(menu);
                 display();
@@ -346,14 +346,14 @@ public class webViewer extends Activity {
             if (!s.startsWith("repository\"") && !s.startsWith("template\""))//exclude the repository itself and the script template
                 currentScripts.add(s.substring(0, s.indexOf("\"")));
         }
-        if (sharedPref.contains(Constants.keyScripts)) {
+        if (sharedPref.contains(getString(R.string.pref_Scripts))) {
             isPossible = true;
-            Set<String> oldScripts = StringFunctions.getSetFromPref(sharedPref, Constants.keyScripts);
+            Set<String> oldScripts = StringFunctions.getSetFromPref(sharedPref, getString(R.string.pref_Scripts));
             HashSet<String> newScripts = new HashSet<>(currentScripts);
             newScripts.removeAll(oldScripts);
             if (!newScripts.isEmpty()) {
                 //found new Scripts
-                StringFunctions.saveSetToPref(sharedPref, Constants.keyScripts, currentScripts);
+                StringFunctions.saveSetToPref(sharedPref, getString(R.string.pref_Scripts), currentScripts);
                 Iterator<String> it = currentScripts.iterator();
                 ArrayList<String> newScriptNames = new ArrayList<>();
                 while (it.hasNext()) {
@@ -369,21 +369,10 @@ public class webViewer extends Activity {
                     Toast.makeText(this, getString(R.string.message_several_new_scripts) + names, Toast.LENGTH_LONG).show();
                 }
             }
-        } else StringFunctions.saveSetToPref(sharedPref, Constants.keyScripts, currentScripts);
+        } else
+            StringFunctions.saveSetToPref(sharedPref, getString(R.string.pref_Scripts), currentScripts);
         return isPossible;
     }
-
-    void showLoadSuccessful(){
-        //notify user that import was successful.
-        new AlertDialog.Builder(this)
-                .setTitle("")
-                .setMessage(R.string.message_manager_loaded)
-                .setNeutralButton(R.string.button_ok, null)
-                .setIcon(R.drawable.ic_launcher)
-                .show();
-    }
-
-
 
     //webView functions
     void changePage(String url){changePage(url,0);}
@@ -395,7 +384,7 @@ public class webViewer extends Activity {
             return;
         }
 
-        if (url.equals(Constants.pageMain)) {
+        if (url.equals(getString(R.string.link_repository))) {
             //main page
             currentUrl = url;
             backStack.clear();
@@ -406,8 +395,7 @@ public class webViewer extends Activity {
                 currentHtml = repoHtml;
                 display();
             }
-        }
-        else if (url.startsWith(Constants.pagePrefix)) {
+        } else if (url.startsWith(getString(R.string.link_script_page_prefix))) {
             // script page
             if(!currentUrl.equals(url)) {
                 backStack.push(new backClass(currentUrl, webView.getScrollY()));
@@ -424,15 +412,15 @@ public class webViewer extends Activity {
 
     void display() {
         //display a page
-        webView.loadDataWithBaseURL(Constants.pageRoot, currentHtml, "text/html", "utf-8", null);
+        webView.loadDataWithBaseURL(getString(R.string.link_server), currentHtml, "text/html", "utf-8", null);
 
         //sets the visibility of the button and the title of the app
-        if(currentUrl.equals(Constants.pageMain)){
+        if (currentUrl.equals(getString(R.string.link_repository))) {
             button.setVisibility(View.GONE);
             setTitle(R.string.action_main_page);
         }else{
             button.setVisibility(View.VISIBLE);
-            setTitle(currentUrl.substring(Constants.pagePrefix.length()));
+            setTitle(currentUrl.substring(getString(R.string.link_script_page_prefix).length()));
             //Note: the name is the one of the URL (with _ ) for debug purpose
         }
     }
@@ -612,7 +600,7 @@ public class webViewer extends Activity {
                 .setPositiveButton(R.string.button_import, new DialogInterface.OnClickListener() {
                     public void onClick(DialogInterface dialog, int which) {
                         sendScriptToLauncher(contentText, nameText, flagsBoxes);
-                        if (!StringFunctions.getMapFromPref(sharedPref, Constants.keySubscriptions).keySet().contains(currentUrl))
+                        if (!StringFunctions.getMapFromPref(sharedPref, getString(R.string.pref_subs)).keySet().contains(currentUrl))
                             showSubscribe();
                     }
                 })
@@ -646,10 +634,10 @@ public class webViewer extends Activity {
                 .setNegativeButton(R.string.button_exit,null)/* new DialogInterface.OnClickListener() {
                     public void onClick(DialogInterface dialog, int which) {}
                 })*/
-                .setPositiveButton(R.string.action_linkGooglePlus, new DialogInterface.OnClickListener() {
+                .setPositiveButton(R.string.text_google_plus, new DialogInterface.OnClickListener() {
                     public void onClick(DialogInterface dialog, int which) {
                         Intent j = new Intent(Intent.ACTION_VIEW);
-                        j.setData(Uri.parse(getString(R.string.linkPlayStore)));
+                        j.setData(Uri.parse(getString(R.string.link_play_store)));
                         startActivity(j);
                     }
                 })
@@ -706,8 +694,8 @@ public class webViewer extends Activity {
     //Subscriptions functions
 
     private void getChangedSubscriptions() {
-        if (sharedPref.contains(Constants.keySubscriptions)) {
-            final Map<String, Integer> pages = StringFunctions.getMapFromPref(sharedPref, Constants.keySubscriptions);
+        if (sharedPref.contains(getString(R.string.pref_subs))) {
+            final Map<String, Integer> pages = StringFunctions.getMapFromPref(sharedPref, getString(R.string.pref_subs));
             if (pages.size() > 0) {
                 counter = pages.size();
                 final ArrayList<String> updated = new ArrayList<>();
@@ -724,7 +712,7 @@ public class webViewer extends Activity {
                                 pages.put(p, hash);
                             }
                             if (counter == 0 && updated.size() > 0) {
-                                StringFunctions.saveMapToPref(sharedPref, Constants.keySubscriptions, pages);
+                                StringFunctions.saveMapToPref(sharedPref, getString(R.string.pref_subs), pages);
                                 showChangedSubscriptions(updated);
                             }
                         }
@@ -753,9 +741,9 @@ public class webViewer extends Activity {
     }
 
     private void subscribeToCurrent() {
-        Map<String, Integer> subs = StringFunctions.getMapFromPref(sharedPref, Constants.keySubscriptions);
+        Map<String, Integer> subs = StringFunctions.getMapFromPref(sharedPref, getString(R.string.pref_subs));
         subs.put(currentUrl, StringFunctions.pageToHash(currentHtml));
-        StringFunctions.saveMapToPref(sharedPref, Constants.keySubscriptions, subs);
+        StringFunctions.saveMapToPref(sharedPref, getString(R.string.pref_subs), subs);
         Toast.makeText(this, getString(R.string.message_subscribe_successful), Toast.LENGTH_SHORT).show();
     }
 

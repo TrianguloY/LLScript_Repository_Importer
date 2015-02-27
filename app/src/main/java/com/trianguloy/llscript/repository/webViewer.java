@@ -3,6 +3,7 @@ package com.trianguloy.llscript.repository;
 import android.annotation.TargetApi;
 import android.app.Activity;
 import android.app.AlertDialog;
+import android.content.ComponentName;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
@@ -56,8 +57,7 @@ public class webViewer extends Activity {
     private ProgressBar progressBar;
 
     //User vars
-    private SharedPreferences sharedPref;//user saved data (used to save the id of the script manager)
-    private int id = -1;
+    private SharedPreferences sharedPref;//user saved data
 
     //Callbacks
     private Boolean close = false; //if pressing back will close or not
@@ -89,7 +89,6 @@ public class webViewer extends Activity {
 
         //initialize variables
         sharedPref = PreferenceManager.getDefaultSharedPreferences(this);
-        id = sharedPref.getInt(Constants.keyId, Constants.notId);
         backStack = new Stack<>();
         currentUrl = Constants.pageMain;
 
@@ -101,79 +100,34 @@ public class webViewer extends Activity {
             return;
         }
 
-        if (id == Constants.notId) {
-            //manager not loaded
-            startActivity(new Intent(this, noManager.class));
-            finish();
-        }else{
-            //Normal activity
-            initializeWeb();
-            getChangedSubscriptions();
-        }
-    }
 
-    private void getChangedSubscriptions() {
-        if (sharedPref.contains(Constants.keySubscriptions)) {
-            final Map<String, Integer> pages = StringFunctions.getMapFromPref(sharedPref, Constants.keySubscriptions);
-            if (pages.size() > 0) {
-                counter = pages.size();
-                final ArrayList<String> updated = new ArrayList<>();
-                for (final String page : pages.keySet()) {
-                    new DownloadTask(new DownloadTask.Listener() {
-                        final String p = page;
 
-                        @Override
-                        public void onFinish(String result) {
-                            counter--;
-                            int hash = StringFunctions.pageToHash(result);
-                            if (hash != -1 && hash != pages.get(p)) {
-                                updated.add(p);
-                                pages.put(p, hash);
-                            }
-                            if (counter == 0 && updated.size() > 0) {
-                                StringFunctions.saveMapToPref(sharedPref, Constants.keySubscriptions, pages);
-                                showChangedSubscriptions(updated);
-                            }
-                        }
+        if (sharedPref.contains(Constants.keyId)) {
+            //To move from the previous version to the new one, to remove on next releases
+            int id = sharedPref.getInt(Constants.keyId,-1);
+            sharedPref.edit().remove(Constants.keyId).commit();
 
-                        @Override
-                        public void onError() {
-                            Log.i("Subscriptions", "Ignored Error");
-                        }
-                    }).execute(page);
-                }
+            if(id != -1) {
+                Intent intent = new Intent(Intent.ACTION_VIEW);
+                intent.setComponent(ComponentName.unflattenFromString(Constants.packageMain));
+                intent.putExtra(Constants.RunActionExtra, Constants.RunActionKey);
+                intent.putExtra(Constants.RunDataExtra, ""+id);
+                startActivity(intent);
+                finish();
+                return;
             }
-        }
-    }
 
-    private void showChangedSubscriptions(List<String> updatedPages) {
-        String pages = "";
-        for (String s : updatedPages) {
-            pages += s.substring(s.indexOf("?id=") + 4) + "\n";
         }
-        new AlertDialog.Builder(this)
-                .setTitle(getString(R.string.title_updated_subs))
-                        //TODO: show script names instead of page ids
-                .setMessage(pages)
-                .setNeutralButton(R.string.button_ok, null)
-                .show();
+
+        //Normal activity
+        initializeWeb();
+        getChangedSubscriptions();
     }
 
     @Override
     protected void onNewIntent(Intent intent){
         //manages the received intent, run automatically when the activity is running and is called again
-        if (intent.hasExtra(Constants.extraId)) {
-            int getId = (int) intent.getDoubleExtra(Constants.extraId, Constants.notId); //The returned id
-            if(getId!=id){
-                //new manager loaded
-                sharedPref.edit().putInt(Constants.keyId, getId).apply();//id of the manager script
-                id = getId;
-                showLoadSuccessful();
-            }
-        }else if (intent.getBooleanExtra(Constants.extraUpdate, false)) {
-            //The manager asks for the updated script (@Deprecated, used in old versions)
-            sendUpdate();
-        }else if (intent.getAction()!=null && intent.getAction().equalsIgnoreCase(Intent.ACTION_VIEW)){
+        if (intent.getAction()!=null && intent.getAction().equalsIgnoreCase(Intent.ACTION_VIEW)){
             String getUrl=intent.getDataString();
             if(getUrl.startsWith(Constants.pagePrefix)){
                 changePage(getUrl);
@@ -184,7 +138,7 @@ public class webViewer extends Activity {
             }
         }
 
-        setIntent(new Intent(this,webViewer.class));
+        setIntent(new Intent(this, webViewer.class));
 
         super.onNewIntent(intent);
     }
@@ -194,8 +148,6 @@ public class webViewer extends Activity {
         this.menu = menu;
         // Inflate the menu; this adds items to the action bar if it is present.
         getMenuInflater().inflate(R.menu.menu_webviewer, menu);
-        menu.findItem(R.id.action_id).setTitle("id: " + (id != Constants.notId ? id : "not found")).setVisible(BuildConfig.DEBUG);
-        menu.findItem(R.id.action_reset).setVisible(BuildConfig.DEBUG);
 
         return true;
     }
@@ -210,11 +162,6 @@ public class webViewer extends Activity {
             case R.id.action_mainPage:
                 //load the main page
                 changePage(Constants.pageMain);
-                break;
-            case R.id.action_reset:
-                //removes the saved id. For Debug purpose
-                sharedPref.edit().remove(Constants.keyId).apply();
-                finish();
                 break;
             case R.id.action_openInBrowser:
                 Intent k = new Intent(Intent.ACTION_VIEW);
@@ -231,13 +178,6 @@ public class webViewer extends Activity {
         }
 
         return true;
-    }
-
-    private void subscribeToCurrent() {
-        Map<String, Integer> subs = StringFunctions.getMapFromPref(sharedPref, Constants.keySubscriptions);
-        subs.put(currentUrl, StringFunctions.pageToHash(currentHtml));
-        StringFunctions.saveMapToPref(sharedPref, Constants.keySubscriptions, subs);
-        Toast.makeText(this, getString(R.string.message_subscribe_successful), Toast.LENGTH_SHORT).show();
     }
 
     @Override
@@ -433,13 +373,6 @@ public class webViewer extends Activity {
                 .setNeutralButton(R.string.button_ok, null)
                 .setIcon(R.drawable.ic_launcher)
                 .show();
-    }
-
-    @Deprecated
-    void sendUpdate(){
-        Intent intent = new Intent(this,ScriptImporter.class);
-        intent.putExtra(Constants.extraUpdate, true);
-        startService(intent);
     }
 
 
@@ -759,5 +692,65 @@ public class webViewer extends Activity {
         share.putExtra(Intent.EXTRA_TEXT,text.toString());
         startActivity(Intent.createChooser(share,"Send to..."));
     }
+
+
+
+    //Subscriptions functions
+
+    private void getChangedSubscriptions() {
+        if (sharedPref.contains(Constants.keySubscriptions)) {
+            final Map<String, Integer> pages = StringFunctions.getMapFromPref(sharedPref, Constants.keySubscriptions);
+            if (pages.size() > 0) {
+                counter = pages.size();
+                final ArrayList<String> updated = new ArrayList<>();
+                for (final String page : pages.keySet()) {
+                    new DownloadTask(new DownloadTask.Listener() {
+                        final String p = page;
+
+                        @Override
+                        public void onFinish(String result) {
+                            counter--;
+                            int hash = StringFunctions.pageToHash(result);
+                            if (hash != -1 && hash != pages.get(p)) {
+                                updated.add(p);
+                                pages.put(p, hash);
+                            }
+                            if (counter == 0 && updated.size() > 0) {
+                                StringFunctions.saveMapToPref(sharedPref, Constants.keySubscriptions, pages);
+                                showChangedSubscriptions(updated);
+                            }
+                        }
+
+                        @Override
+                        public void onError() {
+                            Log.i("Subscriptions", "Ignored Error");
+                        }
+                    }).execute(page);
+                }
+            }
+        }
+    }
+
+    private void showChangedSubscriptions(List<String> updatedPages) {
+        String pages = "";
+        for (String s : updatedPages) {
+            pages += s.substring(s.indexOf("?id=") + 4) + "\n";
+        }
+        new AlertDialog.Builder(this)
+                .setTitle(getString(R.string.title_updated_subs))
+                        //TODO: show script names instead of page ids
+                .setMessage(pages)
+                .setNeutralButton(R.string.button_ok, null)
+                .show();
+    }
+
+    private void subscribeToCurrent() {
+        Map<String, Integer> subs = StringFunctions.getMapFromPref(sharedPref, Constants.keySubscriptions);
+        subs.put(currentUrl, StringFunctions.pageToHash(currentHtml));
+        StringFunctions.saveMapToPref(sharedPref, Constants.keySubscriptions, subs);
+        Toast.makeText(this, getString(R.string.message_subscribe_successful), Toast.LENGTH_SHORT).show();
+    }
+
+
 
 }

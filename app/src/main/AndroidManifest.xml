@@ -51,16 +51,6 @@
                 <!-- \\?id\\=script\\_.* -->
             </intent-filter>
         </activity>
-        <activity
-            android:name=".noManager"
-            android:excludeFromRecents="true"
-            android:label="@string/title_activity" />
-        <activity
-            android:name="com.app.lukas.llscript.RootScriptInstaller"
-            android:excludeFromRecents="true"
-            android:icon="@drawable/ic_launcher"
-            android:label="@string/title_activity"
-            android:screenOrientation="locked" />
 
         <service
             android:name="com.app.lukas.llscript.ScriptImporter"

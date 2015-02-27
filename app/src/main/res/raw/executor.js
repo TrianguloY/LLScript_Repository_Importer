@@ -9,13 +9,21 @@ var intent=new Intent("android.intent.action.MAIN");
 intent.setComponent(ComponentName.unflattenFromString("com.trianguloy.llscript.repository/com.trianguloy.llscript.repository.webViewer"));
 
 if(data==null){
-    //Send the id to the importer app
-    intent.putExtra("id",LL.getCurrentScript().getId());
+
+    //From previous versions, delete the saved script
+    var thisscript=LL.getCurrentScript();
+    if(thisscript.getId() != -3){
+    LL.deleteScript(thisscript);
+    Android.makeNewToast("Removed old manager",true).show();
+    }
+
+    //Open the app
     LL.startActivity(intent);
     return;
 }
 
 //Data received. Let's assume it is correct
+
 //create script
 var toast="";
 var scripts=LL.getAllScriptMatching(Script.FLAG_ALL);

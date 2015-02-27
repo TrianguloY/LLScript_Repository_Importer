@@ -29,7 +29,7 @@ public class Constants {
     static final String INTENT_EXTRA_DELETE_AFTER_EXECUTION = "d";
 
     //App constants
-    static public final int notId = -1;
+    static public final int managerId = -3;
 
     //WebViewer constants
     static final String pageMain = "http://www.pierrox.net/android/applications/lightning_launcher/wiki/doku.php?id=script_repository";
@@ -48,19 +48,22 @@ public class Constants {
 
     //sharedPrefs
     static final String keyRepoHash = "repoHash";
+    @Deprecated
     static public final String keyId = "id";
     static final String keyScripts = "scripts";
     static final String keySubscriptions = "subscriptions";
 
     //Intent Extras
-    static public final String extraId = "id";
     static public final String extraCode = "code";
     static public final String extraFlags = "flags";
     static public final String extraReceiver = "receiver";
     static public final String extraName = "name";
     static public final String extraForceUpdate = "forceUpdate";
-    static public final String extraRunAction = "a";
-    static public final String extraRunData = "d";
+
+    //Run script parameters
+    static public final String RunActionExtra = "a";
+    static public final String RunDataExtra = "d";
+    static public final int RunActionKey = 35;
 
     //Script JSON names for direct drop
     static public final String name = "name";
@@ -74,10 +77,4 @@ public class Constants {
     static public final String ScriptForceUpdate = "forceUpdate";
     static public final String ScriptCode = "code";
     static public final String ScriptReturnResultTo = "returnTo";
-
-
-    @Deprecated
-    static public final String extraUpdate = "update";
-    @Deprecated
-    static public final String ScriptUpdate = "update";
 }

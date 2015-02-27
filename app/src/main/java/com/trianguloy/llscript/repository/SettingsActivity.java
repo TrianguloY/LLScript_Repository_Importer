@@ -27,6 +27,7 @@ public class SettingsActivity extends PreferenceActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setupActionBar();
+        //noinspection deprecation
         addPreferencesFromResource(R.xml.pref_general);
     }
 

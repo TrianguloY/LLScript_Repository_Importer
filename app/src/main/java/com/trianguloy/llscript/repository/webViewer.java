@@ -79,7 +79,7 @@ public class webViewer extends Activity {
         }
     }
     private Stack<backClass> backStack;//contains the history of the views pages
-    private int webViewPositionY = 0;//Contains the positionY that will be applied when the webview finish loading a page
+    private int webViewPositionY = 0;//Contains the positionY that will be applied when the webView finish loading a page
     private int counter;
     private Menu menu;
 
@@ -90,7 +90,7 @@ public class webViewer extends Activity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        //htis is currently untested
+        //this is currently untested
         if(checkForLauncher()){
             return;
         }
@@ -481,12 +481,12 @@ public class webViewer extends Activity {
             //starting found
             StringFunctions.valueAndIndex found=new StringFunctions.valueAndIndex(null,-1,0);
             do{
-                //searchs for a match
+                //searches for a match
                 found = StringFunctions.findBetween(currentHtml, aStart, Constants.ending, found.to, false);
                 if(found.value!=null){
                     //if it is found, it adds it to the list
                     rawCodes.add(found.value.trim());
-                    //Assumes the script name is just before the code, and searchs for it
+                    //Assumes the script name is just before the code, and searches for it
                     StringFunctions.valueAndIndex name=new StringFunctions.valueAndIndex(null,found.from,-1);
                     do {
                         name=StringFunctions.findBetween(currentHtml,">","<",name.from,true);
@@ -522,7 +522,7 @@ public class webViewer extends Activity {
                 aboutScript += ((i == 0) ? "" : "\n *  ") + Html.fromHtml(prov[i]).toString();
             }
 
-            //adds the beggining and end comment block, and remove extra whitespaces at the beginning and end
+            //adds the beginning and end comment block, and remove extra whitespaces at the beginning and end
             aboutScript="/* "+aboutScript.trim()+"\n */\n\n";
         }
 

@@ -1,6 +1,5 @@
 package com.trianguloy.llscript.repository;
 
-import android.annotation.SuppressLint;
 
 /**
  * Static constants used in the project (like R.strings, but also other types)
@@ -14,8 +13,8 @@ public class Constants {
     // The script appears in the custom menu.
     static final int FLAG_CUSTOM_MENU = 8;
 
-    /*
-    @Deprecated
+
+    //Deprecated
         //Id of the script
         static final String INTENT_EXTRA_SCRIPT_ID = "i";
         // Optional: or'ed combination of the FLAG_* constants above (default is 0)
@@ -28,9 +27,9 @@ public class Constants {
          * Optional: delete the script right after loading and (presumably) executing it.
          * This is useful when the script is meant to configure the home screen, create items or
          * install some other scripts, and is no longer needed after this initial setup (default is false).
-         * /
+         */
         static final String INTENT_EXTRA_DELETE_AFTER_EXECUTION = "d";
-    */
+
 
 
     //App constants
@@ -46,10 +45,10 @@ public class Constants {
     static final String ending = "</pre>";
 
     //package constants
-    @SuppressLint("SdCardPath")
-    static public final String scriptsPath = "/data/data/net.pierrox.lightning_launcher_extreme/files/scripts/";
     static public final String packageMain = "net.pierrox.lightning_launcher_extreme/net.pierrox.lightning_launcher.activities.Dashboard";
-
+    static public String[] packages = new String[]{"net.pierrox.lightning_launcher_extreme","net.pierrox.lightning_launcher"};
+    static public String installedPackage = "";
+    static public int minimumNecessaryVersion = 0;
 
     //sharedPrefs
     static final String keyRepoHash = "repoHash";

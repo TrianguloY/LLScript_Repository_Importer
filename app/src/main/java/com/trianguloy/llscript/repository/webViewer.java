@@ -8,6 +8,7 @@ import android.content.ComponentName;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.content.pm.PackageManager;
 import android.net.Uri;
 import android.net.http.HttpResponseCache;
 import android.os.Build;
@@ -88,6 +89,11 @@ public class webViewer extends Activity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
+        //htis is currently untested
+        if(checkForLauncher()){
+            return;
+        }
 
         //initialize variables
         sharedPref = PreferenceManager.getDefaultSharedPreferences(this);
@@ -754,5 +760,47 @@ public class webViewer extends Activity {
     }
 
 
+    private boolean checkForLauncher(){
+        //TODO checks the installed package, extreme or not
+        Constants.installedPackage=Constants.packages[0];
+
+
+        //Checks the version of the launcher
+        try {
+            if(getPackageManager().getPackageInfo(Constants.installedPackage,0).versionCode < Constants.minimumNecessaryVersion){
+                new AlertDialog.Builder(this)
+                        .setTitle("Warning")
+                        .setMessage("The version of the launcher is not supported.\nPlease update the launcher to the latest version")
+                        .setNeutralButton(R.string.button_ok, new DialogInterface.OnClickListener() {
+                            @Override
+                            public void onClick(DialogInterface dialog, int which) {
+                                Intent i = new Intent(Intent.ACTION_VIEW);
+                                i.setData(Uri.parse("https://play.google.com/store/apps/details?id="+Constants.packageMain));
+                                startActivity(i);
+                                finish();
+                            }
+                        })
+                        .setIcon(R.drawable.ic_launcher)
+                        .show();
+                return true;
+            }
+        }catch (PackageManager.NameNotFoundException e) {
+            new AlertDialog.Builder(this)
+                    .setTitle("Warning")
+                    .setMessage("Lightning Launcher was not found. Please install Lightning Launcher for this to work")
+                    .setNeutralButton(R.string.button_ok, new DialogInterface.OnClickListener() {
+                        @Override
+                        public void onClick(DialogInterface dialog, int which) {
+                            finish();
+                        }
+                    })
+                    .setIcon(R.drawable.ic_launcher)
+                    .show();
+            e.printStackTrace();
+            return true;
+        }
+
+        return false;
+    }
 
 }

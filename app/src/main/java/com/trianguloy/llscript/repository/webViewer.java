@@ -407,7 +407,7 @@ public class webViewer extends Activity {
             menu.findItem(R.id.action_subscribe).setVisible(false);
         }else{
             button.setVisibility(View.VISIBLE);
-            setTitle(currentUrl.substring(getString(R.string.link_script_page_prefix).length()));
+            setTitle(StringFunctions.getNameForPageFromPref(sharedPref, this, currentUrl.substring(currentUrl.indexOf("?id=script_") + 11)));
             menu.findItem(R.id.action_subscribe).setVisible(!StringFunctions.getMapFromPref(sharedPref, getString(R.string.pref_subs)).containsKey(currentUrl));
             //Note: the name is the one of the URL (with _ ) for debug purpose
         }
@@ -707,7 +707,7 @@ public class webViewer extends Activity {
 
                         @Override
                         public void onError() {
-                            Log.i("Subscriptions", "Ignored Error");
+                            if (BuildConfig.DEBUG) Log.i("Subscriptions", "Ignored Error");
                         }
                     }).execute(page);
             }

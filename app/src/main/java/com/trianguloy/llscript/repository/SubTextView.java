@@ -23,7 +23,8 @@ public class SubTextView extends TextView {
 
     @Override
     public void setText(CharSequence text, BufferType type) {
-        //noinspection ConstantConditions inspection is wrong here! this statement is not constant!
+        //inspection is wrong here! this statement is not constant!
+        //noinspection ConstantConditions
         if (context != null) {
             key = (String) text;
             super.setText(StringFunctions.getNameForPageFromPref(PreferenceManager.getDefaultSharedPreferences(context), context, key), type);

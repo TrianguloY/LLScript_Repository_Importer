@@ -60,6 +60,7 @@
     <string name="pref_Scripts">scripts</string>
     <string name="pref_repo_hash">repoHash</string>
     <string name="pref_subs">subscriptions</string>
+    <string name="pref_page_names">page_name_map</string>
 
     <!--texts -->
     <string name="text_script_code">Source Code:</string>

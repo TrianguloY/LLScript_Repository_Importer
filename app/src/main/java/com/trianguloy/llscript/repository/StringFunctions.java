@@ -1,5 +1,6 @@
 package com.trianguloy.llscript.repository;
 
+import android.content.Context;
 import android.content.SharedPreferences;
 import android.os.Build;
 
@@ -92,19 +93,19 @@ public class StringFunctions {
         return Collections.emptySet();
     }
 
-    public static void saveMapToPref(SharedPreferences pref, String key, Map<String, Integer> map) {
+    public static void saveMapToPref(SharedPreferences pref, String key, Map<String, Object> map) {
         pref.edit().putString(key, new JSONObject(map).toString()).apply();
     }
 
-    public static Map<String, Integer> getMapFromPref(SharedPreferences pref, String key) {
+    public static Map<String, Object> getMapFromPref(SharedPreferences pref, String key) {
         if (pref.contains(key)) {
             try {
-                HashMap<String, Integer> map = new HashMap<>();
+                HashMap<String, Object> map = new HashMap<>();
                 JSONObject object = new JSONObject(pref.getString(key, ""));
                 Iterator<String> iterator = object.keys();
                 while (iterator.hasNext()) {
                     String k = iterator.next();
-                    map.put(k, (int) object.get(k));
+                    map.put(k, object.get(k));
                 }
                 return map;
             } catch (JSONException e) {
@@ -118,6 +119,26 @@ public class StringFunctions {
         String newHash = StringFunctions.findBetween(html, "<div class=\"docInfo\">", "</div>", -1, false).value;
         if (newHash == null) return -1;
         else return newHash.hashCode();
+    }
+
+    public static Map<String, String> getAllScriptPagesAndNames(String html) {
+        HashMap<String, String> scripts = new HashMap<>();
+        //find all scripts in the repository
+        String[] temp = html.split("title=\"script_");
+        for (int i = 1; i < temp.length; i++) {
+            String s = temp[i];
+            if (!s.startsWith("repository\"") && !s.startsWith("template\""))//exclude the repository itself and the script template
+            {
+                String page = s.substring(0, s.indexOf("\""));
+                String name = StringFunctions.findBetween(html, page + "\">", "<", 0, false).value;
+                scripts.put(page, name);
+            }
+        }
+        return scripts;
+    }
+
+    public static String getNameForPageFromPref(SharedPreferences pref, Context ctx, String page) {
+        return (String) getMapFromPref(pref, ctx.getString(R.string.pref_page_names)).get(page);
     }
 
 }

@@ -17,7 +17,7 @@ import java.util.Map;
 public class SubscriptionsDialog extends Activity implements ListView.OnItemClickListener {
 
     private SharedPreferences sharedPref;
-    private Map<String, Integer> subsMap;
+    private Map<String, Object> subsMap;
     private ArrayAdapter<String> adapter;
 
     @Override
@@ -27,9 +27,9 @@ public class SubscriptionsDialog extends Activity implements ListView.OnItemClic
         ListView subsList = (ListView) findViewById(R.id.sub_list);
         sharedPref = PreferenceManager.getDefaultSharedPreferences(this);
         subsMap = StringFunctions.getMapFromPref(sharedPref, getString(R.string.pref_subs));
-        adapter = new ArrayAdapter<>(this, android.R.layout.simple_list_item_1);
+        adapter = new ArrayAdapter<>(this, R.layout.sub_list_item);
         for (String s : subsMap.keySet()) {
-            adapter.add(s.substring(s.indexOf("?id=") + 4));
+            adapter.add(s.substring(s.indexOf("?id=script_") + 11));
         }
         subsList.setAdapter(adapter);
         subsList.setOnItemClickListener(this);
@@ -40,7 +40,7 @@ public class SubscriptionsDialog extends Activity implements ListView.OnItemClic
     public void onItemClick(AdapterView<?> parent, View view, final int position, long id) {
         new AlertDialog.Builder(this)
                 .setTitle(R.string.title_remove)
-                .setMessage(getString(R.string.message_remove) + adapter.getItem(position) + "?")
+                .setMessage(getString(R.string.message_remove) + StringFunctions.getNameForPageFromPref(sharedPref, this, adapter.getItem(position)) + "?")
                 .setPositiveButton(R.string.button_ok, new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialog, int which) {

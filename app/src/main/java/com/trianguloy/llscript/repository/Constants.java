@@ -41,7 +41,7 @@ public class Constants {
     static public final String packageMain = "net.pierrox.lightning_launcher_extreme/net.pierrox.lightning_launcher.activities.Dashboard";
     static public final String[] packages = new String[]{"net.pierrox.lightning_launcher_extreme", "net.pierrox.lightning_launcher"};
     static public String installedPackage = "";
-    static public final int minimumNecessaryVersion = 0;
+    static public final int minimumNecessaryVersion = 2225; // V12.2b2
 
     //sharedPrefs
     @Deprecated

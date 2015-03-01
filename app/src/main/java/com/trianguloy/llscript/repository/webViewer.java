@@ -745,13 +745,14 @@ public class webViewer extends Activity {
         try {
             if(getPackageManager().getPackageInfo(Constants.installedPackage,0).versionCode < Constants.minimumNecessaryVersion){
                 new AlertDialog.Builder(this)
+                        .setCancelable(false)
                         .setTitle("Warning")
                         .setMessage("The version of the launcher is not supported.\nPlease update the launcher to the latest version")
                         .setNeutralButton(R.string.button_ok, new DialogInterface.OnClickListener() {
                             @Override
                             public void onClick(DialogInterface dialog, int which) {
                                 Intent i = new Intent(Intent.ACTION_VIEW);
-                                i.setData(Uri.parse("https://play.google.com/store/apps/details?id="+Constants.packageMain));
+                                i.setData(Uri.parse("https://play.google.com/store/apps/details?id="+Constants.installedPackage));
                                 startActivity(i);
                                 finish();
                             }

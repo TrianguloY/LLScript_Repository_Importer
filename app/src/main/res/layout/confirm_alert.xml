@@ -13,7 +13,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:textAppearance="?android:attr/textAppearanceSmall"
-            android:text="@string/text_script_name"
+            android:text="@string/text_scriptName"
             android:id="@+id/textView3" />
 
         <EditText
@@ -32,21 +32,21 @@
         <CheckBox
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="@string/flag_alert_menu"
+            android:text="@string/text_menuFlag"
             android:id="@+id/checkBox"
             android:textSize="12sp" />
 
         <CheckBox
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="@string/flag_alert_item"
+            android:text="@string/text_itemFlag"
             android:id="@+id/checkBox2"
             android:textSize="12sp" />
 
         <CheckBox
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="@string/flag_alert_custom"
+            android:text="@string/text_customFlag"
             android:id="@+id/checkBox3"
             android:textSize="12sp" />
     </LinearLayout>
@@ -55,13 +55,13 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:textAppearance="?android:attr/textAppearanceSmall"
-        android:text="@string/text_script_code"
+        android:text="@string/text_scriptCode"
         android:id="@+id/textView4" />
 
     <EditText
         android:layout_width="fill_parent"
         android:layout_height="fill_parent"
         android:id="@+id/editText2"
-        android:hint="@string/message_code_hint" />
+        android:hint="@string/message_codeHint" />
 
 </LinearLayout>

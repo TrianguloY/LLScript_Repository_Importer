@@ -135,10 +135,10 @@ public class webViewer extends Activity {
         //manages the received intent, run automatically when the activity is running and is called again
         if (intent.getAction()!=null && intent.getAction().equalsIgnoreCase(Intent.ACTION_VIEW)){
             String getUrl=intent.getDataString();
-            if (getUrl.startsWith(getString(R.string.link_script_page_prefix))) {
+            if (getUrl.startsWith(getString(R.string.link_scriptPagePrefix))) {
                 changePage(getUrl);
             }else{
-                Toast.makeText(getApplicationContext(),getString(R.string.message_badString),Toast.LENGTH_LONG).show();
+                Toast.makeText(getApplicationContext(),getString(R.string.toast_badString),Toast.LENGTH_LONG).show();
                 moveTaskToBack(true);
                 finish=true;
             }
@@ -200,7 +200,7 @@ public class webViewer extends Activity {
 
         }else if (!close) {
             //Press back while the toast is still displayed to close
-            Toast.makeText(getApplicationContext(),R.string.message_back_to_close, Toast.LENGTH_SHORT).show();
+            Toast.makeText(getApplicationContext(),R.string.toast_backToClose, Toast.LENGTH_SHORT).show();
             close = true;
             new Timer().schedule(new TimerTask() {
                 @Override
@@ -257,10 +257,10 @@ public class webViewer extends Activity {
                     int newHash = StringFunctions.pageToHash(result);
                     if (newHash != -1) {
 
-                        if ((sharedPref.contains(getString(R.string.pref_repo_hash)) && sharedPref.getInt(getString(R.string.pref_repo_hash), 0) != newHash) || !sharedPref.contains(getString(R.string.pref_page_names))) {
+                        if ((sharedPref.contains(getString(R.string.pref_repoHash)) && sharedPref.getInt(getString(R.string.pref_repoHash), 0) != newHash) || !sharedPref.contains(getString(R.string.pref_pageNames))) {
                             showNewScripts();
                         }
-                        sharedPref.edit().putInt(getString(R.string.pref_repo_hash), newHash).apply();
+                        sharedPref.edit().putInt(getString(R.string.pref_repoHash), newHash).apply();
                     }
                 }
                 progressBar.setVisibility(View.GONE);
@@ -334,7 +334,7 @@ public class webViewer extends Activity {
         Map<String, String> map = StringFunctions.getAllScriptPagesAndNames(repoHtml);
         HashMap<String, Object> temp = new HashMap<>();
         for (String s : map.keySet()) temp.put(s, map.get(s));
-        StringFunctions.saveMapToPref(sharedPref, getString(R.string.pref_page_names), temp);
+        StringFunctions.saveMapToPref(sharedPref, getString(R.string.pref_pageNames), temp);
         Set<String> currentScripts = map.keySet();
         if (sharedPref.contains(getString(R.string.pref_Scripts))) {
             Set<String> oldScripts = StringFunctions.getSetFromPref(sharedPref, getString(R.string.pref_Scripts));
@@ -346,17 +346,17 @@ public class webViewer extends Activity {
                 ArrayList<String> newScriptNames = new ArrayList<>();
                 for (String s : newScripts) newScriptNames.add(map.get(s));
                 if (newScriptNames.size() == 1)
-                    Toast.makeText(this, getString(R.string.message_one_new_script) + "\n" + newScriptNames.get(0), Toast.LENGTH_LONG).show();
+                    Toast.makeText(this, getString(R.string.toast_oneNewScript) + "\n" + newScriptNames.get(0), Toast.LENGTH_LONG).show();
                 else {
                     String names = "";
                     for (int i = 0; i < newScriptNames.size(); i++)
                         names += "\n" + newScriptNames.get(i);
-                    Toast.makeText(this, getString(R.string.message_several_new_scripts) + names, Toast.LENGTH_LONG).show();
+                    Toast.makeText(this, getString(R.string.toast_severalNewScripts) + names, Toast.LENGTH_LONG).show();
                 }
             }
         } else {
             StringFunctions.saveSetToPref(sharedPref, getString(R.string.pref_Scripts), currentScripts);
-            Toast.makeText(getApplicationContext(), R.string.message_repo_changed, Toast.LENGTH_SHORT).show();
+            Toast.makeText(getApplicationContext(), R.string.toast_repoChanged, Toast.LENGTH_SHORT).show();
         }
     }
 
@@ -381,7 +381,7 @@ public class webViewer extends Activity {
                 currentHtml = repoHtml;
                 display();
             }
-        } else if (url.startsWith(getString(R.string.link_script_page_prefix))) {
+        } else if (url.startsWith(getString(R.string.link_scriptPagePrefix))) {
             // script page
             if(!currentUrl.equals(url)) {
                 backStack.push(new backClass(currentUrl, webView.getScrollY()));
@@ -403,7 +403,7 @@ public class webViewer extends Activity {
         //sets the visibility of the button and the title of the app
         if (currentUrl.equals(getString(R.string.link_repository))) {
             button.setVisibility(View.GONE);
-            setTitle(R.string.action_main_page);
+            setTitle(R.string.action_mainPage);
             menu.findItem(R.id.action_subscribe).setVisible(false);
         }else{
             button.setVisibility(View.VISIBLE);
@@ -416,8 +416,8 @@ public class webViewer extends Activity {
     void showExternalPageLinkClicked(final String url){
         //When the clicked page is not useful for this app
         new AlertDialog.Builder(this)
-                .setTitle(R.string.title_external_page)
-                .setMessage(R.string.message_external_page)
+                .setTitle(R.string.title_externalPage)
+                .setMessage(R.string.message_externalPage)
                 .setPositiveButton(R.string.button_ok, new DialogInterface.OnClickListener() {
                     public void onClick(DialogInterface dialog, int which) {
                         Intent i = new Intent(Intent.ACTION_VIEW);
@@ -546,7 +546,7 @@ public class webViewer extends Activity {
     void showMoreThanOneScriptFound(final String[] names, final String[] rawCodes, final String about){
         //More than one script found select one of them to import
         new AlertDialog.Builder(this)
-                .setTitle(R.string.message_more_than_one_script)
+                .setTitle(R.string.title_severalScriptsFound)
                 .setIcon(R.drawable.ic_launcher)
                 .setSingleChoiceItems(names, android.R.layout.simple_list_item_single_choice, new DialogInterface.OnClickListener() {
                     public void onClick(DialogInterface dialog, int which) {
@@ -567,7 +567,7 @@ public class webViewer extends Activity {
         }
 
         String code =new String(builder).trim();
-        if (sharedPref.getBoolean(getString(R.string.pref_about_script), true))
+        if (sharedPref.getBoolean(getString(R.string.pref_aboutScript), true))
             code = aboutString + code;
 
         //the alert dialog
@@ -604,7 +604,7 @@ public class webViewer extends Activity {
     private void showSubscribe() {
         new AlertDialog.Builder(this)
                 .setTitle(getString(R.string.title_subscribe))
-                .setMessage(getString(R.string.message_subscribe))
+                .setMessage(getString(R.string.message_subscribeAsk))
                 .setNegativeButton(R.string.button_cancel, null)
                 .setPositiveButton(R.string.button_ok, new DialogInterface.OnClickListener() {
                     @Override
@@ -622,15 +622,15 @@ public class webViewer extends Activity {
                 .setNegativeButton(R.string.button_exit,null)/* new DialogInterface.OnClickListener() {
                     public void onClick(DialogInterface dialog, int which) {}
                 })*/
-                .setPositiveButton(R.string.text_google_plus, new DialogInterface.OnClickListener() {
+                .setPositiveButton(R.string.text_googlePlus, new DialogInterface.OnClickListener() {
                     public void onClick(DialogInterface dialog, int which) {
                         Intent j = new Intent(Intent.ACTION_VIEW);
-                        j.setData(Uri.parse(getString(R.string.link_play_store)));
+                        j.setData(Uri.parse(getString(R.string.link_playStoreImporter)));
                         startActivity(j);
                     }
                 })
                 .setIcon(R.drawable.ic_launcher)
-                .setMessage(R.string.message_no_script_found)
+                .setMessage(R.string.message_noScriptFound)
                 .show();
     }
 
@@ -721,7 +721,7 @@ public class webViewer extends Activity {
             pages += map.get(s.substring(s.indexOf("?id=script_") + 11)) + "\n";
         }
         new AlertDialog.Builder(this)
-                .setTitle(getString(R.string.title_updated_subs))
+                .setTitle(getString(R.string.title_updatedSubs))
                 .setMessage(pages)
                 .setNeutralButton(R.string.button_ok, null)
                 .show();
@@ -731,7 +731,7 @@ public class webViewer extends Activity {
         Map<String, Object> subs = StringFunctions.getMapFromPref(sharedPref, getString(R.string.pref_subs));
         subs.put(currentUrl, StringFunctions.pageToHash(currentHtml));
         StringFunctions.saveMapToPref(sharedPref, getString(R.string.pref_subs), subs);
-        Toast.makeText(this, getString(R.string.message_subscribe_successful), Toast.LENGTH_SHORT).show();
+        Toast.makeText(this, getString(R.string.toast_subscribeSuccessful), Toast.LENGTH_SHORT).show();
         menu.findItem(R.id.action_subscribe).setVisible(false);
     }
 
@@ -746,13 +746,13 @@ public class webViewer extends Activity {
             if(getPackageManager().getPackageInfo(Constants.installedPackage,0).versionCode < Constants.minimumNecessaryVersion){
                 new AlertDialog.Builder(this)
                         .setCancelable(false)
-                        .setTitle("Warning")
-                        .setMessage("The version of the launcher is not supported.\nPlease update the launcher to the latest version")
+                        .setTitle(getString(R.string.title_oudatedLauncher))
+                        .setMessage(getString(R.string.message_outdatedLauncher))
                         .setNeutralButton(R.string.button_ok, new DialogInterface.OnClickListener() {
                             @Override
                             public void onClick(DialogInterface dialog, int which) {
                                 Intent i = new Intent(Intent.ACTION_VIEW);
-                                i.setData(Uri.parse("https://play.google.com/store/apps/details?id="+Constants.installedPackage));
+                                i.setData(Uri.parse(getString(R.string.link_playStorePrefix)+Constants.installedPackage));
                                 startActivity(i);
                                 finish();
                             }
@@ -763,8 +763,8 @@ public class webViewer extends Activity {
             }
         }catch (PackageManager.NameNotFoundException e) {
             new AlertDialog.Builder(this)
-                    .setTitle("Warning")
-                    .setMessage("Lightning Launcher was not found. Please install Lightning Launcher for this to work")
+                    .setTitle(getString(R.string.title_launcherNotFound))
+                    .setMessage(getString(R.string.message_launcherNotFound))
                     .setNeutralButton(R.string.button_ok, new DialogInterface.OnClickListener() {
                         @Override
                         public void onClick(DialogInterface dialog, int which) {

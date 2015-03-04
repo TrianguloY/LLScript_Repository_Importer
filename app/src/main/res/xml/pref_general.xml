@@ -2,35 +2,35 @@
 
     <PreferenceCategory android:title="General">
         <CheckBoxPreference
-            android:key="@string/pref_about_script"
-            android:title="Attach 'About Script'"
+            android:key="@string/pref_aboutScript"
+            android:title="@string/title_attachAboutScript"
             android:defaultValue="true" />
         <Preference
-            android:title="Subscriptions"
-            android:summary="Manage your subscriptions">
+            android:title="@string/title_subscriptions"
+            android:summary="@string/summary_subscriptions">
             <intent
                 android:action="android.intent.action.VIEW"
                 android:targetClass="com.trianguloy.llscript.repository.SubscriptionsDialog"
                 android:targetPackage="com.trianguloy.llscript.repository" />
         </Preference>
     </PreferenceCategory>
-    <PreferenceCategory android:title="Links">
-        <Preference android:title="@string/text_play_store">
+    <PreferenceCategory android:title="@string/title_links">
+        <Preference android:title="@string/text_playStore">
             <intent
                 android:action="android.intent.action.VIEW"
-                android:data="@string/link_play_store" />
+                android:data="@string/link_playStoreImporter" />
         </Preference>
 
-        <Preference android:title="@string/text_google_plus">
+        <Preference android:title="@string/text_googlePlus">
             <intent
                 android:action="android.intent.action.VIEW"
-                android:data="@string/link_google_plus" />
+                android:data="@string/link_googlePlus" />
         </Preference>
     </PreferenceCategory>
-    <PreferenceCategory android:title="About">
+    <PreferenceCategory android:title="@string/title_about">
         <Preference
-            android:title="Authors"
-            android:summary="TrianguloY and Lukas Morawietz"
+            android:title="@string/title_author"
+            android:summary="@string/summary_about"
             android:enabled="false" />
     </PreferenceCategory>
 </PreferenceScreen>

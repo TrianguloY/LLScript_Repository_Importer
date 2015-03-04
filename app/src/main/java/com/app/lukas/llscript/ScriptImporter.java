@@ -51,7 +51,7 @@ public class ScriptImporter extends Service {
             data.put(Constants.ScriptForceUpdate, forceUpdate);
         } catch (JSONException e) {
             e.printStackTrace();
-            Toast.makeText(getApplicationContext(), getString(R.string.message_manager_error), Toast.LENGTH_LONG).show();
+            Toast.makeText(getApplicationContext(), getString(R.string.toast_managerError), Toast.LENGTH_LONG).show();
             return;
         }
         sendIntent(data);

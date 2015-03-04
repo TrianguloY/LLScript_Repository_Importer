@@ -28,7 +28,7 @@
         <activity
             android:name=".webViewer"
             android:configChanges="orientation|screenSize"
-            android:label="@string/title_activity"
+            android:label="@string/label_repoImporter"
             android:launchMode="singleInstance">
         <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
@@ -54,7 +54,7 @@
             android:excludeFromRecents="true"
             android:exported="true"
             android:icon="@drawable/ic_launcher"
-            android:label="@string/title_activity"
+            android:label="@string/label_repoImporter"
             android:permission="net.pierrox.lightning_launcher.IMPORT_SCRIPTS">
         <intent-filter>
                 <action android:name="net.pierrox.lightning_launcher.script.IMPORT" />
@@ -65,7 +65,7 @@
 
         <activity
             android:name=".SettingsActivity"
-            android:label="@string/title_settings"
+            android:label="@string/label_settings"
             android:parentActivityName=".webViewer">
         <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
@@ -73,7 +73,7 @@
         </activity>
         <activity
             android:name=".SubscriptionsDialog"
-            android:label="@string/title_activity_subscriptions_dialog"
+            android:label="@string/label_subscriptionsDialog"
             android:parentActivityName=".SettingsActivity">
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"

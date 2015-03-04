@@ -139,7 +139,7 @@ public class StringFunctions {
     }
 
     public static String getNameForPageFromPref(SharedPreferences pref, Context ctx, String page) {
-        String result = (String) getMapFromPref(pref, ctx.getString(R.string.pref_page_names)).get(page);
+        String result = (String) getMapFromPref(pref, ctx.getString(R.string.pref_pageNames)).get(page);
         if (result != null) return result;
         if (BuildConfig.DEBUG) Log.i("StringFunctions", "Failed to find script name for " + page);
         return page;

@@ -1,7 +1,7 @@
 <menu xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     tools:context="trianguloy.llscript.repository/.webViewer">
-    <item android:id="@+id/action_mainPage" android:title="@string/action_main_page"
+    <item android:id="@+id/action_mainPage" android:title="@string/action_mainPage"
         android:orderInCategory="100" android:showAsAction="ifRoom" android:icon="@drawable/ic_menu_home"/>
 
     <item android:id="@+id/action_openInBrowser" android:title="@string/action_openInBrowser"

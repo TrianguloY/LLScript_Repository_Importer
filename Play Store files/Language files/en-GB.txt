@@ -30,11 +30,13 @@ https://github.com/TrianguloY/LLScript_Repository_Importer
 
 _Changes_
 V 1.5
+IMPORTANT: Requires a minimum Version of LL. It will ask to update otherwise.
 New: Settings
 New: Subscriptions - You'll get notified if a page changes to which you subscribed
 New: Upward navigation on web pages in the actionbar
 Improved: No setup required
 Improved: Show page names instead of identifiers where possible
+Improved: Texts
 Fixed: Support for the LL Trial Version
 
 V 1.4

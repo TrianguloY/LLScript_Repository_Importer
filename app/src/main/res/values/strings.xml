@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<resources>
+<resources xmlns:tools="http://schemas.android.com/tools">
 
     <!-- package name -->
     <string name="app_name">Repository importer</string>
@@ -18,7 +18,7 @@
     <string name="action_unsubscribe">Unsubscribe</string>
 
     <!-- webviewer -->
-    <string name="button_importToLauncher">Search and import...</string>
+    <string name="button_importToLauncher">Search and import…</string>
 
     <!-- settings -->
     <string name="title_attachAboutScript">Attach \'About Script\'</string>
@@ -120,6 +120,6 @@
 
 
     <!-- unsorted-->
-    <string name="dummy">Dummy string to force new ones to be below</string>
+    <string name="dummy" tools:ignore="UnusedResources">Dummy string to force new ones to be below</string>
 
 </resources>

@@ -457,13 +457,13 @@ public class webViewer extends Activity {
             setTitle(R.string.action_mainPage);
             menu.findItem(R.id.action_subscribe).setVisible(false);
             menu.findItem(R.id.action_unsubscribe).setVisible(false);
-            getActionBar().setDisplayHomeAsUpEnabled(false);
+            if (Build.VERSION.SDK_INT >= 11) getActionBar().setDisplayHomeAsUpEnabled(false);
         }else{
             button.setVisibility(View.VISIBLE);
             setTitle(StringFunctions.getNameForPageFromPref(sharedPref, this, currentUrl.substring(currentUrl.indexOf("?id=script_") + 11)));
             menu.findItem(R.id.action_subscribe).setVisible(!StringFunctions.getMapFromPref(sharedPref, getString(R.string.pref_subs)).containsKey(currentUrl));
             menu.findItem(R.id.action_unsubscribe).setVisible(StringFunctions.getMapFromPref(sharedPref, getString(R.string.pref_subs)).containsKey(currentUrl));
-            getActionBar().setDisplayHomeAsUpEnabled(true);
+            if (Build.VERSION.SDK_INT >= 11) getActionBar().setDisplayHomeAsUpEnabled(true);
         }
     }
 

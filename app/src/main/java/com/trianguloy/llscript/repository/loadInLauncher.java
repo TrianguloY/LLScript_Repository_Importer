@@ -6,8 +6,9 @@ import android.os.Bundle;
 /**
  * Basic activity used by Lightning launcher to load the script
  *
- * This class is deprecated and it should be removed
+ * Class kept to avoid crashes on old versions of Lightning launcher. To remove in future releases
  */
+@Deprecated
 public class loadInLauncher extends Activity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {

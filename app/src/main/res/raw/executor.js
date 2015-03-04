@@ -34,13 +34,22 @@ for(var t=0;t<scripts.getLength();++t){
 }
 
 if(match==null){
+
 //Not found. Create
     match = LL.createScript(data.name,data.code,data.flags);
     toast="Script imported successfully.\nAvailable in the launcher";
+
 }else if(match.getText()==data.code){
-//same name and code
-    toast="Script already imported, nothing changed";
+
+//same name and code. Updated flags
+    toast="Script already imported";
+    //2,4,8 <-> app_menu,item_menu,custom_menu
+    match.setFlag(2,((data.flags>>1)&1)==1);
+    match.setFlag(4,((data.flags>>2)&1)==1);
+    match.setFlag(8,((data.flags>>3)&1)==1);
+
 }else{
+
 //same name, different code
     if(data.forceUpdate || confirm("There is a script with the same name but different code. Do you want to update it?")){
     //update

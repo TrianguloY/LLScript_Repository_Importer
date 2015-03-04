@@ -18,7 +18,7 @@
     <Button
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="@string/button_import"
+        android:text="@string/button_importToLauncher"
         android:id="@+id/button"
         android:onClick="startImport"
         android:visibility="gone"

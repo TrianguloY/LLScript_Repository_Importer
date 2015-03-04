@@ -237,6 +237,50 @@ public class webViewer extends Activity {
 
 
     //Initialization
+    private boolean checkForLauncher(){
+        //TODO checks the installed package, extreme or not
+        Constants.installedPackage=Constants.packages[0];
+
+
+        //Checks the version of the launcher
+        try {
+            if(getPackageManager().getPackageInfo(Constants.installedPackage,0).versionCode < Constants.minimumNecessaryVersion){
+                new AlertDialog.Builder(this)
+                        .setCancelable(false)
+                        .setTitle(getString(R.string.title_oudatedLauncher))
+                        .setMessage(getString(R.string.message_outdatedLauncher))
+                        .setNeutralButton(R.string.button_ok, new DialogInterface.OnClickListener() {
+                            @Override
+                            public void onClick(DialogInterface dialog, int which) {
+                                Intent i = new Intent(Intent.ACTION_VIEW);
+                                i.setData(Uri.parse(getString(R.string.link_playStorePrefix)+Constants.installedPackage));
+                                startActivity(i);
+                                finish();
+                            }
+                        })
+                        .setIcon(R.drawable.ic_launcher)
+                        .show();
+                return true;
+            }
+        }catch (PackageManager.NameNotFoundException e) {
+            new AlertDialog.Builder(this)
+                    .setTitle(getString(R.string.title_launcherNotFound))
+                    .setMessage(getString(R.string.message_launcherNotFound))
+                    .setNeutralButton(R.string.button_ok, new DialogInterface.OnClickListener() {
+                        @Override
+                        public void onClick(DialogInterface dialog, int which) {
+                            finish();
+                        }
+                    })
+                    .setIcon(R.drawable.ic_launcher)
+                    .show();
+            e.printStackTrace();
+            return true;
+        }
+
+        return false;
+    }
+
     void initializeWeb(){
         //Main Activity. Run on onCreate when normal launch
         setContentView(R.layout.activity_webviewer);
@@ -409,7 +453,6 @@ public class webViewer extends Activity {
             button.setVisibility(View.VISIBLE);
             setTitle(StringFunctions.getNameForPageFromPref(sharedPref, this, currentUrl.substring(currentUrl.indexOf("?id=script_") + 11)));
             menu.findItem(R.id.action_subscribe).setVisible(!StringFunctions.getMapFromPref(sharedPref, getString(R.string.pref_subs)).containsKey(currentUrl));
-            //Note: the name is the one of the URL (with _ ) for debug purpose
         }
     }
 
@@ -680,7 +723,6 @@ public class webViewer extends Activity {
 
 
     //Subscriptions functions
-
     private void getChangedSubscriptions() {
         if (sharedPref.contains(getString(R.string.pref_subs))) {
             final Map<String, Object> pages = StringFunctions.getMapFromPref(sharedPref, getString(R.string.pref_subs));
@@ -735,49 +777,5 @@ public class webViewer extends Activity {
         menu.findItem(R.id.action_subscribe).setVisible(false);
     }
 
-
-    private boolean checkForLauncher(){
-        //TODO checks the installed package, extreme or not
-        Constants.installedPackage=Constants.packages[0];
-
-
-        //Checks the version of the launcher
-        try {
-            if(getPackageManager().getPackageInfo(Constants.installedPackage,0).versionCode < Constants.minimumNecessaryVersion){
-                new AlertDialog.Builder(this)
-                        .setCancelable(false)
-                        .setTitle(getString(R.string.title_oudatedLauncher))
-                        .setMessage(getString(R.string.message_outdatedLauncher))
-                        .setNeutralButton(R.string.button_ok, new DialogInterface.OnClickListener() {
-                            @Override
-                            public void onClick(DialogInterface dialog, int which) {
-                                Intent i = new Intent(Intent.ACTION_VIEW);
-                                i.setData(Uri.parse(getString(R.string.link_playStorePrefix)+Constants.installedPackage));
-                                startActivity(i);
-                                finish();
-                            }
-                        })
-                        .setIcon(R.drawable.ic_launcher)
-                        .show();
-                return true;
-            }
-        }catch (PackageManager.NameNotFoundException e) {
-            new AlertDialog.Builder(this)
-                    .setTitle(getString(R.string.title_launcherNotFound))
-                    .setMessage(getString(R.string.message_launcherNotFound))
-                    .setNeutralButton(R.string.button_ok, new DialogInterface.OnClickListener() {
-                        @Override
-                        public void onClick(DialogInterface dialog, int which) {
-                            finish();
-                        }
-                    })
-                    .setIcon(R.drawable.ic_launcher)
-                    .show();
-            e.printStackTrace();
-            return true;
-        }
-
-        return false;
-    }
 
 }

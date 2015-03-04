@@ -12,7 +12,7 @@ public class Constants {
     static final int FLAG_CUSTOM_MENU = 8;
 
 
-    //Deprecated
+    //Legacy variables. To remove with loadInLauncher
         //Id of the script
         static final String INTENT_EXTRA_SCRIPT_ID = "i";
         // Optional: or'ed combination of the FLAG_* constants above (default is 0)

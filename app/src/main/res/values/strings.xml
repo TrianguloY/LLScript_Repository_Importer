@@ -15,6 +15,7 @@
     <string name="action_openInBrowser">Open in browser</string>
     <string name="action_settings">Settings…</string>
     <string name="action_subscribe">Subscribe</string>
+    <string name="action_unsubscribe">Unsubscribe</string>
 
     <!-- webviewer -->
     <string name="button_importToLauncher">Search and import...</string>
@@ -78,6 +79,7 @@
     <string name="toast_severalNewScripts">There are new Scripts in the Repository:</string>
     <string name="toast_repoChanged">The repository Page has changed since your last visit\nNew Script?</string>
     <string name="toast_subscribeSuccessful">Successfully subscribed</string>
+    <string name="toast_unsubscribeSuccessful">Successfully unsubscribed</string>
 
 
     <!-- generic buttons -->

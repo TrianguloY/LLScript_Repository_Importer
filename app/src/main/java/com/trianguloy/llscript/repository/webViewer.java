@@ -179,6 +179,13 @@ public class webViewer extends Activity {
                 break;
             case R.id.action_subscribe:
                 subscribeToCurrent();
+                break;
+            case R.id.action_unsubscribe:
+                unsubscribeCurrent();
+                break;
+            case android.R.id.home:
+                onBackPressed();
+                break;
             default:
                 return super.onOptionsItemSelected(item);
         }
@@ -449,10 +456,14 @@ public class webViewer extends Activity {
             button.setVisibility(View.GONE);
             setTitle(R.string.action_mainPage);
             menu.findItem(R.id.action_subscribe).setVisible(false);
+            menu.findItem(R.id.action_unsubscribe).setVisible(false);
+            getActionBar().setDisplayHomeAsUpEnabled(false);
         }else{
             button.setVisibility(View.VISIBLE);
             setTitle(StringFunctions.getNameForPageFromPref(sharedPref, this, currentUrl.substring(currentUrl.indexOf("?id=script_") + 11)));
             menu.findItem(R.id.action_subscribe).setVisible(!StringFunctions.getMapFromPref(sharedPref, getString(R.string.pref_subs)).containsKey(currentUrl));
+            menu.findItem(R.id.action_unsubscribe).setVisible(StringFunctions.getMapFromPref(sharedPref, getString(R.string.pref_subs)).containsKey(currentUrl));
+            getActionBar().setDisplayHomeAsUpEnabled(true);
         }
     }
 
@@ -775,6 +786,17 @@ public class webViewer extends Activity {
         StringFunctions.saveMapToPref(sharedPref, getString(R.string.pref_subs), subs);
         Toast.makeText(this, getString(R.string.toast_subscribeSuccessful), Toast.LENGTH_SHORT).show();
         menu.findItem(R.id.action_subscribe).setVisible(false);
+        menu.findItem(R.id.action_unsubscribe).setVisible(true);
+    }
+
+    private void unsubscribeCurrent() {
+        Map<String, Object> subs = StringFunctions.getMapFromPref(sharedPref, getString(R.string.pref_subs));
+        subs.remove(currentUrl);
+        StringFunctions.saveMapToPref(sharedPref, getString(R.string.pref_subs), subs);
+        Toast.makeText(this, getString(R.string.toast_unsubscribeSuccessful), Toast.LENGTH_SHORT).show();
+        menu.findItem(R.id.action_subscribe).setVisible(true);
+        menu.findItem(R.id.action_unsubscribe).setVisible(false);
+
     }
 
 

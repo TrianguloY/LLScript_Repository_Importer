@@ -60,7 +60,7 @@ public class ScriptImporter extends Service {
 
     void sendIntent(JSONObject data) {
         Intent i = new Intent(Intent.ACTION_VIEW);
-        i.setComponent(ComponentName.unflattenFromString(Constants.packageMain));
+        i.setComponent(new ComponentName(Constants.installedPackage,Constants.activityRunScript));
         i.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
         i.putExtra(Constants.RunActionExtra, Constants.RunActionKey);
         i.putExtra(Constants.RunDataExtra, Constants.managerId + "/" + data.toString());

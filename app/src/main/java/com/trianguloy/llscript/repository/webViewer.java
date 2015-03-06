@@ -7,6 +7,7 @@ import android.content.ComponentName;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager;
 import android.net.Uri;
 import android.net.http.HttpResponseCache;
@@ -115,7 +116,7 @@ public class webViewer extends Activity {
 
             if(id != -1) {
                 Intent intent = new Intent(Intent.ACTION_VIEW);
-                intent.setComponent(ComponentName.unflattenFromString(Constants.packageMain));
+                intent.setComponent(new ComponentName(Constants.installedPackage,Constants.activityRunScript));
                 intent.putExtra(Constants.RunActionExtra, Constants.RunActionKey);
                 intent.putExtra(Constants.RunDataExtra, ""+id);
                 startActivity(intent);
@@ -245,45 +246,63 @@ public class webViewer extends Activity {
 
     //Initialization
     private boolean checkForLauncher(){
-        //TODO checks the installed package, extreme or not
-        Constants.installedPackage=Constants.packages[0];
 
+        //checks the installed package, extreme or not
+        PackageManager pm = getPackageManager();
+        PackageInfo pi = null;
+        Constants.installedPackage="";
 
-        //Checks the version of the launcher
-        try {
-            if(getPackageManager().getPackageInfo(Constants.installedPackage,0).versionCode < Constants.minimumNecessaryVersion){
-                new AlertDialog.Builder(this)
-                        .setCancelable(false)
-                        .setTitle(getString(R.string.title_oudatedLauncher))
-                        .setMessage(getString(R.string.message_outdatedLauncher))
-                        .setNeutralButton(R.string.button_ok, new DialogInterface.OnClickListener() {
-                            @Override
-                            public void onClick(DialogInterface dialog, int which) {
-                                Intent i = new Intent(Intent.ACTION_VIEW);
-                                i.setData(Uri.parse(getString(R.string.link_playStorePrefix)+Constants.installedPackage));
-                                startActivity(i);
-                                finish();
-                            }
-                        })
-                        .setIcon(R.drawable.ic_launcher)
-                        .show();
-                return true;
+        for (String p : Constants.packages){
+            try{
+                pi=pm.getPackageInfo(p, PackageManager.GET_ACTIVITIES);
+                Constants.installedPackage=p;
+                break;
+            } catch (PackageManager.NameNotFoundException e) {
+                //empty, it just don't breaks and go to next iteration
             }
-        }catch (PackageManager.NameNotFoundException e) {
+        }
+
+        if(Constants.installedPackage.equals("") || (pi == null)){
+            //Non of the apps were found
             new AlertDialog.Builder(this)
                     .setTitle(getString(R.string.title_launcherNotFound))
                     .setMessage(getString(R.string.message_launcherNotFound))
                     .setNeutralButton(R.string.button_ok, new DialogInterface.OnClickListener() {
                         @Override
                         public void onClick(DialogInterface dialog, int which) {
+                            Intent i = new Intent(Intent.ACTION_VIEW);
+                            i.setData(Uri.parse(getString(R.string.link_playStorePrefix)+Constants.packages[1]));
+                            startActivity(i);
                             finish();
                         }
                     })
                     .setIcon(R.drawable.ic_launcher)
                     .show();
-            e.printStackTrace();
             return true;
         }
+
+
+        //Checks the version of the launcher
+
+        if( ( pi.versionCode % 1000) < Constants.minimumNecessaryVersion){
+            new AlertDialog.Builder(this)
+                    .setCancelable(false)
+                    .setTitle(getString(R.string.title_oudatedLauncher))
+                    .setMessage(getString(R.string.message_outdatedLauncher))
+                    .setNeutralButton(R.string.button_ok, new DialogInterface.OnClickListener() {
+                        @Override
+                        public void onClick(DialogInterface dialog, int which) {
+                            Intent i = new Intent(Intent.ACTION_VIEW);
+                            i.setData(Uri.parse(getString(R.string.link_playStorePrefix) + Constants.installedPackage));
+                            startActivity(i);
+                            finish();
+                        }
+                    })
+                    .setIcon(R.drawable.ic_launcher)
+                    .show();
+            return true;
+        }
+
 
         return false;
     }

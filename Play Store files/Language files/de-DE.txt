@@ -29,6 +29,15 @@ https://github.com/TrianguloY/LLScript_Repository_Importer
 
 
 _Changes_
+V 1.5
+WICHTIG: Erfordert eine minimale LL-Version. Wenn diese nicht installiert ist, wird nach einem Updat gefragt.
+Neu: Einstellungen
+Neu: Abonnements - Sie erhalten Benachrichtigungen wenn sich eine abonnierte Seite verändert
+Verbessert: Kein Setup erforderlich
+Verbessert: Verwendet Seitennamen statt IDs
+Verbessert: Texte
+Fix: Unterstützt die LL-Testversion
+
 V 1.4
 Verbessert: Zeigt nun an welches Script neu hinzugekommen ist.
 Verbessert: Scripts werden mit neuer Methode geladen

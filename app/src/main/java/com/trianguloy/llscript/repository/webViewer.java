@@ -265,6 +265,7 @@ public class webViewer extends Activity {
         if(Constants.installedPackage.equals("") || (pi == null)){
             //Non of the apps were found
             new AlertDialog.Builder(this)
+                    .setCancelable(false)
                     .setTitle(getString(R.string.title_launcherNotFound))
                     .setMessage(getString(R.string.message_launcherNotFound))
                     .setNeutralButton(R.string.button_ok, new DialogInterface.OnClickListener() {

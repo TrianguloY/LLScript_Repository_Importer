@@ -8,11 +8,12 @@ android {
         applicationId "com.trianguloy.llscript.repository"
         minSdkVersion 9
         targetSdkVersion 21
-        versionCode 15
-        versionName "1.5b"
+        versionCode 17
+        versionName "1.5"
     }
     buildTypes {
         release {
+
             minifyEnabled false
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
         }

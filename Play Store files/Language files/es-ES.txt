@@ -30,6 +30,16 @@ https://github.com/TrianguloY/LLScript_Repository_Importer
 
 
 _Changes_
+V 1.5
+IMPORTANTE: Requiere versión mínima de LL. En caso contrario pedirá actualizar.
+Nuevo: Ajustes
+Nuevo: Suscripciones - Serás notificado si una página a la que te has suscrito es actualizada.
+Nuevo: Boton de atras en la barra de acción.
+Mejorado: No requiere instalación de un script extra
+Mejorado: Se muestra en nombre de la página en lugar del identificador si es posible
+Mejorado: Textos
+Arreglado: Funciona con la version de prueba de LL
+
 V 1.4
 Mejorado: El mensaje te dice qué script del repositorio ha cambiado
 Mejorado: Nuevo método de carga de scripts (sin cambios para el usuario)

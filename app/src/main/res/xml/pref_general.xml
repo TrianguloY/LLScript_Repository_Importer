@@ -4,33 +4,45 @@
         <CheckBoxPreference
             android:key="@string/pref_aboutScript"
             android:title="@string/title_attachAboutScript"
-            android:defaultValue="true" />
+            android:defaultValue="true"/>
         <Preference
             android:title="@string/title_subscriptions"
             android:summary="@string/summary_subscriptions">
             <intent
                 android:action="android.intent.action.VIEW"
                 android:targetClass="com.trianguloy.llscript.repository.SubscriptionsDialog"
-                android:targetPackage="com.trianguloy.llscript.repository" />
+                android:targetPackage="com.trianguloy.llscript.repository"/>
         </Preference>
+    </PreferenceCategory>
+    <PreferenceCategory android:title="Notifications">
+        <CheckBoxPreference
+            android:title="Push Notifications"
+            android:key="@string/pref_notifications"
+            android:defaultValue="false"/>
+        <ListPreference
+            android:title="Update Interval"
+            android:key="@string/pref_notificationInterval"
+            android:entries="@array/val_intervalTexts"
+            android:entryValues="@array/val_intervalValues"
+            android:defaultValue="@string/val_intervalDefault"/>
     </PreferenceCategory>
     <PreferenceCategory android:title="@string/title_links">
         <Preference android:title="@string/text_playStore">
             <intent
                 android:action="android.intent.action.VIEW"
-                android:data="@string/link_playStoreImporter" />
+                android:data="@string/link_playStoreImporter"/>
         </Preference>
 
         <Preference android:title="@string/text_googlePlus">
             <intent
                 android:action="android.intent.action.VIEW"
-                android:data="@string/link_googlePlus" />
+                android:data="@string/link_googlePlus"/>
         </Preference>
     </PreferenceCategory>
     <PreferenceCategory android:title="@string/title_about">
         <Preference
             android:title="@string/title_author"
             android:summary="@string/summary_about"
-            android:enabled="false" />
+            android:enabled="false"/>
     </PreferenceCategory>
 </PreferenceScreen>

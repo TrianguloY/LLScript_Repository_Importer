@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
-    package="com.trianguloy.llscript.repository">
+          package="com.trianguloy.llscript.repository">
 
     <uses-permission android:name="android.permission.INTERNET" />
     <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
@@ -30,8 +30,8 @@
             android:configChanges="orientation|screenSize"
             android:label="@string/label_repoImporter"
             android:launchMode="singleInstance">
-        <intent-filter>
-                <action android:name="android.intent.action.MAIN" />
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN"/>
 
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
@@ -56,8 +56,8 @@
             android:icon="@drawable/ic_launcher"
             android:label="@string/label_repoImporter"
             android:permission="net.pierrox.lightning_launcher.IMPORT_SCRIPTS">
-        <intent-filter>
-                <action android:name="net.pierrox.lightning_launcher.script.IMPORT" />
+            <intent-filter>
+                <action android:name="net.pierrox.lightning_launcher.script.IMPORT"/>
 
                 <category android:name="android.intent.category.DEFAULT" />
             </intent-filter>
@@ -67,7 +67,7 @@
             android:name=".SettingsActivity"
             android:label="@string/label_settings"
             android:parentActivityName=".webViewer">
-        <meta-data
+            <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value="com.trianguloy.llscript.repository.webViewer" />
         </activity>
@@ -79,6 +79,21 @@
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value="com.trianguloy.llscript.repository.SettingsActivity" />
         </activity>
+
+        <service
+            android:name="com.app.lukas.llscript.WebService"
+            android:enabled="true"
+            android:exported="false">
+        </service>
+        <receiver
+            android:name="com.app.lukas.llscript.BootBroadcastReceiver"
+            android:enabled="false"
+            >
+            <intent-filter>
+                <action android:name="android.intent.action.BOOT_COMPLETED"/>
+            </intent-filter>
+        </receiver>
+
     </application>
 
 </manifest>

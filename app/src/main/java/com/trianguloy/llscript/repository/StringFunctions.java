@@ -145,4 +145,8 @@ public class StringFunctions {
         return page;
     }
 
+    public static String getNameFromUrl(String url) {
+        return url.substring(url.indexOf("?id=script_") + 11);
+    }
+
 }

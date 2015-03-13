@@ -4,8 +4,10 @@ import android.annotation.TargetApi;
 import android.app.Activity;
 import android.app.AlertDialog;
 import android.content.ComponentName;
+import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.ServiceConnection;
 import android.content.SharedPreferences;
 import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager;
@@ -13,6 +15,7 @@ import android.net.Uri;
 import android.net.http.HttpResponseCache;
 import android.os.Build;
 import android.os.Bundle;
+import android.os.IBinder;
 import android.preference.PreferenceManager;
 import android.text.Html;
 import android.util.Log;
@@ -31,6 +34,8 @@ import android.widget.ProgressBar;
 import android.widget.Toast;
 
 import com.app.lukas.llscript.ScriptImporter;
+import com.app.lukas.llscript.ServiceManager;
+import com.app.lukas.llscript.WebService;
 
 import java.io.File;
 import java.io.IOException;
@@ -80,7 +85,6 @@ public class webViewer extends Activity {
     }
     private Stack<backClass> backStack;//contains the history of the views pages
     private int webViewPositionY = 0;//Contains the positionY that will be applied when the webView finish loading a page
-    private int counter;
     private Menu menu;
 
 
@@ -288,7 +292,7 @@ public class webViewer extends Activity {
         if( ( pi.versionCode % 1000) < Constants.minimumNecessaryVersion){
             new AlertDialog.Builder(this)
                     .setCancelable(false)
-                    .setTitle(getString(R.string.title_oudatedLauncher))
+                    .setTitle(getString(R.string.title_outdatedLauncher))
                     .setMessage(getString(R.string.message_outdatedLauncher))
                     .setNeutralButton(R.string.button_ok, new DialogInterface.OnClickListener() {
                         @Override
@@ -480,7 +484,7 @@ public class webViewer extends Activity {
             if (Build.VERSION.SDK_INT >= 11) getActionBar().setDisplayHomeAsUpEnabled(false);
         }else{
             button.setVisibility(View.VISIBLE);
-            setTitle(StringFunctions.getNameForPageFromPref(sharedPref, this, currentUrl.substring(currentUrl.indexOf("?id=script_") + 11)));
+            setTitle(StringFunctions.getNameForPageFromPref(sharedPref, this, StringFunctions.getNameFromUrl(currentUrl)));
             menu.findItem(R.id.action_subscribe).setVisible(!StringFunctions.getMapFromPref(sharedPref, getString(R.string.pref_subs)).containsKey(currentUrl));
             menu.findItem(R.id.action_unsubscribe).setVisible(StringFunctions.getMapFromPref(sharedPref, getString(R.string.pref_subs)).containsKey(currentUrl));
             if (Build.VERSION.SDK_INT >= 11) getActionBar().setDisplayHomeAsUpEnabled(true);
@@ -755,43 +759,37 @@ public class webViewer extends Activity {
 
     //Subscriptions functions
     private void getChangedSubscriptions() {
-        if (sharedPref.contains(getString(R.string.pref_subs))) {
-            final Map<String, Object> pages = StringFunctions.getMapFromPref(sharedPref, getString(R.string.pref_subs));
-            if (pages.size() > 0) {
-                counter = pages.size();
-                final ArrayList<String> updated = new ArrayList<>();
-                for (final String page : pages.keySet())
-                    new DownloadTask(new DownloadTask.Listener() {
-                        final String p = page;
+        final Context context = this;
+        ServiceConnection connection = new ServiceConnection() {
+            @Override
+            public void onServiceConnected(ComponentName name, IBinder service) {
+                WebService.LocalBinder binder = (WebService.LocalBinder) service;
+                binder.getService().getChangedSubscriptions(new WebService.Listener() {
+                    @Override
+                    public void onFinish(ArrayList<String> updated) {
+                        showChangedSubscriptions(updated);
+                    }
 
-                        @Override
-                        public void onFinish(String result) {
-                            counter--;
-                            int hash = StringFunctions.pageToHash(result);
-                            if (hash != -1 && hash != (int) pages.get(p)) {
-                                updated.add(p);
-                                pages.put(p, hash);
-                            }
-                            if (counter == 0 && updated.size() > 0) {
-                                StringFunctions.saveMapToPref(sharedPref, getString(R.string.pref_subs), pages);
-                                showChangedSubscriptions(updated);
-                            }
-                        }
-
-                        @Override
-                        public void onError() {
-                            if (BuildConfig.DEBUG) Log.i("Subscriptions", "Ignored Error");
-                        }
-                    }).execute(page);
+                    @Override
+                    public void onError() {
+                        if (BuildConfig.DEBUG) Log.i("Subscriptions", "Ignored Error");
+                    }
+                });
+                ServiceManager.unbindService(context, this);
             }
-        }
+
+            @Override
+            public void onServiceDisconnected(ComponentName name) {
+            }
+        };
+        ServiceManager.bindService(this, connection);
     }
 
     private void showChangedSubscriptions(List<String> updatedPages) {
         Map<String, String> map = StringFunctions.getAllScriptPagesAndNames(repoHtml);
         String pages = "";
         for (String s : updatedPages) {
-            pages += map.get(s.substring(s.indexOf("?id=script_") + 11)) + "\n";
+            pages += map.get(StringFunctions.getNameFromUrl(s)) + "\n";
         }
         new AlertDialog.Builder(this)
                 .setTitle(getString(R.string.title_updatedSubs))

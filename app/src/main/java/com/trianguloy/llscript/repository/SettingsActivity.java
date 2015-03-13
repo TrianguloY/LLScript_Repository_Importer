@@ -1,14 +1,23 @@
 package com.trianguloy.llscript.repository;
 
 import android.annotation.TargetApi;
+import android.app.AlarmManager;
+import android.content.ComponentName;
 import android.content.Context;
+import android.content.SharedPreferences;
+import android.content.pm.PackageManager;
 import android.content.res.Configuration;
 import android.os.Build;
 import android.os.Bundle;
+import android.preference.CheckBoxPreference;
+import android.preference.ListPreference;
 import android.preference.PreferenceActivity;
 import android.preference.PreferenceFragment;
 import android.support.v4.app.NavUtils;
 import android.view.MenuItem;
+
+import com.app.lukas.llscript.BootBroadcastReceiver;
+import com.app.lukas.llscript.ServiceManager;
 
 /**
  * A {@link PreferenceActivity} that presents a set of application settings. On
@@ -21,7 +30,7 @@ import android.view.MenuItem;
  * href="http://developer.android.com/guide/topics/ui/settings.html">Settings
  * API Guide</a> for more information on developing a Settings UI.
  */
-public class SettingsActivity extends PreferenceActivity {
+public class SettingsActivity extends PreferenceActivity implements SharedPreferences.OnSharedPreferenceChangeListener {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -29,6 +38,23 @@ public class SettingsActivity extends PreferenceActivity {
         setupActionBar();
         //noinspection deprecation
         addPreferencesFromResource(R.xml.pref_general);
+
+        ListPreference listPreference = (ListPreference) findPreference(getString(R.string.pref_notificationInterval));
+        listPreference.setSummary(listPreference.getEntry());
+        CheckBoxPreference checkBoxPreference = (CheckBoxPreference) findPreference(getString(R.string.pref_notifications));
+        listPreference.setEnabled(checkBoxPreference.isChecked());
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        getPreferenceScreen().getSharedPreferences().registerOnSharedPreferenceChangeListener(this);
+    }
+
+    @Override
+    protected void onPause() {
+        super.onPause();
+        getPreferenceScreen().getSharedPreferences().unregisterOnSharedPreferenceChangeListener(this);
     }
 
     /**
@@ -95,4 +121,35 @@ public class SettingsActivity extends PreferenceActivity {
     }
 
 
+    @Override
+    public void onSharedPreferenceChanged(SharedPreferences sharedPreferences, String key) {
+        if (key.equals(getString(R.string.pref_notificationInterval))) {
+            ListPreference listPreference = (ListPreference) findPreference(key);
+            listPreference.setSummary(listPreference.getEntry());
+            startService(sharedPreferences);
+        } else if (key.equals(getString(R.string.pref_notifications))) {
+            CheckBoxPreference checkBoxPreference = (CheckBoxPreference) findPreference(key);
+            if (checkBoxPreference.isChecked()) startService(sharedPreferences);
+            else stopService();
+            ListPreference listPreference = (ListPreference) findPreference(getString(R.string.pref_notificationInterval));
+            listPreference.setEnabled(checkBoxPreference.isChecked());
+        }
+    }
+
+
+    private void stopService() {
+        ServiceManager.stopService(getApplicationContext());
+        getPackageManager().setComponentEnabledSetting(new ComponentName(getApplicationContext(), BootBroadcastReceiver.class),
+                PackageManager.COMPONENT_ENABLED_STATE_DISABLED,
+                PackageManager.DONT_KILL_APP);
+    }
+
+    private void startService(SharedPreferences sharedPreferences) {
+        ServiceManager.startService(getApplicationContext(),
+                Integer.parseInt(sharedPreferences.getString(getString(R.string.pref_notificationInterval),
+                        String.valueOf(AlarmManager.INTERVAL_HOUR))));
+        getPackageManager().setComponentEnabledSetting(new ComponentName(getApplicationContext(), BootBroadcastReceiver.class),
+                PackageManager.COMPONENT_ENABLED_STATE_ENABLED,
+                PackageManager.DONT_KILL_APP);
+    }
 }

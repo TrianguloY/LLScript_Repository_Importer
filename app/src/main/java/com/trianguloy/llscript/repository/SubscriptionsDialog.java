@@ -29,7 +29,7 @@ public class SubscriptionsDialog extends Activity implements ListView.OnItemClic
         subsMap = StringFunctions.getMapFromPref(sharedPref, getString(R.string.pref_subs));
         adapter = new ArrayAdapter<>(this, R.layout.sub_list_item);
         for (String s : subsMap.keySet()) {
-            adapter.add(s.substring(s.indexOf("?id=script_") + 11));
+            adapter.add(StringFunctions.getNameFromUrl(s));
         }
         subsList.setAdapter(adapter);
         subsList.setOnItemClickListener(this);

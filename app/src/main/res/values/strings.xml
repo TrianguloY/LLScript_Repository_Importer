@@ -8,8 +8,6 @@
     <!-- This is the name of the script once loaded in the launcher (visible in the script editor and the script menus) -->
     <string name="script_name">(deprecated) Repository importer</string>
 
-
-
     <!-- menu webViewer -->
     <string name="action_mainPage">Repository Index</string>
     <string name="action_openInBrowser">Open in browser</string>
@@ -32,7 +30,8 @@
     <string name="title_about">About</string>
     <string name="title_author">Authors</string>
     <string name="summary_about">TrianguloY and Lukas Morawietz</string>
-
+    <string name="title_browser">Default external Browser</string>
+    <string name="summary_browser">Used for all external pages</string>
 
     <!-- alert confirm and import -->
     <string name="title_importer">Script Importer</string>
@@ -45,22 +44,18 @@
     <string name="button_import">Import</string>
     <string name="button_share">share</string>
 
-
     <!-- alert external page link clicked -->
     <string name="title_externalPage">External page</string>
     <string name="message_externalPage">This page is not related to the repository. Do you want to open it with your normal browser?</string>
-
 
     <!-- alert No page loaded -->
     <string name="title_noPageFound">No page found</string>
     <string name="message_noPageFound">The page couldn\'t be loaded. Make sure you have an active connection or try again in some minutes</string>
     <string name="button_retry">Retry</string>
 
-
     <!-- alert Scripts -->
     <string name="title_severalScriptsFound">Found more than one Script on this page, please choose one</string>
     <string name="message_noScriptFound">No script found. If you know that there is one, contact the developer</string>
-
 
     <!-- alert launcher checks -->
     <string name="title_outdatedLauncher">Warning</string>
@@ -68,6 +63,10 @@
     <string name="title_launcherNotFound">Warning</string>
     <string name="message_launcherNotFound">Lightning Launcher was not found. Please install Lightning Launcher for this to work</string>
 
+    <!-- alert open in browser-->
+    <string name="title_appChooserBad">Can\'t open page. Open instead with</string>
+    <string name="title_appChooserNormal">Open with:</string>
+    <string name="message_noBrowser">No browser found</string>
 
     <!-- Subscriptions -->
     <string name="title_subscribe">Subscribe</string>
@@ -81,13 +80,11 @@
     <string name="toast_subscribeSuccessful">Successfully subscribed</string>
     <string name="toast_unsubscribeSuccessful">Successfully unsubscribed</string>
 
-
     <!-- generic buttons -->
     <string name="button_cancel">Cancel</string>
     <string name="button_exit">Exit</string>
     <string name="button_no">No</string>
     <string name="button_ok">OK</string>
-
 
     <!-- html links -->
     <string name="link_repository">http://www.pierrox.net/android/applications/lightning_launcher/wiki/doku.php?id=script_repository</string>
@@ -95,12 +92,10 @@
     <string name="link_scriptPagePrefix">http://www.pierrox.net/android/applications/lightning_launcher/wiki/doku.php?id=script_</string>
     <string name="link_playStorePrefix">https://play.google.com/store/apps/details?id=</string>
 
-
     <!-- Toasts (others) -->
     <string name="toast_backToClose">Press back again to close\n(optionally long-press back to close anytime)</string>
     <string name="toast_badString">The provided URL is not from a script of the Repository</string>
     <string name="toast_managerError">There was an error trying to pass the data to the manager</string>
-
 
     <!--preference keys -->
     <string name="pref_aboutScript">aboutScript</string>
@@ -110,6 +105,7 @@
     <string name="pref_pageNames">page_name_map</string>
     <string name="pref_notifications">notify</string>
     <string name="pref_notificationInterval">interval</string>
+    <string name="pref_browser">browser</string>
 
     <!--preference values -->
     <string-array name="val_intervalTexts">
@@ -126,7 +122,6 @@
     </string-array>
     <string name="val_intervalDefault">86400000</string>
 
-
     <!-- Manifest -->
     <string name="permission_description">Allows to import scripts into LL without User confirmation</string>
     <string name="permission_label">LL Import Scripts</string>
@@ -138,9 +133,7 @@
     <string name="title_updatedPages">Updated Repository pages</string>
     <string name="text_updatedPages">updated pages</string>
 
-
     <!-- unsorted-->
     <string name="dummy" tools:ignore="UnusedResources">Dummy string to force new ones to be below</string>
-    <string name="title_appChooser">Can\'t open page. Open instead with</string>
 
 </resources>

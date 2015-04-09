@@ -13,6 +13,10 @@
                 android:targetClass="com.trianguloy.llscript.repository.SubscriptionsDialog"
                 android:targetPackage="com.trianguloy.llscript.repository"/>
         </Preference>
+        <com.trianguloy.llscript.repository.BrowserPreference
+            android:title="@string/title_browser"
+            android:summary="@string/summary_browser"
+            android:key="@string/pref_browser"/>
     </PreferenceCategory>
     <PreferenceCategory android:title="Notifications">
         <CheckBoxPreference

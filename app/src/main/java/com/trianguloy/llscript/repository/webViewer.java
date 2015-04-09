@@ -9,10 +9,8 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.ServiceConnection;
 import android.content.SharedPreferences;
-import android.content.pm.ActivityInfo;
 import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager;
-import android.content.pm.ResolveInfo;
 import android.net.Uri;
 import android.net.http.HttpResponseCache;
 import android.os.Build;
@@ -142,49 +140,18 @@ public class webViewer extends Activity {
         if (intent.getAction()!=null && intent.getAction().equalsIgnoreCase(Intent.ACTION_VIEW)){
             String getUrl = intent.getDataString();
             Uri uri = intent.getData();
-            boolean handled = false;
             if (getUrl.startsWith(getString(R.string.link_scriptPagePrefix))) {
                 changePage(getUrl);
-                handled = true;
             } else if (uri != null) {
                 //pass the bad intent to another app
-                final Intent i = new Intent(Intent.ACTION_VIEW);
-                i.setData(uri);
-                List<ResolveInfo> activities = getPackageManager().queryIntentActivities(i, 0);
-                for (ResolveInfo info : activities) {
-                    if (info.activityInfo.applicationInfo.packageName.equals(webViewer.class.getPackage().getName())) {
-                        activities.remove(info);
-                        break;
+                new AppChooser(this, uri, getString(R.string.title_appChooserBad), getString(R.string.toast_badString), new AppChooser.OnCloseListener() {
+                    @Override
+                    public void onClose() {
+                        finish();
                     }
-                }
-                if (activities.size() > 0) {
-                    final AppAdapter adapter = new AppAdapter(this, activities);
-                    new AlertDialog.Builder(this)
-                            .setTitle(R.string.title_appChooser)
-                            .setAdapter(adapter, new DialogInterface.OnClickListener() {
-                                @Override
-                                public void onClick(DialogInterface dialog, int which) {
-                                    ResolveInfo activity = adapter.getItem(which);
-                                    ActivityInfo activityInfo = activity.activityInfo;
-                                    i.setComponent(new ComponentName(activityInfo.applicationInfo.packageName,
-                                            activityInfo.name));
-                                    i.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-                                    startActivity(i);
-                                    finish();
-                                }
-                            })
-                            .setNegativeButton(R.string.button_cancel, new DialogInterface.OnClickListener() {
-                                @Override
-                                public void onClick(DialogInterface dialog, int which) {
-                                    finish();
-                                }
-                            })
-                            .show();
+                }).show();
                     finish = true;
-                    handled = true;
-                }
-            }
-            if (!handled) {
+            } else {
                 Toast.makeText(getApplicationContext(),getString(R.string.toast_badString),Toast.LENGTH_LONG).show();
                 moveTaskToBack(true);
                 finish=true;
@@ -218,9 +185,7 @@ public class webViewer extends Activity {
                 changePage(getString(R.string.link_repository));
                 break;
             case R.id.action_openInBrowser:
-                Intent k = new Intent(Intent.ACTION_VIEW);
-                k.setData(Uri.parse(currentUrl));
-                startActivity(k);
+                new AppChooser(this, Uri.parse(currentUrl), getString(R.string.title_appChooserNormal), getString(R.string.message_noBrowser), null).show();
                 break;
             case R.id.action_settings:
                 startActivity(new Intent(this, SettingsActivity.class));
@@ -698,7 +663,7 @@ public class webViewer extends Activity {
         final EditText nameText = ((EditText) layout.findViewById(R.id.editText));
         nameText.setText(scriptName);
         final CheckBox[] flagsBoxes = {
-                (CheckBox) layout.findViewById(R.id.checkBox),
+                (CheckBox) layout.findViewById(R.id.checkBox1),
                 (CheckBox) layout.findViewById(R.id.checkBox2),
                 (CheckBox) layout.findViewById(R.id.checkBox3)};
 

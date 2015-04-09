@@ -9,8 +9,10 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.ServiceConnection;
 import android.content.SharedPreferences;
+import android.content.pm.ActivityInfo;
 import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager;
+import android.content.pm.ResolveInfo;
 import android.net.Uri;
 import android.net.http.HttpResponseCache;
 import android.os.Build;
@@ -106,8 +108,7 @@ public class webViewer extends Activity {
         //parse the Intent
         onNewIntent(getIntent());
 
-        if(finish){
-            finish();//Callback to finish the activity
+        if (finish) {//Callback to finish the activity instead of continue to load
             return;
         }
 
@@ -139,13 +140,55 @@ public class webViewer extends Activity {
     protected void onNewIntent(Intent intent){
         //manages the received intent, run automatically when the activity is running and is called again
         if (intent.getAction()!=null && intent.getAction().equalsIgnoreCase(Intent.ACTION_VIEW)){
-            String getUrl=intent.getDataString();
+            String getUrl = intent.getDataString();
+            Uri uri = intent.getData();
+            boolean handled = false;
             if (getUrl.startsWith(getString(R.string.link_scriptPagePrefix))) {
                 changePage(getUrl);
-            }else{
+                handled = true;
+            } else if (uri != null) {
+                //pass the bad intent to another app
+                final Intent i = new Intent(Intent.ACTION_VIEW);
+                i.setData(uri);
+                List<ResolveInfo> activities = getPackageManager().queryIntentActivities(i, 0);
+                for (ResolveInfo info : activities) {
+                    if (info.activityInfo.applicationInfo.packageName.equals(webViewer.class.getPackage().getName())) {
+                        activities.remove(info);
+                        break;
+                    }
+                }
+                if (activities.size() > 0) {
+                    final AppAdapter adapter = new AppAdapter(this, activities);
+                    new AlertDialog.Builder(this)
+                            .setTitle(R.string.title_appChooser)
+                            .setAdapter(adapter, new DialogInterface.OnClickListener() {
+                                @Override
+                                public void onClick(DialogInterface dialog, int which) {
+                                    ResolveInfo activity = adapter.getItem(which);
+                                    ActivityInfo activityInfo = activity.activityInfo;
+                                    i.setComponent(new ComponentName(activityInfo.applicationInfo.packageName,
+                                            activityInfo.name));
+                                    i.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+                                    startActivity(i);
+                                    finish();
+                                }
+                            })
+                            .setNegativeButton(R.string.button_cancel, new DialogInterface.OnClickListener() {
+                                @Override
+                                public void onClick(DialogInterface dialog, int which) {
+                                    finish();
+                                }
+                            })
+                            .show();
+                    finish = true;
+                    handled = true;
+                }
+            }
+            if (!handled) {
                 Toast.makeText(getApplicationContext(),getString(R.string.toast_badString),Toast.LENGTH_LONG).show();
                 moveTaskToBack(true);
                 finish=true;
+                finish();
             }
         }
 

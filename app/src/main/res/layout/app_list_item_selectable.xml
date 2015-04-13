@@ -31,5 +31,7 @@
               android:layout_height="match_parent"
               android:layout_alignParentRight="true"
               android:layout_alignParentEnd="true"
-              android:id="@+id/checkBox"/>
+              android:id="@+id/checkBox"
+              android:clickable="false"
+              android:longClickable="false"/>
 </RelativeLayout>

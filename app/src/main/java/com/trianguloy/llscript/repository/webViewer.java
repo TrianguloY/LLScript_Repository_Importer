@@ -33,10 +33,6 @@ import android.widget.EditText;
 import android.widget.ProgressBar;
 import android.widget.Toast;
 
-import com.app.lukas.llscript.ScriptImporter;
-import com.app.lukas.llscript.ServiceManager;
-import com.app.lukas.llscript.WebService;
-
 import java.io.File;
 import java.io.IOException;
 import java.net.HttpURLConnection;
@@ -74,15 +70,18 @@ public class webViewer extends Activity {
     private String repoHtml = "";//source code of the repository, used to get the name of the scripts
     private String currentHtml = "";//source code of the current page
     private String currentUrl = "";//The URL of the current page
-    private DownloadTask.Listener downloadTaskListener=null; //default downloadTaskListener
-    private class backClass{
+    private DownloadTask.Listener downloadTaskListener = null; //default downloadTaskListener
+
+    private class backClass {
         final String url;
         final int posY;
-        backClass(String u,int p){
+
+        backClass(String u, int p) {
             url = u;
             posY = p;
         }
     }
+
     private Stack<backClass> backStack;//contains the history of the views pages
     private int webViewPositionY = 0;//Contains the positionY that will be applied when the webView finish loading a page
     private Menu menu;
@@ -94,7 +93,7 @@ public class webViewer extends Activity {
         super.onCreate(savedInstanceState);
 
         //this is currently untested
-        if(checkForLauncher()){
+        if (checkForLauncher()) {
             return;
         }
 
@@ -111,17 +110,16 @@ public class webViewer extends Activity {
         }
 
 
-
         if (sharedPref.contains(Constants.keyId)) {
             //To move from the previous version to the new one, to remove on next releases
-            int id = sharedPref.getInt(Constants.keyId,-1);
+            int id = sharedPref.getInt(Constants.keyId, -1);
             sharedPref.edit().remove(Constants.keyId).apply();
 
-            if(id != -1) {
+            if (id != -1) {
                 Intent intent = new Intent(Intent.ACTION_VIEW);
-                intent.setComponent(new ComponentName(Constants.installedPackage,Constants.activityRunScript));
+                intent.setComponent(new ComponentName(Constants.installedPackage, Constants.activityRunScript));
                 intent.putExtra(Constants.RunActionExtra, Constants.RunActionKey);
-                intent.putExtra(Constants.RunDataExtra, ""+id);
+                intent.putExtra(Constants.RunDataExtra, "" + id);
                 startActivity(intent);
                 finish();
                 return;
@@ -135,9 +133,9 @@ public class webViewer extends Activity {
     }
 
     @Override
-    protected void onNewIntent(Intent intent){
+    protected void onNewIntent(Intent intent) {
         //manages the received intent, run automatically when the activity is running and is called again
-        if (intent.getAction()!=null && intent.getAction().equalsIgnoreCase(Intent.ACTION_VIEW)){
+        if (intent.getAction() != null && intent.getAction().equalsIgnoreCase(Intent.ACTION_VIEW)) {
             String getUrl = intent.getDataString();
             Uri uri = intent.getData();
             if (getUrl.startsWith(getString(R.string.link_scriptPagePrefix))) {
@@ -150,11 +148,11 @@ public class webViewer extends Activity {
                         finish();
                     }
                 }).show();
-                    finish = true;
+                finish = true;
             } else {
-                Toast.makeText(getApplicationContext(),getString(R.string.toast_badString),Toast.LENGTH_LONG).show();
+                Toast.makeText(getApplicationContext(), getString(R.string.toast_badString), Toast.LENGTH_LONG).show();
                 moveTaskToBack(true);
-                finish=true;
+                finish = true;
                 finish();
             }
         }
@@ -207,20 +205,20 @@ public class webViewer extends Activity {
     }
 
     @Override
-    public void onBackPressed(){
+    public void onBackPressed() {
         if (!currentUrl.equals(getString(R.string.link_repository))) {
             //not on the home page
-            if(!backStack.empty()){
+            if (!backStack.empty()) {
                 backClass previous = backStack.pop();
                 currentUrl = previous.url;
-                changePage(currentUrl,previous.posY);
-            }else{
+                changePage(currentUrl, previous.posY);
+            } else {
                 changePage(getString(R.string.link_repository));
             }
 
-        }else if (!close) {
+        } else if (!close) {
             //Press back while the toast is still displayed to close
-            Toast.makeText(getApplicationContext(),R.string.toast_backToClose, Toast.LENGTH_SHORT).show();
+            Toast.makeText(getApplicationContext(), R.string.toast_backToClose, Toast.LENGTH_SHORT).show();
             close = true;
             new Timer().schedule(new TimerTask() {
                 @Override
@@ -229,15 +227,13 @@ public class webViewer extends Activity {
                     close = false;
                 }
             }, 2000);//2000ms is the default time for the TOAST_LENGTH_SHORT
-        }
-        else
+        } else
             finish();
     }
 
     @Override
     public boolean onKeyLongPress(int keyCode, KeyEvent event) {
-        if (keyCode == KeyEvent.KEYCODE_BACK)
-        {
+        if (keyCode == KeyEvent.KEYCODE_BACK) {
             finish();
             return true;
         }
@@ -257,24 +253,24 @@ public class webViewer extends Activity {
 
 
     //Initialization
-    private boolean checkForLauncher(){
+    private boolean checkForLauncher() {
 
         //checks the installed package, extreme or not
         PackageManager pm = getPackageManager();
         PackageInfo pi = null;
-        Constants.installedPackage="";
+        Constants.installedPackage = "";
 
-        for (String p : Constants.packages){
-            try{
-                pi=pm.getPackageInfo(p, PackageManager.GET_ACTIVITIES);
-                Constants.installedPackage=p;
+        for (String p : Constants.packages) {
+            try {
+                pi = pm.getPackageInfo(p, PackageManager.GET_ACTIVITIES);
+                Constants.installedPackage = p;
                 break;
             } catch (PackageManager.NameNotFoundException e) {
                 //empty, it just don't breaks and go to next iteration
             }
         }
 
-        if(Constants.installedPackage.equals("") || (pi == null)){
+        if (Constants.installedPackage.equals("") || (pi == null)) {
             //Non of the apps were found
             new AlertDialog.Builder(this)
                     .setCancelable(false)
@@ -284,7 +280,7 @@ public class webViewer extends Activity {
                         @Override
                         public void onClick(DialogInterface dialog, int which) {
                             Intent i = new Intent(Intent.ACTION_VIEW);
-                            i.setData(Uri.parse(getString(R.string.link_playStorePrefix)+Constants.packages[1]));
+                            i.setData(Uri.parse(getString(R.string.link_playStorePrefix) + Constants.packages[1]));
                             startActivity(i);
                             finish();
                         }
@@ -297,7 +293,7 @@ public class webViewer extends Activity {
 
         //Checks the version of the launcher
 
-        if( ( pi.versionCode % 1000) < Constants.minimumNecessaryVersion){
+        if ((pi.versionCode % 1000) < Constants.minimumNecessaryVersion) {
             new AlertDialog.Builder(this)
                     .setCancelable(false)
                     .setTitle(getString(R.string.title_outdatedLauncher))
@@ -320,21 +316,21 @@ public class webViewer extends Activity {
         return false;
     }
 
-    void initializeWeb(){
+    void initializeWeb() {
         //Main Activity. Run on onCreate when normal launch
         setContentView(R.layout.activity_webviewer);
 
         //initialize vars
         button = (Button) findViewById(R.id.button);
         webView = (WebView) findViewById(R.id.webView);
-        progressBar = (ProgressBar)findViewById(R.id.progressBar);
+        progressBar = (ProgressBar) findViewById(R.id.progressBar);
         downloadTaskListener = new DownloadTask.Listener() {
             @Override
             public void onFinish(String result) {
                 //default listener: show the page after loading it
                 currentHtml = result;
                 if (currentUrl.equals(getString(R.string.link_repository)) && repoHtml.equals("")) {
-                    repoHtml=result;
+                    repoHtml = result;
 
                     //It detects if the page has changed since the last visit (the editing date is different)
                     int newHash = StringFunctions.pageToHash(result);
@@ -352,7 +348,7 @@ public class webViewer extends Activity {
             }
 
             @Override
-            public void onError(){
+            public void onError() {
                 progressBar.setVisibility(View.GONE);
                 showNoPageLoaded(currentUrl);
             }
@@ -373,7 +369,8 @@ public class webViewer extends Activity {
             @Override
             public WebResourceResponse shouldInterceptRequest(final WebView view, final String url) {
                 //from http://stackoverflow.com/questions/12063937/can-i-use-the-android-4-httpresponsecache-with-a-webview-based-application/13596877#13596877
-                if (Build.VERSION.SDK_INT<14 || !(url.startsWith("http://") || url.startsWith("https://")) || HttpResponseCache.getInstalled() == null) return null;
+                if (Build.VERSION.SDK_INT < 14 || !(url.startsWith("http://") || url.startsWith("https://")) || HttpResponseCache.getInstalled() == null)
+                    return null;
                 try {
                     final HttpURLConnection connection = (HttpURLConnection) new URL(url).openConnection();
                     connection.connect();
@@ -444,12 +441,15 @@ public class webViewer extends Activity {
     }
 
     //webView functions
-    void changePage(String url){changePage(url,0);}
-    void changePage(String url,int positionY) {
+    void changePage(String url) {
+        changePage(url, 0);
+    }
+
+    void changePage(String url, int positionY) {
         //Change the page of the webView to the passed one
-        if(downloadTaskListener==null){
+        if (downloadTaskListener == null) {
             //The activity is not yet loaded. The url is kept as the currentUrl, so it gets loaded when the activity do so
-            currentUrl=url;
+            currentUrl = url;
             return;
         }
 
@@ -457,24 +457,23 @@ public class webViewer extends Activity {
             //main page
             currentUrl = url;
             backStack.clear();
-            webViewPositionY=positionY;
-            if(repoHtml.equals("")){
+            webViewPositionY = positionY;
+            if (repoHtml.equals("")) {
                 new DownloadTask(downloadTaskListener).execute(url);
-            }else{
+            } else {
                 currentHtml = repoHtml;
                 display();
             }
         } else if (url.startsWith(getString(R.string.link_scriptPagePrefix))) {
             // script page
-            if(!currentUrl.equals(url)) {
+            if (!currentUrl.equals(url)) {
                 backStack.push(new backClass(currentUrl, webView.getScrollY()));
             }
             currentUrl = url;
-            webViewPositionY=positionY;
+            webViewPositionY = positionY;
             progressBar.setVisibility(View.VISIBLE);
             new DownloadTask(downloadTaskListener).execute(url);
-        }
-        else
+        } else
             //external page
             showExternalPageLinkClicked(url);
     }
@@ -490,7 +489,7 @@ public class webViewer extends Activity {
             menu.findItem(R.id.action_subscribe).setVisible(false);
             menu.findItem(R.id.action_unsubscribe).setVisible(false);
             if (Build.VERSION.SDK_INT >= 11) getActionBar().setDisplayHomeAsUpEnabled(false);
-        }else{
+        } else {
             button.setVisibility(View.VISIBLE);
             setTitle(StringFunctions.getNameForPageFromPref(sharedPref, this, StringFunctions.getNameFromUrl(currentUrl)));
             menu.findItem(R.id.action_subscribe).setVisible(!StringFunctions.getMapFromPref(sharedPref, getString(R.string.pref_subs)).containsKey(currentUrl));
@@ -499,7 +498,7 @@ public class webViewer extends Activity {
         }
     }
 
-    void showExternalPageLinkClicked(final String url){
+    void showExternalPageLinkClicked(final String url) {
         //When the clicked page is not useful for this app
         new AlertDialog.Builder(this)
                 .setTitle(R.string.title_externalPage)
@@ -516,7 +515,7 @@ public class webViewer extends Activity {
                 .show();
     }
 
-    void showNoPageLoaded(final String url){
+    void showNoPageLoaded(final String url) {
         //When the page couldn't be loaded
         progressBar.setVisibility(View.GONE);
         new AlertDialog.Builder(this)
@@ -539,7 +538,6 @@ public class webViewer extends Activity {
     }
 
 
-
     //Script importer
     @SuppressWarnings({"unused", "unusedParameter"})
     public void startImport(View v) {
@@ -551,67 +549,70 @@ public class webViewer extends Activity {
         String aboutScript;
 
         //Starts searching all scripts
-        for(String aStart : Constants.beginning){
+        for (String aStart : Constants.beginning) {
             //starting found
-            StringFunctions.valueAndIndex found=new StringFunctions.valueAndIndex(null,-1,0);
-            do{
+            StringFunctions.valueAndIndex found = new StringFunctions.valueAndIndex(null, -1, 0);
+            do {
                 //searches for a match
                 found = StringFunctions.findBetween(currentHtml, aStart, Constants.ending, found.to, false);
-                if(found.value!=null){
+                if (found.value != null) {
                     //if it is found, it adds it to the list
                     rawCodes.add(found.value.trim());
                     //Assumes the script name is just before the code, and searches for it
-                    StringFunctions.valueAndIndex name=new StringFunctions.valueAndIndex(null,found.from,-1);
+                    StringFunctions.valueAndIndex name = new StringFunctions.valueAndIndex(null, found.from, -1);
                     do {
-                        name=StringFunctions.findBetween(currentHtml,">","<",name.from,true);
-                        if(name.value==null) {names.add("Name not found");break;}//In theory this will never get executed ... in theory
-                        if(name.value.matches(".*\\w.*")){
+                        name = StringFunctions.findBetween(currentHtml, ">", "<", name.from, true);
+                        if (name.value == null) {
+                            names.add("Name not found");
+                            break;
+                        }//In theory this will never get executed ... in theory
+                        if (name.value.matches(".*\\w.*")) {
                             //when it is found (if not it will return another text not related
                             names.add(name.value);
                             break;
                         }
                     } while (true);
 
-                }else{
+                } else {
                     //if not found, another starting token
                     break;
                 }
-            }while(true);
+            } while (true);
         }
 
         //TODO search the flags
 
         //About script: purpose, author, link
-        aboutScript=StringFunctions.findBetween(currentHtml,"id=\"about_the_script\">","</ul>",-1,false).value;
-        if(aboutScript!=null){
+        aboutScript = StringFunctions.findBetween(currentHtml, "id=\"about_the_script\">", "</ul>", -1, false).value;
+        if (aboutScript != null) {
 
             //remove html tags
-            aboutScript=aboutScript.replaceAll("<[^>]*>", "");
+            aboutScript = aboutScript.replaceAll("<[^>]*>", "");
 
             String[] prov = aboutScript.split("\n+");//separate the text removing duplicated line breaks
 
             //join the text adding an asterisk at the beginning of each line and converting the html string into normal code
-            aboutScript="";
-            for(int i=0;i<prov.length;++i){
+            aboutScript = "";
+            for (int i = 0; i < prov.length; ++i) {
                 aboutScript += ((i == 0) ? "" : "\n *  ") + Html.fromHtml(prov[i]).toString();
             }
 
             //adds the beginning and end comment block, and remove extra whitespaces at the beginning and end
-            aboutScript="/* "+aboutScript.trim()+"\n */\n\n";
+            aboutScript = "/* " + aboutScript.trim() + "\n */\n\n";
         }
 
         //switch based on the number of scripts found
-        if(rawCodes.size()>1){
+        if (rawCodes.size() > 1) {
             //more than one script founds
-            showMoreThanOneScriptFound(names.toArray(new String[names.size()]),rawCodes.toArray(new String[rawCodes.size()]),aboutScript);
-        }else if(rawCodes.size()>0){
-            oneScriptFound(names.get(0),rawCodes.get(0),aboutScript);
-        }else{
+            showMoreThanOneScriptFound(names.toArray(new String[names.size()]), rawCodes.toArray(new String[rawCodes.size()]), aboutScript);
+        } else if (rawCodes.size() > 0) {
+            oneScriptFound(names.get(0), rawCodes.get(0), aboutScript);
+        } else {
             showNoScriptFound();
         }
     }
 
-    void oneScriptFound(String name, String rawCode, String about){
+    void oneScriptFound(String name, String rawCode, String about) {
         //only one script, load directly
 
         //get the name from the repository
@@ -629,7 +630,7 @@ public class webViewer extends Activity {
 
     }
 
-    void showMoreThanOneScriptFound(final String[] names, final String[] rawCodes, final String about){
+    void showMoreThanOneScriptFound(final String[] names, final String[] rawCodes, final String about) {
         //More than one script found select one of them to import
         new AlertDialog.Builder(this)
                 .setTitle(R.string.title_severalScriptsFound)
@@ -637,14 +638,14 @@ public class webViewer extends Activity {
                 .setSingleChoiceItems(names, android.R.layout.simple_list_item_single_choice, new DialogInterface.OnClickListener() {
                     public void onClick(DialogInterface dialog, int which) {
                         dialog.dismiss();//Necessary, this is launched when clicking an item, not when clicking a button
-                        showImportScript(names[which],rawCodes[which],about);
+                        showImportScript(names[which], rawCodes[which], about);
                     }
                 })
                 .setNegativeButton(R.string.button_cancel, null)
                 .show();
     }
 
-    void showImportScript(String scriptName, String rawCode,String aboutString) {
+    void showImportScript(String scriptName, String rawCode, String aboutString) {
         //show the alert to import a single script
         String[] lines = rawCode.split("\n");
         StringBuilder builder = new StringBuilder();
@@ -652,7 +653,7 @@ public class webViewer extends Activity {
             builder.append(Html.fromHtml(line).toString()).append("\n");//Because Html.fromHtml() removes the line breaks
         }
 
-        String code =new String(builder).trim();
+        String code = new String(builder).trim();
         if (sharedPref.getBoolean(getString(R.string.pref_aboutScript), true))
             code = aboutString + code;
 
@@ -680,7 +681,7 @@ public class webViewer extends Activity {
                 })
                 .setNeutralButton(R.string.button_share, new DialogInterface.OnClickListener() {
                     public void onClick(DialogInterface dialog, int which) {
-                        shareAsText(contentText,nameText,flagsBoxes);
+                        shareAsText(contentText, nameText, flagsBoxes);
                     }
                 })
                 .setNegativeButton(R.string.button_exit, null)
@@ -701,11 +702,11 @@ public class webViewer extends Activity {
                 .show();
     }
 
-    void showNoScriptFound(){
+    void showNoScriptFound() {
         //alert to show that no script is found
         new AlertDialog.Builder(this)
                 .setTitle(R.string.title_importer)
-                .setNegativeButton(R.string.button_exit,null)/* new DialogInterface.OnClickListener() {
+                .setNegativeButton(R.string.button_exit, null)/* new DialogInterface.OnClickListener() {
                     public void onClick(DialogInterface dialog, int which) {}
                 })*/
                 .setPositiveButton(R.string.text_googlePlus, new DialogInterface.OnClickListener() {
@@ -721,7 +722,6 @@ public class webViewer extends Activity {
     }
 
 
-
     //Send & share functions
     void sendScriptToLauncher(EditText contentText, EditText nameText, CheckBox[] flagsBoxes) {
         // let's import the script
@@ -730,7 +730,7 @@ public class webViewer extends Activity {
         final int flags = (flagsBoxes[0].isChecked() ? Constants.FLAG_APP_MENU : 0) +
                 (flagsBoxes[1].isChecked() ? Constants.FLAG_ITEM_MENU : 0) +
                 (flagsBoxes[2].isChecked() ? Constants.FLAG_CUSTOM_MENU : 0);
-        Intent intent = new Intent(this,ScriptImporter.class);
+        Intent intent = new Intent(this, ScriptImporter.class);
         intent.putExtra(Constants.extraCode, code);
         intent.putExtra(Constants.extraName, scriptName);
         intent.putExtra(Constants.extraFlags, flags);
@@ -744,9 +744,9 @@ public class webViewer extends Activity {
 
         //flags
         text.append("//Flags: ");
-        if(flagsBoxes[0].isChecked())text.append("app ");
-        if(flagsBoxes[1].isChecked())text.append("item ");
-        if(flagsBoxes[2].isChecked())text.append("custom ");
+        if (flagsBoxes[0].isChecked()) text.append("app ");
+        if (flagsBoxes[1].isChecked()) text.append("item ");
+        if (flagsBoxes[2].isChecked()) text.append("custom ");
         text.append("\n");
 
         //name
@@ -759,10 +759,9 @@ public class webViewer extends Activity {
 
         Intent share = new Intent(Intent.ACTION_SEND);
         share.setType("text/plain");
-        share.putExtra(Intent.EXTRA_TEXT,text.toString());
-        startActivity(Intent.createChooser(share,"Send to..."));
+        share.putExtra(Intent.EXTRA_TEXT, text.toString());
+        startActivity(Intent.createChooser(share, "Send to..."));
     }
-
 
 
     //Subscriptions functions

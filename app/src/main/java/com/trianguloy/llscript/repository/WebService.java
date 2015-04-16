@@ -1,4 +1,4 @@
-package com.app.lukas.llscript;
+package com.trianguloy.llscript.repository;
 
 import android.app.NotificationManager;
 import android.app.PendingIntent;
@@ -10,11 +10,6 @@ import android.os.Binder;
 import android.os.IBinder;
 import android.preference.PreferenceManager;
 import android.support.v4.app.NotificationCompat;
-
-import com.trianguloy.llscript.repository.DownloadTask;
-import com.trianguloy.llscript.repository.R;
-import com.trianguloy.llscript.repository.StringFunctions;
-import com.trianguloy.llscript.repository.webViewer;
 
 import java.util.ArrayList;
 import java.util.Map;

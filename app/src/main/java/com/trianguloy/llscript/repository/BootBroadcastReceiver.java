@@ -1,4 +1,4 @@
-package com.app.lukas.llscript;
+package com.trianguloy.llscript.repository;
 
 import android.app.AlarmManager;
 import android.content.BroadcastReceiver;
@@ -6,8 +6,6 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.preference.PreferenceManager;
-
-import com.trianguloy.llscript.repository.R;
 
 /**
  * Created by Lukas on 06.12.2014.

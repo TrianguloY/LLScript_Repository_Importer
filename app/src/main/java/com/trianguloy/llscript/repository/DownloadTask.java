@@ -11,7 +11,7 @@ import java.net.URL;
  * Created by Lukas on 26.01.2015.
  * Requests a Html page and return it to the listener passed in the constructor
  */
-public class DownloadTask extends AsyncTask<String, Void, String> {
+class DownloadTask extends AsyncTask<String, Void, String> {
     private final Listener listener;
 
     public DownloadTask(Listener listener) {

@@ -1,14 +1,10 @@
-package com.app.lukas.llscript;
+package com.trianguloy.llscript.repository;
 
 import android.app.Service;
 import android.content.ComponentName;
 import android.content.Intent;
 import android.os.IBinder;
 import android.widget.Toast;
-
-import com.trianguloy.llscript.repository.Constants;
-import com.trianguloy.llscript.repository.R;
-import com.trianguloy.llscript.repository.webViewer;
 
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -60,7 +56,7 @@ public class ScriptImporter extends Service {
 
     void sendIntent(JSONObject data) {
         Intent i = new Intent(Intent.ACTION_VIEW);
-        i.setComponent(new ComponentName(Constants.installedPackage,Constants.activityRunScript));
+        i.setComponent(new ComponentName(Constants.installedPackage, Constants.activityRunScript));
         i.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
         i.putExtra(Constants.RunActionExtra, Constants.RunActionKey);
         i.putExtra(Constants.RunDataExtra, Constants.managerId + "/" + data.toString());

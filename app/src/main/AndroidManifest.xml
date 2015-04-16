@@ -13,6 +13,7 @@
         android:protectionLevel="dangerous"/>
 
     <application
+        android:name=".RepositoryImporter"
         android:allowBackup="true"
         android:icon="@drawable/ic_launcher"
         android:label="@string/app_name"
@@ -50,7 +51,7 @@
         </activity>
 
         <service
-            android:name="com.app.lukas.llscript.ScriptImporter"
+            android:name=".ScriptImporter"
             android:excludeFromRecents="true"
             android:exported="true"
             android:icon="@drawable/ic_launcher"
@@ -81,13 +82,13 @@
         </activity>
 
         <service
-            android:name="com.app.lukas.llscript.WebService"
+            android:name=".WebService"
             android:enabled="true"
             android:exported="false">
         </service>
 
         <receiver
-            android:name="com.app.lukas.llscript.BootBroadcastReceiver"
+            android:name=".BootBroadcastReceiver"
             android:enabled="false">
             <intent-filter>
                 <action android:name="android.intent.action.BOOT_COMPLETED"/>

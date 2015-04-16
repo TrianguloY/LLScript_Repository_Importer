@@ -1,4 +1,4 @@
-package com.app.lukas.llscript;
+package com.trianguloy.llscript.repository;
 
 import android.app.Activity;
 import android.app.AlarmManager;
@@ -12,7 +12,7 @@ import android.os.SystemClock;
  * Created by Lukas on 12.12.2014.
  * A small set of static methods required at several places, targeting the service
  */
-public class ServiceManager {
+class ServiceManager {
 
     public static void startService(Context context, int interval) {
         Intent i = new Intent(context, WebService.class);

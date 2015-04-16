@@ -4,7 +4,7 @@ package com.trianguloy.llscript.repository;
 /**
  * Static constants used in the project (like R.strings, but also other types)
  */
-public class Constants {
+class Constants {
 
     //script flags
     static final int FLAG_APP_MENU = 2;

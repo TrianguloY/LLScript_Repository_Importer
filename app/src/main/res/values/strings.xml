@@ -68,6 +68,11 @@
     <string name="title_appChooserNormal">Open with:</string>
     <string name="message_noBrowser">No browser found</string>
 
+    <!--alert crash-->
+    <string name="text_crash">Repository Importer has crashed. Do you want to send a Log via
+        email?
+    </string>
+
     <!-- Subscriptions -->
     <string name="title_subscribe">Subscribe</string>
     <string name="message_subscribeAsk">Do you want to subscribe to this page?</string>

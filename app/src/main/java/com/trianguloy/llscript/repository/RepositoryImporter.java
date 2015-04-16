@@ -3,6 +3,7 @@ package com.trianguloy.llscript.repository;
 import android.app.Application;
 
 import org.acra.ACRA;
+import org.acra.ReportingInteractionMode;
 import org.acra.annotation.ReportsCrashes;
 
 /**
@@ -10,10 +11,12 @@ import org.acra.annotation.ReportsCrashes;
  * Represents the application
  */
 @ReportsCrashes(
-        formKey = ""
-        //TODO attach valid debugger (https://github.com/ACRA/acra/wiki/BasicSetup)
+        formKey = "",
+        mailTo = "repository.importer@gmail.com",
+        mode = ReportingInteractionMode.DIALOG,
+        resDialogText = R.string.text_crash
 )
-class RepositoryImporter extends Application {
+public class RepositoryImporter extends Application {
     @Override
     public void onCreate() {
         super.onCreate();

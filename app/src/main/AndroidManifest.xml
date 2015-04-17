@@ -3,7 +3,6 @@
     package="com.trianguloy.llscript.repository" >
 
     <uses-permission android:name="android.permission.INTERNET" />
-    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
 
     <permission
         android:name="net.pierrox.lightning_launcher.IMPORT_SCRIPTS"

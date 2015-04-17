@@ -104,7 +104,6 @@ public class WebService extends Service {
             inboxStyle.addLine(StringFunctions.getNameForPageFromPref(sharedPref, this, StringFunctions.getNameFromUrl(s)));
         }
         builder.setStyle(inboxStyle);
-        //TODO: Create a notification icon, that does look good
         builder.setSmallIcon(R.drawable.ic_notification);
         builder.setLargeIcon(BitmapFactory.decodeResource(getResources(), R.drawable.ic_launcher));
         builder.setContentIntent(PendingIntent.getActivity(this, 0, new Intent(this, webViewer.class), PendingIntent.FLAG_UPDATE_CURRENT));

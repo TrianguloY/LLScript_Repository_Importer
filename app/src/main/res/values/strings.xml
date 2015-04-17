@@ -133,6 +133,7 @@
     <string name="label_subscriptionsDialog">Subscribed Pages</string>
     <string name="label_repoImporter">Repository Importer</string>
     <string name="label_settings">Settings</string>
+    <string name="label_intent_handle">Open Link</string>
 
     <!-- Notification -->
     <string name="title_updatedPages">Updated Repository pages</string>
@@ -140,5 +141,7 @@
 
     <!-- unsorted-->
     <string name="dummy" tools:ignore="UnusedResources">Dummy string to force new ones to be below</string>
+
+
 
 </resources>

@@ -53,6 +53,8 @@ class Constants {
     static public final String extraReceiver = "receiver";
     static public final String extraName = "name";
     static public final String extraForceUpdate = "forceUpdate";
+    static public final String extraOpenUrl = "openUrl";
+    static public final String extraOpenUrlTime = "openUrlTime";
 
     //Run script parameters
     static public final String RunActionExtra = "a";

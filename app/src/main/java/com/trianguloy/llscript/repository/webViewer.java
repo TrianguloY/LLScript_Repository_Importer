@@ -92,7 +92,6 @@ public class webViewer extends Activity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        //this is currently untested
         if (checkForLauncher()) {
             return;
         }
@@ -134,30 +133,17 @@ public class webViewer extends Activity {
 
     @Override
     protected void onNewIntent(Intent intent) {
-        //manages the received intent, run automatically when the activity is running and is called again
-        if (intent.getAction() != null && intent.getAction().equalsIgnoreCase(Intent.ACTION_VIEW)) {
-            String getUrl = intent.getDataString();
-            Uri uri = intent.getData();
-            if (getUrl.startsWith(getString(R.string.link_scriptPagePrefix))) {
-                changePage(getUrl);
-            } else if (uri != null) {
-                //pass the bad intent to another app
-                new AppChooser(this, uri, getString(R.string.title_appChooserBad), getString(R.string.toast_badString), new AppChooser.OnCloseListener() {
-                    @Override
-                    public void onClose() {
-                        finish();
-                    }
-                }).show();
-                finish = true;
-            } else {
-                Toast.makeText(getApplicationContext(), getString(R.string.toast_badString), Toast.LENGTH_LONG).show();
-                moveTaskToBack(true);
-                finish = true;
-                finish();
-            }
+
+        if(
+                intent.hasExtra(Constants.extraOpenUrl)
+                &&//if has both extras
+                intent.hasExtra(Constants.extraOpenUrlTime)
+                &&//and if the time passed is less than five seconds (to avoid be launched after closed, because the intent is kept)
+                intent.getLongExtra(Constants.extraOpenUrlTime,0)+5000>System.currentTimeMillis()
+                ){
+            changePage(intent.getStringExtra(Constants.extraOpenUrl));
         }
 
-        setIntent(new Intent(this, webViewer.class));
 
         super.onNewIntent(intent);
     }

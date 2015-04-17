@@ -646,7 +646,7 @@ public class webViewer extends Activity {
 
         //the alert dialog
         View layout = getLayoutInflater().inflate(R.layout.confirm_alert, (ViewGroup) findViewById(R.id.webView).getRootView(), false);
-        if (Build.VERSION.SDK_INT <= 11) layout.setBackgroundColor(Color.WHITE);
+        if (Build.VERSION.SDK_INT < 11) layout.setBackgroundColor(Color.WHITE);
         final EditText contentText = ((EditText) layout.findViewById(R.id.editText2));
         contentText.setText(code);
         final EditText nameText = ((EditText) layout.findViewById(R.id.editText));

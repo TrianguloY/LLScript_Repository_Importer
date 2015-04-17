@@ -5,7 +5,9 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.pm.ActivityInfo;
 import android.content.pm.ResolveInfo;
+import android.graphics.Color;
 import android.net.Uri;
+import android.os.Build;
 import android.preference.DialogPreference;
 import android.util.AttributeSet;
 import android.view.View;
@@ -64,6 +66,7 @@ class BrowserPreference extends DialogPreference {
                 }
             }
         }
+        if (Build.VERSION.SDK_INT < 11) view.setBackgroundColor(Color.WHITE);
         return view;
     }
 

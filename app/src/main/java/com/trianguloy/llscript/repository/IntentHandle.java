@@ -4,9 +4,6 @@ import android.app.Activity;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
-import android.util.Log;
-import android.view.Menu;
-import android.view.MenuItem;
 import android.widget.Toast;
 
 
@@ -16,7 +13,6 @@ public class IntentHandle extends Activity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         Intent intent=getIntent();
-        Log.d("IntentHandler","New intent"+intent.toString());
 
         //manages the received intent, run automatically when the activity is running and is called again
         if (intent.getAction() != null && intent.getAction().equalsIgnoreCase(Intent.ACTION_VIEW)) {
@@ -43,7 +39,7 @@ public class IntentHandle extends Activity {
         }
     }
 
-    public void openWebViewer(String url){
+    void openWebViewer(String url) {
         Intent intent = new Intent(this,webViewer.class);
         if(url!=null)intent.putExtra(Constants.extraOpenUrl,url);
         intent.putExtra(Constants.extraOpenUrlTime,System.currentTimeMillis());

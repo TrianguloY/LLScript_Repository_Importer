@@ -64,7 +64,6 @@ public class webViewer extends Activity {
 
     //Callbacks
     private Boolean close = false; //if pressing back will close or not
-    private Boolean finish = false; //Used in onNewIntent as a callback
 
     //Web view data
     private String repoHtml = "";//source code of the repository, used to get the name of the scripts
@@ -103,10 +102,6 @@ public class webViewer extends Activity {
 
         //parse the Intent
         onNewIntent(getIntent());
-
-        if (finish) {//Callback to finish the activity instead of continue to load
-            return;
-        }
 
 
         if (sharedPref.contains(Constants.keyId)) {
@@ -399,7 +394,7 @@ public class webViewer extends Activity {
                 Toast.makeText(getApplicationContext(), R.string.toast_repoChanged, Toast.LENGTH_SHORT).show();
             }
             //will remove the old method
-            sharedPref.edit().remove(getString(R.string.pref_repoHash)).commit();
+            sharedPref.edit().remove(getString(R.string.pref_repoHash)).apply();
         }
 
         //new method: based on the scripts found

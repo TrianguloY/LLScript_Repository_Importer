@@ -322,7 +322,7 @@ public class webViewer extends Activity {
                     showNewScripts();
                 }
                 progressBar.setVisibility(View.GONE);
-                onPrepareOptionsMenu(menu);
+                if (menu != null) onPrepareOptionsMenu(menu);
                 display();
             }
 
@@ -478,14 +478,13 @@ public class webViewer extends Activity {
         if (currentUrl.equals(getString(R.string.link_repository))) {
             button.setVisibility(View.GONE);
             setTitle(R.string.action_mainPage);
-            menu.findItem(R.id.action_subscribe).setVisible(false);
-            menu.findItem(R.id.action_unsubscribe).setVisible(false);
+            setSubscriptionState(CANT_SUBSCRIBE);
             if (Build.VERSION.SDK_INT >= 11) getActionBar().setDisplayHomeAsUpEnabled(false);
         } else {
             button.setVisibility(View.VISIBLE);
             setTitle(StringFunctions.getNameForPageFromPref(sharedPref, this, StringFunctions.getNameFromUrl(currentUrl)));
-            menu.findItem(R.id.action_subscribe).setVisible(!StringFunctions.getMapFromPref(sharedPref, getString(R.string.pref_subs)).containsKey(currentUrl));
-            menu.findItem(R.id.action_unsubscribe).setVisible(StringFunctions.getMapFromPref(sharedPref, getString(R.string.pref_subs)).containsKey(currentUrl));
+            boolean sub = StringFunctions.getMapFromPref(sharedPref, getString(R.string.pref_subs)).containsKey(currentUrl);
+            setSubscriptionState(sub ? SUBSCRIBED : NOT_SUBSCRIBED);
             if (Build.VERSION.SDK_INT >= 11) getActionBar().setDisplayHomeAsUpEnabled(true);
         }
     }
@@ -802,8 +801,7 @@ public class webViewer extends Activity {
         subs.put(currentUrl, StringFunctions.pageToHash(currentHtml));
         StringFunctions.saveMapToPref(sharedPref, getString(R.string.pref_subs), subs);
         Toast.makeText(this, getString(R.string.toast_subscribeSuccessful), Toast.LENGTH_SHORT).show();
-        menu.findItem(R.id.action_subscribe).setVisible(false);
-        menu.findItem(R.id.action_unsubscribe).setVisible(true);
+        setSubscriptionState(SUBSCRIBED);
     }
 
     private void unsubscribeCurrent() {
@@ -811,8 +809,34 @@ public class webViewer extends Activity {
         subs.remove(currentUrl);
         StringFunctions.saveMapToPref(sharedPref, getString(R.string.pref_subs), subs);
         Toast.makeText(this, getString(R.string.toast_unsubscribeSuccessful), Toast.LENGTH_SHORT).show();
-        menu.findItem(R.id.action_subscribe).setVisible(true);
-        menu.findItem(R.id.action_unsubscribe).setVisible(false);
+        setSubscriptionState(NOT_SUBSCRIBED);
+
+    }
+
+    private final int CANT_SUBSCRIBE = -1;
+    private final int NOT_SUBSCRIBED = 0;
+    private final int SUBSCRIBED = 1;
+
+    private void setSubscriptionState(int state) {
+        if (menu == null) return;
+        boolean sub = false;
+        boolean unsub = false;
+        switch (state) {
+            case CANT_SUBSCRIBE:
+                sub = false;
+                unsub = false;
+                break;
+            case NOT_SUBSCRIBED:
+                sub = true;
+                unsub = false;
+                break;
+            case SUBSCRIBED:
+                sub = false;
+                unsub = true;
+                break;
+        }
+        menu.findItem(R.id.action_subscribe).setVisible(sub);
+        menu.findItem(R.id.action_unsubscribe).setVisible(unsub);
 
     }
 

@@ -332,15 +332,8 @@ public class webViewer extends Activity {
                 if (currentUrl.equals(getString(R.string.link_repository)) && repoHtml.equals("")) {
                     repoHtml = result;
 
-                    //It detects if the page has changed since the last visit (the editing date is different)
-                    int newHash = StringFunctions.pageToHash(result);
-                    if (newHash != -1) {
-
-                        if ((sharedPref.contains(getString(R.string.pref_repoHash)) && sharedPref.getInt(getString(R.string.pref_repoHash), 0) != newHash) || !sharedPref.contains(getString(R.string.pref_pageNames))) {
-                            showNewScripts();
-                        }
-                        sharedPref.edit().putInt(getString(R.string.pref_repoHash), newHash).apply();
-                    }
+                    //Function to check if the page has changed since the last visit
+                    showNewScripts();
                 }
                 progressBar.setVisibility(View.GONE);
                 onPrepareOptionsMenu(menu);
@@ -411,6 +404,19 @@ public class webViewer extends Activity {
     }
 
     void showNewScripts() {
+        //legacy code
+        // old method: if the page was changed with the previous method hash of page
+        if(sharedPref.contains(getString(R.string.pref_repoHash))){
+            int newHash = StringFunctions.pageToHash(repoHtml);
+            if (newHash != -1 && sharedPref.getInt(getString(R.string.pref_repoHash), -1) != newHash && !sharedPref.contains(getString(R.string.pref_Scripts))) {
+                //show the toast only if the page has changed based on the previous method and the new method is not found
+                Toast.makeText(getApplicationContext(), R.string.toast_repoChanged, Toast.LENGTH_SHORT).show();
+            }
+            //will remove the old method
+            sharedPref.edit().remove(getString(R.string.pref_repoHash)).commit();
+        }
+
+        //new method: based on the scripts found
         Map<String, String> map = StringFunctions.getAllScriptPagesAndNames(repoHtml);
         HashMap<String, Object> temp = new HashMap<>();
         for (String s : map.keySet()) temp.put(s, map.get(s));
@@ -435,8 +441,8 @@ public class webViewer extends Activity {
                 }
             }
         } else {
+            //No info about previous scripts. Only save the current scripts
             StringFunctions.saveSetToPref(sharedPref, getString(R.string.pref_Scripts), currentScripts);
-            Toast.makeText(getApplicationContext(), R.string.toast_repoChanged, Toast.LENGTH_SHORT).show();
         }
     }
 

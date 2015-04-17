@@ -61,7 +61,7 @@
                 android:value="com.trianguloy.llscript.repository.webViewer" />
         </activity>
         <activity
-            android:name=".SubscriptionsDialog"
+            android:name=".SubscriptionsActivity"
             android:excludeFromRecents="true"
             android:label="@string/label_subscriptionsDialog"
             android:parentActivityName=".SettingsActivity" >

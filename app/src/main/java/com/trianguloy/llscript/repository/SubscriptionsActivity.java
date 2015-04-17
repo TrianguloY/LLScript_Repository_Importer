@@ -14,7 +14,7 @@ import android.widget.ListView;
 import java.util.Map;
 
 
-public class SubscriptionsDialog extends Activity implements ListView.OnItemClickListener {
+public class SubscriptionsActivity extends Activity implements ListView.OnItemClickListener {
 
     private SharedPreferences sharedPref;
     private Map<String, Object> subsMap;
@@ -27,12 +27,14 @@ public class SubscriptionsDialog extends Activity implements ListView.OnItemClic
         ListView subsList = (ListView) findViewById(R.id.sub_list);
         sharedPref = PreferenceManager.getDefaultSharedPreferences(this);
         subsMap = StringFunctions.getMapFromPref(sharedPref, getString(R.string.pref_subs));
-        adapter = new ArrayAdapter<>(this, R.layout.sub_list_item);
-        for (String s : subsMap.keySet()) {
-            adapter.add(StringFunctions.getNameFromUrl(s));
-        }
-        subsList.setAdapter(adapter);
-        subsList.setOnItemClickListener(this);
+        if (subsMap.size() > 0) {
+            adapter = new ArrayAdapter<>(this, R.layout.sub_list_item);
+            for (String s : subsMap.keySet()) {
+                adapter.add(StringFunctions.getNameFromUrl(s));
+            }
+            subsList.setAdapter(adapter);
+            subsList.setOnItemClickListener(this);
+        } else findViewById(R.id.text_noSubscriptions).setVisibility(View.VISIBLE);
     }
 
 

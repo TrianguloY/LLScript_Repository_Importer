@@ -24,9 +24,12 @@
     <string name="summary_subscriptions">Manage your subscriptions</string>
     <string name="title_links">Links</string>
     <string name="text_playStore">Play store page</string>
-    <string name="link_playStoreImporter">https://play.google.com/store/apps/details?id=com.trianguloy.llscript.repository</string>
+    <string name="link_playStoreImporter">
+        https://play.google.com/store/apps/details?id=com.trianguloy.llscript.repository
+    </string>
     <string name="text_googlePlus">Google+ Community</string>
-    <string name="link_googlePlus">https://plus.google.com/communities/109017480579703391739</string>
+    <string name="link_googlePlus">https://plus.google.com/communities/109017480579703391739
+    </string>
     <string name="title_about">About</string>
     <string name="title_author">Authors</string>
     <string name="summary_about">TrianguloY and Lukas Morawietz</string>
@@ -46,22 +49,34 @@
 
     <!-- alert external page link clicked -->
     <string name="title_externalPage">External page</string>
-    <string name="message_externalPage">This page is not related to the repository. Do you want to open it with your normal browser?</string>
+    <string name="message_externalPage">This page is not related to the repository. Do you want to
+        open it with your normal browser?
+    </string>
 
     <!-- alert No page loaded -->
     <string name="title_noPageFound">No page found</string>
-    <string name="message_noPageFound">The page couldn\'t be loaded. Make sure you have an active connection or try again in some minutes</string>
+    <string name="message_noPageFound">The page couldn\'t be loaded. Make sure you have an active
+        connection or try again in some minutes
+    </string>
     <string name="button_retry">Retry</string>
 
     <!-- alert Scripts -->
-    <string name="title_severalScriptsFound">Found more than one Script on this page, please choose one</string>
-    <string name="message_noScriptFound">No script found. If you know that there is one, contact the developer</string>
+    <string name="title_severalScriptsFound">Found more than one Script on this page, please choose
+        one
+    </string>
+    <string name="message_noScriptFound">No script found. If you know that there is one, contact the
+        developer
+    </string>
 
     <!-- alert launcher checks -->
     <string name="title_outdatedLauncher">Warning</string>
-    <string name="message_outdatedLauncher">The version of the launcher is not supported.\nPlease update the launcher to the latest version</string>
+    <string name="message_outdatedLauncher">The version of the launcher is not supported.\nPlease
+        update the launcher to the latest version
+    </string>
     <string name="title_launcherNotFound">Warning</string>
-    <string name="message_launcherNotFound">Lightning Launcher was not found. Please install Lightning Launcher for this to work</string>
+    <string name="message_launcherNotFound">Lightning Launcher was not found. Please install
+        Lightning Launcher for this to work
+    </string>
 
     <!-- alert open in browser-->
     <string name="title_appChooserBad">Can\'t open page. Open instead with</string>
@@ -81,7 +96,9 @@
     <string name="message_remove">"Remove subscription to page "</string>
     <string name="toast_oneNewScript">There is a new Script in the Repository:</string>
     <string name="toast_severalNewScripts">There are new Scripts in the Repository:</string>
-    <string name="toast_repoChanged">The repository Page has changed since your last visit\nNew Script?</string>
+    <string name="toast_repoChanged">The repository Page has changed since your last visit\nNew
+        Script?
+    </string>
     <string name="toast_subscribeSuccessful">Successfully subscribed</string>
     <string name="toast_unsubscribeSuccessful">Successfully unsubscribed</string>
 
@@ -92,15 +109,22 @@
     <string name="button_ok">OK</string>
 
     <!-- html links -->
-    <string name="link_repository">http://www.pierrox.net/android/applications/lightning_launcher/wiki/doku.php?id=script_repository</string>
+    <string name="link_repository">
+        http://www.pierrox.net/android/applications/lightning_launcher/wiki/doku.php?id=script_repository
+    </string>
     <string name="link_server">http://www.pierrox.net</string>
-    <string name="link_scriptPagePrefix">http://www.pierrox.net/android/applications/lightning_launcher/wiki/doku.php?id=script_</string>
+    <string name="link_scriptPagePrefix">
+        http://www.pierrox.net/android/applications/lightning_launcher/wiki/doku.php?id=script_
+    </string>
     <string name="link_playStorePrefix">https://play.google.com/store/apps/details?id=</string>
 
     <!-- Toasts (others) -->
-    <string name="toast_backToClose">Press back again to close\n(optionally long-press back to close anytime)</string>
+    <string name="toast_backToClose">Press back again to close\n(optionally long-press back to close
+        anytime)
+    </string>
     <string name="toast_badString">The provided URL is not from a script of the Repository</string>
-    <string name="toast_managerError">There was an error trying to pass the data to the manager</string>
+    <string name="toast_managerError">There was an error trying to pass the data to the manager
+    </string>
 
     <!--preference keys -->
     <string name="pref_aboutScript">aboutScript</string>
@@ -128,7 +152,9 @@
     <string name="val_intervalDefault">86400000</string>
 
     <!-- Manifest -->
-    <string name="permission_description">Allows to import scripts into LL without User confirmation</string>
+    <string name="permission_description">Allows to import scripts into LL without User
+        confirmation
+    </string>
     <string name="permission_label">LL Import Scripts</string>
     <string name="label_subscriptionsDialog">Subscribed Pages</string>
     <string name="label_repoImporter">Repository Importer</string>
@@ -140,8 +166,9 @@
     <string name="text_updatedPages">updated pages</string>
 
     <!-- unsorted-->
-    <string name="dummy" tools:ignore="UnusedResources">Dummy string to force new ones to be below</string>
-
+    <string name="dummy" tools:ignore="UnusedResources">Dummy string to force new ones to be below
+    </string>
+    <string name="text_noSubs">No Subscriptions</string>
 
 
 </resources>

@@ -23,7 +23,7 @@ public class SubscriptionsDialog extends Activity implements ListView.OnItemClic
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_subscriptions_dialog);
+        setContentView(R.layout.activity_subscriptions);
         ListView subsList = (ListView) findViewById(R.id.sub_list);
         sharedPref = PreferenceManager.getDefaultSharedPreferences(this);
         subsMap = StringFunctions.getMapFromPref(sharedPref, getString(R.string.pref_subs));

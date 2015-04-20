@@ -310,9 +310,13 @@ public class webViewer extends Activity {
             @Override
             public void onFinish(String result) {
                 //default listener: show the page after loading it
-                currentHtml = result;
-                if (currentUrl.equals(getString(R.string.link_repository)) && repoHtml.equals("")) {
-                    repoHtml = result;
+                if (!sharedPref.getBoolean(getString(R.string.pref_showTools), false)) {
+                    //remove tools
+                    StringFunctions.valueAndIndex val = StringFunctions.findBetween(result, "<div class=\"tools group\">", "<hr class=\"a11y\" />", 0, false);
+                    currentHtml = result.substring(0, val.from) + result.substring(val.to, result.length());
+                } else currentHtml = result;
+                if (currentUrl.equals(getString(R.string.link_repository))) {
+                    repoHtml = currentHtml;
 
                     //Function to check if the page has changed since the last visit
                     showNewScripts();

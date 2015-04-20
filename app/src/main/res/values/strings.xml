@@ -169,6 +169,10 @@
     <string name="dummy" tools:ignore="UnusedResources">Dummy string to force new ones to be below
     </string>
     <string name="text_noSubs">No Subscriptions</string>
+    <string name="pref_showTools">showTools</string>
+    <string name="title_showTools">Show Tools in header</string>
+    <string name="summary_showTools">Some of them might not work, search can\'t be used in-app
+    </string>
 
 
 </resources>

@@ -13,18 +13,9 @@ import java.net.URL;
  */
 public class DownloadTask extends AsyncTask<String, Void, String> {
     private final Listener listener;
-    private final boolean usePost;
-    private String body;
 
     public DownloadTask(Listener listener) {
         this.listener = listener;
-        usePost = false;
-    }
-
-    public DownloadTask(Listener listener, boolean usePost, String body) {
-        this.listener = listener;
-        this.usePost = usePost;
-        this.body = body;
     }
 
     @Override
@@ -34,15 +25,6 @@ public class DownloadTask extends AsyncTask<String, Void, String> {
         try {
             connection = (HttpURLConnection) new URL(urls[0]).openConnection();
             connection.setUseCaches(true);
-            if (usePost) {
-                connection.setRequestMethod("POST");
-                connection.setRequestProperty("Content-Type", "application/x-www-form-urlencoded");
-                connection.setDoOutput(true);
-                byte[] bytes = body.getBytes();
-                connection.setFixedLengthStreamingMode(bytes.length);
-                connection.getOutputStream().write(bytes);
-                connection.getOutputStream().close();
-            }
             StringBuilder builder = new StringBuilder();
             try {
                 byte[] buff = new byte[2048];

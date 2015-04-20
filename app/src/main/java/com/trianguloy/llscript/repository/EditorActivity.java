@@ -14,6 +14,9 @@ import com.trianguloy.llscript.repository.internal.AppChooser;
 import com.trianguloy.llscript.repository.internal.DownloadTask;
 import com.trianguloy.llscript.repository.internal.StringFunctions;
 
+import java.io.UnsupportedEncodingException;
+import java.net.URLEncoder;
+
 /**
  * Created by Lukas on 20.04.2015.
  * Provides an UI to edit/create a script page
@@ -57,17 +60,22 @@ public class EditorActivity extends Activity {
     }
 
     void sendLogin(String user, String password) {
-        new DownloadTask(new DownloadTask.Listener() {
-            @Override
-            public void onFinish(String result) {
-                Log.d("Login Result", String.valueOf(result.contains("Logged in as")));
-            }
+        try {
+            new DownloadTask(new DownloadTask.Listener() {
+                @Override
+                public void onFinish(String result) {
+                    Log.d("Login Result", String.valueOf(result.contains("Logged in as")));
+                }
 
-            @Override
-            public void onError() {
-                showConnectionFailed();
-            }
-        }, true, "secTok=" + sessionToken + "&id=script_repository&do=login&u=" + user.toLowerCase() + "&p=" + password + "%3A").execute(getString(R.string.link_repository) + "&do=login&sectok=" + sessionToken);
+                @Override
+                public void onError() {
+                    showConnectionFailed();
+                }
+            }).execute(getString(R.string.link_repository) + "&do=login&sectok=" + sessionToken + "&u=" + URLEncoder.encode(user, "UTF-8") + "&p=" + URLEncoder.encode(password, "UTF-8"));
+        } catch (UnsupportedEncodingException e) {
+            e.printStackTrace();
+            showConnectionFailed();
+        }
 
     }
 

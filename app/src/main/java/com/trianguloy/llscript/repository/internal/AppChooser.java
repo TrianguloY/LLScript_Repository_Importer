@@ -1,4 +1,4 @@
-package com.trianguloy.llscript.repository;
+package com.trianguloy.llscript.repository.internal;
 
 import android.app.AlertDialog;
 import android.content.ComponentName;
@@ -13,10 +13,12 @@ import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.widget.Toast;
 
+import com.trianguloy.llscript.repository.R;
+
 import java.util.List;
 
 
-class AppChooser extends AlertDialog.Builder {
+public class AppChooser extends AlertDialog.Builder {
 
     private final Context context;
     private final Uri action;
@@ -101,7 +103,7 @@ class AppChooser extends AlertDialog.Builder {
         return activities;
     }
 
-    interface OnCloseListener {
+    public interface OnCloseListener {
         void onClose();
     }
 }

@@ -7,6 +7,8 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.preference.PreferenceManager;
 
+import com.trianguloy.llscript.repository.internal.ServiceManager;
+
 /**
  * Created by Lukas on 06.12.2014.
  * Starts the service at device startup, if enabled

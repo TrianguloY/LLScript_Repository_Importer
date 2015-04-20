@@ -107,6 +107,7 @@
                 <!-- \\?id\\=script\\_.* -->
             </intent-filter>
         </activity>
+        <activity android:name=".EditorActivity"/>
     </application>
 
 </manifest>

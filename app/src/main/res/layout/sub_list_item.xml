@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<com.trianguloy.llscript.repository.SubTextView
+<com.trianguloy.llscript.repository.internal.SubTextView
     xmlns:android="http://schemas.android.com/apk/res/android"
     android:id="@android:id/text1"
     android:layout_width="fill_parent"

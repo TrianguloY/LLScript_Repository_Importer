@@ -34,6 +34,11 @@ import android.widget.EditText;
 import android.widget.ProgressBar;
 import android.widget.Toast;
 
+import com.trianguloy.llscript.repository.internal.AppChooser;
+import com.trianguloy.llscript.repository.internal.DownloadTask;
+import com.trianguloy.llscript.repository.internal.ServiceManager;
+import com.trianguloy.llscript.repository.internal.StringFunctions;
+
 import java.io.File;
 import java.io.IOException;
 import java.net.HttpURLConnection;
@@ -130,13 +135,13 @@ public class webViewer extends Activity {
     @Override
     protected void onNewIntent(Intent intent) {
 
-        if(
+        if (
                 intent.hasExtra(Constants.extraOpenUrl)
-                &&//if has both extras
-                intent.hasExtra(Constants.extraOpenUrlTime)
-                &&//and if the time passed is less than five seconds (to avoid be launched after closed, because the intent is kept)
-                intent.getLongExtra(Constants.extraOpenUrlTime,0)+5000>System.currentTimeMillis()
-                ){
+                        &&//if has both extras
+                        intent.hasExtra(Constants.extraOpenUrlTime)
+                        &&//and if the time passed is less than five seconds (to avoid be launched after closed, because the intent is kept)
+                        intent.getLongExtra(Constants.extraOpenUrlTime, 0) + 5000 > System.currentTimeMillis()
+                ) {
             changePage(intent.getStringExtra(Constants.extraOpenUrl));
         }
 
@@ -178,6 +183,9 @@ public class webViewer extends Activity {
                 break;
             case android.R.id.home:
                 onBackPressed();
+                break;
+            case R.id.editor:
+                startActivity(new Intent(this, EditorActivity.class));
                 break;
             default:
                 return super.onOptionsItemSelected(item);
@@ -392,7 +400,7 @@ public class webViewer extends Activity {
     void showNewScripts() {
         //legacy code
         // old method: if the page was changed with the previous method hash of page
-        if(sharedPref.contains(getString(R.string.pref_repoHash))){
+        if (sharedPref.contains(getString(R.string.pref_repoHash))) {
             int newHash = StringFunctions.pageToHash(repoHtml);
             if (newHash != -1 && sharedPref.getInt(getString(R.string.pref_repoHash), -1) != newHash && !sharedPref.contains(getString(R.string.pref_Scripts))) {
                 //show the toast only if the page has changed based on the previous method and the new method is not found
@@ -491,19 +499,7 @@ public class webViewer extends Activity {
 
     void showExternalPageLinkClicked(final String url) {
         //When the clicked page is not useful for this app
-        new AlertDialog.Builder(this)
-                .setTitle(R.string.title_externalPage)
-                .setMessage(R.string.message_externalPage)
-                .setPositiveButton(R.string.button_ok, new DialogInterface.OnClickListener() {
-                    public void onClick(DialogInterface dialog, int which) {
-                        Intent i = new Intent(Intent.ACTION_VIEW);
-                        i.setData(Uri.parse(url));
-                        startActivity(i);
-                    }
-                })
-                .setNegativeButton(R.string.button_no, null)
-                .setIcon(R.drawable.ic_launcher)
-                .show();
+        new AppChooser(this, Uri.parse(url), getString(R.string.title_appChooserExternalClicked), getString(R.string.message_noBrowser), null).show();
     }
 
     void showNoPageLoaded(final String url) {

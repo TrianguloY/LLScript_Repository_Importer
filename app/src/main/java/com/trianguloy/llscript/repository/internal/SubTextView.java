@@ -1,4 +1,4 @@
-package com.trianguloy.llscript.repository;
+package com.trianguloy.llscript.repository.internal;
 
 import android.content.Context;
 import android.preference.PreferenceManager;

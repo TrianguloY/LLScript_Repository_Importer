@@ -6,19 +6,21 @@ import android.net.Uri;
 import android.os.Bundle;
 import android.widget.Toast;
 
+import com.trianguloy.llscript.repository.internal.AppChooser;
+
 
 public class IntentHandle extends Activity {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        Intent intent=getIntent();
+        Intent intent = getIntent();
 
         //manages the received intent, run automatically when the activity is running and is called again
         if (intent.getAction() != null && intent.getAction().equalsIgnoreCase(Intent.ACTION_VIEW)) {
             String getUrl = intent.getDataString();
             Uri uri = intent.getData();
-            if (getUrl.startsWith(getString(R.string.link_scriptPagePrefix))) {
+            if (uri != null && getUrl.startsWith(getString(R.string.link_scriptPagePrefix))) {
                 openWebViewer(getUrl);
             } else if (uri != null) {
                 //pass the bad intent to another app
@@ -32,7 +34,7 @@ public class IntentHandle extends Activity {
                 Toast.makeText(getApplicationContext(), getString(R.string.toast_badString), Toast.LENGTH_LONG).show();
                 finish();
             }
-        }else{
+        } else {
             //bad intent
             openWebViewer(null);
             finish();
@@ -40,9 +42,9 @@ public class IntentHandle extends Activity {
     }
 
     void openWebViewer(String url) {
-        Intent intent = new Intent(this,webViewer.class);
-        if(url!=null)intent.putExtra(Constants.extraOpenUrl,url);
-        intent.putExtra(Constants.extraOpenUrlTime,System.currentTimeMillis());
+        Intent intent = new Intent(this, webViewer.class);
+        if (url != null) intent.putExtra(Constants.extraOpenUrl, url);
+        intent.putExtra(Constants.extraOpenUrlTime, System.currentTimeMillis());
         startActivity(intent);
         finish();
     }

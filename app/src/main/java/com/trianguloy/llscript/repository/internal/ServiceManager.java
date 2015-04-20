@@ -1,4 +1,4 @@
-package com.trianguloy.llscript.repository;
+package com.trianguloy.llscript.repository.internal;
 
 import android.app.Activity;
 import android.app.AlarmManager;
@@ -8,11 +8,13 @@ import android.content.Intent;
 import android.content.ServiceConnection;
 import android.os.SystemClock;
 
+import com.trianguloy.llscript.repository.WebService;
+
 /**
  * Created by Lukas on 12.12.2014.
  * A small set of static methods required at several places, targeting the service
  */
-class ServiceManager {
+public class ServiceManager {
 
     public static void startService(Context context, int interval) {
         Intent i = new Intent(context, WebService.class);

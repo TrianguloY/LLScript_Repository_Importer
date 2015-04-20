@@ -47,12 +47,6 @@
     <string name="button_import">Import</string>
     <string name="button_share">share</string>
 
-    <!-- alert external page link clicked -->
-    <string name="title_externalPage">External page</string>
-    <string name="message_externalPage">This page is not related to the repository. Do you want to
-        open it with your normal browser?
-    </string>
-
     <!-- alert No page loaded -->
     <string name="title_noPageFound">No page found</string>
     <string name="message_noPageFound">The page couldn\'t be loaded. Make sure you have an active
@@ -79,8 +73,9 @@
     </string>
 
     <!-- alert open in browser-->
-    <string name="title_appChooserBad">Can\'t open page. Open instead with</string>
+    <string name="title_appChooserBad">Can\'t open page. Open instead with:</string>
     <string name="title_appChooserNormal">Open with:</string>
+    <string name="title_appChooserExternalClicked">External Page. Open with:</string>
     <string name="message_noBrowser">No browser found</string>
 
     <!--alert crash-->
@@ -171,8 +166,17 @@
     <string name="text_noSubs">No Subscriptions</string>
     <string name="pref_showTools">showTools</string>
     <string name="title_showTools">Show Tools in header</string>
-    <string name="summary_showTools">Some of them might not work, search can\'t be used in-app
+    <string name="summary_showTools">Some of them might not work, search can\'t be used in-app.
+        Might require App restart to apply.
     </string>
+    <string name="pref_user">userName</string>
+    <string name="pref_password">userPassword</string>
+    <string name="button_login">Login</string>
+    <string name="button_register">Register ↗</string>
+    <string name="link_register">
+        http://www.pierrox.net/android/applications/lightning_launcher/wiki/doku.php?do=register
+    </string>
+    <string name="title_appChooserRegister">Go to Register website</string>
 
 
 </resources>

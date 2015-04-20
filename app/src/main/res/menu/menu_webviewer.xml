@@ -21,6 +21,10 @@
         android:showAsAction="never"
         android:visible="false"/>
 
+    <item android:id="@+id/editor"
+          android:title="Editor"
+          android:showAsAction="never"/>
+
     <item
         android:id="@+id/action_settings"
         android:title="@string/action_settings"

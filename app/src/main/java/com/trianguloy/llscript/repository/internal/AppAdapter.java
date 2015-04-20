@@ -1,4 +1,4 @@
-package com.trianguloy.llscript.repository;
+package com.trianguloy.llscript.repository.internal;
 
 import android.content.Context;
 import android.content.pm.PackageManager;
@@ -10,6 +10,8 @@ import android.widget.ArrayAdapter;
 import android.widget.CheckBox;
 import android.widget.ImageView;
 import android.widget.TextView;
+
+import com.trianguloy.llscript.repository.R;
 
 import java.util.List;
 
@@ -25,7 +27,7 @@ class AppAdapter extends ArrayAdapter<ResolveInfo> {
     private final int resource;
     private int selected = NONE;
 
-    AppAdapter(Context context, List<ResolveInfo> apps, int resource) {
+    public AppAdapter(Context context, List<ResolveInfo> apps, int resource) {
         super(context, resource, apps);
         this.context = context;
         this.resource = resource;
@@ -62,13 +64,13 @@ class AppAdapter extends ArrayAdapter<ResolveInfo> {
         if (checkBox != null) checkBox.setChecked(position == selected);
     }
 
-    void select(int position) {
+    public void select(int position) {
         if (selected == position) selected = NONE;
         else selected = position;
         notifyDataSetChanged();
     }
 
-    int getSelected() {
+    public int getSelected() {
         return selected;
     }
 

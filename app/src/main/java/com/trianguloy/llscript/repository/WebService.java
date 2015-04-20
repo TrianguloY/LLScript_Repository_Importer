@@ -11,6 +11,9 @@ import android.os.IBinder;
 import android.preference.PreferenceManager;
 import android.support.v4.app.NotificationCompat;
 
+import com.trianguloy.llscript.repository.internal.DownloadTask;
+import com.trianguloy.llscript.repository.internal.StringFunctions;
+
 import java.util.ArrayList;
 import java.util.Map;
 

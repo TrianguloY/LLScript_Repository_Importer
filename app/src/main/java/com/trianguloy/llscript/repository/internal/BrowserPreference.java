@@ -1,4 +1,4 @@
-package com.trianguloy.llscript.repository;
+package com.trianguloy.llscript.repository.internal;
 
 import android.content.ComponentName;
 import android.content.Context;
@@ -14,13 +14,15 @@ import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ListView;
 
+import com.trianguloy.llscript.repository.R;
+
 import java.util.List;
 
 /**
  * Created by Lukas on 09.04.2015.
  * Preference object to select a default browser
  */
-class BrowserPreference extends DialogPreference {
+public class BrowserPreference extends DialogPreference {
     private Context context;
     private ComponentName value;
     private List<ResolveInfo> activities;

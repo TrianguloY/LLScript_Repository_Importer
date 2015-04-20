@@ -1,9 +1,12 @@
-package com.trianguloy.llscript.repository;
+package com.trianguloy.llscript.repository.internal;
 
 import android.content.Context;
 import android.content.SharedPreferences;
 import android.os.Build;
 import android.util.Log;
+
+import com.trianguloy.llscript.repository.BuildConfig;
+import com.trianguloy.llscript.repository.R;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -23,17 +26,17 @@ import java.util.Set;
 public class StringFunctions {
 
     public static class valueAndIndex {
-        final String value;
-        final int from;
-        final int to;
+        public final String value;
+        public final int from;
+        public final int to;
 
-        valueAndIndex(String v, int f, int t) {
+        public valueAndIndex(String v, int f, int t) {
             value = v;
             from = f;
             to = t;
         }
 
-        valueAndIndex() {
+        public valueAndIndex() {
             value = null;
             from = -1;
             to = -1;

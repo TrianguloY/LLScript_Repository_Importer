@@ -177,6 +177,10 @@
         http://www.pierrox.net/android/applications/lightning_launcher/wiki/doku.php?do=register
     </string>
     <string name="title_appChooserRegister">Go to Register website</string>
+    <string name="text_login">Login with your Wiki account:</string>
+    <string name="button_createPage">Create a new Page</string>
+    <string name="button_editPage">Edit an existing Page</string>
+    <string name="button_save">Save</string>
 
 
 </resources>

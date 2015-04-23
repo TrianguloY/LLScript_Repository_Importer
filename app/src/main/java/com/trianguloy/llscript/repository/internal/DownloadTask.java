@@ -8,7 +8,9 @@ import java.io.OutputStream;
 import java.net.HttpURLConnection;
 import java.net.URL;
 import java.net.URLEncoder;
-import java.nio.charset.Charset;
+import java.util.ArrayList;
+import java.util.Iterator;
+import java.util.Map;
 
 /**
  * Created by Lukas on 26.01.2015.
@@ -17,13 +19,13 @@ import java.nio.charset.Charset;
 public class DownloadTask extends AsyncTask<String, Void, String> {
     private final Listener listener;
     private final boolean usePost;
-    private final String body;
+    private final Map<String,String> body;
 
     public DownloadTask(Listener listener) {
         this(listener,false, null);
     }
 
-    public DownloadTask(Listener listener, boolean usePost, String body) {
+    public DownloadTask(Listener listener, boolean usePost, Map<String,String> body) {
         this.listener = listener;
         this.usePost = usePost;
         this.body = body;
@@ -39,8 +41,23 @@ public class DownloadTask extends AsyncTask<String, Void, String> {
             if(usePost){
                 connection.setRequestMethod("POST");
                 connection.setDoOutput(true);
-                Charset utf8 = Charset.forName("UTF-8");
-                byte[] bytes = utf8.encode(URLEncoder.encode(body,"UTF-8")).array();
+                ArrayList<Byte> list = new ArrayList<>();
+                Iterator<String> it = body.keySet().iterator();
+                while (it.hasNext()){
+                    String key = it.next();
+                    byte[] add = key.getBytes("UTF-8");
+                    for (byte b:add) list.add(b);
+                    add = "=".getBytes("UTF-8");
+                    for (byte b:add) list.add(b);
+                    add = URLEncoder.encode(body.get(key),"UTF-8").getBytes("UTF-8");
+                    for (byte b:add) list.add(b);
+                    if(it.hasNext()) {
+                        add = "&".getBytes("UTF-8");
+                        for (byte b : add) list.add(b);
+                    }
+                }
+                byte[] bytes = new byte[list.size()];
+                for(int i=0;i<list.size();i++) bytes[i] = list.get(i);
                 connection.setFixedLengthStreamingMode(bytes.length);
                 OutputStream stream = connection.getOutputStream();
                 try {

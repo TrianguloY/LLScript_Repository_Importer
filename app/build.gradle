@@ -25,4 +25,5 @@ dependencies {
     compile 'com.android.support:support-annotations:21.0.3'
     compile 'com.android.support:support-v4:22.0.0'
     compile 'ch.acra:acra:4.3.0'
+    compile 'commons-codec:commons-codec:1.2+'
 }

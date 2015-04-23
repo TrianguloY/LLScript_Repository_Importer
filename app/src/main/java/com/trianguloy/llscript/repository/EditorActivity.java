@@ -16,8 +16,11 @@ import com.trianguloy.llscript.repository.internal.AppChooser;
 import com.trianguloy.llscript.repository.internal.DownloadTask;
 import com.trianguloy.llscript.repository.internal.StringFunctions;
 
+import org.apache.commons.codec.digest.DigestUtils;
+
 import java.io.UnsupportedEncodingException;
 import java.net.URLEncoder;
+import java.util.HashMap;
 import java.util.HashSet;
 
 /**
@@ -147,7 +150,7 @@ public class EditorActivity extends Activity {
             public void onError() {
                 showConnectionFailed();
             }
-        }).execute(getString(R.string.link_scriptPagePrefix)+id+"&do=edit");
+        }).execute(getString(R.string.link_scriptPagePrefix)+id+"&do=edit&sectok="+sessionToken);
     }
 
     void showPageEditor(String text){
@@ -160,18 +163,47 @@ public class EditorActivity extends Activity {
         setContentView(R.layout.activity_select_action);
     }
 
-    public void savePage(View v){
+    public void savePage(View v) {
+        HashMap<String,String> map = new HashMap<>();
+        String text = editor.getText().toString();
+        map.put("changecheck",DigestUtils.md5Hex(text));
+        map.put("prefix",".");
+        map.put("suffix","");
+        map.put("date","1429715740");
+        map.put("sectok",sessionToken);
+        map.put("id","script_"+pageId);
+        map.put("rev","0");
+        map.put("target","section");
+        map.put("wikitext", text);
         new DownloadTask(new DownloadTask.Listener() {
             @Override
             public void onFinish(String result) {
-                Log.d("Tag","Finished");
+                Log.d("Tag", "Finished");
+                deleteDraft();
             }
 
             @Override
             public void onError() {
                 showConnectionFailed();
             }
-        },true,"wikitext="+editor.getText()).execute(getString(R.string.link_scriptPagePrefix)+pageId+"&do=edit&rev=0&prefix=.&suffix=&sectok="+sessionToken+"&changecheck="+((int)(Math.random()*1000000))+"&target=section");
+        },true,map).execute(getString(R.string.link_scriptPagePrefix) + pageId + "&do=edit");
+    }
+
+    void deleteDraft(){
+        HashMap<String,String> map = new HashMap<>();
+        map.put("call","draftdel");
+        map.put("id","script_"+pageId);
+        new DownloadTask(new DownloadTask.Listener() {
+            @Override
+            public void onFinish(String result) {
+                Log.d("tag","deleted draft");
+            }
+
+            @Override
+            public void onError() {
+                showConnectionFailed();
+            }
+        },true,map).execute("http://www.pierrox.net/android/applications/lightning_launcher/wiki/lib/exe/ajax.php");
     }
 
 

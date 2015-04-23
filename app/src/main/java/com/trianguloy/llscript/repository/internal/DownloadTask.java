@@ -4,13 +4,8 @@ import android.os.AsyncTask;
 
 import java.io.BufferedInputStream;
 import java.io.IOException;
-import java.io.OutputStream;
 import java.net.HttpURLConnection;
 import java.net.URL;
-import java.net.URLEncoder;
-import java.util.ArrayList;
-import java.util.Iterator;
-import java.util.Map;
 
 /**
  * Created by Lukas on 26.01.2015.
@@ -18,18 +13,11 @@ import java.util.Map;
  */
 public class DownloadTask extends AsyncTask<String, Void, String> {
     private final Listener listener;
-    private final boolean usePost;
-    private final Map<String,String> body;
 
     public DownloadTask(Listener listener) {
-        this(listener,false, null);
+        this.listener = listener;
     }
 
-    public DownloadTask(Listener listener, boolean usePost, Map<String,String> body) {
-        this.listener = listener;
-        this.usePost = usePost;
-        this.body = body;
-    }
 
     @Override
     protected String doInBackground(String... urls) {
@@ -38,37 +26,6 @@ public class DownloadTask extends AsyncTask<String, Void, String> {
         try {
             connection = (HttpURLConnection) new URL(urls[0]).openConnection();
             connection.setUseCaches(true);
-            if(usePost){
-                connection.setRequestMethod("POST");
-                connection.setDoOutput(true);
-                ArrayList<Byte> list = new ArrayList<>();
-                Iterator<String> it = body.keySet().iterator();
-                while (it.hasNext()){
-                    String key = it.next();
-                    byte[] add = key.getBytes("UTF-8");
-                    for (byte b:add) list.add(b);
-                    add = "=".getBytes("UTF-8");
-                    for (byte b:add) list.add(b);
-                    add = URLEncoder.encode(body.get(key),"UTF-8").getBytes("UTF-8");
-                    for (byte b:add) list.add(b);
-                    if(it.hasNext()) {
-                        add = "&".getBytes("UTF-8");
-                        for (byte b : add) list.add(b);
-                    }
-                }
-                byte[] bytes = new byte[list.size()];
-                for(int i=0;i<list.size();i++) bytes[i] = list.get(i);
-                connection.setFixedLengthStreamingMode(bytes.length);
-                OutputStream stream = connection.getOutputStream();
-                try {
-                    stream.write(bytes);
-                } catch (IOException e1) {
-                    e1.printStackTrace();
-                }
-                finally {
-                    stream.close();
-                }
-            }
             StringBuilder builder = new StringBuilder();
             try {
                 byte[] buff = new byte[2048];

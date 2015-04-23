@@ -27,6 +27,7 @@ public class SubTextView extends TextView {
         //noinspection ConstantConditions
         if (context != null) {
             key = (String) text;
+            if(key.startsWith("script_"))key = key.substring(7);
             super.setText(StringFunctions.getNameForPageFromPref(PreferenceManager.getDefaultSharedPreferences(context), context, key), type);
         } else this.text = (String) text;
     }

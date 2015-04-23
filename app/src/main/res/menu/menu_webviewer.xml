@@ -22,7 +22,7 @@
         android:visible="false"/>
 
     <item android:id="@+id/editor"
-          android:title="Editor"
+          android:title="@string/action_editor"
           android:showAsAction="never"/>
 
     <item

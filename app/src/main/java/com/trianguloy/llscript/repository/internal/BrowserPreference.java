@@ -22,6 +22,7 @@ import java.util.List;
  * Created by Lukas on 09.04.2015.
  * Preference object to select a default browser
  */
+@SuppressWarnings("WeakerAccess")
 public class BrowserPreference extends DialogPreference {
     private Context context;
     private ComponentName value;

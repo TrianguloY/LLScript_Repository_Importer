@@ -5,6 +5,11 @@
       <entry_point TYPE="class" FQNAME="com.trianguloy.llscript.repository.RepositoryImporter" />
       <entry_point TYPE="method" FQNAME="com.trianguloy.llscript.repository.EditorActivity void login(android.view.View v)" />
       <entry_point TYPE="method" FQNAME="com.trianguloy.llscript.repository.EditorActivity void register(android.view.View v)" />
+      <entry_point TYPE="method" FQNAME="com.trianguloy.llscript.repository.EditorActivity void createPage(android.view.View v)" />
+      <entry_point TYPE="method" FQNAME="com.trianguloy.llscript.repository.EditorActivity void editPage(android.view.View v)" />
+      <entry_point TYPE="method" FQNAME="com.trianguloy.llscript.repository.EditorActivity void cancelEdit(android.view.View v)" />
+      <entry_point TYPE="method" FQNAME="com.trianguloy.llscript.repository.EditorActivity void savePage(android.view.View v)" />
+      <entry_point TYPE="method" FQNAME="com.trianguloy.llscript.repository.EditorActivity void commitCreate(android.view.View v)" />
     </entry_points>
   </component>
   <component name="NullableNotNullManager">

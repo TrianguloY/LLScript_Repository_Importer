@@ -42,4 +42,25 @@
         android:text="@string/text_startTemplate"
         android:id="@+id/checkTemplate" android:layout_below="@+id/textView2"
         android:layout_alignParentLeft="true" android:layout_alignParentStart="true"/>
+    <Spinner
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/spinner"
+        android:layout_below="@+id/textView3" android:layout_alignParentLeft="true"
+        android:layout_alignParentStart="true" android:layout_alignParentRight="true"
+        android:layout_alignParentEnd="true"/>
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Add to Repository Category:"
+        android:id="@+id/textView3"
+        android:layout_below="@+id/checkTemplate" android:layout_alignParentLeft="true"
+        android:layout_alignParentStart="true"/>
+    <EditText
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/editName" android:layout_below="@+id/spinner"
+        android:layout_alignParentLeft="true" android:layout_alignParentStart="true"
+        android:layout_alignParentRight="true" android:layout_alignParentEnd="true"
+        android:hint="Name / Short Description"/>
 </RelativeLayout>

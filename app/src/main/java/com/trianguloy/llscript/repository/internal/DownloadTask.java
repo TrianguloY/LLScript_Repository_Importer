@@ -4,8 +4,11 @@ import android.os.AsyncTask;
 
 import java.io.BufferedInputStream;
 import java.io.IOException;
+import java.io.OutputStream;
 import java.net.HttpURLConnection;
 import java.net.URL;
+import java.net.URLEncoder;
+import java.nio.charset.Charset;
 
 /**
  * Created by Lukas on 26.01.2015.
@@ -14,14 +17,16 @@ import java.net.URL;
 public class DownloadTask extends AsyncTask<String, Void, String> {
     private final Listener listener;
     private final boolean usePost;
+    private final String body;
 
     public DownloadTask(Listener listener) {
-        this(listener,false);
+        this(listener,false, null);
     }
 
-    public DownloadTask(Listener listener, boolean usePost) {
+    public DownloadTask(Listener listener, boolean usePost, String body) {
         this.listener = listener;
         this.usePost = usePost;
+        this.body = body;
     }
 
     @Override
@@ -31,7 +36,22 @@ public class DownloadTask extends AsyncTask<String, Void, String> {
         try {
             connection = (HttpURLConnection) new URL(urls[0]).openConnection();
             connection.setUseCaches(true);
-            if(usePost)connection.setRequestMethod("POST");
+            if(usePost){
+                connection.setRequestMethod("POST");
+                connection.setDoOutput(true);
+                Charset utf8 = Charset.forName("UTF-8");
+                byte[] bytes = utf8.encode(URLEncoder.encode(body,"UTF-8")).array();
+                connection.setFixedLengthStreamingMode(bytes.length);
+                OutputStream stream = connection.getOutputStream();
+                try {
+                    stream.write(bytes);
+                } catch (IOException e1) {
+                    e1.printStackTrace();
+                }
+                finally {
+                    stream.close();
+                }
+            }
             StringBuilder builder = new StringBuilder();
             try {
                 byte[] buff = new byte[2048];

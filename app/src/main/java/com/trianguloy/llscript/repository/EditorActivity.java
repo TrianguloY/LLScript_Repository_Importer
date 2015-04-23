@@ -161,7 +161,6 @@ public class EditorActivity extends Activity {
     }
 
     public void savePage(View v){
-        String html = Html.toHtml(editor.getText()).replace(" ","+").replace("\n","%0D%0A");
         new DownloadTask(new DownloadTask.Listener() {
             @Override
             public void onFinish(String result) {
@@ -172,7 +171,7 @@ public class EditorActivity extends Activity {
             public void onError() {
                 showConnectionFailed();
             }
-        },true).execute(getString(R.string.link_scriptPagePrefix)+pageId+"&do=edit&rev=0&prefix=.&suffix=&sectok="+sessionToken+"&changecheck="+((int)(Math.random()*1000000))+"&target=section&wikitext="+html);
+        },true,"wikitext="+editor.getText()).execute(getString(R.string.link_scriptPagePrefix)+pageId+"&do=edit&rev=0&prefix=.&suffix=&sectok="+sessionToken+"&changecheck="+((int)(Math.random()*1000000))+"&target=section");
     }
 
 

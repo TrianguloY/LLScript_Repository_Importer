@@ -49,32 +49,32 @@
         <ImageButton
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:id="@+id/action_bold" android:src="@drawable/bold" android:layout_weight="1"
+            android:id="@+id/action_bold" android:src="@drawable/ic_bold" android:layout_weight="1"
             android:onClick="action"/>
         <ImageButton
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:id="@+id/action_italic" android:src="@drawable/italic"
+            android:id="@+id/action_italic" android:src="@drawable/ic_italic"
             android:layout_weight="1" android:onClick="action"/>
         <ImageButton
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:id="@+id/action_underline" android:src="@drawable/underline"
+            android:id="@+id/action_underline" android:src="@drawable/ic_underline"
             android:layout_weight="1" android:onClick="action"/>
         <ImageButton
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:id="@+id/action_code" android:src="@drawable/code" android:layout_weight="1"
+            android:id="@+id/action_code" android:src="@drawable/ic_code" android:layout_weight="1"
             android:onClick="action"/>
         <ImageButton
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:id="@+id/action_unorderedList" android:src="@drawable/unordered_list"
+            android:id="@+id/action_unorderedList" android:src="@drawable/ic_unordered_list"
             android:layout_weight="1" android:onClick="action"/>
         <ImageButton
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:id="@+id/action_orderedList" android:src="@drawable/ordered_list"
+            android:id="@+id/action_orderedList" android:src="@drawable/ic_ordered_list"
             android:layout_weight="1" android:onClick="action"/>
     </LinearLayout>
 </RelativeLayout>

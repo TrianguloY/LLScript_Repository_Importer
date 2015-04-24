@@ -28,18 +28,22 @@ import android.widget.EditText;
 import android.widget.Spinner;
 import android.widget.TextView;
 
+import com.trianguloy.llscript.repository.internal.AesCbcWithIntegrity;
 import com.trianguloy.llscript.repository.internal.AppChooser;
 import com.trianguloy.llscript.repository.internal.StringFunctions;
 
 import java.io.IOException;
+import java.io.UnsupportedEncodingException;
 import java.net.HttpURLConnection;
 import java.net.MalformedURLException;
 import java.net.URL;
+import java.security.GeneralSecurityException;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Comparator;
 import java.util.HashSet;
 import java.util.List;
+import java.util.Map;
 import java.util.Random;
 
 import dw.xmlrpc.DokuJClient;
@@ -60,6 +64,7 @@ public class EditorActivity extends Activity {
     private RepositoryCategory addTo;
     private String pageName;
     private String pageText;
+    private AesCbcWithIntegrity.SecretKeys key;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -69,7 +74,30 @@ public class EditorActivity extends Activity {
         sharedPref = PreferenceManager.getDefaultSharedPreferences(this);
         setContentView(R.layout.activity_login);
         ((EditText) findViewById(R.id.username)).setText(sharedPref.getString(getString(R.string.pref_user), ""));
-        ((EditText) findViewById(R.id.password)).setText(sharedPref.getString(getString(R.string.pref_password), ""));
+        String k = StringFunctions.getNameForPageFromPref(sharedPref,this,getString(R.string.text_none));
+        key = null;
+        try {
+            if (!k.equals(getString(R.string.text_none))) {
+                try {
+                    key = AesCbcWithIntegrity.keys(k);
+                }catch (IllegalArgumentException e){
+                    e.printStackTrace();
+                }
+            }
+            if(key == null){
+                key = AesCbcWithIntegrity.generateKey();
+                Map<String,Object> map  = StringFunctions.getMapFromPref(sharedPref, getString(R.string.pref_pageNames));
+                map.put(getString(R.string.text_none),key.toString());
+                StringFunctions.saveMapToPref(sharedPref,getString(R.string.pref_pageNames),map);
+            }
+            String encPw = sharedPref.getString(getString(R.string.pref_password),null);
+            if(encPw!=null){
+                String pw = AesCbcWithIntegrity.decryptString(new AesCbcWithIntegrity.CipherTextIvMac(encPw),key);
+                ((EditText) findViewById(R.id.password)).setText(pw);
+            }
+        } catch (GeneralSecurityException | UnsupportedEncodingException |IllegalArgumentException e ) {
+            e.printStackTrace();
+        }
         ((CheckBox)findViewById(R.id.checkRemember)).setChecked(sharedPref.getBoolean(getString(R.string.pref_remindPassword),false));
     }
 
@@ -98,10 +126,19 @@ public class EditorActivity extends Activity {
         final String user = ((EditText) findViewById(R.id.username)).getText().toString();
         final String password = ((EditText) findViewById(R.id.password)).getText().toString();
         boolean remember = ((CheckBox)findViewById(R.id.checkRemember)).isChecked();
+        String save = null;
+        if(remember){
+            try {
+                save = AesCbcWithIntegrity.encrypt(password,key).toString();
+            } catch (UnsupportedEncodingException | GeneralSecurityException e) {
+                e.printStackTrace();
+                save = null;
+            }
+        }
         sharedPref.edit()
                 .putString(getString(R.string.pref_user),user)
                 .putBoolean(getString(R.string.pref_remindPassword),remember)
-                .putString(getString(R.string.pref_password),remember?password:null)
+                .putString(getString(R.string.pref_password),save)
                 .apply();
             new Thread(new Runnable() {
                 @Override

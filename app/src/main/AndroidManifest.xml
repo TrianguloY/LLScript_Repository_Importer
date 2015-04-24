@@ -93,7 +93,7 @@
         <activity
             android:name=".IntentHandle"
             android:label="@string/label_intent_handle"
-            android:theme="@style/Theme.Transparent">
+            android:theme="@style/Theme.Transparent" >
             <intent-filter>
                 <action android:name="android.intent.action.VIEW" />
 
@@ -107,7 +107,7 @@
                 <!-- \\?id\\=script\\_.* -->
             </intent-filter>
         </activity>
-        <activity android:name=".EditorActivity"/>
+        <activity android:name=".EditorActivity" />
     </application>
 
 </manifest>

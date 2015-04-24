@@ -35,6 +35,10 @@
     <string name="summary_about">TrianguloY and Lukas Morawietz</string>
     <string name="title_browser">Default external Browser</string>
     <string name="summary_browser">Used for all external pages</string>
+    <string name="title_showTools">Show Tools in header</string>
+    <string name="summary_showTools">Some of them might not work, search can\'t be used in-app.
+        Might require App restart to apply.
+    </string>
 
     <!-- alert confirm and import -->
     <string name="title_importer">Script Importer</string>
@@ -76,12 +80,20 @@
     <string name="title_appChooserBad">Can\'t open page. Open instead with:</string>
     <string name="title_appChooserNormal">Open with:</string>
     <string name="title_appChooserExternalClicked">External Page. Open with:</string>
+    <string name="title_appChooserRegister">Go to Register website</string>
     <string name="message_noBrowser">No browser found</string>
 
     <!--alert crash-->
     <string name="text_crash">Repository Importer has crashed. Do you want to send a Log via
         email?
     </string>
+
+    <!-- alert NetworkProblem -->
+    <string name="text_cantConnect">Can\'t connect to server</string>
+
+    <!-- alert page exists -->
+    <string name="title_error">Error</string>
+    <string name="text_alreadyExists">Page already exists. Please choose another ID</string>
 
     <!-- Subscriptions -->
     <string name="title_subscribe">Subscribe</string>
@@ -96,6 +108,7 @@
     </string>
     <string name="toast_subscribeSuccessful">Successfully subscribed</string>
     <string name="toast_unsubscribeSuccessful">Successfully unsubscribed</string>
+    <string name="text_noSubs">No Subscriptions</string>
 
     <!-- generic buttons -->
     <string name="button_cancel">Cancel</string>
@@ -103,7 +116,7 @@
     <string name="button_no">No</string>
     <string name="button_ok">OK</string>
 
-    <!-- html links -->
+    <!-- http links -->
     <string name="link_repository">
         http://www.pierrox.net/android/applications/lightning_launcher/wiki/doku.php?id=script_repository
     </string>
@@ -112,6 +125,12 @@
         http://www.pierrox.net/android/applications/lightning_launcher/wiki/doku.php?id=script_
     </string>
     <string name="link_playStorePrefix">https://play.google.com/store/apps/details?id=</string>
+    <string name="link_register">
+        http://www.pierrox.net/android/applications/lightning_launcher/wiki/doku.php?do=register
+    </string>
+    <string name="link_xmlrpc">
+        http://www.pierrox.net/android/applications/lightning_launcher/wiki/lib/exe/xmlrpc.php
+    </string>
 
     <!-- Toasts (others) -->
     <string name="toast_backToClose">Press back again to close\n(optionally long-press back to close
@@ -130,6 +149,10 @@
     <string name="pref_notifications">notify</string>
     <string name="pref_notificationInterval">interval</string>
     <string name="pref_browser">browser</string>
+    <string name="pref_showTools">showTools</string>
+    <string name="pref_user">userName</string>
+    <string name="pref_password">userPassword</string>
+    <string name="pref_remindPassword">remindPassword</string>
 
     <!--preference values -->
     <string-array name="val_intervalTexts">
@@ -160,34 +183,44 @@
     <string name="title_updatedPages">Updated Repository pages</string>
     <string name="text_updatedPages">updated pages</string>
 
-    <!-- unsorted-->
-    <string name="dummy" tools:ignore="UnusedResources">Dummy string to force new ones to be below
-    </string>
-    <string name="text_noSubs">No Subscriptions</string>
-    <string name="pref_showTools">showTools</string>
-    <string name="title_showTools">Show Tools in header</string>
-    <string name="summary_showTools">Some of them might not work, search can\'t be used in-app.
-        Might require App restart to apply.
-    </string>
-    <string name="pref_user">userName</string>
-    <string name="pref_password">userPassword</string>
-    <string name="pref_remindPassword">remindPassword</string>
+    <!-- Editor -->
     <string name="button_login">Login</string>
     <string name="button_register">Register ↗</string>
-    <string name="link_register">
-        http://www.pierrox.net/android/applications/lightning_launcher/wiki/doku.php?do=register
-    </string>
-    <string name="title_appChooserRegister">Go to Register website</string>
     <string name="text_login">Login with your Wiki account:</string>
     <string name="button_createPage">Create a new Page</string>
     <string name="button_editPage">Edit an existing Page</string>
     <string name="button_save">Save</string>
-    <string name="buttton_create">Create</string>
+    <string name="button_create">Create</string>
     <string name="action_editor">Editor</string>
-    <string name="text_scriptPagePrefix">script_</string>
     <string name="hint_id">unique_id</string>
     <string name="text_startTemplate">Start with Template</string>
     <string name="text_rememberPassword">Remember Password</string>
+    <string name="text_none">None</string>
+    <string name="prefix_script">script_</string>
+    <string name="prefix_temp">temp_</string>
+    <string name="text_bold">Bold Text</string>
+    <string name="text_italic">Italic Text</string>
+    <string name="text_underline">Underlined Text</string>
+    <string name="text_code">Code</string>
+    <string name="text_unorderedList">Unordered List Item</string>
+    <string name="text_orderedList">Ordered List Item</string>
+    <string name="title_selectPage">Select page to edit</string>
+    <string name="title_saved">Saved</string>
+    <string name="text_doNext">What do you want to do now?</string>
+    <string name="button_viewPage">View Page</string>
+    <string name="button_goHome">Go Home</string>
+    <string name="button_stay">Stay</string>
+    <string name="text_addTo">Add to Repository Category:</string>
+    <string name="hint_nameOrDescription">Name / Short Description</string>
+    <string name="button_preview">Preview</string>
+
+    <!-- Page IDs -->
+    <string name="id_scriptRepository">script_repository</string>
+    <string name="id_scriptTemplate">script_template</string>
+
+    <!-- unsorted-->
+    <string name="dummy" tools:ignore="UnusedResources">Dummy string to force new ones to be below
+    </string>
 
 
 </resources>

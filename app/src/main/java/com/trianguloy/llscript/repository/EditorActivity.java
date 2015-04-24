@@ -1,5 +1,6 @@
 package com.trianguloy.llscript.repository;
 
+import android.annotation.TargetApi;
 import android.app.Activity;
 import android.app.AlertDialog;
 import android.content.Context;
@@ -7,13 +8,20 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.net.Uri;
+import android.net.http.HttpResponseCache;
+import android.os.Build;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
+import android.text.Editable;
 import android.text.TextUtils;
-import android.util.Log;
+import android.view.KeyEvent;
 import android.view.LayoutInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
+import android.webkit.WebResourceResponse;
+import android.webkit.WebView;
+import android.webkit.WebViewClient;
 import android.widget.ArrayAdapter;
 import android.widget.CheckBox;
 import android.widget.EditText;
@@ -23,12 +31,16 @@ import android.widget.TextView;
 import com.trianguloy.llscript.repository.internal.AppChooser;
 import com.trianguloy.llscript.repository.internal.StringFunctions;
 
+import java.io.IOException;
+import java.net.HttpURLConnection;
 import java.net.MalformedURLException;
+import java.net.URL;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Comparator;
 import java.util.HashSet;
 import java.util.List;
+import java.util.Random;
 
 import dw.xmlrpc.DokuJClient;
 import dw.xmlrpc.Page;
@@ -37,7 +49,6 @@ import dw.xmlrpc.exception.DokuException;
 /**
  * Created by Lukas on 20.04.2015.
  * Provides an UI to edit/create a script page
- * TODO edit: Preview & helpers (bold, list, usw)
  */
 public class EditorActivity extends Activity {
 
@@ -48,16 +59,38 @@ public class EditorActivity extends Activity {
     private Repository repository;
     private RepositoryCategory addTo;
     private String pageName;
+    private String pageText;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        editor = null;
 
         sharedPref = PreferenceManager.getDefaultSharedPreferences(this);
         setContentView(R.layout.activity_login);
         ((EditText) findViewById(R.id.username)).setText(sharedPref.getString(getString(R.string.pref_user), ""));
         ((EditText) findViewById(R.id.password)).setText(sharedPref.getString(getString(R.string.pref_password), ""));
         ((CheckBox)findViewById(R.id.checkRemember)).setChecked(sharedPref.getBoolean(getString(R.string.pref_remindPassword),false));
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        if(item.getItemId()==android.R.id.home){
+            onBackPressed();
+            return true;
+        }
+        return super.onOptionsItemSelected(item);
+    }
+
+    @Override
+    public void onBackPressed() {
+        if(findViewById(R.id.webPreview)!=null){
+            setContentView(R.layout.activity_edit);
+            if(Build.VERSION.SDK_INT>=11)getActionBar().setDisplayHomeAsUpEnabled(false);
+            editor = (EditText)findViewById(R.id.editor);
+            editor.setText(pageText);
+        }
+        else super.onBackPressed();
     }
 
     @SuppressWarnings("UnusedParameters")
@@ -74,7 +107,7 @@ public class EditorActivity extends Activity {
                 @Override
                 public void run() {
                     try {
-                    client = new DokuJClient("http://www.pierrox.net/android/applications/lightning_launcher/wiki/lib/exe/xmlrpc.php",user,password);
+                    client = new DokuJClient(getString(R.string.link_xmlrpc),user,password);
                         runOnUiThread(new Runnable() {
                             @Override
                             public void run() {
@@ -100,10 +133,10 @@ public class EditorActivity extends Activity {
             @Override
             public void run() {
                 try {
-                    String repoText = client.getPage("script_repository");
+                    String repoText = client.getPage(getString(R.string.id_scriptRepository));
                     String[] lines = repoText.split("\n");
                     repository = new Repository(lines);
-                    repository.categories.add(new RepositoryCategory("None",-1,-1));
+                    repository.categories.add(new RepositoryCategory(getString(R.string.text_none),-1,-1));
                     for (int i = 0; i< lines.length; i++){
                         String line = lines[i];
                         if(!line.startsWith("|")&&!line.startsWith("^")){
@@ -117,8 +150,6 @@ public class EditorActivity extends Activity {
                         else if(line.startsWith("^"))repository.categories.add(new RepositoryCategory(StringFunctions.findBetween(line,"^","^^^",0,false).value,i,0));
                         else if(line.startsWith("|//**"))repository.categories.add(new RepositoryCategory(StringFunctions.findBetween(line,"|//**","**//||\\\\ |",0,false).value,i,1));
                     }
-                    for (RepositoryCategory c : repository.categories)
-                        Log.d("Categories",c.name);
                     runOnUiThread(new Runnable() {
                         @Override
                         public void run() {
@@ -143,7 +174,7 @@ public class EditorActivity extends Activity {
                     List<Page> list = client.getAllPages();
                     final HashSet<Page> pages = new HashSet<>();
                     for (Page p: list){
-                        if(p.id().startsWith("script_"))pages.add(p);
+                        if(p.id().startsWith(getString(R.string.prefix_script)))pages.add(p);
                     }
                     runOnUiThread(new Runnable() {
                         @Override
@@ -161,6 +192,7 @@ public class EditorActivity extends Activity {
     @SuppressWarnings("UnusedParameters")
     public void cancelEdit(View v){
         setContentView(R.layout.activity_select_action);
+        editor = null;
     }
 
     @SuppressWarnings("UnusedParameters")
@@ -193,7 +225,7 @@ public class EditorActivity extends Activity {
                                 "[[" + pageId + ((pageName!=null)?(" |"+pageName):"")+ "]]" +
                                 ((addTo.level==0)?"||\\\\ |":"|\\\\ |");
                         repository.lines.add(addAt,add);
-                        client.putPage("script_repository", TextUtils.join("\n", repository.lines));
+                        client.putPage(getString(R.string.id_scriptRepository), TextUtils.join("\n", repository.lines));
 
                     }
                     showSaved();
@@ -208,7 +240,7 @@ public class EditorActivity extends Activity {
 
     @SuppressWarnings("UnusedParameters")
     public void commitCreate(View v){
-        pageId = "script_"+((EditText)findViewById(R.id.editId)).getText();
+        pageId = getString(R.string.prefix_script)+((EditText)findViewById(R.id.editId)).getText();
         Spinner spinner = (Spinner) findViewById(R.id.spinner);
         final RepositoryCategory selected = ((RepositoryCategory)spinner.getSelectedItem());
             new Thread(new Runnable() {
@@ -218,7 +250,7 @@ public class EditorActivity extends Activity {
                         boolean exists;
                         try {
                             String page = client.getPage(pageId);
-                            exists = page!=null && page != "";
+                            exists = page!=null && !page.equals("");
                         }
                         catch (DokuException e){
                             e.printStackTrace();
@@ -234,7 +266,7 @@ public class EditorActivity extends Activity {
                             }
                             final String text;
                             if (((CheckBox) findViewById(R.id.checkTemplate)).isChecked()) {
-                                text = client.getPage("script_template");
+                                text = client.getPage(getString(R.string.id_scriptTemplate));
                             } else text = "";
                             runOnUiThread(new Runnable() {
                                 @Override
@@ -250,26 +282,127 @@ public class EditorActivity extends Activity {
             }).start();
     }
 
+    @SuppressWarnings("UnusedParameters")
+    public void action(View v) {
+        switch (v.getId()){
+            case R.id.action_bold:
+                surroundOrAdd("**","**",getString(R.string.text_bold));
+                break;
+            case R.id.action_italic:
+                surroundOrAdd("//","//",getString(R.string.text_italic));
+                break;
+            case R.id.action_underline:
+                surroundOrAdd("__","__",getString(R.string.text_underline));
+                break;
+            case R.id.action_code:
+                surroundOrAdd("<sxh javascript;>","</sxh>",getString(R.string.text_code));
+                break;
+            case R.id.action_unorderedList:
+                surroundOrAdd("  * ","",getString(R.string.text_unorderedList));
+                break;
+            case R.id.action_orderedList:
+                surroundOrAdd("  - ","",getString(R.string.text_orderedList));
+                break;
+        }
+    }
+
+    @SuppressWarnings("UnusedParameters")
+    public void preview(View v){
+        new Thread(new Runnable() {
+            @Override
+            public void run() {
+                try {
+                    final String tempId = getString(R.string.prefix_temp)+ new Random().nextInt();
+                    pageText = editor.getText().toString();
+                    client.putPage(getString(R.string.prefix_script)+tempId,pageText);
+                    runOnUiThread(new Runnable() {
+                        @Override
+                        public void run() {
+                            showPreview(tempId);
+                        }
+                    });
+                } catch (DokuException e) {
+                    e.printStackTrace();
+                    showConnectionFailed();
+                }
+            }
+        }).start();
+    }
+
+    private void showPreview(final String tempId){
+        setContentView(R.layout.activity_preview);
+        final WebView webView = (WebView)findViewById(R.id.webPreview);
+        //noinspection deprecation
+        webView.setWebViewClient(new WebViewClient(){
+
+            @Override
+            public boolean shouldOverrideKeyEvent(WebView view, KeyEvent event) {
+                return true;
+            }
+
+            @TargetApi(Build.VERSION_CODES.ICE_CREAM_SANDWICH)
+            @Override
+            public WebResourceResponse shouldInterceptRequest(final WebView view, final String url) {
+                //from http://stackoverflow.com/questions/12063937/can-i-use-the-android-4-httpresponsecache-with-a-webview-based-application/13596877#13596877
+                if (Build.VERSION.SDK_INT < 14 || !(url.startsWith("http://") || url.startsWith("https://")) || HttpResponseCache.getInstalled() == null)
+                    return null;
+                try {
+                    final HttpURLConnection connection = (HttpURLConnection) new URL(url).openConnection();
+                    connection.connect();
+                    final String content_type = connection.getContentType();
+                    final String separator = "; charset=";
+                    final int pos = content_type.indexOf(separator);
+                    final String mime_type = pos >= 0 ? content_type.substring(0, pos) : content_type;
+                    final String encoding = pos >= 0 ? content_type.substring(pos + separator.length()) : "UTF-8";
+                    return new WebResourceResponse(mime_type, encoding, connection.getInputStream());
+                } catch (final MalformedURLException e) {
+                    e.printStackTrace();
+                    return null;
+                } catch (final IOException e) {
+                    e.printStackTrace();
+                    return null;
+                }
+            }
+
+            @Override
+            public void onPageFinished(WebView view, String url) {
+                super.onPageFinished(view, url);
+                new Thread(new Runnable() {
+                    @Override
+                    public void run() {
+                        try {
+                            client.putPage("script_"+tempId,"");
+                        } catch (DokuException e) {
+                            e.printStackTrace();
+                        }
+                    }
+                }).start();
+            }
+        });
+        webView.loadUrl(getString(R.string.link_scriptPagePrefix) + tempId);
+        if(Build.VERSION.SDK_INT>=11)getActionBar().setDisplayHomeAsUpEnabled(true);
+    }
+
     private void showPageAlreadyExists() {
         runOnUiThread(new Runnable() {
             @Override
             public void run() {
                 new AlertDialog.Builder(EditorActivity.this)
-                        .setTitle("Error")
-                        .setMessage("Page already exists. Please choose another ID")
+                        .setTitle(getString(R.string.title_error))
+                        .setMessage(getString(R.string.text_alreadyExists))
                         .setNeutralButton(R.string.button_ok, null)
                         .show();
             }
         });
     }
 
-    void showSelectPageToEdit(final Page[] pages){
+    private void showSelectPageToEdit(final Page[] pages){
         final ArrayAdapter<String> adapter = new ArrayAdapter<>(this,R.layout.sub_list_item);
         for (Page p:pages)adapter.add(p.id());
         adapter.sort(new Comparator<String>() {
             @Override
             public int compare(String lhs, String rhs) {
-                return StringFunctions.getNameForPageFromPref(sharedPref,EditorActivity.this,lhs).compareTo(StringFunctions.getNameForPageFromPref(sharedPref, EditorActivity.this, rhs));
+                return StringFunctions.getNameForPageFromPref(sharedPref,EditorActivity.this,lhs).toLowerCase().compareTo(StringFunctions.getNameForPageFromPref(sharedPref, EditorActivity.this, rhs).toLowerCase());
             }
         });
         new AlertDialog.Builder(this)
@@ -281,11 +414,11 @@ public class EditorActivity extends Activity {
                     }
                 })
                 .setNegativeButton(R.string.button_cancel, null)
-                .setTitle("Select page to edit")
+                .setTitle(getString(R.string.title_selectPage))
                 .show();
     }
 
-    void loadPageToEdit(String id){
+    private void loadPageToEdit(String id){
         pageId = id;
         new Thread(new Runnable() {
             @Override
@@ -306,33 +439,33 @@ public class EditorActivity extends Activity {
         }).start();
     }
 
-    void showPageEditor(String text){
+    private void showPageEditor(String text){
         setContentView(R.layout.activity_edit);
         editor = (EditText)findViewById(R.id.editor);
         editor.setText(text);
     }
 
-    void showConnectionFailed() {
+    private void showConnectionFailed() {
         runOnUiThread(new Runnable() {
             @Override
             public void run() {
                 new AlertDialog.Builder(EditorActivity.this)
-                        .setTitle("Error")
-                        .setMessage("Can't connect to server")
+                        .setTitle(getString(R.string.title_error))
+                        .setMessage(getString(R.string.text_cantConnect))
                         .setNeutralButton(R.string.button_ok, null)
                         .show();
             }
         });
     }
 
-    void showSaved(){
+    private void showSaved(){
         runOnUiThread(new Runnable() {
             @Override
             public void run() {
                 new AlertDialog.Builder(EditorActivity.this)
-                        .setTitle("Saved")
-                        .setMessage("What do you want to do now?")
-                        .setPositiveButton("View Page",new DialogInterface.OnClickListener() {
+                        .setTitle(getString(R.string.title_saved))
+                        .setMessage(getString(R.string.text_doNext))
+                        .setPositiveButton(getString(R.string.button_viewPage),new DialogInterface.OnClickListener() {
                             @Override
                             public void onClick(DialogInterface dialog, int which) {
                                 Intent intent = new Intent(Intent.ACTION_VIEW);
@@ -342,7 +475,7 @@ public class EditorActivity extends Activity {
                                 finish();
                             }
                         })
-                        .setNeutralButton("Go Home",new DialogInterface.OnClickListener() {
+                        .setNeutralButton(getString(R.string.button_goHome),new DialogInterface.OnClickListener() {
                             @Override
                             public void onClick(DialogInterface dialog, int which) {
                                 Intent intent = new Intent(Intent.ACTION_VIEW);
@@ -352,17 +485,32 @@ public class EditorActivity extends Activity {
                                 finish();
                             }
                         })
-                        .setNegativeButton("Stay",null)
+                        .setNegativeButton(getString(R.string.button_stay),null)
                         .show();
             }
         });
     }
 
+    private void surroundOrAdd(String prefix, String suffix, String text){
+        int start = editor.getSelectionStart();
+        int end = editor.getSelectionEnd();
+        Editable editable = editor.getEditableText();
+        if(start!=end){
+            editable.insert(end,suffix);
+            editable.insert(start,prefix);
+            editor.setSelection(start+prefix.length(),end+prefix.length());
+        }
+        else {
+            editable.insert(start==-1?0:start,prefix+text+suffix);
+            editor.setSelection(start + prefix.length(), start + prefix.length() + text.length());
+        }
+    }
+
     class Repository{
         int tableStartLine;
         int tableEndLine;
-        ArrayList<RepositoryCategory> categories;
-        ArrayList<String> lines;
+        final ArrayList<RepositoryCategory> categories;
+        final ArrayList<String> lines;
 
         public Repository(String[] lines){
             this.lines = new ArrayList<>(Arrays.asList(lines));

@@ -7,7 +7,6 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:id="@+id/editor"
-        android:layout_alignParentTop="true"
         android:layout_alignParentLeft="true"
         android:layout_alignParentStart="true"
         android:layout_alignParentRight="true"
@@ -15,7 +14,8 @@
         android:inputType="textMultiLine|textNoSuggestions"
         android:singleLine="false"
         android:gravity="left|top"
-        android:textAlignment="gravity" android:layout_above="@+id/linearLayout"/>
+        android:textAlignment="gravity" android:layout_above="@+id/linearLayout"
+        android:layout_below="@+id/linearLayout2"/>
     <LinearLayout
         android:orientation="horizontal"
         android:layout_width="match_parent"
@@ -31,8 +31,50 @@
         <Button
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:text="@string/button_preview"
+            android:id="@+id/button10" android:layout_weight="1" android:onClick="preview"/>
+        <Button
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
             android:text="@string/button_save"
             android:id="@+id/button7"
             android:layout_weight="1" android:onClick="savePage"/>
+    </LinearLayout>
+    <LinearLayout
+        android:orientation="horizontal"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content" android:layout_alignParentTop="true"
+        android:layout_alignParentLeft="true" android:layout_alignParentStart="true"
+        android:id="@+id/linearLayout2">
+        <ImageButton
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:id="@+id/action_bold" android:src="@drawable/bold" android:layout_weight="1"
+            android:onClick="action"/>
+        <ImageButton
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:id="@+id/action_italic" android:src="@drawable/italic"
+            android:layout_weight="1" android:onClick="action"/>
+        <ImageButton
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:id="@+id/action_underline" android:src="@drawable/underline"
+            android:layout_weight="1" android:onClick="action"/>
+        <ImageButton
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:id="@+id/action_code" android:src="@drawable/code" android:layout_weight="1"
+            android:onClick="action"/>
+        <ImageButton
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:id="@+id/action_unorderedList" android:src="@drawable/unordered_list"
+            android:layout_weight="1" android:onClick="action"/>
+        <ImageButton
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:id="@+id/action_orderedList" android:src="@drawable/ordered_list"
+            android:layout_weight="1" android:onClick="action"/>
     </LinearLayout>
 </RelativeLayout>

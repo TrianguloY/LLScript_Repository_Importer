@@ -18,13 +18,13 @@
         <Button
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="@string/buttton_create"
+            android:text="@string/button_create"
             android:id="@+id/button9" android:layout_weight="1" android:onClick="commitCreate"/>
     </LinearLayout>
     <TextView
         android:layout_width="wrap_content"
         android:layout_height="match_parent"
-        android:text="@string/text_scriptPagePrefix"
+        android:text="@string/prefix_script"
         android:id="@+id/textView2"
         android:layout_alignBottom="@+id/editId" android:layout_alignParentLeft="true"
         android:layout_alignParentStart="true"
@@ -52,7 +52,7 @@
     <TextView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Add to Repository Category:"
+        android:text="@string/text_addTo"
         android:id="@+id/textView3"
         android:layout_below="@+id/checkTemplate" android:layout_alignParentLeft="true"
         android:layout_alignParentStart="true"/>
@@ -62,5 +62,5 @@
         android:id="@+id/editName" android:layout_below="@+id/spinner"
         android:layout_alignParentLeft="true" android:layout_alignParentStart="true"
         android:layout_alignParentRight="true" android:layout_alignParentEnd="true"
-        android:hint="Name / Short Description"/>
+        android:hint="@string/hint_nameOrDescription"/>
 </RelativeLayout>

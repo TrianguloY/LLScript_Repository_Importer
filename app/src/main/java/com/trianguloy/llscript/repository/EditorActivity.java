@@ -14,7 +14,7 @@ import android.os.Bundle;
 import android.preference.PreferenceManager;
 import android.text.Editable;
 import android.text.TextUtils;
-import android.view.KeyEvent;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.MenuItem;
 import android.view.View;
@@ -49,6 +49,7 @@ import java.util.Random;
 import dw.xmlrpc.DokuJClient;
 import dw.xmlrpc.Page;
 import dw.xmlrpc.exception.DokuException;
+import dw.xmlrpc.exception.DokuUnauthorizedException;
 
 /**
  * Created by Lukas on 20.04.2015.
@@ -74,10 +75,11 @@ public class EditorActivity extends Activity {
         sharedPref = PreferenceManager.getDefaultSharedPreferences(this);
         setContentView(R.layout.activity_login);
         ((EditText) findViewById(R.id.username)).setText(sharedPref.getString(getString(R.string.pref_user), ""));
-        String k = StringFunctions.getNameForPageFromPref(sharedPref,this,getString(R.string.text_none));
+        Map<String,Object> map  = StringFunctions.getMapFromPref(sharedPref, getString(R.string.pref_pageNames));
+        String k = (String)map.get(getString(R.string.text_none));
         key = null;
         try {
-            if (!k.equals(getString(R.string.text_none))) {
+            if (k!=null) {
                 try {
                     key = AesCbcWithIntegrity.keys(k);
                 }catch (IllegalArgumentException e){
@@ -86,10 +88,9 @@ public class EditorActivity extends Activity {
             }
             if(key == null){
                 key = AesCbcWithIntegrity.generateKey();
-                Map<String,Object> map  = StringFunctions.getMapFromPref(sharedPref, getString(R.string.pref_pageNames));
-                map.put(getString(R.string.text_none),key.toString());
-                StringFunctions.saveMapToPref(sharedPref,getString(R.string.pref_pageNames),map);
             }
+            map.put(getString(R.string.text_none),key.toString());
+            StringFunctions.saveMapToPref(sharedPref,getString(R.string.pref_pageNames),map);
             String encPw = sharedPref.getString(getString(R.string.pref_password),null);
             if(encPw!=null){
                 String pw = AesCbcWithIntegrity.decryptString(new AesCbcWithIntegrity.CipherTextIvMac(encPw),key);
@@ -144,13 +145,21 @@ public class EditorActivity extends Activity {
                 @Override
                 public void run() {
                     try {
-                    client = new DokuJClient(getString(R.string.link_xmlrpc),user,password);
-                        runOnUiThread(new Runnable() {
-                            @Override
-                            public void run() {
-                                setContentView(R.layout.activity_select_action);
-                            }
-                        });
+                        client = new DokuJClient(getString(R.string.link_xmlrpc),user,password);
+                        try {
+                            //test if logged in
+                            client.getPageInfo(getString(R.string.id_scriptRepository));
+                            runOnUiThread(new Runnable() {
+                                @Override
+                                public void run() {
+                                    setContentView(R.layout.activity_select_action);
+                                }
+                            });
+                        }
+                        catch (DokuUnauthorizedException e){
+                            e.printStackTrace();
+                            showBadLogin();
+                        }
                     } catch (MalformedURLException | DokuException e) {
                         e.printStackTrace();
                         showConnectionFailed();
@@ -372,11 +381,6 @@ public class EditorActivity extends Activity {
         //noinspection deprecation
         webView.setWebViewClient(new WebViewClient(){
 
-            @Override
-            public boolean shouldOverrideKeyEvent(WebView view, KeyEvent event) {
-                return true;
-            }
-
             @TargetApi(Build.VERSION_CODES.ICE_CREAM_SANDWICH)
             @Override
             public WebResourceResponse shouldInterceptRequest(final WebView view, final String url) {
@@ -414,6 +418,12 @@ public class EditorActivity extends Activity {
                         }
                     }
                 }).start();
+            }
+        });
+        webView.setOnLongClickListener(new View.OnLongClickListener() {
+            @Override
+            public boolean onLongClick(View v) {
+                return true;
             }
         });
         webView.loadUrl(getString(R.string.link_scriptPagePrefix) + tempId);
@@ -489,6 +499,19 @@ public class EditorActivity extends Activity {
                 new AlertDialog.Builder(EditorActivity.this)
                         .setTitle(getString(R.string.title_error))
                         .setMessage(getString(R.string.text_cantConnect))
+                        .setNeutralButton(R.string.button_ok, null)
+                        .show();
+            }
+        });
+    }
+
+    private void showBadLogin() {
+        runOnUiThread(new Runnable() {
+            @Override
+            public void run() {
+                new AlertDialog.Builder(EditorActivity.this)
+                        .setTitle(getString(R.string.title_error))
+                        .setMessage(getString(R.string.text_badLogin))
                         .setNeutralButton(R.string.button_ok, null)
                         .show();
             }

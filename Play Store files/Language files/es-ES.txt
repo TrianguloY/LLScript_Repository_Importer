@@ -30,6 +30,19 @@ https://github.com/TrianguloY/LLScript_Repository_Importer
 
 
 _Changes_
+V 1.6
+Nuevo: Notificaciones Push para las suscripciones (elige el tiempo entre comprobaciones en ajustes)
+Nuevo: Añadir/Editar páginas con una interfaz dedicada*
+Nuevo: Modulo para capturar logs
+Nuevo: Ocultar la barra de herramintas en las páginas de la Wiki, pues pueden no funcionar correctamente (pueden ser mostradas de nuevo en ajustes)
+Nuevo: Elegir navegador para usar con 'open in browser'
+Mejorado: Disposición en dispositivos con API baja
+Arreglado: Crashes en dispositivos con API baja
+Arreglado: Abrir en navegador no resulta en un bucle si la aplicación se elige como defecto
+Arreglado: No mostrar un mensaje con nuevos scripts al instalar
+
+*Permisos:Los nuevos permisos de cuentas son usados para almacenar tus credenciales si usas el editor
+
 V 1.5
 IMPORTANTE: Requiere versión mínima de LL. En caso contrario pedirá actualizar.
 Nuevo: Ajustes

@@ -187,6 +187,7 @@ public class EditorActivity extends Activity {
                     });
                 } catch (DokuException e) {
                     e.printStackTrace();
+                    showConnectionFailed();
                 }
             }
         }).start();
@@ -211,6 +212,7 @@ public class EditorActivity extends Activity {
                     });
                 } catch (DokuException e) {
                     e.printStackTrace();
+                    showConnectionFailed();
                 }
             }
         }).start();

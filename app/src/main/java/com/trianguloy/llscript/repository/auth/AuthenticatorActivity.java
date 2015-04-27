@@ -1,13 +1,9 @@
 package com.trianguloy.llscript.repository.auth;
 
-import android.accounts.Account;
 import android.accounts.AccountAuthenticatorActivity;
-import android.accounts.AccountManager;
 import android.app.AlertDialog;
-import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.View;
 import android.widget.EditText;
 
@@ -48,19 +44,20 @@ public class AuthenticatorActivity extends AccountAuthenticatorActivity {
             @Override
             public void run() {
                 try {
-                    DokuJClient client = new DokuJClient(getString(R.string.link_xmlrpc),user,password);
+                    DokuJClient client = new DokuJClient(getString(R.string.link_xmlrpc));
                     try {
                         //test if logged in
-                        client.getPageInfo(getString(R.string.id_scriptRepository));
-                        Account account = new Account(user,accountType);
-                        AccountManager.get(AuthenticatorActivity.this).addAccountExplicitly(account,password,null);
-                        Intent intent = new Intent();
-                        intent.putExtra(AccountManager.KEY_ACCOUNT_NAME, user);
-                        intent.putExtra(AccountManager.KEY_ACCOUNT_TYPE, ACCOUNT_TYPE);
-                        setAccountAuthenticatorResult(intent.getExtras());
-                        setResult(RESULT_OK, intent);
-                        AuthenticatorActivity.this.finish();
-                        Log.d("Act","done");
+                        Object[] params = new Object[]{user, password};
+                        boolean login = (boolean)client.genericQuery("dokuwiki.login", params);
+                        if(login) {
+                            runOnUiThread(new Runnable() {
+                                @Override
+                                public void run() {
+                                    setContentView(R.layout.activity_select_action);
+                                }
+                            });
+                        }
+                        else showBadLogin();
                     }
                     catch (DokuUnauthorizedException e){
                         e.printStackTrace();

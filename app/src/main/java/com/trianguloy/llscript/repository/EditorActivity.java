@@ -127,16 +127,20 @@ public class EditorActivity extends Activity {
                 @Override
                 public void run() {
                     try {
-                        client = new DokuJClient(getString(R.string.link_xmlrpc),user,password);
+                        client = new DokuJClient(getString(R.string.link_xmlrpc));
                         try {
                             //test if logged in
-                            client.getPageInfo(getString(R.string.id_scriptRepository));
-                            runOnUiThread(new Runnable() {
-                                @Override
-                                public void run() {
-                                    setContentView(R.layout.activity_select_action);
-                                }
-                            });
+                            Object[] params = new Object[]{user, password};
+                            boolean login = (boolean)client.genericQuery("dokuwiki.login", params);
+                            if(login) {
+                                runOnUiThread(new Runnable() {
+                                    @Override
+                                    public void run() {
+                                        setContentView(R.layout.activity_select_action);
+                                    }
+                                });
+                            }
+                            else showBadLogin();
                         }
                         catch (DokuUnauthorizedException e){
                             e.printStackTrace();

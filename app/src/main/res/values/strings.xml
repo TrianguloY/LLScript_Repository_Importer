@@ -222,6 +222,7 @@
     <string name="dummy" tools:ignore="UnusedResources">Dummy string to force new ones to be below
     </string>
     <string name="text_badLogin">Bad Login values</string>
+    <string name="account_type">lightning_launcher.wiki</string>
 
 
 </resources>

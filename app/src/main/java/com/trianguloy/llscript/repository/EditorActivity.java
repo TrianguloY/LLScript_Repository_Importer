@@ -1,5 +1,11 @@
 package com.trianguloy.llscript.repository;
 
+import android.accounts.Account;
+import android.accounts.AccountManager;
+import android.accounts.AccountManagerCallback;
+import android.accounts.AccountManagerFuture;
+import android.accounts.AuthenticatorException;
+import android.accounts.OperationCanceledException;
 import android.annotation.TargetApi;
 import android.app.Activity;
 import android.app.AlertDialog;
@@ -29,21 +35,17 @@ import android.widget.Spinner;
 import android.widget.TextView;
 
 import com.trianguloy.llscript.repository.internal.AesCbcWithIntegrity;
-import com.trianguloy.llscript.repository.internal.AppChooser;
 import com.trianguloy.llscript.repository.internal.StringFunctions;
 
 import java.io.IOException;
-import java.io.UnsupportedEncodingException;
 import java.net.HttpURLConnection;
 import java.net.MalformedURLException;
 import java.net.URL;
-import java.security.GeneralSecurityException;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Comparator;
 import java.util.HashSet;
 import java.util.List;
-import java.util.Map;
 import java.util.Random;
 
 import dw.xmlrpc.DokuJClient;
@@ -56,6 +58,7 @@ import dw.xmlrpc.exception.DokuUnauthorizedException;
  * Provides an UI to edit/create a script page
  */
 public class EditorActivity extends Activity {
+    String TAG = "editor";
 
     private SharedPreferences sharedPref;
     private String pageId;
@@ -73,33 +76,7 @@ public class EditorActivity extends Activity {
         editor = null;
 
         sharedPref = PreferenceManager.getDefaultSharedPreferences(this);
-        setContentView(R.layout.activity_login);
-        ((EditText) findViewById(R.id.username)).setText(sharedPref.getString(getString(R.string.pref_user), ""));
-        Map<String,Object> map  = StringFunctions.getMapFromPref(sharedPref, getString(R.string.pref_pageNames));
-        String k = (String)map.get(getString(R.string.text_none));
-        key = null;
-        try {
-            if (k!=null) {
-                try {
-                    key = AesCbcWithIntegrity.keys(k);
-                }catch (IllegalArgumentException e){
-                    e.printStackTrace();
-                }
-            }
-            if(key == null){
-                key = AesCbcWithIntegrity.generateKey();
-            }
-            map.put(getString(R.string.text_none),key.toString());
-            StringFunctions.saveMapToPref(sharedPref,getString(R.string.pref_pageNames),map);
-            String encPw = sharedPref.getString(getString(R.string.pref_password),null);
-            if(encPw!=null){
-                String pw = AesCbcWithIntegrity.decryptString(new AesCbcWithIntegrity.CipherTextIvMac(encPw),key);
-                ((EditText) findViewById(R.id.password)).setText(pw);
-            }
-        } catch (GeneralSecurityException | UnsupportedEncodingException |IllegalArgumentException e ) {
-            e.printStackTrace();
-        }
-        ((CheckBox)findViewById(R.id.checkRemember)).setChecked(sharedPref.getBoolean(getString(R.string.pref_remindPassword),false));
+        findAccount();
     }
 
     @Override
@@ -122,25 +99,34 @@ public class EditorActivity extends Activity {
         else super.onBackPressed();
     }
 
-    @SuppressWarnings("UnusedParameters")
-    public void login(View v) {
-        final String user = ((EditText) findViewById(R.id.username)).getText().toString();
-        final String password = ((EditText) findViewById(R.id.password)).getText().toString();
-        boolean remember = ((CheckBox)findViewById(R.id.checkRemember)).isChecked();
-        String save = null;
-        if(remember){
-            try {
-                save = AesCbcWithIntegrity.encrypt(password,key).toString();
-            } catch (UnsupportedEncodingException | GeneralSecurityException e) {
-                e.printStackTrace();
-                save = null;
-            }
+    void findAccount(){
+        AccountManager accountManager = AccountManager.get(this);
+        Account[] accounts = accountManager.getAccountsByType(getString(R.string.account_type));
+        if(accounts.length == 0) {
+            AccountManagerCallback<Bundle> callback = new AccountManagerCallback<Bundle>() {
+                public void run(AccountManagerFuture<Bundle> future) {
+                    try {
+                        Bundle bundle = future.getResult();
+                        bundle.keySet();
+                        Log.d(TAG, "account added: " + bundle);
+                        findAccount();
+
+                    } catch (OperationCanceledException e) {
+                        Log.d(TAG, "addAccount was canceled");
+                    } catch (IOException e) {
+                        Log.d(TAG, "addAccount failed: " + e);
+                    } catch (AuthenticatorException e) {
+                        Log.d(TAG, "addAccount failed: " + e);
+                    }
+                }
+            };
+            AccountManager.get(this).addAccount(getString(R.string.account_type), null, null, null, this, callback, null);
         }
-        sharedPref.edit()
-                .putString(getString(R.string.pref_user),user)
-                .putBoolean(getString(R.string.pref_remindPassword),remember)
-                .putString(getString(R.string.pref_password),save)
-                .apply();
+        else login(accounts[0].name,accountManager.getPassword(accounts[0]));
+
+    }
+
+    void login(final String user, final String password) {
             new Thread(new Runnable() {
                 @Override
                 public void run() {
@@ -166,11 +152,6 @@ public class EditorActivity extends Activity {
                     }
                 }
             }).start();
-    }
-
-    @SuppressWarnings("UnusedParameters")
-    public void register(View v) {
-        new AppChooser(this, Uri.parse(getString(R.string.link_register)), getString(R.string.title_appChooserRegister), getString(R.string.message_noBrowser), null).show();
     }
 
     @SuppressWarnings("UnusedParameters")

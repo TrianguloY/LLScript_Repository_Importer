@@ -4,6 +4,11 @@
 
     <uses-permission android:name="android.permission.INTERNET" />
 
+    <uses-permission android:name="android.permission.AUTHENTICATE_ACCOUNTS"/>
+    <uses-permission android:name="android.permission.MANAGE_ACCOUNTS"/>
+    <uses-permission android:name="android.permission.USE_CREDENTIALS"/>
+    <uses-permission android:name="android.permission.GET_ACCOUNTS"/>
+
     <permission
         android:name="net.pierrox.lightning_launcher.IMPORT_SCRIPTS"
         android:description="@string/permission_description"
@@ -107,7 +112,19 @@
                 <!-- \\?id\\=script\\_.* -->
             </intent-filter>
         </activity>
-        <activity android:name=".EditorActivity" />
+        <activity android:name=".EditorActivity"
+                  android:excludeFromRecents="true" />
+
+        <service android:name=".AuthenticationService">
+        <intent-filter>
+            <action android:name="android.accounts.AccountAuthenticator"/>
+        </intent-filter>
+        <meta-data android:name="android.accounts.AccountAuthenticator" android:resource="@xml/authenticator"/>
+        </service>
+
+        <activity android:name=".AuthenticatorActivity"
+                  android:excludeFromRecents="true"
+            android:label="@string/button_login"/>
     </application>
 
 </manifest>

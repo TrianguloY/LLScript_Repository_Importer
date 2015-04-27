@@ -6,10 +6,6 @@ import org.acra.ACRA;
 import org.acra.ReportingInteractionMode;
 import org.acra.annotation.ReportsCrashes;
 
-import java.net.CookieHandler;
-import java.net.CookieManager;
-import java.net.CookiePolicy;
-
 /**
  * Created by Lukas on 16.04.2015.
  * Represents the application
@@ -25,6 +21,5 @@ public class RepositoryImporter extends Application {
     public void onCreate() {
         super.onCreate();
         ACRA.init(this);
-        CookieHandler.setDefault( new CookieManager( null, CookiePolicy.ACCEPT_ALL ) );
     }
 }

@@ -7,6 +7,7 @@ import android.webkit.WebView;
 
 /**
  * Created by Lukas on 25.04.2015.
+ * A webview which should prevent all user interactions but scrolling
  */
 public class NoEventWebView extends WebView {
     private MotionEvent last;

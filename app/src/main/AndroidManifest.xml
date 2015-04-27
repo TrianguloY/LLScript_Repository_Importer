@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
-    package="com.trianguloy.llscript.repository" >
+          xmlns:tools="http://schemas.android.com/tools" package="com.trianguloy.llscript.repository" >
 
     <uses-permission android:name="android.permission.INTERNET" />
 
@@ -115,7 +115,7 @@
         <activity android:name=".EditorActivity"
                   android:excludeFromRecents="true" />
 
-        <service android:name=".auth.AuthenticationService">
+        <service android:name=".auth.AuthenticationService" tools:ignore="ExportedService">
         <intent-filter>
             <action android:name="android.accounts.AccountAuthenticator"/>
         </intent-filter>

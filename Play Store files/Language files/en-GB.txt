@@ -29,6 +29,18 @@ https://github.com/TrianguloY/LLScript_Repository_Importer
 
 
 _Changes_
+V 1.6
+New: Notifications for Subscriptions
+New: Create/add pages with a custom UI
+New: Log catching module
+New: Hide toolbar on Wiki pages, as they might not work properly
+Improved: Layout on low API devices
+Fixed: Crashes on low API devices
+Fixed: Open in Browser doesn't result in a loop if the app is set as default
+Fixed: Don't show Toast with new Scripts at first install
+Permissions: The newly added account permissions are used to store your credentials if you use the editor
+
+
 V 1.5
 IMPORTANT: Requires a minimum Version of LL. It will ask to update otherwise.
 New: Settings

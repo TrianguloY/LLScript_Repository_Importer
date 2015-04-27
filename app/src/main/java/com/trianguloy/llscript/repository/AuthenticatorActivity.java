@@ -21,6 +21,7 @@ import dw.xmlrpc.exception.DokuUnauthorizedException;
 
 /**
  * Created by Lukas on 27.04.2015.
+ * Shows UI to manage account
  */
 public class AuthenticatorActivity extends AccountAuthenticatorActivity {
 
@@ -38,7 +39,7 @@ public class AuthenticatorActivity extends AccountAuthenticatorActivity {
         accountType = getIntent().getStringExtra(ACCOUNT_TYPE);
     }
 
-    @SuppressWarnings("UnusedParamters")
+    @SuppressWarnings("UnusedParameters")
     public void login(View v){
         final String user = ((EditText) findViewById(R.id.username)).getText().toString();
         final String password = ((EditText) findViewById(R.id.password)).getText().toString();

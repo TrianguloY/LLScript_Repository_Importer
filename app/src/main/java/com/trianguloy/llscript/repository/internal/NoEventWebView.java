@@ -9,7 +9,7 @@ import android.webkit.WebView;
  * Created by Lukas on 25.04.2015.
  */
 public class NoEventWebView extends WebView {
-    MotionEvent last;
+    private MotionEvent last;
 
     public NoEventWebView(Context context, AttributeSet attrs) {
         super(context, attrs);

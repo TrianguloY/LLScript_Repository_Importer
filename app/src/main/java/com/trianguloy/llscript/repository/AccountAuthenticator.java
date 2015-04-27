@@ -11,10 +11,11 @@ import android.os.Bundle;
 
 /**
  * Created by Lukas on 27.04.2015.
+ * Manages an account. UpdateCredentials should be implemented.
  */
-public class AccountAuthenticator extends AbstractAccountAuthenticator{
+class AccountAuthenticator extends AbstractAccountAuthenticator{
 
-    final Context context;
+    private final Context context;
 
     public AccountAuthenticator(Context context) {
         super(context);
@@ -27,7 +28,7 @@ public class AccountAuthenticator extends AbstractAccountAuthenticator{
     }
 
     @Override
-    public Bundle addAccount(AccountAuthenticatorResponse response, String accountType, String authTokenType, String[] requiredFeatures, Bundle options) throws NetworkErrorException { final Bundle result;
+    public Bundle addAccount(AccountAuthenticatorResponse response, String accountType, String authTokenType, String[] requiredFeatures, Bundle options) throws NetworkErrorException {
         final Intent intent = new Intent(context, AuthenticatorActivity.class);
         intent.putExtra(AuthenticatorActivity.ACCOUNT_TYPE, accountType);
         //intent.putExtra(AuthenticatorActivity.AUTH_TYPE, authTokenType);

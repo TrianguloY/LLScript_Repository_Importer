@@ -150,9 +150,6 @@
     <string name="pref_notificationInterval">interval</string>
     <string name="pref_browser">browser</string>
     <string name="pref_showTools">showTools</string>
-    <string name="pref_user">userName</string>
-    <string name="pref_password">userPassword</string>
-    <string name="pref_remindPassword">remindPassword</string>
 
     <!--preference values -->
     <string-array name="val_intervalTexts">
@@ -194,7 +191,6 @@
     <string name="action_editor">Editor</string>
     <string name="hint_id">unique_id</string>
     <string name="text_startTemplate">Start with Template</string>
-    <string name="text_rememberPassword">Remember Password</string>
     <string name="text_none">None</string>
     <string name="prefix_script">script_</string>
     <string name="prefix_temp">temp_</string>

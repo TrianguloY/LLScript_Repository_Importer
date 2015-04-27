@@ -6,6 +6,7 @@ import android.os.IBinder;
 
 /**
  * Created by Lukas on 27.04.2015.
+ * Returns the authentication object to the android system
  */
 
 public class AuthenticationService extends Service {

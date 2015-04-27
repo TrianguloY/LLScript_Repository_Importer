@@ -12,6 +12,8 @@
       <entry_point TYPE="method" FQNAME="com.trianguloy.llscript.repository.EditorActivity void commitCreate(android.view.View v)" />
       <entry_point TYPE="method" FQNAME="com.trianguloy.llscript.repository.EditorActivity void action(android.view.View v)" />
       <entry_point TYPE="method" FQNAME="com.trianguloy.llscript.repository.EditorActivity void preview(android.view.View v)" />
+      <entry_point TYPE="method" FQNAME="com.trianguloy.llscript.repository.AuthenticatorActivity void login(android.view.View v)" />
+      <entry_point TYPE="method" FQNAME="com.trianguloy.llscript.repository.AuthenticatorActivity void register(android.view.View v)" />
     </entry_points>
   </component>
   <component name="NullableNotNullManager">

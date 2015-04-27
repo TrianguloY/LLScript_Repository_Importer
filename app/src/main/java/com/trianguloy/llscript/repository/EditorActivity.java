@@ -34,7 +34,6 @@ import android.widget.EditText;
 import android.widget.Spinner;
 import android.widget.TextView;
 
-import com.trianguloy.llscript.repository.internal.AesCbcWithIntegrity;
 import com.trianguloy.llscript.repository.internal.StringFunctions;
 
 import java.io.IOException;
@@ -58,7 +57,7 @@ import dw.xmlrpc.exception.DokuUnauthorizedException;
  * Provides an UI to edit/create a script page
  */
 public class EditorActivity extends Activity {
-    String TAG = "editor";
+    private String TAG = "editor";
 
     private SharedPreferences sharedPref;
     private String pageId;
@@ -68,7 +67,6 @@ public class EditorActivity extends Activity {
     private RepositoryCategory addTo;
     private String pageName;
     private String pageText;
-    private AesCbcWithIntegrity.SecretKeys key;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -99,7 +97,7 @@ public class EditorActivity extends Activity {
         else super.onBackPressed();
     }
 
-    void findAccount(){
+    private void findAccount(){
         AccountManager accountManager = AccountManager.get(this);
         Account[] accounts = accountManager.getAccountsByType(getString(R.string.account_type));
         if(accounts.length == 0) {
@@ -113,9 +111,7 @@ public class EditorActivity extends Activity {
 
                     } catch (OperationCanceledException e) {
                         Log.d(TAG, "addAccount was canceled");
-                    } catch (IOException e) {
-                        Log.d(TAG, "addAccount failed: " + e);
-                    } catch (AuthenticatorException e) {
+                    } catch (IOException | AuthenticatorException e) {
                         Log.d(TAG, "addAccount failed: " + e);
                     }
                 }
@@ -126,7 +122,7 @@ public class EditorActivity extends Activity {
 
     }
 
-    void login(final String user, final String password) {
+    private void login(final String user, final String password) {
             new Thread(new Runnable() {
                 @Override
                 public void run() {

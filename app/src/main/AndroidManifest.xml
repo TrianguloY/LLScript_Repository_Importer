@@ -115,14 +115,14 @@
         <activity android:name=".EditorActivity"
                   android:excludeFromRecents="true" />
 
-        <service android:name=".AuthenticationService">
+        <service android:name=".auth.AuthenticationService">
         <intent-filter>
             <action android:name="android.accounts.AccountAuthenticator"/>
         </intent-filter>
         <meta-data android:name="android.accounts.AccountAuthenticator" android:resource="@xml/authenticator"/>
         </service>
 
-        <activity android:name=".AuthenticatorActivity"
+        <activity android:name=".auth.AuthenticatorActivity"
                   android:excludeFromRecents="true"
             android:label="@string/button_login"/>
     </application>

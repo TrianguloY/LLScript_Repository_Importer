@@ -414,8 +414,6 @@ public class webViewer extends Activity {
         Map<String, String> map = StringFunctions.getAllScriptPagesAndNames(repoHtml);
         HashMap<String, Object> temp = new HashMap<>();
         for (String s : map.keySet()) temp.put(s, map.get(s));
-        Map<String,Object> old = StringFunctions.getMapFromPref(sharedPref,getString(R.string.pref_pageNames));
-        if(old.containsKey(getString(R.string.text_none)))temp.put(getString(R.string.text_none),old.get(getString(R.string.text_none)));
         StringFunctions.saveMapToPref(sharedPref, getString(R.string.pref_pageNames), temp);
         Set<String> currentScripts = map.keySet();
         if (sharedPref.contains(getString(R.string.pref_Scripts))) {

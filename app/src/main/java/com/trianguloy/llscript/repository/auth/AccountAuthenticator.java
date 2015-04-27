@@ -1,4 +1,4 @@
-package com.trianguloy.llscript.repository;
+package com.trianguloy.llscript.repository.auth;
 
 import android.accounts.AbstractAccountAuthenticator;
 import android.accounts.Account;

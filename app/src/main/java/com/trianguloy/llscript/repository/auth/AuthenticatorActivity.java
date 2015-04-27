@@ -1,4 +1,4 @@
-package com.trianguloy.llscript.repository;
+package com.trianguloy.llscript.repository.auth;
 
 import android.accounts.Account;
 import android.accounts.AccountAuthenticatorActivity;
@@ -11,6 +11,7 @@ import android.util.Log;
 import android.view.View;
 import android.widget.EditText;
 
+import com.trianguloy.llscript.repository.R;
 import com.trianguloy.llscript.repository.internal.AppChooser;
 
 import java.net.MalformedURLException;

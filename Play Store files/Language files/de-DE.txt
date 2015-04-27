@@ -29,6 +29,19 @@ https://github.com/TrianguloY/LLScript_Repository_Importer
 
 
 _Changes_
+V 1.6
+Neu: Benachrichtigungen in der Statusleiste für Abonnements (Checkintervall einstellbar)
+Neu: Seiten bearbeiten oder hinzufügen mit eigener Benutzeroberfläche*
+Neu: Logs werden nun abgefangen
+Neu: Verstecke die Toolbar auf allen Seiten, da Sie nicht immer funktioniert (kann in den Einstellungen aktiviert werden)
+Neu: Browser für 'open in browser' ist auswählbar
+Verbessert: Oberfläche auf alten Geräten
+Fix: Abstürze auf alten Geräten
+Fix: Open in Browser löst keine Endlosschleife mehr aus, wenn die App als Standard ausgewählt wurde
+Fix: Keine Benachrichtigung über neue Scripte bei der Erstinstallation
+
+*Berechtigungen: Die neuen Account-Berechtigungen werden verwendet um ihre Accountdaten zu speichern, wenn Sie den Editor benutzen
+
 V 1.5
 WICHTIG: Erfordert eine minimale LL-Version. Wenn diese nicht installiert ist, wird nach einem Updat gefragt.
 Neu: Einstellungen

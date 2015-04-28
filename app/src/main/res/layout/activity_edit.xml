@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-                android:layout_width="match_parent"
+                xmlns:tools="http://schemas.android.com/tools" android:layout_width="match_parent"
                 android:layout_height="match_parent">
 
     <EditText
@@ -50,31 +50,31 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:id="@+id/action_bold" android:src="@drawable/ic_bold" android:layout_weight="1"
-            android:onClick="action"/>
+            android:onClick="action" tools:ignore="ContentDescription"/>
         <ImageButton
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:id="@+id/action_italic" android:src="@drawable/ic_italic"
-            android:layout_weight="1" android:onClick="action"/>
+            android:layout_weight="1" android:onClick="action" tools:ignore="ContentDescription"/>
         <ImageButton
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:id="@+id/action_underline" android:src="@drawable/ic_underline"
-            android:layout_weight="1" android:onClick="action"/>
+            android:layout_weight="1" android:onClick="action" tools:ignore="ContentDescription"/>
         <ImageButton
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:id="@+id/action_code" android:src="@drawable/ic_code" android:layout_weight="1"
-            android:onClick="action"/>
+            android:onClick="action" tools:ignore="ContentDescription"/>
         <ImageButton
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:id="@+id/action_unorderedList" android:src="@drawable/ic_unordered_list"
-            android:layout_weight="1" android:onClick="action"/>
+            android:layout_weight="1" android:onClick="action" tools:ignore="ContentDescription"/>
         <ImageButton
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:id="@+id/action_orderedList" android:src="@drawable/ic_ordered_list"
-            android:layout_weight="1" android:onClick="action"/>
+            android:layout_weight="1" android:onClick="action" tools:ignore="ContentDescription"/>
     </LinearLayout>
 </RelativeLayout>

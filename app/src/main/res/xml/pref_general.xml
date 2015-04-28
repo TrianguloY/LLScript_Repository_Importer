@@ -1,6 +1,6 @@
 <PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android">
 
-    <PreferenceCategory android:title="General">
+    <PreferenceCategory android:title="@string/title_general">
         <CheckBoxPreference
             android:key="@string/pref_aboutScript"
             android:title="@string/title_attachAboutScript"
@@ -23,17 +23,21 @@
             android:summary="@string/summary_showTools"
             android:defaultValue="false"/>
     </PreferenceCategory>
-    <PreferenceCategory android:title="Notifications">
+    <PreferenceCategory android:title="@string/title_notifications">
         <CheckBoxPreference
-            android:title="Push Notifications"
+            android:title="@string/title_pushNotifications"
             android:key="@string/pref_notifications"
             android:defaultValue="false"/>
         <ListPreference
-            android:title="Update Interval"
+            android:title="@string/title_interval"
             android:key="@string/pref_notificationInterval"
             android:entries="@array/val_intervalTexts"
             android:entryValues="@array/val_intervalValues"
             android:defaultValue="@string/val_intervalDefault"/>
+    </PreferenceCategory>
+    <PreferenceCategory android:title="@string/title_editor">
+        <Preference android:title="@string/title_resetPw"
+            android:key="@string/pref_resetPw"/>
     </PreferenceCategory>
     <PreferenceCategory android:title="@string/title_links">
         <Preference android:title="@string/text_playStore">

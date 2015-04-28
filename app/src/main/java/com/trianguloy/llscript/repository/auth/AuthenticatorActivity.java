@@ -3,16 +3,17 @@ package com.trianguloy.llscript.repository.auth;
 import android.accounts.Account;
 import android.accounts.AccountAuthenticatorActivity;
 import android.accounts.AccountManager;
-import android.app.AlertDialog;
 import android.content.Intent;
 import android.net.Uri;
+import android.os.Build;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.View;
+import android.widget.CheckBox;
 import android.widget.EditText;
 
 import com.trianguloy.llscript.repository.R;
 import com.trianguloy.llscript.repository.internal.AppChooser;
+import com.trianguloy.llscript.repository.internal.Dialogs;
 
 import java.net.MalformedURLException;
 
@@ -27,23 +28,32 @@ import dw.xmlrpc.exception.DokuUnauthorizedException;
 public class AuthenticatorActivity extends AccountAuthenticatorActivity {
 
     public static final String ACCOUNT_TYPE = "accType";
-    //public static final String AUTH_TYPE = "authType";
+    public static final String ACCOUNT = "acc";
 
+
+    public static String user;
+    public static String password;
 
     private String accountType;
+    private Account account;
 
 
     @Override
     protected void onCreate(Bundle icicle) {
         super.onCreate(icicle);
         setContentView(R.layout.activity_login);
-        accountType = getIntent().getStringExtra(ACCOUNT_TYPE);
+        Intent intent = getIntent();
+        accountType = intent.getStringExtra(ACCOUNT_TYPE);
+        account = intent.getParcelableExtra(ACCOUNT);
+        if(account!=null)((EditText) findViewById(R.id.username)).setText(account.name);
+
     }
 
     @SuppressWarnings("UnusedParameters")
     public void login(View v){
         final String user = ((EditText) findViewById(R.id.username)).getText().toString();
         final String password = ((EditText) findViewById(R.id.password)).getText().toString();
+        final boolean savePw = ((CheckBox)findViewById(R.id.checkRemember)).isChecked();
         new Thread(new Runnable() {
             @Override
             public void run() {
@@ -52,28 +62,41 @@ public class AuthenticatorActivity extends AccountAuthenticatorActivity {
                     try {
                         //test if logged in
                         Object[] params = new Object[]{user, password};
-                        Object login = client.genericQuery("dokuwiki.login", params);
-                        Log.d("Auth",login.toString());
-                        if(login!=null) {
-                            Account account = new Account(user,accountType);
-                            AccountManager.get(AuthenticatorActivity.this).addAccountExplicitly(account,password,null);
+                        boolean login = (boolean)client.genericQuery("dokuwiki.login", params);
+                        if(login) {
+                            AccountManager accountManager = AccountManager.get(AuthenticatorActivity.this);
+                            if(account != null){
+                                accountManager.setPassword(account,savePw?password:null);
+                                if(!account.name.equals(user)) {
+                                    if( Build.VERSION.SDK_INT >= 21) accountManager.renameAccount(account,user,null,null);
+                                    else {
+                                        accountManager.removeAccount(account,null,null);
+                                        account = null;
+                                    }
+                                }
+                            }
+                            if(account ==  null) {
+                                Account account = new Account(user, accountType);
+                                accountManager.addAccountExplicitly(account, savePw ? password : null, null);
+                            }
                             Intent intent = new Intent();
                             intent.putExtra(AccountManager.KEY_ACCOUNT_NAME, user);
                             intent.putExtra(AccountManager.KEY_ACCOUNT_TYPE, ACCOUNT_TYPE);
                             setAccountAuthenticatorResult(intent.getExtras());
                             setResult(RESULT_OK, intent);
+                            AuthenticatorActivity.user = user;
+                            AuthenticatorActivity.password = password;
                             AuthenticatorActivity.this.finish();
-                            Log.d("Act", "done");
                         }
-                        else showBadLogin();
+                        else Dialogs.badLogin(AuthenticatorActivity.this);
                     }
                     catch (DokuUnauthorizedException e){
                         e.printStackTrace();
-                        showBadLogin();
+                        Dialogs.badLogin(AuthenticatorActivity.this);
                     }
                 } catch (MalformedURLException | DokuException e) {
                     e.printStackTrace();
-                    showConnectionFailed();
+                    Dialogs.connectionFailed(AuthenticatorActivity.this);
                 }
             }
         }).start();
@@ -84,32 +107,5 @@ public class AuthenticatorActivity extends AccountAuthenticatorActivity {
     @SuppressWarnings("UnusedParameters")
     public void register(View v) {
         new AppChooser(this, Uri.parse(getString(R.string.link_register)), getString(R.string.title_appChooserRegister), getString(R.string.message_noBrowser), null).show();
-    }
-
-
-    private void showBadLogin() {
-        runOnUiThread(new Runnable() {
-            @Override
-            public void run() {
-                new AlertDialog.Builder(AuthenticatorActivity.this)
-                        .setTitle(getString(R.string.title_error))
-                        .setMessage(getString(R.string.text_badLogin))
-                        .setNeutralButton(R.string.button_ok, null)
-                        .show();
-            }
-        });
-    }
-
-    private void showConnectionFailed() {
-        runOnUiThread(new Runnable() {
-            @Override
-            public void run() {
-                new AlertDialog.Builder(AuthenticatorActivity.this)
-                        .setTitle(getString(R.string.title_error))
-                        .setMessage(getString(R.string.text_cantConnect))
-                        .setNeutralButton(R.string.button_ok, null)
-                        .show();
-            }
-        });
     }
 }

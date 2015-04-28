@@ -1,5 +1,7 @@
 package com.trianguloy.llscript.repository;
 
+import android.accounts.Account;
+import android.accounts.AccountManager;
 import android.annotation.TargetApi;
 import android.app.AlarmManager;
 import android.content.ComponentName;
@@ -11,10 +13,12 @@ import android.os.Build;
 import android.os.Bundle;
 import android.preference.CheckBoxPreference;
 import android.preference.ListPreference;
+import android.preference.Preference;
 import android.preference.PreferenceActivity;
 import android.preference.PreferenceFragment;
 import android.support.v4.app.NavUtils;
 import android.view.MenuItem;
+import android.widget.Toast;
 
 import com.trianguloy.llscript.repository.internal.ServiceManager;
 
@@ -29,19 +33,32 @@ import com.trianguloy.llscript.repository.internal.ServiceManager;
  * href="http://developer.android.com/guide/topics/ui/settings.html">Settings
  * API Guide</a> for more information on developing a Settings UI.
  */
+@SuppressWarnings("deprecation")
 public class SettingsActivity extends PreferenceActivity implements SharedPreferences.OnSharedPreferenceChangeListener {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setupActionBar();
-        //noinspection deprecation
         addPreferencesFromResource(R.xml.pref_general);
 
         ListPreference listPreference = (ListPreference) findPreference(getString(R.string.pref_notificationInterval));
         listPreference.setSummary(listPreference.getEntry());
         CheckBoxPreference checkBoxPreference = (CheckBoxPreference) findPreference(getString(R.string.pref_notifications));
         listPreference.setEnabled(checkBoxPreference.isChecked());
+        final Preference resetPwPref = findPreference(getString(R.string.pref_resetPw));
+        final AccountManager accountManager = AccountManager.get(this);
+        final Account[] accounts = accountManager.getAccountsByType(getString(R.string.account_type));
+        resetPwPref.setEnabled(accounts.length > 0 && accountManager.getPassword(accounts[0]) != null);
+        resetPwPref.setOnPreferenceClickListener(new Preference.OnPreferenceClickListener() {
+            @Override
+            public boolean onPreferenceClick(Preference preference) {
+                accountManager.clearPassword(accounts[0]);
+                resetPwPref.setEnabled(false);
+                Toast.makeText(SettingsActivity.this,getString(R.string.toast_resetPw),Toast.LENGTH_SHORT).show();
+                return true;
+            }
+        });
     }
 
     @Override

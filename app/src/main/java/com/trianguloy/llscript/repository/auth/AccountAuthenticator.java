@@ -31,7 +31,6 @@ class AccountAuthenticator extends AbstractAccountAuthenticator{
     public Bundle addAccount(AccountAuthenticatorResponse response, String accountType, String authTokenType, String[] requiredFeatures, Bundle options) throws NetworkErrorException {
         final Intent intent = new Intent(context, AuthenticatorActivity.class);
         intent.putExtra(AuthenticatorActivity.ACCOUNT_TYPE, accountType);
-        //intent.putExtra(AuthenticatorActivity.AUTH_TYPE, authTokenType);
         intent.putExtra(AccountManager.KEY_ACCOUNT_AUTHENTICATOR_RESPONSE, response);
         final Bundle bundle = new Bundle();
         bundle.putParcelable(AccountManager.KEY_INTENT, intent);
@@ -55,7 +54,13 @@ class AccountAuthenticator extends AbstractAccountAuthenticator{
 
     @Override
     public Bundle updateCredentials(AccountAuthenticatorResponse response, Account account, String authTokenType, Bundle options) throws NetworkErrorException {
-        return null;
+        final Intent intent = new Intent(context, AuthenticatorActivity.class);
+        intent.putExtra(AuthenticatorActivity.ACCOUNT_TYPE, account.type);
+        intent.putExtra(AuthenticatorActivity.ACCOUNT,account);
+        intent.putExtra(AccountManager.KEY_ACCOUNT_AUTHENTICATOR_RESPONSE, response);
+        final Bundle bundle = new Bundle();
+        bundle.putParcelable(AccountManager.KEY_INTENT, intent);
+        return bundle;
     }
 
     @Override

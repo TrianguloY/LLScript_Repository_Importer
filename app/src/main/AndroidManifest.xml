@@ -34,7 +34,8 @@
             android:name=".webViewer"
             android:configChanges="orientation|screenSize"
             android:label="@string/label_repoImporter"
-            android:launchMode="singleInstance" >
+            android:launchMode="singleInstance"
+            android:excludeFromRecents="false">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
@@ -113,7 +114,7 @@
             </intent-filter>
         </activity>
         <activity android:name=".EditorActivity"
-                  android:excludeFromRecents="true" />
+                  android:excludeFromRecents="false" />
 
         <service android:name=".auth.AuthenticationService" tools:ignore="ExportedService">
         <intent-filter>

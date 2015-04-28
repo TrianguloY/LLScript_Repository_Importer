@@ -20,7 +20,6 @@ import android.os.Bundle;
 import android.preference.PreferenceManager;
 import android.text.Editable;
 import android.text.TextUtils;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.MenuItem;
 import android.view.View;
@@ -34,7 +33,11 @@ import android.widget.EditText;
 import android.widget.Spinner;
 import android.widget.TextView;
 
+import com.trianguloy.llscript.repository.auth.AuthenticatorActivity;
+import com.trianguloy.llscript.repository.internal.Dialogs;
 import com.trianguloy.llscript.repository.internal.StringFunctions;
+
+import org.acra.ACRA;
 
 import java.io.IOException;
 import java.net.HttpURLConnection;
@@ -57,7 +60,6 @@ import dw.xmlrpc.exception.DokuUnauthorizedException;
  * Provides an UI to edit/create a script page
  */
 public class EditorActivity extends Activity {
-    private String TAG = "editor";
 
     private SharedPreferences sharedPref;
     private String pageId;
@@ -98,28 +100,32 @@ public class EditorActivity extends Activity {
     }
 
     private void findAccount(){
-        AccountManager accountManager = AccountManager.get(this);
-        Account[] accounts = accountManager.getAccountsByType(getString(R.string.account_type));
-        if(accounts.length == 0) {
+        if(AuthenticatorActivity.user!=null&&AuthenticatorActivity.password!=null){
+            login(AuthenticatorActivity.user,AuthenticatorActivity.password);
+            AuthenticatorActivity.user = null;
+            AuthenticatorActivity.password = null;
+        }
+        else {
+            AccountManager accountManager = AccountManager.get(this);
+            Account[] accounts = accountManager.getAccountsByType(getString(R.string.account_type));
             AccountManagerCallback<Bundle> callback = new AccountManagerCallback<Bundle>() {
                 public void run(AccountManagerFuture<Bundle> future) {
                     try {
-                        Bundle bundle = future.getResult();
-                        bundle.keySet();
-                        Log.d(TAG, "account added: " + bundle);
+                        future.getResult();
                         findAccount();
 
-                    } catch (OperationCanceledException e) {
-                        Log.d(TAG, "addAccount was canceled");
+                    } catch (OperationCanceledException ignored) {
                     } catch (IOException | AuthenticatorException e) {
-                        Log.d(TAG, "addAccount failed: " + e);
+                        ACRA.getErrorReporter().handleException(e);
                     }
                 }
             };
-            AccountManager.get(this).addAccount(getString(R.string.account_type), null, null, null, this, callback, null);
+            if (accounts.length == 0) {
+                accountManager.addAccount(getString(R.string.account_type), "", null, null, this, callback, null);
+            } else if (accountManager.getPassword(accounts[0]) == null) {
+                accountManager.updateCredentials(accounts[0], "", null, this, callback, null);
+            } else login(accounts[0].name, accountManager.getPassword(accounts[0]));
         }
-        else login(accounts[0].name,accountManager.getPassword(accounts[0]));
-
     }
 
     private void login(final String user, final String password) {
@@ -140,15 +146,15 @@ public class EditorActivity extends Activity {
                                     }
                                 });
                             }
-                            else showBadLogin();
+                            else Dialogs.badLogin(EditorActivity.this);
                         }
                         catch (DokuUnauthorizedException e){
                             e.printStackTrace();
-                            showBadLogin();
+                            Dialogs.badLogin(EditorActivity.this);
                         }
                     } catch (MalformedURLException | DokuException e) {
                         e.printStackTrace();
-                        showConnectionFailed();
+                        Dialogs.connectionFailed(EditorActivity.this);
                     }
                 }
             }).start();
@@ -187,7 +193,7 @@ public class EditorActivity extends Activity {
                     });
                 } catch (DokuException e) {
                     e.printStackTrace();
-                    showConnectionFailed();
+                    Dialogs.connectionFailed(EditorActivity.this);
                 }
             }
         }).start();
@@ -212,7 +218,7 @@ public class EditorActivity extends Activity {
                     });
                 } catch (DokuException e) {
                     e.printStackTrace();
-                    showConnectionFailed();
+                    Dialogs.connectionFailed(EditorActivity.this);
                 }
             }
         }).start();
@@ -261,7 +267,7 @@ public class EditorActivity extends Activity {
 
                 } catch (DokuException e) {
                     e.printStackTrace();
-                    showConnectionFailed();
+                    Dialogs.connectionFailed(EditorActivity.this);
                 }
             }
         }).start();
@@ -352,7 +358,7 @@ public class EditorActivity extends Activity {
                     });
                 } catch (DokuException e) {
                     e.printStackTrace();
-                    showConnectionFailed();
+                    Dialogs.connectionFailed(EditorActivity.this);
                 }
             }
         }).start();
@@ -463,7 +469,7 @@ public class EditorActivity extends Activity {
                     });
                 } catch (DokuException e) {
                     e.printStackTrace();
-                    showConnectionFailed();
+                    Dialogs.connectionFailed(EditorActivity.this);
                 }
             }
         }).start();
@@ -475,32 +481,6 @@ public class EditorActivity extends Activity {
         editor.setText(text);
     }
 
-    private void showConnectionFailed() {
-        runOnUiThread(new Runnable() {
-            @Override
-            public void run() {
-                new AlertDialog.Builder(EditorActivity.this)
-                        .setTitle(getString(R.string.title_error))
-                        .setMessage(getString(R.string.text_cantConnect))
-                        .setNeutralButton(R.string.button_ok, null)
-                        .show();
-            }
-        });
-    }
-
-    private void showBadLogin() {
-        runOnUiThread(new Runnable() {
-            @Override
-            public void run() {
-                new AlertDialog.Builder(EditorActivity.this)
-                        .setTitle(getString(R.string.title_error))
-                        .setMessage(getString(R.string.text_badLogin))
-                        .setNeutralButton(R.string.button_ok, null)
-                        .show();
-            }
-        });
-    }
-
     private void showSaved(){
         runOnUiThread(new Runnable() {
             @Override
@@ -508,17 +488,17 @@ public class EditorActivity extends Activity {
                 new AlertDialog.Builder(EditorActivity.this)
                         .setTitle(getString(R.string.title_saved))
                         .setMessage(getString(R.string.text_doNext))
-                        .setPositiveButton(getString(R.string.button_viewPage),new DialogInterface.OnClickListener() {
+                        .setPositiveButton(getString(R.string.button_viewPage), new DialogInterface.OnClickListener() {
                             @Override
                             public void onClick(DialogInterface dialog, int which) {
                                 Intent intent = new Intent(Intent.ACTION_VIEW);
-                                intent.setData(Uri.parse(getString(R.string.link_scriptPagePrefix)+pageId.substring(7)));
-                                intent.setClass(EditorActivity.this,IntentHandle.class);
+                                intent.setData(Uri.parse(getString(R.string.link_scriptPagePrefix) + pageId.substring(7)));
+                                intent.setClass(EditorActivity.this, IntentHandle.class);
                                 startActivity(intent);
                                 finish();
                             }
                         })
-                        .setNeutralButton(getString(R.string.button_goHome),new DialogInterface.OnClickListener() {
+                        .setNeutralButton(getString(R.string.button_goHome), new DialogInterface.OnClickListener() {
                             @Override
                             public void onClick(DialogInterface dialog, int which) {
                                 Intent intent = new Intent(Intent.ACTION_VIEW);
@@ -528,7 +508,7 @@ public class EditorActivity extends Activity {
                                 finish();
                             }
                         })
-                        .setNegativeButton(getString(R.string.button_stay),null)
+                        .setNegativeButton(getString(R.string.button_stay), null)
                         .show();
             }
         });

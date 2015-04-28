@@ -39,6 +39,13 @@
     <string name="summary_showTools">Some of them might not work, search can\'t be used in-app.
         Might require App restart to apply.
     </string>
+    <string name="title_editor">Editor</string>
+    <string name="title_resetPw">Reset saved password</string>
+    <string name="toast_resetPw">Password cleared</string>
+    <string name="title_general">General</string>
+    <string name="title_notifications">Notifications</string>
+    <string name="title_pushNotifications">Push Notifications</string>
+    <string name="title_interval">Update Interval</string>
 
     <!-- alert confirm and import -->
     <string name="title_importer">Script Importer</string>
@@ -150,6 +157,7 @@
     <string name="pref_notificationInterval">interval</string>
     <string name="pref_browser">browser</string>
     <string name="pref_showTools">showTools</string>
+    <string name="pref_resetPw">reset_pw</string>
 
     <!--preference values -->
     <string-array name="val_intervalTexts">
@@ -210,6 +218,11 @@
     <string name="hint_nameOrDescription">Name / Short Description</string>
     <string name="button_preview">Preview</string>
 
+    <!-- Authentication -->
+    <string name="text_badLogin">Bad Login values</string>
+    <string name="account_type">lightning_launcher.wiki</string>
+
+
     <!-- Page IDs -->
     <string name="id_scriptRepository">script_repository</string>
     <string name="id_scriptTemplate">script_template</string>
@@ -217,8 +230,7 @@
     <!-- unsorted-->
     <string name="dummy" tools:ignore="UnusedResources">Dummy string to force new ones to be below
     </string>
-    <string name="text_badLogin">Bad Login values</string>
-    <string name="account_type">lightning_launcher.wiki</string>
+    <string name="text_rememberPw">Remember Password</string>
 
 
 </resources>

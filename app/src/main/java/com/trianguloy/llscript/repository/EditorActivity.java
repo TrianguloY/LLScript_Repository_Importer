@@ -6,7 +6,6 @@ import android.accounts.AccountManagerCallback;
 import android.accounts.AccountManagerFuture;
 import android.accounts.AuthenticatorException;
 import android.accounts.OperationCanceledException;
-import android.annotation.TargetApi;
 import android.app.Activity;
 import android.app.AlertDialog;
 import android.content.Context;
@@ -14,19 +13,17 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.net.Uri;
-import android.net.http.HttpResponseCache;
 import android.os.Build;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
 import android.text.Editable;
 import android.text.TextUtils;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
-import android.webkit.WebResourceResponse;
 import android.webkit.WebView;
-import android.webkit.WebViewClient;
 import android.widget.ArrayAdapter;
 import android.widget.CheckBox;
 import android.widget.EditText;
@@ -36,13 +33,12 @@ import android.widget.TextView;
 import com.trianguloy.llscript.repository.auth.AuthenticatorActivity;
 import com.trianguloy.llscript.repository.internal.Dialogs;
 import com.trianguloy.llscript.repository.internal.StringFunctions;
+import com.trianguloy.llscript.repository.internal.WebClient;
 
 import org.acra.ACRA;
 
 import java.io.IOException;
-import java.net.HttpURLConnection;
 import java.net.MalformedURLException;
-import java.net.URL;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Comparator;
@@ -69,6 +65,7 @@ public class EditorActivity extends Activity {
     private RepositoryCategory addTo;
     private String pageName;
     private String pageText;
+    private Random random;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -76,6 +73,7 @@ public class EditorActivity extends Activity {
         editor = null;
 
         sharedPref = PreferenceManager.getDefaultSharedPreferences(this);
+        random = new Random();
         findAccount();
     }
 
@@ -92,7 +90,7 @@ public class EditorActivity extends Activity {
     public void onBackPressed() {
         if(findViewById(R.id.webPreview)!=null){
             setContentView(R.layout.activity_edit);
-            if(Build.VERSION.SDK_INT>=11)getActionBar().setDisplayHomeAsUpEnabled(false);
+            if(Build.VERSION.SDK_INT>=Build.VERSION_CODES.HONEYCOMB)getActionBar().setDisplayHomeAsUpEnabled(false);
             editor = (EditText)findViewById(R.id.editor);
             editor.setText(pageText);
         }
@@ -100,12 +98,7 @@ public class EditorActivity extends Activity {
     }
 
     private void findAccount(){
-        if(AuthenticatorActivity.user!=null&&AuthenticatorActivity.password!=null){
-            login(AuthenticatorActivity.user,AuthenticatorActivity.password);
-            AuthenticatorActivity.user = null;
-            AuthenticatorActivity.password = null;
-        }
-        else {
+        if (AuthenticatorActivity.user == null || AuthenticatorActivity.password == null) {
             AccountManager accountManager = AccountManager.get(this);
             Account[] accounts = accountManager.getAccountsByType(getString(R.string.account_type));
             AccountManagerCallback<Bundle> callback = new AccountManagerCallback<Bundle>() {
@@ -125,6 +118,10 @@ public class EditorActivity extends Activity {
             } else if (accountManager.getPassword(accounts[0]) == null) {
                 accountManager.updateCredentials(accounts[0], "", null, this, callback, null);
             } else login(accounts[0].name, accountManager.getPassword(accounts[0]));
+        } else {
+            login(AuthenticatorActivity.user,AuthenticatorActivity.password);
+            AuthenticatorActivity.user = null;
+            AuthenticatorActivity.password = null;
         }
     }
 
@@ -161,18 +158,19 @@ public class EditorActivity extends Activity {
     }
 
     @SuppressWarnings("UnusedParameters")
-    public void createPage(View v){
+    public void createPage(View ignored){
         new Thread(new Runnable() {
             @Override
             public void run() {
                 try {
                     String repoText = client.getPage(getString(R.string.id_scriptRepository));
                     String[] lines = repoText.split("\n");
+                    final String circumflex = "^";
                     repository = new Repository(lines);
                     repository.categories.add(new RepositoryCategory(getString(R.string.text_none),-1,-1));
                     for (int i = 0; i< lines.length; i++){
                         String line = lines[i];
-                        if(!line.startsWith("|")&&!line.startsWith("^")){
+                        if(!line.startsWith("|")&&!line.startsWith(circumflex)){
                             if(repository.tableStartLine!=-1){
                                 repository.tableEndLine = i-1;
                                 break;
@@ -180,7 +178,7 @@ public class EditorActivity extends Activity {
                             continue;
                         }
                         if(repository.tableStartLine == -1)repository.tableStartLine = i;
-                        else if(line.startsWith("^"))repository.categories.add(new RepositoryCategory(StringFunctions.findBetween(line,"^","^^^",0,false).value,i,0));
+                        else if(line.startsWith(circumflex))repository.categories.add(new RepositoryCategory(StringFunctions.findBetween(line,circumflex,"^^^",0,false).value,i,0));
                         else if(line.startsWith("|//**"))repository.categories.add(new RepositoryCategory(StringFunctions.findBetween(line,"|//**","**//||\\\\ |",0,false).value,i,1));
                     }
                     runOnUiThread(new Runnable() {
@@ -200,7 +198,7 @@ public class EditorActivity extends Activity {
     }
 
     @SuppressWarnings("UnusedParameters")
-    public void editPage(View v){
+    public void editPage(View ignored){
         new Thread(new Runnable() {
             @Override
             public void run() {
@@ -225,13 +223,13 @@ public class EditorActivity extends Activity {
     }
 
     @SuppressWarnings("UnusedParameters")
-    public void cancelEdit(View v){
+    public void cancelEdit(View ignored){
         setContentView(R.layout.activity_select_action);
         editor = null;
     }
 
     @SuppressWarnings("UnusedParameters")
-    public void savePage(View v) {
+    public void savePage(View ignored) {
         //TODO progressDialog to notify user that saving is going on
         new Thread(new Runnable() {
             @Override
@@ -256,9 +254,9 @@ public class EditorActivity extends Activity {
                                 }
                             }
                         }
-                        String add = ((addTo.level==0)?"|":"|\\\\ |") +
-                                "[[" + pageId + ((pageName!=null)?(" |"+pageName):"")+ "]]" +
-                                ((addTo.level==0)?"||\\\\ |":"|\\\\ |");
+                        String add = (addTo.level==0 ?"|":"|\\\\ |") +
+                                "[[" + pageId + ((pageName == null) ? "" : " |" + pageName)+ "]]" +
+                                ((addTo.level == 0) ? "||\\\\ |" : "|\\\\ |");
                         repository.lines.add(addAt,add);
                         client.putPage(getString(R.string.id_scriptRepository), TextUtils.join("\n", repository.lines));
 
@@ -274,7 +272,7 @@ public class EditorActivity extends Activity {
     }
 
     @SuppressWarnings("UnusedParameters")
-    public void commitCreate(View v){
+    public void commitCreate(View ignored){
         pageId = getString(R.string.prefix_script)+((EditText)findViewById(R.id.editId)).getText();
         Spinner spinner = (Spinner) findViewById(R.id.spinner);
         final RepositoryCategory selected = ((RepositoryCategory)spinner.getSelectedItem());
@@ -318,8 +316,8 @@ public class EditorActivity extends Activity {
     }
 
     @SuppressWarnings("UnusedParameters")
-    public void action(View v) {
-        switch (v.getId()){
+    public void action(View view) {
+        switch (view.getId()){
             case R.id.action_bold:
                 surroundOrAdd("**","**",getString(R.string.text_bold));
                 break;
@@ -338,16 +336,19 @@ public class EditorActivity extends Activity {
             case R.id.action_orderedList:
                 surroundOrAdd("  - ","",getString(R.string.text_orderedList));
                 break;
+            default:
+                if(BuildConfig.DEBUG) Log.i(this.getClass().getSimpleName(),"Ignored action "+view.getId());
+                break;
         }
     }
 
     @SuppressWarnings("UnusedParameters")
-    public void preview(View v){
+    public void preview(View ignored){
         new Thread(new Runnable() {
             @Override
             public void run() {
                 try {
-                    final String tempId = getString(R.string.prefix_temp)+ new Random().nextInt();
+                    final String tempId = getString(R.string.prefix_temp)+ random.nextInt();
                     pageText = editor.getText().toString();
                     client.putPage(getString(R.string.prefix_script)+tempId,pageText);
                     runOnUiThread(new Runnable() {
@@ -368,32 +369,7 @@ public class EditorActivity extends Activity {
         setContentView(R.layout.activity_preview);
         final WebView webView = (WebView)findViewById(R.id.webPreview);
         //noinspection deprecation
-        webView.setWebViewClient(new WebViewClient(){
-
-            @TargetApi(Build.VERSION_CODES.ICE_CREAM_SANDWICH)
-            @Override
-            public WebResourceResponse shouldInterceptRequest(final WebView view, final String url) {
-                //from http://stackoverflow.com/questions/12063937/can-i-use-the-android-4-httpresponsecache-with-a-webview-based-application/13596877#13596877
-                if (Build.VERSION.SDK_INT < 14 || !(url.startsWith("http://") || url.startsWith("https://")) || HttpResponseCache.getInstalled() == null)
-                    return null;
-                try {
-                    final HttpURLConnection connection = (HttpURLConnection) new URL(url).openConnection();
-                    connection.connect();
-                    final String content_type = connection.getContentType();
-                    final String separator = "; charset=";
-                    final int pos = content_type.indexOf(separator);
-                    final String mime_type = pos >= 0 ? content_type.substring(0, pos) : content_type;
-                    final String encoding = pos >= 0 ? content_type.substring(pos + separator.length()) : "UTF-8";
-                    return new WebResourceResponse(mime_type, encoding, connection.getInputStream());
-                } catch (final MalformedURLException e) {
-                    e.printStackTrace();
-                    return null;
-                } catch (final IOException e) {
-                    e.printStackTrace();
-                    return null;
-                }
-            }
-
+        webView.setWebViewClient(new WebClient(){
             @Override
             public void onPageFinished(WebView view, String url) {
                 super.onPageFinished(view, url);
@@ -411,12 +387,12 @@ public class EditorActivity extends Activity {
         });
         webView.setOnLongClickListener(new View.OnLongClickListener() {
             @Override
-            public boolean onLongClick(View v) {
+            public boolean onLongClick(View ignored) {
                 return true;
             }
         });
         webView.loadUrl(getString(R.string.link_scriptPagePrefix) + tempId);
-        if(Build.VERSION.SDK_INT>=11)getActionBar().setDisplayHomeAsUpEnabled(true);
+        if(Build.VERSION.SDK_INT>=Build.VERSION_CODES.HONEYCOMB)getActionBar().setDisplayHomeAsUpEnabled(true);
     }
 
     private void showPageAlreadyExists() {
@@ -492,7 +468,7 @@ public class EditorActivity extends Activity {
                             @Override
                             public void onClick(DialogInterface dialog, int which) {
                                 Intent intent = new Intent(Intent.ACTION_VIEW);
-                                intent.setData(Uri.parse(getString(R.string.link_scriptPagePrefix) + pageId.substring(7)));
+                                intent.setData(Uri.parse(getString(R.string.link_scriptPagePrefix) + pageId.substring(getString(R.string.prefix_script).length())));
                                 intent.setClass(EditorActivity.this, IntentHandle.class);
                                 startActivity(intent);
                                 finish();
@@ -518,18 +494,17 @@ public class EditorActivity extends Activity {
         int start = editor.getSelectionStart();
         int end = editor.getSelectionEnd();
         Editable editable = editor.getEditableText();
-        if(start!=end){
+        if (start == end) {
+            editable.insert(start==-1?0:start,prefix+text+suffix);
+            editor.setSelection(start + prefix.length(), start + prefix.length() + text.length());
+        } else {
             editable.insert(end,suffix);
             editable.insert(start,prefix);
             editor.setSelection(start+prefix.length(),end+prefix.length());
         }
-        else {
-            editable.insert(start==-1?0:start,prefix+text+suffix);
-            editor.setSelection(start + prefix.length(), start + prefix.length() + text.length());
-        }
     }
 
-    class Repository{
+    private static class Repository{
         int tableStartLine;
         int tableEndLine;
         final ArrayList<RepositoryCategory> categories;
@@ -544,7 +519,7 @@ public class EditorActivity extends Activity {
 
     }
 
-    class RepositoryCategory {
+    private static class RepositoryCategory {
         final String name;
         final int line;
         private final int level;
@@ -557,7 +532,7 @@ public class EditorActivity extends Activity {
 
     }
 
-    class CategoryAdapter extends ArrayAdapter<RepositoryCategory>{
+    private static class CategoryAdapter extends ArrayAdapter<RepositoryCategory>{
 
         private final Context context;
 
@@ -568,13 +543,12 @@ public class EditorActivity extends Activity {
 
         @Override
         public View getView(int position, View convertView, ViewGroup parent) {
-            if(convertView ==null) convertView = newView(parent);
+            if(convertView ==null) {
+                LayoutInflater inflater = (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+                convertView = inflater.inflate(android.R.layout.simple_list_item_1, parent, false);
+            }
             bindView(position,convertView);
             return convertView;
-        }
-
-        private View newView(ViewGroup parent) {
-            return (((LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE)).inflate(android.R.layout.simple_list_item_1, parent, false));
         }
 
         private void bindView(int position, View row) {
@@ -583,9 +557,7 @@ public class EditorActivity extends Activity {
 
         @Override
         public View getDropDownView(int position, View convertView, ViewGroup parent) {
-            if(convertView ==null) convertView = newView(parent);
-            bindView(position,convertView);
-            return convertView;
+            return getView(position,convertView,parent);
         }
     }
 }

@@ -74,13 +74,13 @@ public class StringFunctions {
     }
 
     public static void saveSetToPref(SharedPreferences pref, String key, Set<String> set) {
-        if (Build.VERSION.SDK_INT >= 11) pref.edit().putStringSet(key, set).apply();
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.HONEYCOMB) pref.edit().putStringSet(key, set).apply();
         else pref.edit().putString(key, new JSONArray(set).toString()).apply();
     }
 
     public static Set<String> getSetFromPref(SharedPreferences pref, String key) {
         if (pref.contains(key)) {
-            if (Build.VERSION.SDK_INT >= 11)
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.HONEYCOMB)
                 return pref.getStringSet(key, Collections.<String>emptySet());
             HashSet<String> set = new HashSet<>();
             JSONArray array;
@@ -142,7 +142,7 @@ public class StringFunctions {
     }
 
     public static String getNameForPageFromPref(SharedPreferences pref, Context ctx, String page) {
-        if(page.startsWith("script_"))page = page.substring(7);
+        if(page.startsWith("script_"))page = page.substring(ctx.getString(R.string.prefix_script).length());
         String result = (String) getMapFromPref(pref, ctx.getString(R.string.pref_pageNames)).get(page);
         if (result != null) return result.trim();
         if (BuildConfig.DEBUG) Log.i("StringFunctions", "Failed to find script name for " + page);
@@ -150,7 +150,8 @@ public class StringFunctions {
     }
 
     public static String getNameFromUrl(String url) {
-        return url.substring(url.indexOf("?id=script_") + 11);
+        final String idScript = "?id=script_";
+        return url.substring(url.indexOf(idScript) + idScript.length());
     }
 
 }

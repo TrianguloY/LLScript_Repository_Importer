@@ -50,7 +50,7 @@ public class AuthenticatorActivity extends AccountAuthenticatorActivity {
     }
 
     @SuppressWarnings("UnusedParameters")
-    public void login(View v){
+    public void login(View ignored){
         final String user = ((EditText) findViewById(R.id.username)).getText().toString();
         final String password = ((EditText) findViewById(R.id.password)).getText().toString();
         final boolean savePw = ((CheckBox)findViewById(R.id.checkRemember)).isChecked();
@@ -68,7 +68,7 @@ public class AuthenticatorActivity extends AccountAuthenticatorActivity {
                             if(account != null){
                                 accountManager.setPassword(account,savePw?password:null);
                                 if(!account.name.equals(user)) {
-                                    if( Build.VERSION.SDK_INT >= 21) accountManager.renameAccount(account,user,null,null);
+                                    if( Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) accountManager.renameAccount(account,user,null,null);
                                     else {
                                         accountManager.removeAccount(account,null,null);
                                         account = null;
@@ -105,7 +105,7 @@ public class AuthenticatorActivity extends AccountAuthenticatorActivity {
 
 
     @SuppressWarnings("UnusedParameters")
-    public void register(View v) {
+    public void register(View ignored) {
         new AppChooser(this, Uri.parse(getString(R.string.link_register)), getString(R.string.title_appChooserRegister), getString(R.string.message_noBrowser), null).show();
     }
 }

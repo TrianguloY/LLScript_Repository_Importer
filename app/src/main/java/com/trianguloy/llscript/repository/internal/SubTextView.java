@@ -6,6 +6,8 @@ import android.text.Editable;
 import android.util.AttributeSet;
 import android.widget.TextView;
 
+import com.trianguloy.llscript.repository.R;
+
 /**
  * Created by Lukas on 28.02.2015.
  * A TextView that shows the name instead of the identifier of a page
@@ -25,11 +27,14 @@ public class SubTextView extends TextView {
     public void setText(CharSequence text, BufferType type) {
         //inspection is wrong here! this statement is not constant!
         //noinspection ConstantConditions
-        if (context != null) {
+        if (context == null) {
+            this.text = (String) text;
+        } else {
             key = (String) text;
-            if(key.startsWith("script_"))key = key.substring(7);
+            String prefix = context.getString(R.string.prefix_script);
+            if(key.startsWith(prefix))key = key.substring(prefix.length());
             super.setText(StringFunctions.getNameForPageFromPref(PreferenceManager.getDefaultSharedPreferences(context), context, key), type);
-        } else this.text = (String) text;
+        }
     }
 
     @Override

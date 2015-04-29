@@ -1,6 +1,5 @@
 package com.trianguloy.llscript.repository;
 
-import android.annotation.TargetApi;
 import android.app.Activity;
 import android.app.AlertDialog;
 import android.content.ComponentName;
@@ -25,9 +24,7 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
-import android.webkit.WebResourceResponse;
 import android.webkit.WebView;
-import android.webkit.WebViewClient;
 import android.widget.Button;
 import android.widget.CheckBox;
 import android.widget.EditText;
@@ -38,12 +35,10 @@ import com.trianguloy.llscript.repository.internal.AppChooser;
 import com.trianguloy.llscript.repository.internal.DownloadTask;
 import com.trianguloy.llscript.repository.internal.ServiceManager;
 import com.trianguloy.llscript.repository.internal.StringFunctions;
+import com.trianguloy.llscript.repository.internal.WebClient;
 
 import java.io.File;
 import java.io.IOException;
-import java.net.HttpURLConnection;
-import java.net.MalformedURLException;
-import java.net.URL;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.HashSet;
@@ -77,7 +72,7 @@ public class webViewer extends Activity {
     private String currentUrl = "";//The URL of the current page
     private DownloadTask.Listener downloadTaskListener = null; //default downloadTaskListener
 
-    private class backClass {
+    private static class backClass {
         final String url;
         final int posY;
 
@@ -198,12 +193,12 @@ public class webViewer extends Activity {
     public void onBackPressed() {
         if (!currentUrl.equals(getString(R.string.link_repository))) {
             //not on the home page
-            if (!backStack.empty()) {
+            if (backStack.empty()) {
+                changePage(getString(R.string.link_repository));
+            } else {
                 backClass previous = backStack.pop();
                 currentUrl = previous.url;
                 changePage(currentUrl, previous.posY);
-            } else {
-                changePage(getString(R.string.link_repository));
             }
 
         } else if (!close) {
@@ -232,7 +227,7 @@ public class webViewer extends Activity {
 
     @Override
     protected void onStop() {
-        if (Build.VERSION.SDK_INT >= 14) {
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.ICE_CREAM_SANDWICH) {
             HttpResponseCache cache = HttpResponseCache.getInstalled();
             if (cache != null) {
                 cache.flush();
@@ -255,12 +250,12 @@ public class webViewer extends Activity {
                 pi = pm.getPackageInfo(p, PackageManager.GET_ACTIVITIES);
                 Constants.installedPackage = p;
                 break;
-            } catch (PackageManager.NameNotFoundException e) {
+            } catch (PackageManager.NameNotFoundException ignored) {
                 //empty, it just don't breaks and go to next iteration
             }
         }
 
-        if (Constants.installedPackage.equals("") || (pi == null)) {
+        if (Constants.installedPackage.equals("") || pi == null) {
             //Non of the apps were found
             new AlertDialog.Builder(this)
                     .setCancelable(false)
@@ -318,11 +313,13 @@ public class webViewer extends Activity {
             @Override
             public void onFinish(String result) {
                 //default listener: show the page after loading it
-                if (!sharedPref.getBoolean(getString(R.string.pref_showTools), false)) {
+                if (sharedPref.getBoolean(getString(R.string.pref_showTools), false)) {
+                    currentHtml = result;
+                } else {
                     //remove tools
                     StringFunctions.valueAndIndex val = StringFunctions.findBetween(result, "<div class=\"tools group\">", "<hr class=\"a11y\" />", 0, false);
                     currentHtml = result.substring(0, val.from) + result.substring(val.to, result.length());
-                } else currentHtml = result;
+                }
                 //open spoilers, as the cannot be opened without javascript enabled (which would be a security issue)
                 //currentHtml = currentHtml.replace("display: none","display");
                 if (currentUrl.equals(getString(R.string.link_repository))) {
@@ -344,7 +341,7 @@ public class webViewer extends Activity {
         };
 
         //noinspection deprecation
-        webView.setWebViewClient(new WebViewClient() {
+        webView.setWebViewClient(new WebClient() {
             @Override
             public boolean shouldOverrideUrlLoading(WebView view, String url) {
                 if (!currentUrl.equals(url)) {
@@ -352,30 +349,6 @@ public class webViewer extends Activity {
                     changePage(url);
                 }
                 return true;
-            }
-
-            @TargetApi(Build.VERSION_CODES.ICE_CREAM_SANDWICH)
-            @Override
-            public WebResourceResponse shouldInterceptRequest(final WebView view, final String url) {
-                //from http://stackoverflow.com/questions/12063937/can-i-use-the-android-4-httpresponsecache-with-a-webview-based-application/13596877#13596877
-                if (Build.VERSION.SDK_INT < 14 || !(url.startsWith("http://") || url.startsWith("https://")) || HttpResponseCache.getInstalled() == null)
-                    return null;
-                try {
-                    final HttpURLConnection connection = (HttpURLConnection) new URL(url).openConnection();
-                    connection.connect();
-                    final String content_type = connection.getContentType();
-                    final String separator = "; charset=";
-                    final int pos = content_type.indexOf(separator);
-                    final String mime_type = pos >= 0 ? content_type.substring(0, pos) : content_type;
-                    final String encoding = pos >= 0 ? content_type.substring(pos + separator.length()) : "UTF-8";
-                    return new WebResourceResponse(mime_type, encoding, connection.getInputStream());
-                } catch (final MalformedURLException e) {
-                    e.printStackTrace();
-                    return null;
-                } catch (final IOException e) {
-                    e.printStackTrace();
-                    return null;
-                }
             }
 
             @Override
@@ -387,7 +360,7 @@ public class webViewer extends Activity {
         webView.getSettings().setJavaScriptEnabled(true);
 
         //install cache
-        if (Build.VERSION.SDK_INT >= 14) {
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.ICE_CREAM_SANDWICH) {
             try {
                 File httpCacheDir = new File(getCacheDir(), "http");
                 long httpCacheSize = 10 * 1024 * 1024; // 10 MiB
@@ -416,7 +389,9 @@ public class webViewer extends Activity {
         //new method: based on the scripts found
         Map<String, String> map = StringFunctions.getAllScriptPagesAndNames(repoHtml);
         HashMap<String, Object> temp = new HashMap<>();
-        for (String s : map.keySet()) temp.put(s, map.get(s));
+        for (Map.Entry<String, String> entry : map.entrySet()) {
+            temp.put(entry.getKey(), entry.getValue());
+        }
         StringFunctions.saveMapToPref(sharedPref, getString(R.string.pref_pageNames), temp);
         Set<String> currentScripts = map.keySet();
         if (sharedPref.contains(getString(R.string.pref_Scripts))) {
@@ -428,14 +403,16 @@ public class webViewer extends Activity {
                 StringFunctions.saveSetToPref(sharedPref, getString(R.string.pref_Scripts), currentScripts);
                 ArrayList<String> newScriptNames = new ArrayList<>();
                 for (String s : newScripts) newScriptNames.add(map.get(s));
-                if (newScriptNames.size() == 1)
-                    Toast.makeText(this, getString(R.string.toast_oneNewScript) + "\n" + newScriptNames.get(0), Toast.LENGTH_LONG).show();
-                else {
-                    String names = "";
-                    for (int i = 0; i < newScriptNames.size(); i++)
-                        names += "\n" + newScriptNames.get(i);
-                    Toast.makeText(this, getString(R.string.toast_severalNewScripts) + names, Toast.LENGTH_LONG).show();
+                StringBuilder names = new StringBuilder();
+                if (newScriptNames.size() == 1){
+                    names.append(getString(R.string.toast_oneNewScript)).append("\n").append(newScriptNames.get(0));
                 }
+                else {
+                    names.append(getString(R.string.toast_severalNewScripts));
+                    for (int i = 0; i < newScriptNames.size(); i++)
+                        names.append("\n").append(newScriptNames.get(i));
+                }
+                Toast.makeText(this,  names.toString(), Toast.LENGTH_LONG).show();
             }
         } else {
             //No info about previous scripts. Only save the current scripts
@@ -490,13 +467,13 @@ public class webViewer extends Activity {
             button.setVisibility(View.GONE);
             setTitle(R.string.action_mainPage);
             setSubscriptionState(CANT_SUBSCRIBE);
-            if (Build.VERSION.SDK_INT >= 11) getActionBar().setDisplayHomeAsUpEnabled(false);
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.HONEYCOMB) getActionBar().setDisplayHomeAsUpEnabled(false);
         } else {
             button.setVisibility(View.VISIBLE);
             setTitle(StringFunctions.getNameForPageFromPref(sharedPref, this, StringFunctions.getNameFromUrl(currentUrl)));
             boolean sub = StringFunctions.getMapFromPref(sharedPref, getString(R.string.pref_subs)).containsKey(currentUrl);
             setSubscriptionState(sub ? SUBSCRIBED : NOT_SUBSCRIBED);
-            if (Build.VERSION.SDK_INT >= 11) getActionBar().setDisplayHomeAsUpEnabled(true);
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.HONEYCOMB) getActionBar().setDisplayHomeAsUpEnabled(true);
         }
     }
 
@@ -530,7 +507,7 @@ public class webViewer extends Activity {
 
     //Script importer
     @SuppressWarnings({"unused", "unusedParameter"})
-    public void startImport(View v) {
+    public void startImport(View ignored) {
         //Download button clicked
 
         //initialize variables
@@ -582,10 +559,11 @@ public class webViewer extends Activity {
             String[] prov = aboutScript.split("\n+");//separate the text removing duplicated line breaks
 
             //join the text adding an asterisk at the beginning of each line and converting the html string into normal code
-            aboutScript = "";
+            StringBuilder buffer = new StringBuilder();
             for (int i = 0; i < prov.length; ++i) {
-                aboutScript += ((i == 0) ? "" : "\n *  ") + Html.fromHtml(prov[i]).toString();
+                buffer.append((i == 0) ? "" : "\n *  ").append(Html.fromHtml(prov[i]).toString());
             }
+            aboutScript = buffer.toString();
 
             //adds the beginning and end comment block, and remove extra whitespaces at the beginning and end
             aboutScript = "/* " + aboutScript.trim() + "\n */\n\n";
@@ -607,7 +585,8 @@ public class webViewer extends Activity {
 
         //get the name from the repository
         String url = currentUrl;
-        url = url.substring(url.indexOf("/", 10));//Why 10?
+        Log.d("tag",url);
+        url = url.substring(url.indexOf("/", "http://www".length()));
         int index = repoHtml.indexOf(url);
         String scriptName;
         if (index != -1) {
@@ -649,7 +628,7 @@ public class webViewer extends Activity {
 
         //the alert dialog
         View layout = getLayoutInflater().inflate(R.layout.confirm_alert, (ViewGroup) findViewById(R.id.webView).getRootView(), false);
-        if (Build.VERSION.SDK_INT < 11) layout.setBackgroundColor(Color.WHITE);
+        if (Build.VERSION.SDK_INT < Build.VERSION_CODES.HONEYCOMB) layout.setBackgroundColor(Color.WHITE);
         final EditText contentText = ((EditText) layout.findViewById(R.id.editText2));
         contentText.setText(code);
         final EditText nameText = ((EditText) layout.findViewById(R.id.editText));
@@ -785,9 +764,9 @@ public class webViewer extends Activity {
 
     private void showChangedSubscriptions(List<String> updatedPages) {
         Map<String, String> map = StringFunctions.getAllScriptPagesAndNames(repoHtml);
-        String pages = "";
+        StringBuffer pages = new StringBuffer();
         for (String s : updatedPages) {
-            pages += map.get(StringFunctions.getNameFromUrl(s)) + "\n";
+            pages.append(map.get(StringFunctions.getNameFromUrl(s))).append("\n");
         }
         new AlertDialog.Builder(this)
                 .setTitle(getString(R.string.title_updatedSubs))
@@ -813,14 +792,14 @@ public class webViewer extends Activity {
 
     }
 
-    private final int CANT_SUBSCRIBE = -1;
-    private final int NOT_SUBSCRIBED = 0;
-    private final int SUBSCRIBED = 1;
+    private static final int CANT_SUBSCRIBE = -1;
+    private static final int NOT_SUBSCRIBED = 0;
+    private static final int SUBSCRIBED = 1;
 
     private void setSubscriptionState(int state) {
         if (menu == null) return;
-        boolean sub = false;
-        boolean unsub = false;
+        boolean sub;
+        boolean unsub;
         switch (state) {
             case CANT_SUBSCRIBE:
                 sub = false;
@@ -834,6 +813,8 @@ public class webViewer extends Activity {
                 sub = false;
                 unsub = true;
                 break;
+            default:
+                throw new IllegalArgumentException("Invalid Argument: "+state);
         }
         menu.findItem(R.id.action_subscribe).setVisible(sub);
         menu.findItem(R.id.action_unsubscribe).setVisible(unsub);

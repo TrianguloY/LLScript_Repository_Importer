@@ -37,16 +37,13 @@ class AppAdapter extends ArrayAdapter<ResolveInfo> {
     public View getView(int position, View convertView,
                         ViewGroup parent) {
         if (convertView == null) {
-            convertView = newView(parent);
+            LayoutInflater inflater = (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+            convertView = inflater.inflate(resource, parent, false);
         }
 
         bindView(position, convertView);
 
-        return (convertView);
-    }
-
-    private View newView(ViewGroup parent) {
-        return (((LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE)).inflate(resource, parent, false));
+        return convertView;
     }
 
     private void bindView(int position, View row) {

@@ -57,7 +57,7 @@ public class BrowserPreference extends DialogPreference {
         view.setAdapter(adapter);
         view.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
-            public void onItemClick(AdapterView<?> parent, View v, int position, long id) {
+            public void onItemClick(AdapterView<?> parent, View ignored, int position, long id) {
                 adapter.select(position);
             }
         });
@@ -69,7 +69,7 @@ public class BrowserPreference extends DialogPreference {
                 }
             }
         }
-        if (Build.VERSION.SDK_INT < 11) view.setBackgroundColor(Color.WHITE);
+        if (Build.VERSION.SDK_INT < Build.VERSION_CODES.HONEYCOMB) view.setBackgroundColor(Color.WHITE);
         return view;
     }
 

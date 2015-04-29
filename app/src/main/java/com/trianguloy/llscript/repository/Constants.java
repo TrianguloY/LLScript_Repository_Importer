@@ -31,40 +31,40 @@ class Constants {
 
 
     //App constants
-    static public final int managerId = -3;
+    public static final int managerId = -3;
 
     //Where to search in the HTML source
     static final String[] beginning = {"class=\"brush: javascript\">", "class=\"brush: javascript;\">", "class=\"code\">"};
     static final String ending = "</pre>";
 
     //package constants
-    static public final String activityRunScript = "net.pierrox.lightning_launcher.activities.Dashboard";
-    static public final String[] packages = new String[]{"net.pierrox.lightning_launcher_extreme", "net.pierrox.lightning_launcher"};
-    static public String installedPackage = "";
-    static public final int minimumNecessaryVersion = 225; // valid for both packages. Number module 1000
+    public static final String activityRunScript = "net.pierrox.lightning_launcher.activities.Dashboard";
+    public static final String[] packages = new String[]{"net.pierrox.lightning_launcher_extreme", "net.pierrox.lightning_launcher"};
+    public static String installedPackage = "";
+    public static final int minimumNecessaryVersion = 225; // valid for both packages. Number module 1000
 
     //sharedPrefs
     @Deprecated
-    static public final String keyId = "id";
+    public static final String keyId = "id";
 
     //Intent Extras
-    static public final String extraCode = "code";
-    static public final String extraFlags = "flags";
-    static public final String extraReceiver = "receiver";
-    static public final String extraName = "name";
-    static public final String extraForceUpdate = "forceUpdate";
-    static public final String extraOpenUrl = "openUrl";
-    static public final String extraOpenUrlTime = "openUrlTime";
+    public static final String extraCode = "code";
+    public static final String extraFlags = "flags";
+    public static final String extraReceiver = "receiver";
+    public static final String extraName = "name";
+    public static final String extraForceUpdate = "forceUpdate";
+    public static final String extraOpenUrl = "openUrl";
+    public static final String extraOpenUrlTime = "openUrlTime";
 
     //Run script parameters
-    static public final String RunActionExtra = "a";
-    static public final String RunDataExtra = "d";
-    static public final int RunActionKey = 35;
+    public static final String RunActionExtra = "a";
+    public static final String RunDataExtra = "d";
+    public static final int RunActionKey = 35;
 
     //Script JSON names for script drop
-    static public final String ScriptName = "name";
-    static public final String ScriptFlags = "flags";
-    static public final String ScriptForceUpdate = "forceUpdate";
-    static public final String ScriptCode = "code";
-    static public final String ScriptReturnResultTo = "returnTo";
+    public static final String ScriptName = "name";
+    public static final String ScriptFlags = "flags";
+    public static final String ScriptForceUpdate = "forceUpdate";
+    public static final String ScriptCode = "code";
+    public static final String ScriptReturnResultTo = "returnTo";
 }

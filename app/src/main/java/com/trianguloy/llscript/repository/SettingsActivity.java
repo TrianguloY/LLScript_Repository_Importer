@@ -15,7 +15,6 @@ import android.preference.CheckBoxPreference;
 import android.preference.ListPreference;
 import android.preference.Preference;
 import android.preference.PreferenceActivity;
-import android.preference.PreferenceFragment;
 import android.support.v4.app.NavUtils;
 import android.view.MenuItem;
 import android.widget.Toast;
@@ -127,7 +126,7 @@ public class SettingsActivity extends PreferenceActivity implements SharedPrefer
     /**
      * Determines whether the simplified settings UI should be shown. This is
      * true if the device
-     * doesn't have newer APIs like {@link PreferenceFragment}, or the device
+     * doesn't have newer APIs like PreferenceFragment, or the device
      * doesn't have an extra-large screen. In these cases, a single-pane
      * "simplified" settings UI should be shown.
      */

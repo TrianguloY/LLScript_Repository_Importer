@@ -24,8 +24,8 @@ public class WebService extends Service {
 
     @Override
     public void onCreate() {
-        sharedPref = PreferenceManager.getDefaultSharedPreferences(this);
         super.onCreate();
+        sharedPref = PreferenceManager.getDefaultSharedPreferences(this);
     }
 
     @Override
@@ -84,7 +84,7 @@ public class WebService extends Service {
         public void onError();
     }
 
-    void check() {
+    private void check() {
         getChangedSubscriptions(new Listener() {
             @Override
             public void onFinish(ArrayList<String> updated) {

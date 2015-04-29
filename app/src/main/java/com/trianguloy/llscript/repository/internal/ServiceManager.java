@@ -20,7 +20,6 @@ public class ServiceManager {
         Intent i = new Intent(context, WebService.class);
         PendingIntent pIntent = PendingIntent.getService(context, 0, i, 0);
         AlarmManager am = (AlarmManager) context.getSystemService(Activity.ALARM_SERVICE);
-        am.cancel(pIntent);
         am.setInexactRepeating(AlarmManager.ELAPSED_REALTIME, SystemClock.elapsedRealtime() + 1000, interval, pIntent);
     }
 

@@ -4,6 +4,7 @@ import android.os.AsyncTask;
 
 import java.io.BufferedInputStream;
 import java.io.IOException;
+import java.io.InputStream;
 import java.net.HttpURLConnection;
 import java.net.URL;
 
@@ -15,6 +16,7 @@ public class DownloadTask extends AsyncTask<String, Void, String> {
     private final Listener listener;
 
     public DownloadTask(Listener listener) {
+        super();
         this.listener = listener;
     }
 
@@ -27,15 +29,20 @@ public class DownloadTask extends AsyncTask<String, Void, String> {
             connection = (HttpURLConnection) new URL(urls[0]).openConnection();
             connection.setUseCaches(true);
             StringBuilder builder = new StringBuilder();
+            BufferedInputStream input = null;
+            InputStream inputStream = null;
+            int count;
             try {
                 byte[] buff = new byte[2048];
-                BufferedInputStream input = new BufferedInputStream(connection.getInputStream());
-                int count;
+                inputStream = connection.getInputStream();
+                input = new BufferedInputStream(inputStream);
                 while ((count = input.read(buff)) > 0) {
-                    builder.append(new String(buff, 0, count));
+                    builder.append(new String(buff, 0, count,"UTF-8"));
                 }
             } finally {
                 connection.disconnect();
+                if(input!=null)input.close();
+                if(inputStream!=null)inputStream.close();
             }
             if (builder.length() > 0) return builder.toString().trim();
         } catch (IOException e) {
@@ -46,10 +53,10 @@ public class DownloadTask extends AsyncTask<String, Void, String> {
 
     @Override
     protected void onPostExecute(String result) {
-        if (result != null) {
-            listener.onFinish(result);
-        } else {
+        if (result == null) {
             listener.onError();
+        } else {
+            listener.onFinish(result);
         }
 
     }

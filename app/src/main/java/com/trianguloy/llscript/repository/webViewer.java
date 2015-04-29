@@ -323,6 +323,8 @@ public class webViewer extends Activity {
                     StringFunctions.valueAndIndex val = StringFunctions.findBetween(result, "<div class=\"tools group\">", "<hr class=\"a11y\" />", 0, false);
                     currentHtml = result.substring(0, val.from) + result.substring(val.to, result.length());
                 } else currentHtml = result;
+                //open spoilers, as the cannot be opened without javascript enabled (which would be a security issue)
+                currentHtml = currentHtml.replace("display: none","display");
                 if (currentUrl.equals(getString(R.string.link_repository))) {
                     repoHtml = currentHtml;
 

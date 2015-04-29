@@ -324,7 +324,7 @@ public class webViewer extends Activity {
                     currentHtml = result.substring(0, val.from) + result.substring(val.to, result.length());
                 } else currentHtml = result;
                 //open spoilers, as the cannot be opened without javascript enabled (which would be a security issue)
-                currentHtml = currentHtml.replace("display: none","display");
+                //currentHtml = currentHtml.replace("display: none","display");
                 if (currentUrl.equals(getString(R.string.link_repository))) {
                     repoHtml = currentHtml;
 
@@ -384,6 +384,7 @@ public class webViewer extends Activity {
                 webView.scrollTo(0, webViewPositionY);
             }
         });
+        webView.getSettings().setJavaScriptEnabled(true);
 
         //install cache
         if (Build.VERSION.SDK_INT >= 14) {

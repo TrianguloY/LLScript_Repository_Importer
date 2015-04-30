@@ -32,6 +32,7 @@ import android.widget.TextView;
 
 import com.trianguloy.llscript.repository.auth.AuthenticatorActivity;
 import com.trianguloy.llscript.repository.internal.Dialogs;
+import com.trianguloy.llscript.repository.internal.DownloadTask;
 import com.trianguloy.llscript.repository.internal.StringFunctions;
 import com.trianguloy.llscript.repository.internal.WebClient;
 
@@ -440,6 +441,11 @@ public class EditorActivity extends Activity {
                     }
                 }.execute();
             }
+
+            @Override
+            public boolean shouldOverrideUrlLoading(WebView view, String url) {
+                return true;
+            }
         });
         webView.setOnLongClickListener(new View.OnLongClickListener() {
             @Override
@@ -447,7 +453,22 @@ public class EditorActivity extends Activity {
                 return true;
             }
         });
-        webView.loadUrl(getString(R.string.link_scriptPagePrefix) + tempId);
+        new DownloadTask(new DownloadTask.Listener() {
+            @Override
+            public void onFinish(String result) {
+                if (!sharedPref.getBoolean(getString(R.string.pref_showTools), false)) {
+                    //remove tools
+                    StringFunctions.valueAndIndex val = StringFunctions.findBetween(result, "<div class=\"tools group\">", "<hr class=\"a11y\" />", 0, false);
+                    result = result.substring(0, val.from) + result.substring(val.to, result.length());
+                }
+                webView.loadDataWithBaseURL(getString(R.string.link_server),result,"text/html","UTF-8",null);
+            }
+
+            @Override
+            public void onError() {
+                if (BuildConfig.DEBUG) Log.i("Preview", "Ignored Error");
+            }
+        }).execute(getString(R.string.link_scriptPagePrefix) + tempId);
         if(Build.VERSION.SDK_INT>=Build.VERSION_CODES.HONEYCOMB){
             ActionBar bar = getActionBar();
             bar.setDisplayHomeAsUpEnabled(true);

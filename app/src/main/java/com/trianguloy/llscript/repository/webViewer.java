@@ -330,10 +330,11 @@ public class webViewer extends Activity {
             }
         };
 
-        //noinspection deprecation
         webView.setWebViewClient(new WebClient() {
             @Override
             public boolean shouldOverrideUrlLoading(WebView view, String url) {
+                //prevent login and register, broken because cookies are missing
+                if(url.contains("&do=login")||url.contains("&do=register"))return true;
                 if (!currentUrl.equals(url)) {
                     //link clicked
                     changePage(url);

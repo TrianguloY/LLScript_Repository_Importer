@@ -40,8 +40,8 @@ public final class Constants {
 
     //package constants
     public static final String activityRunScript = "net.pierrox.lightning_launcher.activities.Dashboard";
-    protected static final String[] packages = new String[]{"net.pierrox.lightning_launcher_extreme", "net.pierrox.lightning_launcher"};
-    protected static String installedPackage = "";
+    static final String[] packages = new String[]{"net.pierrox.lightning_launcher_extreme", "net.pierrox.lightning_launcher"};
+    static String installedPackage = "";
     public static final int minimumNecessaryVersion = 225; // valid for both packages. Number module 1000
 
     //sharedPrefs

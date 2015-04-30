@@ -291,7 +291,7 @@ public class webViewer extends Activity {
         return false;
     }
 
-    void initializeWeb() {
+    private void initializeWeb() {
         //Main Activity. Run on onCreate when normal launch
         setContentView(R.layout.activity_webviewer);
 
@@ -364,7 +364,7 @@ public class webViewer extends Activity {
         changePage(currentUrl);
     }
 
-    void showNewScripts() {
+    private void showNewScripts() {
         //legacy code
         // old method: if the page was changed with the previous method hash of page
         if (sharedPref.contains(getString(R.string.pref_repoHash))) {
@@ -412,11 +412,11 @@ public class webViewer extends Activity {
     }
 
     //webView functions
-    void changePage(String url) {
+    private void changePage(String url) {
         changePage(url, 0);
     }
 
-    void changePage(String url, int positionY) {
+    private void changePage(String url, int positionY) {
         //Change the page of the webView to the passed one
         if (downloadTaskListener == null) {
             //The activity is not yet loaded. The url is kept as the currentUrl, so it gets loaded when the activity do so
@@ -449,7 +449,7 @@ public class webViewer extends Activity {
             showExternalPageLinkClicked(url);
     }
 
-    void display() {
+    private void display() {
         //display a page
         webView.loadDataWithBaseURL(getString(R.string.link_server), currentHtml, "text/html", "utf-8", null);
 
@@ -468,12 +468,12 @@ public class webViewer extends Activity {
         }
     }
 
-    void showExternalPageLinkClicked(final String url) {
+    private void showExternalPageLinkClicked(final String url) {
         //When the clicked page is not useful for this app
         new AppChooser(this, Uri.parse(url), getString(R.string.title_appChooserExternalClicked), getString(R.string.message_noBrowser), null).show();
     }
 
-    void showNoPageLoaded(final String url) {
+    private void showNoPageLoaded(final String url) {
         //When the page couldn't be loaded
         progressBar.setVisibility(View.GONE);
         new AlertDialog.Builder(this)
@@ -571,7 +571,7 @@ public class webViewer extends Activity {
         }
     }
 
-    void oneScriptFound(String name, String rawCode, String about) {
+    private void oneScriptFound(String name, String rawCode, String about) {
         //only one script, load directly
 
         //get the name from the repository
@@ -590,7 +590,7 @@ public class webViewer extends Activity {
 
     }
 
-    void showMoreThanOneScriptFound(final String[] names, final String[] rawCodes, final String about) {
+    private void showMoreThanOneScriptFound(final String[] names, final String[] rawCodes, final String about) {
         //More than one script found select one of them to import
         new AlertDialog.Builder(this)
                 .setTitle(R.string.title_severalScriptsFound)
@@ -605,7 +605,7 @@ public class webViewer extends Activity {
                 .show();
     }
 
-    void showImportScript(String scriptName, String rawCode, String aboutString) {
+    private void showImportScript(String scriptName, String rawCode, String aboutString) {
         //show the alert to import a single script
         String[] lines = rawCode.split("\n");
         StringBuilder builder = new StringBuilder();
@@ -663,7 +663,7 @@ public class webViewer extends Activity {
                 .show();
     }
 
-    void showNoScriptFound() {
+    private void showNoScriptFound() {
         //alert to show that no script is found
         new AlertDialog.Builder(this)
                 .setTitle(R.string.title_importer)
@@ -684,7 +684,7 @@ public class webViewer extends Activity {
 
 
     //Send & share functions
-    void sendScriptToLauncher(EditText contentText, EditText nameText, CheckBox[] flagsBoxes) {
+    private void sendScriptToLauncher(EditText contentText, EditText nameText, CheckBox[] flagsBoxes) {
         // let's import the script
         final String code = contentText.getText().toString();
         final String scriptName = nameText.getText().toString();
@@ -698,7 +698,7 @@ public class webViewer extends Activity {
         startService(intent);
     }
 
-    void shareAsText(EditText contentText, EditText nameText, CheckBox[] flagsBoxes) {
+    private void shareAsText(EditText contentText, EditText nameText, CheckBox[] flagsBoxes) {
         //share the code as plain text
 
         StringBuilder text = new StringBuilder("");

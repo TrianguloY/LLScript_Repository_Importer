@@ -37,7 +37,7 @@ public class ScriptImporter extends Service {
     }
 
 
-    void installScript(String code, String name, int flags, ComponentName answerTo, boolean forceUpdate) {
+    private void installScript(String code, String name, int flags, ComponentName answerTo, boolean forceUpdate) {
         JSONObject data = new JSONObject();
         try {
             data.put(Constants.ScriptCode, code);
@@ -54,7 +54,7 @@ public class ScriptImporter extends Service {
     }
 
 
-    void sendIntent(JSONObject data) {
+    private void sendIntent(JSONObject data) {
         Intent i = new Intent(Intent.ACTION_VIEW);
         i.setComponent(new ComponentName(Constants.installedPackage, Constants.activityRunScript));
         i.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);

@@ -19,6 +19,7 @@ import java.net.URL;
  */
 public class WebClient extends WebViewClient {
 
+    @SuppressWarnings("deprecation")
     @TargetApi(Build.VERSION_CODES.ICE_CREAM_SANDWICH)
     @Override
     public WebResourceResponse shouldInterceptRequest(final WebView view, final String url) {

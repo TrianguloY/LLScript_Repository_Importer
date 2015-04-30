@@ -41,7 +41,7 @@ public class IntentHandle extends Activity {
         }
     }
 
-    void openWebViewer(String url) {
+    private void openWebViewer(String url) {
         Intent intent = new Intent(this, webViewer.class);
         if (url != null) intent.putExtra(Constants.extraOpenUrl, url);
         intent.putExtra(Constants.extraOpenUrlTime, System.currentTimeMillis());

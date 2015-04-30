@@ -18,6 +18,7 @@ public class NoEventWebView extends WebView {
 
     @Override
     public boolean onTouchEvent(MotionEvent event) {
+        //TODO allow clicks on spoilers
         switch (event.getAction()){
             case MotionEvent.ACTION_UP:
                 event.setAction(MotionEvent.ACTION_CANCEL);

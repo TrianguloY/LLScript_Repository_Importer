@@ -114,7 +114,8 @@
             </intent-filter>
         </activity>
         <activity android:name=".EditorActivity"
-                  android:excludeFromRecents="false" />
+                  android:excludeFromRecents="false"
+            android:windowSoftInputMode="adjustResize"/>
 
         <service android:name=".auth.AuthenticationService" tools:ignore="ExportedService">
         <intent-filter>

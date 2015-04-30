@@ -6,6 +6,7 @@ import android.accounts.AccountManagerCallback;
 import android.accounts.AccountManagerFuture;
 import android.accounts.AuthenticatorException;
 import android.accounts.OperationCanceledException;
+import android.app.ActionBar;
 import android.app.Activity;
 import android.app.AlertDialog;
 import android.content.Context;
@@ -90,7 +91,11 @@ public class EditorActivity extends Activity {
     public void onBackPressed() {
         if(findViewById(R.id.webPreview)!=null){
             setContentView(R.layout.activity_edit);
-            if(Build.VERSION.SDK_INT>=Build.VERSION_CODES.HONEYCOMB)getActionBar().setDisplayHomeAsUpEnabled(false);
+            if(Build.VERSION.SDK_INT>=Build.VERSION_CODES.HONEYCOMB){
+                ActionBar bar = getActionBar();
+                bar.setDisplayHomeAsUpEnabled(false);
+                bar.hide();
+            }
             editor = (EditText)findViewById(R.id.editor);
             editor.setText(pageText);
         }
@@ -310,7 +315,7 @@ public class EditorActivity extends Activity {
 
             @Override
             protected void onPostExecute(Boolean aBoolean) {
-                if (aBoolean)Dialogs.showSaved(EditorActivity.this,pageId);
+                if (aBoolean)Dialogs.showSaved(EditorActivity.this, pageId);
                 else Dialogs.connectionFailed(EditorActivity.this);
             }
         }.execute();
@@ -417,6 +422,7 @@ public class EditorActivity extends Activity {
     private void showPreview(final String tempId){
         setContentView(R.layout.activity_preview);
         final WebView webView = (WebView)findViewById(R.id.webPreview);
+        webView.getSettings().setJavaScriptEnabled(true);
         //noinspection deprecation
         webView.setWebViewClient(new WebClient() {
             @Override
@@ -442,7 +448,11 @@ public class EditorActivity extends Activity {
             }
         });
         webView.loadUrl(getString(R.string.link_scriptPagePrefix) + tempId);
-        if(Build.VERSION.SDK_INT>=Build.VERSION_CODES.HONEYCOMB)getActionBar().setDisplayHomeAsUpEnabled(true);
+        if(Build.VERSION.SDK_INT>=Build.VERSION_CODES.HONEYCOMB){
+            ActionBar bar = getActionBar();
+            bar.setDisplayHomeAsUpEnabled(true);
+            bar.show();
+        }
     }
 
     private void showSelectPageToEdit(final Page[] pages){
@@ -493,6 +503,9 @@ public class EditorActivity extends Activity {
         setContentView(R.layout.activity_edit);
         editor = (EditText)findViewById(R.id.editor);
         editor.setText(text);
+        if(Build.VERSION.SDK_INT>=Build.VERSION_CODES.HONEYCOMB){
+            getActionBar().hide();
+        }
     }
 
     private void surroundOrAdd(String prefix, String suffix, String text){

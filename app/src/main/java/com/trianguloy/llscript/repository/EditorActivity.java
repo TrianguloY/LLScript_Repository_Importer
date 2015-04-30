@@ -29,6 +29,7 @@ import android.widget.CheckBox;
 import android.widget.EditText;
 import android.widget.Spinner;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.trianguloy.llscript.repository.auth.AuthenticatorActivity;
 import com.trianguloy.llscript.repository.internal.Dialogs;
@@ -444,6 +445,7 @@ public class EditorActivity extends Activity {
 
             @Override
             public boolean shouldOverrideUrlLoading(WebView view, String url) {
+                Toast.makeText(EditorActivity.this,getString(R.string.toast_previewLink),Toast.LENGTH_SHORT).show();
                 return true;
             }
         });

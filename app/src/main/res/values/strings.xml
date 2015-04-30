@@ -231,6 +231,8 @@
     <string name="dummy" tools:ignore="UnusedResources">Dummy string to force new ones to be below
     </string>
     <string name="text_rememberPw">Remember Password</string>
+    <string name="toast_previewLink">This is a preview. You can\'t actually do anything here
+    </string>
 
 
 </resources>

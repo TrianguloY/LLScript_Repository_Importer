@@ -79,10 +79,7 @@ public class SettingsActivity extends PreferenceActivity implements SharedPrefer
     private void setupActionBar() {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.HONEYCOMB) {
             // Show the Up button in the action bar.
-            try {
-                getActionBar().setDisplayHomeAsUpEnabled(true);
-            } catch (NullPointerException ignored) {
-            }
+            getActionBar().setDisplayHomeAsUpEnabled(true);
         }
     }
 

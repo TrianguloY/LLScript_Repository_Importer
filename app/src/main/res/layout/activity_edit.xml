@@ -26,19 +26,19 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="@string/button_cancel"
-            android:id="@+id/button6"
-            android:layout_weight="1" android:onClick="cancelEdit"/>
+            android:id="@+id/buttonCancel"
+            android:layout_weight="1" android:onClick="button"/>
         <Button
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="@string/button_preview"
-            android:id="@+id/button10" android:layout_weight="1" android:onClick="preview"/>
+            android:id="@+id/buttonPreview" android:layout_weight="1" android:onClick="button"/>
         <Button
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="@string/button_save"
-            android:id="@+id/button7"
-            android:layout_weight="1" android:onClick="savePage"/>
+            android:id="@+id/buttonSave"
+            android:layout_weight="1" android:onClick="button"/>
     </LinearLayout>
     <LinearLayout
         android:orientation="horizontal"

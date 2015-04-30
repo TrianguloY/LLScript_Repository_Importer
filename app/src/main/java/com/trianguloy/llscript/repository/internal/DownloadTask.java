@@ -62,8 +62,8 @@ public class DownloadTask extends AsyncTask<String, Void, String> {
     }
 
     public interface Listener {
-        public void onFinish(String result);
+        void onFinish(String result);
 
-        public void onError();
+        void onError();
     }
 }

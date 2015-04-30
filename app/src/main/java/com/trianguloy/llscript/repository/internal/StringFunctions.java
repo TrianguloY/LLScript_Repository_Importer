@@ -23,25 +23,8 @@ import java.util.Set;
  * Created by TrianguloY on 26/01/2015.
  * Reads a given Resource to a string
  */
-public class StringFunctions {
-
-    public static class valueAndIndex {
-        public final String value;
-        public final int from;
-        public final int to;
-
-        public valueAndIndex(String v, int f, int t) {
-            value = v;
-            from = f;
-            to = t;
-        }
-
-        public valueAndIndex() {
-            value = null;
-            from = -1;
-            to = -1;
-        }
-    }
+public final class StringFunctions {
+    private StringFunctions(){}
 
     //This function returns the string between beginning and ending in source starting from index, and the position o the matches (including the searched strings). If backwards is true it uses lastIndexOf
     public static valueAndIndex findBetween(String source, String beginning, String ending, int index, boolean backwards) {
@@ -152,6 +135,24 @@ public class StringFunctions {
     public static String getNameFromUrl(String url) {
         final String idScript = "?id=script_";
         return url.substring(url.indexOf(idScript) + idScript.length());
+    }
+
+    public static class valueAndIndex {
+        public final String value;
+        public final int from;
+        public final int to;
+
+        public valueAndIndex(String v, int f, int t) {
+            value = v;
+            from = f;
+            to = t;
+        }
+
+        public valueAndIndex() {
+            value = null;
+            from = -1;
+            to = -1;
+        }
     }
 
 }

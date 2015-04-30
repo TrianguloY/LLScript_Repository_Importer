@@ -72,16 +72,6 @@ public class webViewer extends Activity {
     private String currentUrl = "";//The URL of the current page
     private DownloadTask.Listener downloadTaskListener = null; //default downloadTaskListener
 
-    private static class backClass {
-        final String url;
-        final int posY;
-
-        backClass(String u, int p) {
-            url = u;
-            posY = p;
-        }
-    }
-
     private Stack<backClass> backStack;//contains the history of the views pages
     private int webViewPositionY = 0;//Contains the positionY that will be applied when the webView finish loading a page
     private Menu menu;
@@ -743,7 +733,7 @@ public class webViewer extends Activity {
                 WebService.LocalBinder binder = (WebService.LocalBinder) service;
                 binder.getService().getChangedSubscriptions(new WebService.Listener() {
                     @Override
-                    public void onFinish(ArrayList<String> updated) {
+                    public void onFinish(List<String> updated) {
                         showChangedSubscriptions(updated);
                     }
 
@@ -820,6 +810,18 @@ public class webViewer extends Activity {
         menu.findItem(R.id.action_unsubscribe).setVisible(unsub);
 
     }
+
+
+    private static class backClass {
+        final String url;
+        final int posY;
+
+        backClass(String u, int p) {
+            url = u;
+            posY = p;
+        }
+    }
+
 
 
 }

@@ -4,7 +4,8 @@ package com.trianguloy.llscript.repository;
 /**
  * Static constants used in the project (like R.strings, but also other types)
  */
-class Constants {
+public final class Constants {
+    private Constants(){}
 
     //script flags
     static final int FLAG_APP_MENU = 2;
@@ -39,8 +40,8 @@ class Constants {
 
     //package constants
     public static final String activityRunScript = "net.pierrox.lightning_launcher.activities.Dashboard";
-    public static final String[] packages = new String[]{"net.pierrox.lightning_launcher_extreme", "net.pierrox.lightning_launcher"};
-    public static String installedPackage = "";
+    protected static final String[] packages = new String[]{"net.pierrox.lightning_launcher_extreme", "net.pierrox.lightning_launcher"};
+    protected static String installedPackage = "";
     public static final int minimumNecessaryVersion = 225; // valid for both packages. Number module 1000
 
     //sharedPrefs
@@ -67,4 +68,9 @@ class Constants {
     public static final String ScriptForceUpdate = "forceUpdate";
     public static final String ScriptCode = "code";
     public static final String ScriptReturnResultTo = "returnTo";
+
+    //internal return values in AsyncTasks
+    public static final int RESULT_OK = 1;
+    public static final int RESULT_NETWORK_ERROR = 0;
+    public static final int RESULT_BAD_LOGIN = -1;
 }

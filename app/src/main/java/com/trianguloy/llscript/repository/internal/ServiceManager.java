@@ -14,7 +14,8 @@ import com.trianguloy.llscript.repository.WebService;
  * Created by Lukas on 12.12.2014.
  * A small set of static methods required at several places, targeting the service
  */
-public class ServiceManager {
+public final class ServiceManager {
+    private ServiceManager(){}
 
     public static void startService(Context context, int interval) {
         Intent i = new Intent(context, WebService.class);

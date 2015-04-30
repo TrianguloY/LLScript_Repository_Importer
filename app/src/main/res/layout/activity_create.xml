@@ -13,13 +13,13 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="@string/button_cancel"
-            android:id="@+id/button8" android:layout_gravity="bottom" android:layout_weight="1"
-            android:onClick="cancelEdit"/>
+            android:id="@+id/buttonCancel" android:layout_gravity="bottom" android:layout_weight="1"
+            android:onClick="button"/>
         <Button
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="@string/button_create"
-            android:id="@+id/button9" android:layout_weight="1" android:onClick="commitCreate"/>
+            android:id="@+id/buttonCreate" android:layout_weight="1" android:onClick="button"/>
     </LinearLayout>
     <TextView
         android:layout_width="wrap_content"

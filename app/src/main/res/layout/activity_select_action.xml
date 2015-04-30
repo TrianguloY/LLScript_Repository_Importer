@@ -8,10 +8,10 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:text="@string/button_createPage"
-        android:id="@+id/button4" android:onClick="createPage"/>
+        android:id="@+id/buttonCreatePage" android:onClick="button"/>
     <Button
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:text="@string/button_editPage"
-        android:id="@+id/button5" android:onClick="editPage"/>
+        android:id="@+id/buttonEditPage" android:onClick="button"/>
 </LinearLayout>

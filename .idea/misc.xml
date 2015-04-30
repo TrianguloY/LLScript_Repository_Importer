@@ -35,6 +35,7 @@
       <entry_point TYPE="method" FQNAME="com.trianguloy.llscript.repository.AuthenticatorActivity void register(android.view.View v)" />
       <entry_point TYPE="method" FQNAME="com.trianguloy.llscript.repository.auth.AuthenticatorActivity void login(android.view.View v)" />
       <entry_point TYPE="method" FQNAME="com.trianguloy.llscript.repository.auth.AuthenticatorActivity void register(android.view.View v)" />
+      <entry_point TYPE="method" FQNAME="com.trianguloy.llscript.repository.EditorActivity void button(android.view.View view)" />
     </entry_points>
   </component>
   <component name="FindBugsConfigurable">
@@ -69,10 +70,6 @@
   </component>
   <component name="ProjectRootManager" version="2" languageLevel="JDK_1_7" assert-keyword="true" jdk-15="true" project-jdk-name="1.7" project-jdk-type="JavaSDK">
     <output url="file://$PROJECT_DIR$/build/classes" />
-  </component>
-  <component name="QAPlugAnalysisUIOptions">
-    <option name="FILTER_RESOLVED_ITEMS" value="false" />
-    <option name="SHOW_SONAR_WAY" value="false" />
   </component>
   <component name="SuppressionsComponent">
     <option name="suppComments" value="[]" />

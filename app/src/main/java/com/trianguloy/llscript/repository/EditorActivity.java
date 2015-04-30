@@ -10,9 +10,8 @@ import android.app.Activity;
 import android.app.AlertDialog;
 import android.content.Context;
 import android.content.DialogInterface;
-import android.content.Intent;
 import android.content.SharedPreferences;
-import android.net.Uri;
+import android.os.AsyncTask;
 import android.os.Build;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
@@ -57,6 +56,7 @@ import dw.xmlrpc.exception.DokuUnauthorizedException;
  */
 public class EditorActivity extends Activity {
 
+    private static final String ALREADY_EXISTS = "AlreadyExists";
     private SharedPreferences sharedPref;
     private String pageId;
     private EditText editor;
@@ -98,7 +98,7 @@ public class EditorActivity extends Activity {
     }
 
     private void findAccount(){
-        if (AuthenticatorActivity.user == null || AuthenticatorActivity.password == null) {
+        if (AuthenticatorActivity.getUser() == null || AuthenticatorActivity.getPassword() == null) {
             AccountManager accountManager = AccountManager.get(this);
             Account[] accounts = accountManager.getAccountsByType(getString(R.string.account_type));
             AccountManagerCallback<Bundle> callback = new AccountManagerCallback<Bundle>() {
@@ -119,121 +119,162 @@ public class EditorActivity extends Activity {
                 accountManager.updateCredentials(accounts[0], "", null, this, callback, null);
             } else login(accounts[0].name, accountManager.getPassword(accounts[0]));
         } else {
-            login(AuthenticatorActivity.user,AuthenticatorActivity.password);
-            AuthenticatorActivity.user = null;
-            AuthenticatorActivity.password = null;
+            login(AuthenticatorActivity.getUser(),AuthenticatorActivity.getPassword());
+            AuthenticatorActivity.resetCredentials();
         }
     }
 
     private void login(final String user, final String password) {
-            new Thread(new Runnable() {
-                @Override
-                public void run() {
+        new AsyncTask<Void,Void,Integer>(){
+            @Override
+            protected Integer doInBackground(Void... params) {
+                int result;
+                try {
+                    client = new DokuJClient(getString(R.string.link_xmlrpc));
                     try {
-                        client = new DokuJClient(getString(R.string.link_xmlrpc));
-                        try {
-                            //test if logged in
-                            Object[] params = new Object[]{user, password};
-                            boolean login = (boolean)client.genericQuery("dokuwiki.login", params);
-                            if(login) {
-                                runOnUiThread(new Runnable() {
-                                    @Override
-                                    public void run() {
-                                        setContentView(R.layout.activity_select_action);
-                                    }
-                                });
-                            }
-                            else Dialogs.badLogin(EditorActivity.this);
-                        }
-                        catch (DokuUnauthorizedException e){
-                            e.printStackTrace();
-                            Dialogs.badLogin(EditorActivity.this);
-                        }
-                    } catch (MalformedURLException | DokuException e) {
-                        e.printStackTrace();
-                        Dialogs.connectionFailed(EditorActivity.this);
+                        //test if logged in
+                        Object[] parameters = new Object[]{user, password};
+                        boolean login = (boolean)client.genericQuery("dokuwiki.login", parameters);
+                        if(login) result = Constants.RESULT_OK;
+                        else result = Constants.RESULT_BAD_LOGIN;
                     }
+                    catch (DokuUnauthorizedException e){
+                        e.printStackTrace();
+                        result = Constants.RESULT_BAD_LOGIN;
+                    }
+                } catch (MalformedURLException | DokuException e) {
+                    e.printStackTrace();
+                    result = Constants.RESULT_NETWORK_ERROR;
                 }
-            }).start();
+                return result;
+            }
+
+            @Override
+            protected void onPostExecute(Integer integer) {
+                switch (integer){
+                    case Constants.RESULT_BAD_LOGIN:
+                        Dialogs.badLogin(EditorActivity.this);
+                        break;
+                    case Constants.RESULT_NETWORK_ERROR:
+                        Dialogs.connectionFailed(EditorActivity.this);
+                        break;
+                    case Constants.RESULT_OK:
+                        setContentView(R.layout.activity_select_action);
+                        break;
+                    default:
+                        throw new IllegalArgumentException();
+                }
+            }
+        }.execute();
     }
 
-    @SuppressWarnings("UnusedParameters")
-    public void createPage(View ignored){
-        new Thread(new Runnable() {
+    public void button(View view){
+        switch (view.getId()){
+            case R.id.buttonCreatePage:
+                createPage();
+                break;
+            case R.id.buttonEditPage:
+                editPage();
+                break;
+            case R.id.buttonCancel:
+                cancelEdit();
+                break;
+            case R.id.buttonSave:
+                savePage();
+                break;
+            case R.id.buttonCreate:
+                commitCreate();
+                break;
+            case R.id.buttonPreview:
+                preview();
+                break;
+            default:
+                throw new IllegalArgumentException();
+        }
+    }
+
+    private void createPage(){
+        new AsyncTask<Void,Void,Boolean>(){
             @Override
-            public void run() {
+            protected Boolean doInBackground(Void... params) {
+                boolean result = false;
                 try {
                     String repoText = client.getPage(getString(R.string.id_scriptRepository));
                     String[] lines = repoText.split("\n");
                     final String circumflex = "^";
                     repository = new Repository(lines);
-                    repository.categories.add(new RepositoryCategory(getString(R.string.text_none),-1,-1));
-                    for (int i = 0; i< lines.length; i++){
+                    repository.categories.add(new RepositoryCategory(getString(R.string.text_none), -1, -1));
+                    for (int i = 0; i < lines.length; i++) {
                         String line = lines[i];
-                        if(!line.startsWith("|")&&!line.startsWith(circumflex)){
-                            if(repository.tableStartLine!=-1){
-                                repository.tableEndLine = i-1;
+                        if (!line.startsWith("|") && !line.startsWith(circumflex)) {
+                            if (repository.tableStartLine != -1) {
+                                repository.tableEndLine = i - 1;
                                 break;
                             }
                             continue;
                         }
-                        if(repository.tableStartLine == -1)repository.tableStartLine = i;
-                        else if(line.startsWith(circumflex))repository.categories.add(new RepositoryCategory(StringFunctions.findBetween(line,circumflex,"^^^",0,false).value,i,0));
-                        else if(line.startsWith("|//**"))repository.categories.add(new RepositoryCategory(StringFunctions.findBetween(line,"|//**","**//||\\\\ |",0,false).value,i,1));
+                        if (repository.tableStartLine == -1) repository.tableStartLine = i;
+                        else if (line.startsWith(circumflex))
+                            repository.categories.add(new RepositoryCategory(StringFunctions.findBetween(line, circumflex, "^^^", 0, false).value, i, 0));
+                        else if (line.startsWith("|//**"))
+                            repository.categories.add(new RepositoryCategory(StringFunctions.findBetween(line, "|//**", "**//||\\\\ |", 0, false).value, i, 1));
                     }
-                    runOnUiThread(new Runnable() {
-                        @Override
-                        public void run() {
-                            setContentView(R.layout.activity_create);
-                            Spinner spinner = (Spinner) findViewById(R.id.spinner);
-                            spinner.setAdapter(new CategoryAdapter(EditorActivity.this, repository.categories));
-                        }
-                    });
-                } catch (DokuException e) {
+                    result = true;
+                }catch (DokuException e) {
                     e.printStackTrace();
-                    Dialogs.connectionFailed(EditorActivity.this);
                 }
+                return result;
             }
-        }).start();
+
+            @Override
+            protected void onPostExecute(Boolean aBoolean) {
+                if(aBoolean) {
+                    setContentView(R.layout.activity_create);
+                    Spinner spinner = (Spinner) findViewById(R.id.spinner);
+                    spinner.setAdapter(new CategoryAdapter(EditorActivity.this, repository.categories));
+                }
+                else Dialogs.connectionFailed(EditorActivity.this);
+            }
+        }.execute();
     }
 
-    @SuppressWarnings("UnusedParameters")
-    public void editPage(View ignored){
-        new Thread(new Runnable() {
+    private void editPage(){
+        new AsyncTask<Void,Void,Page[]>(){
             @Override
-            public void run() {
+            protected Page[] doInBackground(Void... params) {
+                Page[] result = null;
                 try {
                     List<Page> list = client.getAllPages();
                     final HashSet<Page> pages = new HashSet<>();
                     for (Page p: list){
                         if(p.id().startsWith(getString(R.string.prefix_script)))pages.add(p);
                     }
-                    runOnUiThread(new Runnable() {
-                        @Override
-                        public void run() {
-                            showSelectPageToEdit(pages.toArray(new Page[pages.size()]));
-                        }
-                    });
+                    result = pages.toArray(new Page[pages.size()]);
                 } catch (DokuException e) {
                     e.printStackTrace();
-                    Dialogs.connectionFailed(EditorActivity.this);
                 }
+                return result;
             }
-        }).start();
+
+            @Override
+            protected void onPostExecute(Page[] pages) {
+                if(pages == null) Dialogs.connectionFailed(EditorActivity.this);
+                else showSelectPageToEdit(pages);
+            }
+        }.execute();
     }
 
-    @SuppressWarnings("UnusedParameters")
-    public void cancelEdit(View ignored){
+    private void cancelEdit(){
         setContentView(R.layout.activity_select_action);
         editor = null;
     }
 
-    @SuppressWarnings("UnusedParameters")
-    public void savePage(View ignored) {
+    private void savePage() {
         //TODO progressDialog to notify user that saving is going on
-        new Thread(new Runnable() {
+        new AsyncTask<Void,Void,Boolean>(){
             @Override
-            public void run() {
+            protected Boolean doInBackground(Void... params) {
+                boolean result = false;
                 try {
                     client.putPage(pageId,editor.getText().toString());
                     if(addTo!=null){
@@ -259,63 +300,69 @@ public class EditorActivity extends Activity {
                                 ((addTo.level == 0) ? "||\\\\ |" : "|\\\\ |");
                         repository.lines.add(addAt,add);
                         client.putPage(getString(R.string.id_scriptRepository), TextUtils.join("\n", repository.lines));
-
                     }
-                    showSaved();
-
+                    result = true;
                 } catch (DokuException e) {
                     e.printStackTrace();
-                    Dialogs.connectionFailed(EditorActivity.this);
                 }
+                return result;
             }
-        }).start();
+
+            @Override
+            protected void onPostExecute(Boolean aBoolean) {
+                if (aBoolean)Dialogs.showSaved(EditorActivity.this,pageId);
+                else Dialogs.connectionFailed(EditorActivity.this);
+            }
+        }.execute();
     }
 
-    @SuppressWarnings("UnusedParameters")
-    public void commitCreate(View ignored){
+    private void commitCreate(){
         pageId = getString(R.string.prefix_script)+((EditText)findViewById(R.id.editId)).getText();
         Spinner spinner = (Spinner) findViewById(R.id.spinner);
         final RepositoryCategory selected = ((RepositoryCategory)spinner.getSelectedItem());
-            new Thread(new Runnable() {
-                @Override
-                public void run() {
+        new AsyncTask<Void,Void,String>(){
+            @Override
+            protected String doInBackground(Void... params) {
+                String result = null;
+                try {
+                    boolean exists;
                     try {
-                        boolean exists;
-                        try {
-                            String page = client.getPage(pageId);
-                            exists = page!=null && !page.equals("");
-                        }
-                        catch (DokuException e){
-                            e.printStackTrace();
-                            exists = false;
-                        }
-                        if(exists){
-                            showPageAlreadyExists();
-                        }
-                        else {
-                            if(selected.level>=0) {
-                                addTo = selected;
-                                pageName = ((EditText)EditorActivity.this.findViewById(R.id.editName)).getText().toString();
-                            }
-                            final String text;
-                            if (((CheckBox) findViewById(R.id.checkTemplate)).isChecked()) {
-                                text = client.getPage(getString(R.string.id_scriptTemplate));
-                            } else text = "";
-                            runOnUiThread(new Runnable() {
-                                @Override
-                                public void run() {
-                                    showPageEditor(text);
-                                }
-                            });
-                        }
-                    } catch (DokuException e) {
-                        e.printStackTrace();
+                        String page = client.getPage(pageId);
+                        exists = page!=null && !page.equals("");
                     }
+                    catch (DokuException e){
+                        e.printStackTrace();
+                        exists = false;
+                    }
+                    if(exists){
+                        result = ALREADY_EXISTS;
+                    }
+                    else {
+                        if(selected.level>=0) {
+                            addTo = selected;
+                            pageName = ((EditText)EditorActivity.this.findViewById(R.id.editName)).getText().toString();
+                        }
+                        final String text;
+                        if (((CheckBox) findViewById(R.id.checkTemplate)).isChecked()) {
+                            text = client.getPage(getString(R.string.id_scriptTemplate));
+                        } else text = "";
+                        result = text;
+                    }
+                } catch (DokuException e) {
+                    e.printStackTrace();
                 }
-            }).start();
+                return result;
+            }
+
+            @Override
+            protected void onPostExecute(String s) {
+                if(s == null) Dialogs.connectionFailed(EditorActivity.this);
+                else if(s.equals(ALREADY_EXISTS)) Dialogs.showPageAlreadyExists(EditorActivity.this);
+                else showPageEditor(s);
+            }
+        }.execute();
     }
 
-    @SuppressWarnings("UnusedParameters")
     public void action(View view) {
         switch (view.getId()){
             case R.id.action_bold:
@@ -342,47 +389,50 @@ public class EditorActivity extends Activity {
         }
     }
 
-    @SuppressWarnings("UnusedParameters")
-    public void preview(View ignored){
-        new Thread(new Runnable() {
+    private void preview(){
+        new AsyncTask<Void,Void,String>(){
+
             @Override
-            public void run() {
+            protected String doInBackground(Void... params) {
+                String result = null;
                 try {
-                    final String tempId = getString(R.string.prefix_temp)+ random.nextInt();
+                    String tempId = getString(R.string.prefix_temp)+ random.nextInt();
                     pageText = editor.getText().toString();
                     client.putPage(getString(R.string.prefix_script)+tempId,pageText);
-                    runOnUiThread(new Runnable() {
-                        @Override
-                        public void run() {
-                            showPreview(tempId);
-                        }
-                    });
+                    result = tempId;
                 } catch (DokuException e) {
                     e.printStackTrace();
-                    Dialogs.connectionFailed(EditorActivity.this);
                 }
+                return result;
             }
-        }).start();
+
+            @Override
+            protected void onPostExecute(String s) {
+                if(s==null) Dialogs.connectionFailed(EditorActivity.this);
+                else showPreview(s);
+            }
+        }.execute();
     }
 
     private void showPreview(final String tempId){
         setContentView(R.layout.activity_preview);
         final WebView webView = (WebView)findViewById(R.id.webPreview);
         //noinspection deprecation
-        webView.setWebViewClient(new WebClient(){
+        webView.setWebViewClient(new WebClient() {
             @Override
             public void onPageFinished(WebView view, String url) {
                 super.onPageFinished(view, url);
-                new Thread(new Runnable() {
+                new AsyncTask<Void, Void, Void>() {
                     @Override
-                    public void run() {
+                    protected Void doInBackground(Void... params) {
                         try {
-                            client.putPage("script_"+tempId,"");
-                        } catch (DokuException e) {
-                            e.printStackTrace();
+                            client.putPage("script_" + tempId, "");
+                        } catch (DokuException e1) {
+                            e1.printStackTrace();
                         }
+                        return null;
                     }
-                }).start();
+                }.execute();
             }
         });
         webView.setOnLongClickListener(new View.OnLongClickListener() {
@@ -393,19 +443,6 @@ public class EditorActivity extends Activity {
         });
         webView.loadUrl(getString(R.string.link_scriptPagePrefix) + tempId);
         if(Build.VERSION.SDK_INT>=Build.VERSION_CODES.HONEYCOMB)getActionBar().setDisplayHomeAsUpEnabled(true);
-    }
-
-    private void showPageAlreadyExists() {
-        runOnUiThread(new Runnable() {
-            @Override
-            public void run() {
-                new AlertDialog.Builder(EditorActivity.this)
-                        .setTitle(getString(R.string.title_error))
-                        .setMessage(getString(R.string.text_alreadyExists))
-                        .setNeutralButton(R.string.button_ok, null)
-                        .show();
-            }
-        });
     }
 
     private void showSelectPageToEdit(final Page[] pages){
@@ -432,62 +469,30 @@ public class EditorActivity extends Activity {
 
     private void loadPageToEdit(String id){
         pageId = id;
-        new Thread(new Runnable() {
+        new AsyncTask<Void,Void,String>(){
             @Override
-            public void run() {
-                try {
-                    final String text = client.getPage(pageId);
-                    runOnUiThread(new Runnable() {
-                        @Override
-                        public void run() {
-                            showPageEditor(text);
-                        }
-                    });
+            protected String doInBackground(Void... params) {
+                String result = null;
+                try{
+                    result = client.getPage(pageId);
                 } catch (DokuException e) {
                     e.printStackTrace();
-                    Dialogs.connectionFailed(EditorActivity.this);
                 }
+                return result;
             }
-        }).start();
+
+            @Override
+            protected void onPostExecute(String s) {
+                if(s == null)Dialogs.connectionFailed(EditorActivity.this);
+                else showPageEditor(s);
+            }
+        }.execute();
     }
 
     private void showPageEditor(String text){
         setContentView(R.layout.activity_edit);
         editor = (EditText)findViewById(R.id.editor);
         editor.setText(text);
-    }
-
-    private void showSaved(){
-        runOnUiThread(new Runnable() {
-            @Override
-            public void run() {
-                new AlertDialog.Builder(EditorActivity.this)
-                        .setTitle(getString(R.string.title_saved))
-                        .setMessage(getString(R.string.text_doNext))
-                        .setPositiveButton(getString(R.string.button_viewPage), new DialogInterface.OnClickListener() {
-                            @Override
-                            public void onClick(DialogInterface dialog, int which) {
-                                Intent intent = new Intent(Intent.ACTION_VIEW);
-                                intent.setData(Uri.parse(getString(R.string.link_scriptPagePrefix) + pageId.substring(getString(R.string.prefix_script).length())));
-                                intent.setClass(EditorActivity.this, IntentHandle.class);
-                                startActivity(intent);
-                                finish();
-                            }
-                        })
-                        .setNeutralButton(getString(R.string.button_goHome), new DialogInterface.OnClickListener() {
-                            @Override
-                            public void onClick(DialogInterface dialog, int which) {
-                                Intent intent = new Intent(Intent.ACTION_VIEW);
-                                intent.setData(Uri.parse(getString(R.string.link_repository)));
-                                intent.setClass(EditorActivity.this, IntentHandle.class);
-                                startActivity(intent);
-                                finish();
-                            }
-                        })
-                        .setNegativeButton(getString(R.string.button_stay), null)
-                        .show();
-            }
-        });
     }
 
     private void surroundOrAdd(String prefix, String suffix, String text){
@@ -507,8 +512,8 @@ public class EditorActivity extends Activity {
     private static class Repository{
         int tableStartLine;
         int tableEndLine;
-        final ArrayList<RepositoryCategory> categories;
-        final ArrayList<String> lines;
+        final List<RepositoryCategory> categories;
+        final List<String> lines;
 
         public Repository(String[] lines){
             this.lines = new ArrayList<>(Arrays.asList(lines));

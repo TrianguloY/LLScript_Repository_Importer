@@ -233,6 +233,7 @@
     <string name="text_rememberPw">Remember Password</string>
     <string name="toast_previewLink">This is a preview. You can\'t actually do anything here
     </string>
+    <string name="text_cantSaveEmpty">You can\'t save an empty page</string>
 
 
 </resources>

@@ -60,6 +60,11 @@ import dw.xmlrpc.exception.DokuUnauthorizedException;
 public class EditorActivity extends Activity {
 
     private static final String ALREADY_EXISTS = "AlreadyExists";
+    private static final int STATE_NONE = -1;
+    private static final int STATE_CHOOSE_ACTION = 0;
+    private static final int STATE_CREATE = 1;
+    private static final int STATE_EDIT = 2;
+    private static final int STATE_PREVIEW = 3;
     private SharedPreferences sharedPref;
     private String pageId;
     private EditText editor;
@@ -69,11 +74,12 @@ public class EditorActivity extends Activity {
     private String pageName;
     private String pageText;
     private Random random;
+    private int state;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        editor = null;
+        state = STATE_NONE;
 
         sharedPref = PreferenceManager.getDefaultSharedPreferences(this);
         random = new Random();
@@ -91,7 +97,7 @@ public class EditorActivity extends Activity {
 
     @Override
     public void onBackPressed() {
-        if(findViewById(R.id.webPreview)!=null){
+        if(state == STATE_PREVIEW){
             setContentView(R.layout.activity_edit);
             if(Build.VERSION.SDK_INT>=Build.VERSION_CODES.HONEYCOMB){
                 ActionBar bar = getActionBar();
@@ -101,7 +107,28 @@ public class EditorActivity extends Activity {
             editor = (EditText)findViewById(R.id.editor);
             editor.setText(pageText);
         }
-        else super.onBackPressed();
+        else finish();
+    }
+
+    @Override
+    public void setContentView(int layoutResID) {
+        super.setContentView(layoutResID);
+        switch (layoutResID){
+            case R.layout.activity_select_action:
+                state = STATE_CHOOSE_ACTION;
+                break;
+            case R.layout.activity_create:
+                state = STATE_CREATE;
+                break;
+            case R.layout.activity_edit:
+                state = STATE_EDIT;
+                break;
+            case R.layout.activity_preview:
+                state = STATE_PREVIEW;
+                break;
+            default:
+                if(BuildConfig.DEBUG) Log.wtf(EditorActivity.class.getSimpleName(),"Unknown state!");
+        }
     }
 
     private void findAccount(){
@@ -158,12 +185,18 @@ public class EditorActivity extends Activity {
 
             @Override
             protected void onPostExecute(Integer integer) {
+                Runnable finish = new Runnable() {
+                    @Override
+                    public void run() {
+                        finish();
+                    }
+                };
                 switch (integer){
                     case Constants.RESULT_BAD_LOGIN:
-                        Dialogs.badLogin(EditorActivity.this);
+                        Dialogs.badLogin(EditorActivity.this,finish);
                         break;
                     case Constants.RESULT_NETWORK_ERROR:
-                        Dialogs.connectionFailed(EditorActivity.this);
+                        Dialogs.connectionFailed(EditorActivity.this,finish);
                         break;
                     case Constants.RESULT_OK:
                         setContentView(R.layout.activity_select_action);
@@ -273,54 +306,57 @@ public class EditorActivity extends Activity {
 
     private void cancelEdit(){
         setContentView(R.layout.activity_select_action);
-        editor = null;
     }
 
     private void savePage() {
-        //TODO progressDialog to notify user that saving is going on
-        new AsyncTask<Void,Void,Boolean>(){
-            @Override
-            protected Boolean doInBackground(Void... params) {
-                boolean result = false;
-                try {
-                    client.putPage(pageId,editor.getText().toString());
-                    if(addTo!=null){
-                        int index = repository.categories.indexOf(addTo);
-                        int addAt = repository.tableEndLine;
-                        if(addTo.level == 0){
-                            for(int i=index+1;i<repository.categories.size();i++){
-                                if(repository.categories.get(i).level == addTo.level){
-                                    addAt = repository.categories.get(i).line;
-                                    break;
+        final String text = editor.getText().toString();
+        if(text == null || text.equals("")) Dialogs.cantSaveEmpty(this);
+        else {
+            //TODO progressDialog to notify user that saving is going on
+            new AsyncTask<Void, Void, Boolean>() {
+                @Override
+                protected Boolean doInBackground(Void... params) {
+                    boolean result = false;
+                    try {
+                        client.putPage(pageId, text);
+                        if (addTo != null) {
+                            int index = repository.categories.indexOf(addTo);
+                            int addAt = repository.tableEndLine;
+                            if (addTo.level == 0) {
+                                for (int i = index + 1; i < repository.categories.size(); i++) {
+                                    if (repository.categories.get(i).level == addTo.level) {
+                                        addAt = repository.categories.get(i).line;
+                                        break;
+                                    }
+                                }
+                            } else {
+                                for (int i = addTo.line + 1; i < repository.lines.size(); i++) {
+                                    if (repository.lines.get(i).startsWith("|[[")) {
+                                        addAt = i;
+                                        break;
+                                    }
                                 }
                             }
-                        }else{
-                            for(int i=addTo.line+1;i<repository.lines.size();i++){
-                                if(repository.lines.get(i).startsWith("|[[")){
-                                    addAt = i;
-                                    break;
-                                }
-                            }
+                            String add = (addTo.level == 0 ? "|" : "|\\\\ |") +
+                                    "[[" + pageId + ((pageName == null) ? "" : " |" + pageName) + "]]" +
+                                    ((addTo.level == 0) ? "||\\\\ |" : "|\\\\ |");
+                            repository.lines.add(addAt, add);
+                            client.putPage(getString(R.string.id_scriptRepository), TextUtils.join("\n", repository.lines));
                         }
-                        String add = (addTo.level==0 ?"|":"|\\\\ |") +
-                                "[[" + pageId + ((pageName == null) ? "" : " |" + pageName)+ "]]" +
-                                ((addTo.level == 0) ? "||\\\\ |" : "|\\\\ |");
-                        repository.lines.add(addAt,add);
-                        client.putPage(getString(R.string.id_scriptRepository), TextUtils.join("\n", repository.lines));
+                        result = true;
+                    } catch (DokuException e) {
+                        e.printStackTrace();
                     }
-                    result = true;
-                } catch (DokuException e) {
-                    e.printStackTrace();
+                    return result;
                 }
-                return result;
-            }
 
-            @Override
-            protected void onPostExecute(Boolean aBoolean) {
-                if (aBoolean)Dialogs.showSaved(EditorActivity.this, pageId);
-                else Dialogs.connectionFailed(EditorActivity.this);
-            }
-        }.execute();
+                @Override
+                protected void onPostExecute(Boolean aBoolean) {
+                    if (aBoolean) Dialogs.saved(EditorActivity.this, pageId);
+                    else Dialogs.connectionFailed(EditorActivity.this);
+                }
+            }.execute();
+        }
     }
 
     private void commitCreate(){
@@ -364,13 +400,14 @@ public class EditorActivity extends Activity {
             @Override
             protected void onPostExecute(String s) {
                 if(s == null) Dialogs.connectionFailed(EditorActivity.this);
-                else if(s.equals(ALREADY_EXISTS)) Dialogs.showPageAlreadyExists(EditorActivity.this);
+                else if(s.equals(ALREADY_EXISTS)) Dialogs.pageAlreadyExists(EditorActivity.this);
                 else showPageEditor(s);
             }
         }.execute();
     }
 
     public void action(View view) {
+        if(state!=STATE_EDIT)throw new IllegalStateException("Can't execute actions when not in editor");
         switch (view.getId()){
             case R.id.action_bold:
                 surroundOrAdd("**","**",getString(R.string.text_bold));
@@ -391,7 +428,7 @@ public class EditorActivity extends Activity {
                 surroundOrAdd("  - ","",getString(R.string.text_orderedList));
                 break;
             default:
-                if(BuildConfig.DEBUG) Log.i(this.getClass().getSimpleName(),"Ignored action "+view.getId());
+                if(BuildConfig.DEBUG) Log.i(EditorActivity.class.getSimpleName(),"Ignored action "+view.getId());
                 break;
         }
     }

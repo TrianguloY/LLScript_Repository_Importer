@@ -56,6 +56,7 @@ public final class Constants {
     public static final String extraForceUpdate = "forceUpdate";
     public static final String extraOpenUrl = "openUrl";
     public static final String extraOpenUrlTime = "openUrlTime";
+    public static final String extraReload = "reload";
 
     //Run script parameters
     public static final String RunActionExtra = "a";

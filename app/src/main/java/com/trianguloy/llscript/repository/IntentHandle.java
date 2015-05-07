@@ -21,7 +21,7 @@ public class IntentHandle extends Activity {
             String getUrl = intent.getDataString();
             Uri uri = intent.getData();
             if (uri != null && getUrl.startsWith(getString(R.string.link_scriptPagePrefix))) {
-                openWebViewer(getUrl);
+                openWebViewer(getUrl,intent.getBooleanExtra(Constants.extraReload,false));
             } else if (uri != null) {
                 //pass the bad intent to another app
                 new AppChooser(this, uri, getString(R.string.title_appChooserBad), getString(R.string.toast_badString), new AppChooser.OnCloseListener() {
@@ -36,15 +36,20 @@ public class IntentHandle extends Activity {
             }
         } else {
             //bad intent
-            openWebViewer(null);
+            openWebViewer();
             finish();
         }
     }
 
-    private void openWebViewer(String url) {
+    private void openWebViewer(){
+        openWebViewer(null,false);
+    }
+
+    private void openWebViewer(String url,boolean reload) {
         Intent intent = new Intent(this, webViewer.class);
         if (url != null) intent.putExtra(Constants.extraOpenUrl, url);
         intent.putExtra(Constants.extraOpenUrlTime, System.currentTimeMillis());
+        intent.putExtra(Constants.extraReload, reload);
         intent.addFlags(Intent.FLAG_ACTIVITY_REORDER_TO_FRONT);
         startActivity(intent);
         finish();

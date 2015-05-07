@@ -73,12 +73,6 @@ public class WebService extends Service {
         }
     }
 
-    public interface Listener {
-        void onFinish(List<String> updated);
-
-        void onError();
-    }
-
     private void check() {
         getChangedSubscriptions(new Listener() {
             @Override
@@ -113,5 +107,11 @@ public class WebService extends Service {
         public WebService getService() {
             return WebService.this;
         }
+    }
+
+    public interface Listener {
+        void onFinish(List<String> updated);
+
+        void onError();
     }
 }

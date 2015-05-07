@@ -9,13 +9,17 @@ import android.accounts.OperationCanceledException;
 import android.app.ActionBar;
 import android.app.Activity;
 import android.app.AlertDialog;
+import android.content.ComponentName;
 import android.content.Context;
 import android.content.DialogInterface;
+import android.content.Intent;
+import android.content.ServiceConnection;
 import android.content.SharedPreferences;
-import android.os.AsyncTask;
 import android.os.Build;
 import android.os.Bundle;
+import android.os.IBinder;
 import android.preference.PreferenceManager;
+import android.support.annotation.Nullable;
 import android.text.Editable;
 import android.text.TextUtils;
 import android.util.Log;
@@ -31,7 +35,6 @@ import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.trianguloy.llscript.repository.auth.AuthenticatorActivity;
 import com.trianguloy.llscript.repository.internal.Dialogs;
 import com.trianguloy.llscript.repository.internal.DownloadTask;
 import com.trianguloy.llscript.repository.internal.StringFunctions;
@@ -40,7 +43,6 @@ import com.trianguloy.llscript.repository.internal.WebClient;
 import org.acra.ACRA;
 
 import java.io.IOException;
-import java.net.MalformedURLException;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Comparator;
@@ -48,10 +50,7 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Random;
 
-import dw.xmlrpc.DokuJClient;
 import dw.xmlrpc.Page;
-import dw.xmlrpc.exception.DokuException;
-import dw.xmlrpc.exception.DokuUnauthorizedException;
 
 /**
  * Created by Lukas on 20.04.2015.
@@ -59,7 +58,6 @@ import dw.xmlrpc.exception.DokuUnauthorizedException;
  */
 public class EditorActivity extends Activity {
 
-    private static final String ALREADY_EXISTS = "AlreadyExists";
     private static final int STATE_NONE = -1;
     private static final int STATE_CHOOSE_ACTION = 0;
     private static final int STATE_CREATE = 1;
@@ -68,22 +66,24 @@ public class EditorActivity extends Activity {
     private SharedPreferences sharedPref;
     private String pageId;
     private EditText editor;
-    private DokuJClient client;
+    private RPCService rpcService;
     private Repository repository;
     private RepositoryCategory addTo;
     private String pageName;
     private String pageText;
     private Random random;
     private int state;
+    private ServiceConnection connection;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         state = STATE_NONE;
+        startService(new Intent(this,RPCService.class));
 
         sharedPref = PreferenceManager.getDefaultSharedPreferences(this);
         random = new Random();
-        findAccount();
+        connect();
     }
 
     @Override
@@ -131,72 +131,76 @@ public class EditorActivity extends Activity {
         }
     }
 
-    private void findAccount(){
-        if (AuthenticatorActivity.getUser() == null || AuthenticatorActivity.getPassword() == null) {
-            AccountManager accountManager = AccountManager.get(this);
-            Account[] accounts = accountManager.getAccountsByType(getString(R.string.account_type));
-            AccountManagerCallback<Bundle> callback = new AccountManagerCallback<Bundle>() {
-                public void run(AccountManagerFuture<Bundle> future) {
-                    try {
-                        future.getResult();
-                        findAccount();
-
-                    } catch (OperationCanceledException ignored) {
-                    } catch (IOException | AuthenticatorException e) {
-                        ACRA.getErrorReporter().handleException(e);
-                    }
-                }
-            };
-            if (accounts.length == 0) {
-                accountManager.addAccount(getString(R.string.account_type), "", null, null, this, callback, null);
-            } else if (accountManager.getPassword(accounts[0]) == null) {
-                accountManager.updateCredentials(accounts[0], "", null, this, callback, null);
-            } else login(accounts[0].name, accountManager.getPassword(accounts[0]));
-        } else {
-            login(AuthenticatorActivity.getUser(),AuthenticatorActivity.getPassword());
-            AuthenticatorActivity.resetCredentials();
-        }
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        if (connection!=null)unbindService(connection);
     }
 
-    private void login(final String user, final String password) {
-        new AsyncTask<Void,Void,Integer>(){
+
+
+    private void connect(){
+        connection =  new ServiceConnection() {
             @Override
-            protected Integer doInBackground(Void... params) {
-                int result;
-                try {
-                    client = new DokuJClient(getString(R.string.link_xmlrpc));
-                    try {
-                        //test if logged in
-                        Object[] parameters = new Object[]{user, password};
-                        boolean login = (boolean)client.genericQuery("dokuwiki.login", parameters);
-                        if(login) result = Constants.RESULT_OK;
-                        else result = Constants.RESULT_BAD_LOGIN;
-                    }
-                    catch (DokuUnauthorizedException e){
-                        e.printStackTrace();
-                        result = Constants.RESULT_BAD_LOGIN;
-                    }
-                } catch (MalformedURLException | DokuException e) {
-                    e.printStackTrace();
-                    result = Constants.RESULT_NETWORK_ERROR;
+            public void onServiceConnected(ComponentName componentName, IBinder iBinder) {
+                rpcService = ((RPCService.LocalBinder) iBinder).getService();
+                if (!rpcService.isLoggedIn()) {
+                    findAccount(false);
                 }
-                return result;
+                else setContentView(R.layout.activity_select_action);
             }
 
             @Override
-            protected void onPostExecute(Integer integer) {
-                Runnable finish = new Runnable() {
-                    @Override
-                    public void run() {
-                        finish();
-                    }
-                };
-                switch (integer){
+            public void onServiceDisconnected(ComponentName componentName) {
+
+            }
+        };
+        bindService(new Intent(this, RPCService.class), connection, 0);
+    }
+
+    private void findAccount(boolean passwordInvalid){
+        AccountManager accountManager = AccountManager.get(this);
+        Account[] accounts = accountManager.getAccountsByType(getString(R.string.account_type));
+        AccountManagerCallback<Bundle> callback = new AccountManagerCallback<Bundle>() {
+            public void run(AccountManagerFuture<Bundle> future) {
+                try {
+                    future.getResult();
+                    setContentView(R.layout.activity_select_action);
+                } catch (OperationCanceledException e) {
+                    finish();
+                } catch (IOException | AuthenticatorException e) {
+                    ACRA.getErrorReporter().handleException(e);
+                    finish();
+                }
+            }
+        };
+        if (accounts.length == 0) {
+            accountManager.addAccount(getString(R.string.account_type), "", null, null, this, callback, null);
+        } else if (accountManager.getPassword(accounts[0]) == null || passwordInvalid) {
+            accountManager.updateCredentials(accounts[0], "", null, this, callback, null);
+        } else login(accounts[0].name, accountManager.getPassword(accounts[0]));
+    }
+
+    private void login(final String user, final String password) {
+        rpcService.login(user, password, new RPCService.Listener<Integer>() {
+            @Override
+            public void onResult(Integer result) {
+                switch (result) {
                     case Constants.RESULT_BAD_LOGIN:
-                        Dialogs.badLogin(EditorActivity.this,finish);
+                        Dialogs.badLogin(EditorActivity.this, new Runnable() {
+                            @Override
+                            public void run() {
+                                findAccount(true);
+                            }
+                        });
                         break;
                     case Constants.RESULT_NETWORK_ERROR:
-                        Dialogs.connectionFailed(EditorActivity.this,finish);
+                        Dialogs.connectionFailed(EditorActivity.this, new Runnable() {
+                            @Override
+                            public void run() {
+                                finish();
+                            }
+                        });
                         break;
                     case Constants.RESULT_OK:
                         setContentView(R.layout.activity_select_action);
@@ -205,7 +209,7 @@ public class EditorActivity extends Activity {
                         throw new IllegalArgumentException();
                 }
             }
-        }.execute();
+        });
     }
 
     public void button(View view){
@@ -234,74 +238,56 @@ public class EditorActivity extends Activity {
     }
 
     private void createPage(){
-        new AsyncTask<Void,Void,Boolean>(){
+        rpcService.getPage(getString(R.string.id_scriptRepository), new RPCService.Listener<String>() {
             @Override
-            protected Boolean doInBackground(Void... params) {
-                boolean result = false;
-                try {
-                    String repoText = client.getPage(getString(R.string.id_scriptRepository));
-                    String[] lines = repoText.split("\n");
-                    final String circumflex = "^";
-                    repository = new Repository(lines);
-                    repository.categories.add(new RepositoryCategory(getString(R.string.text_none), -1, -1));
-                    for (int i = 0; i < lines.length; i++) {
-                        String line = lines[i];
-                        if (!line.startsWith("|") && !line.startsWith(circumflex)) {
-                            if (repository.tableStartLine != -1) {
-                                repository.tableEndLine = i - 1;
-                                break;
-                            }
-                            continue;
+            public void onResult(String result) {
+                if (result == null) {
+                    Dialogs.connectionFailed(EditorActivity.this);
+                    return;
+                }
+                String[] lines = result.split("\n");
+                final String circumflex = "^";
+                repository = new Repository(lines);
+                repository.categories.add(new RepositoryCategory(getString(R.string.text_none), -1, -1));
+                for (int i = 0; i < lines.length; i++) {
+                    String line = lines[i];
+                    if (!line.startsWith("|") && !line.startsWith(circumflex)) {
+                        if (repository.tableStartLine != -1) {
+                            repository.tableEndLine = i - 1;
+                            break;
                         }
-                        if (repository.tableStartLine == -1) repository.tableStartLine = i;
-                        else if (line.startsWith(circumflex))
-                            repository.categories.add(new RepositoryCategory(StringFunctions.findBetween(line, circumflex, "^^^", 0, false).value, i, 0));
-                        else if (line.startsWith("|//**"))
-                            repository.categories.add(new RepositoryCategory(StringFunctions.findBetween(line, "|//**", "**//||\\\\ |", 0, false).value, i, 1));
+                        continue;
                     }
-                    result = true;
-                }catch (DokuException e) {
-                    e.printStackTrace();
+                    if (repository.tableStartLine == -1) repository.tableStartLine = i;
+                    else if (line.startsWith(circumflex))
+                        repository.categories.add(new RepositoryCategory(StringFunctions.findBetween(line, circumflex, "^^^", 0, false).value, i, 0));
+                    else if (line.startsWith("|//**"))
+                        repository.categories.add(new RepositoryCategory(StringFunctions.findBetween(line, "|//**", "**//||\\\\ |", 0, false).value, i, 1));
                 }
-                return result;
-            }
+                setContentView(R.layout.activity_create);
+                Spinner spinner = (Spinner)findViewById(R.id.spinner);
+                spinner.setAdapter(new CategoryAdapter(EditorActivity.this,repository.categories));
 
-            @Override
-            protected void onPostExecute(Boolean aBoolean) {
-                if(aBoolean) {
-                    setContentView(R.layout.activity_create);
-                    Spinner spinner = (Spinner) findViewById(R.id.spinner);
-                    spinner.setAdapter(new CategoryAdapter(EditorActivity.this, repository.categories));
-                }
-                else Dialogs.connectionFailed(EditorActivity.this);
             }
-        }.execute();
+        });
     }
 
-    private void editPage(){
-        new AsyncTask<Void,Void,Page[]>(){
+    private void editPage() {
+        rpcService.getAllPages(new RPCService.Listener<List<Page>>() {
             @Override
-            protected Page[] doInBackground(Void... params) {
-                Page[] result = null;
-                try {
-                    List<Page> list = client.getAllPages();
-                    final HashSet<Page> pages = new HashSet<>();
-                    for (Page p: list){
-                        if(p.id().startsWith(getString(R.string.prefix_script)))pages.add(p);
-                    }
-                    result = pages.toArray(new Page[pages.size()]);
-                } catch (DokuException e) {
-                    e.printStackTrace();
+            public void onResult(List<Page> result) {
+                if (result == null) {
+                    Dialogs.connectionFailed(EditorActivity.this);
+                    return;
                 }
-                return result;
+                final HashSet<Page> pages = new HashSet<>();
+                for (Page p : result) {
+                    if (p.id().startsWith(getString(R.string.prefix_script))) pages.add(p);
+                }
+                Page[] array = pages.toArray(new Page[pages.size()]);
+                showSelectPageToEdit(array);
             }
-
-            @Override
-            protected void onPostExecute(Page[] pages) {
-                if(pages == null) Dialogs.connectionFailed(EditorActivity.this);
-                else showSelectPageToEdit(pages);
-            }
-        }.execute();
+        });
     }
 
     private void cancelEdit(){
@@ -310,15 +296,13 @@ public class EditorActivity extends Activity {
 
     private void savePage() {
         final String text = editor.getText().toString();
-        if(text == null || text.equals("")) Dialogs.cantSaveEmpty(this);
+        if(text.equals("")) Dialogs.cantSaveEmpty(this);
         else {
             //TODO progressDialog to notify user that saving is going on
-            new AsyncTask<Void, Void, Boolean>() {
+            rpcService.putPage(pageId, text, new RPCService.Listener<Boolean>() {
                 @Override
-                protected Boolean doInBackground(Void... params) {
-                    boolean result = false;
-                    try {
-                        client.putPage(pageId, text);
+                public void onResult(Boolean result) {
+                    if(result){
                         if (addTo != null) {
                             int index = repository.categories.indexOf(addTo);
                             int addAt = repository.tableEndLine;
@@ -341,21 +325,18 @@ public class EditorActivity extends Activity {
                                     "[[" + pageId + ((pageName == null) ? "" : " |" + pageName) + "]]" +
                                     ((addTo.level == 0) ? "||\\\\ |" : "|\\\\ |");
                             repository.lines.add(addAt, add);
-                            client.putPage(getString(R.string.id_scriptRepository), TextUtils.join("\n", repository.lines));
-                        }
-                        result = true;
-                    } catch (DokuException e) {
-                        e.printStackTrace();
+                            rpcService.putPage(getString(R.string.id_scriptRepository), TextUtils.join("\n", repository.lines), new RPCService.Listener<Boolean>() {
+                                @Override
+                                public void onResult(Boolean result) {
+                                    if(result)Dialogs.saved(EditorActivity.this,pageId);
+                                    else Dialogs.connectionFailed(EditorActivity.this);
+                                }
+                            });
+                        } else Dialogs.saved(EditorActivity.this,pageId);
                     }
-                    return result;
-                }
-
-                @Override
-                protected void onPostExecute(Boolean aBoolean) {
-                    if (aBoolean) Dialogs.saved(EditorActivity.this, pageId);
                     else Dialogs.connectionFailed(EditorActivity.this);
                 }
-            }.execute();
+            });
         }
     }
 
@@ -363,47 +344,26 @@ public class EditorActivity extends Activity {
         pageId = getString(R.string.prefix_script)+((EditText)findViewById(R.id.editId)).getText();
         Spinner spinner = (Spinner) findViewById(R.id.spinner);
         final RepositoryCategory selected = ((RepositoryCategory)spinner.getSelectedItem());
-        new AsyncTask<Void,Void,String>(){
+        rpcService.getPage(pageId, new RPCService.Listener<String>() {
             @Override
-            protected String doInBackground(Void... params) {
-                String result = null;
-                try {
-                    boolean exists;
-                    try {
-                        String page = client.getPage(pageId);
-                        exists = page!=null && !page.equals("");
+            public void onResult(String result) {
+                if (result != null && !result.equals("")) {
+                    if (selected.level >= 0) {
+                        addTo = selected;
+                        pageName = ((EditText) EditorActivity.this.findViewById(R.id.editName)).getText().toString();
                     }
-                    catch (DokuException e){
-                        e.printStackTrace();
-                        exists = false;
-                    }
-                    if(exists){
-                        result = ALREADY_EXISTS;
-                    }
-                    else {
-                        if(selected.level>=0) {
-                            addTo = selected;
-                            pageName = ((EditText)EditorActivity.this.findViewById(R.id.editName)).getText().toString();
-                        }
-                        final String text;
-                        if (((CheckBox) findViewById(R.id.checkTemplate)).isChecked()) {
-                            text = client.getPage(getString(R.string.id_scriptTemplate));
-                        } else text = "";
-                        result = text;
-                    }
-                } catch (DokuException e) {
-                    e.printStackTrace();
-                }
-                return result;
+                    if (((CheckBox) findViewById(R.id.checkTemplate)).isChecked()) {
+                        rpcService.getPage(getString(R.string.id_scriptTemplate), new RPCService.Listener<String>() {
+                            @Override
+                            public void onResult(String result) {
+                                if(result==null) Dialogs.connectionFailed(EditorActivity.this);
+                                else showPageEditor(result);
+                            }
+                        });
+                    } else showPageEditor("");
+                } else Dialogs.pageAlreadyExists(EditorActivity.this);
             }
-
-            @Override
-            protected void onPostExecute(String s) {
-                if(s == null) Dialogs.connectionFailed(EditorActivity.this);
-                else if(s.equals(ALREADY_EXISTS)) Dialogs.pageAlreadyExists(EditorActivity.this);
-                else showPageEditor(s);
-            }
-        }.execute();
+        });
     }
 
     public void action(View view) {
@@ -434,28 +394,15 @@ public class EditorActivity extends Activity {
     }
 
     private void preview(){
-        new AsyncTask<Void,Void,String>(){
-
+        final String tempId = getString(R.string.prefix_temp)+ random.nextInt();
+        pageText = editor.getText().toString();
+        rpcService.putPage(getString(R.string.prefix_script) + tempId, pageText, new RPCService.Listener<Boolean>() {
             @Override
-            protected String doInBackground(Void... params) {
-                String result = null;
-                try {
-                    String tempId = getString(R.string.prefix_temp)+ random.nextInt();
-                    pageText = editor.getText().toString();
-                    client.putPage(getString(R.string.prefix_script)+tempId,pageText);
-                    result = tempId;
-                } catch (DokuException e) {
-                    e.printStackTrace();
-                }
-                return result;
+            public void onResult(@Nullable Boolean result) {
+                if(!result) Dialogs.connectionFailed(EditorActivity.this);
+                else showPreview(tempId);
             }
-
-            @Override
-            protected void onPostExecute(String s) {
-                if(s==null) Dialogs.connectionFailed(EditorActivity.this);
-                else showPreview(s);
-            }
-        }.execute();
+        });
     }
 
     private void showPreview(final String tempId){
@@ -467,17 +414,7 @@ public class EditorActivity extends Activity {
             @Override
             public void onPageFinished(WebView view, String url) {
                 super.onPageFinished(view, url);
-                new AsyncTask<Void, Void, Void>() {
-                    @Override
-                    protected Void doInBackground(Void... params) {
-                        try {
-                            client.putPage("script_" + tempId, "");
-                        } catch (DokuException e1) {
-                            e1.printStackTrace();
-                        }
-                        return null;
-                    }
-                }.execute();
+                rpcService.putPage("script_" + tempId, "",null);
             }
 
             @Override
@@ -539,24 +476,13 @@ public class EditorActivity extends Activity {
 
     private void loadPageToEdit(String id){
         pageId = id;
-        new AsyncTask<Void,Void,String>(){
+        rpcService.getPage(pageId, new RPCService.Listener<String>() {
             @Override
-            protected String doInBackground(Void... params) {
-                String result = null;
-                try{
-                    result = client.getPage(pageId);
-                } catch (DokuException e) {
-                    e.printStackTrace();
-                }
-                return result;
+            public void onResult(@Nullable String result) {
+                if(result == null)Dialogs.connectionFailed(EditorActivity.this);
+                else showPageEditor(result);
             }
-
-            @Override
-            protected void onPostExecute(String s) {
-                if(s == null)Dialogs.connectionFailed(EditorActivity.this);
-                else showPageEditor(s);
-            }
-        }.execute();
+        });
     }
 
     private void showPageEditor(String text){
@@ -600,7 +526,7 @@ public class EditorActivity extends Activity {
     private static class RepositoryCategory {
         final String name;
         final int line;
-        private final int level;
+        final int level;
 
         public RepositoryCategory(String name, int line, int level){
             this.name = name;

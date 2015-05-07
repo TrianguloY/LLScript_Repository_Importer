@@ -116,7 +116,7 @@ public final class StringFunctions {
             String s = temp[i];
             if (!s.startsWith("repository\"") && !s.startsWith("template\""))//exclude the repository itself and the script template
             {
-                String page = s.substring(0, s.indexOf("\""));
+                String page = s.substring(0, s.indexOf('"'));
                 String name = StringFunctions.findBetween(html, page + "\">", "<", 0, false).value;
                 scripts.put(page, name);
             }

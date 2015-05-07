@@ -3,25 +3,23 @@ package com.trianguloy.llscript.repository.auth;
 import android.accounts.Account;
 import android.accounts.AccountAuthenticatorActivity;
 import android.accounts.AccountManager;
+import android.content.ComponentName;
 import android.content.Intent;
+import android.content.ServiceConnection;
 import android.net.Uri;
-import android.os.AsyncTask;
 import android.os.Build;
 import android.os.Bundle;
+import android.os.IBinder;
+import android.support.annotation.Nullable;
 import android.view.View;
 import android.widget.CheckBox;
 import android.widget.EditText;
 
 import com.trianguloy.llscript.repository.Constants;
 import com.trianguloy.llscript.repository.R;
+import com.trianguloy.llscript.repository.RPCService;
 import com.trianguloy.llscript.repository.internal.AppChooser;
 import com.trianguloy.llscript.repository.internal.Dialogs;
-
-import java.net.MalformedURLException;
-
-import dw.xmlrpc.DokuJClient;
-import dw.xmlrpc.exception.DokuException;
-import dw.xmlrpc.exception.DokuUnauthorizedException;
 
 /**
  * Created by Lukas on 27.04.2015.
@@ -32,9 +30,6 @@ public class AuthenticatorActivity extends AccountAuthenticatorActivity {
     public static final String ACCOUNT_TYPE = "accType";
     public static final String ACCOUNT = "acc";
 
-
-    private static String user;
-    private static String password;
 
     private String accountType;
     private Account account;
@@ -56,51 +51,37 @@ public class AuthenticatorActivity extends AccountAuthenticatorActivity {
         final String user = ((EditText) findViewById(R.id.username)).getText().toString();
         final String password = ((EditText) findViewById(R.id.password)).getText().toString();
         final boolean savePw = ((CheckBox)findViewById(R.id.checkRemember)).isChecked();
-        new AsyncTask<Void,Void,Integer>(){
+        bindService(new Intent(this, RPCService.class), new ServiceConnection() {
             @Override
-            protected Integer doInBackground(Void... params) {
-                int result = Constants.RESULT_NETWORK_ERROR;
-                try {
-                    DokuJClient client = new DokuJClient(getString(R.string.link_xmlrpc));
-                    try {
-                        //test if logged in
-                        Object[] parameters = new Object[]{user, password};
-                        boolean login = (boolean)client.genericQuery("dokuwiki.login", parameters);
-                        if(login) {
-                            setAccount(user,savePw?password:null);
+            public void onServiceConnected(ComponentName componentName, IBinder iBinder) {
+                final ServiceConnection connection = this;
+                RPCService rpcService = ((RPCService.LocalBinder) iBinder).getService();
+                rpcService.login(user, password, new RPCService.Listener<Integer>() {
+                    @Override
+                    public void onResult(@Nullable Integer result) {
+                        switch (result) {
+                            case Constants.RESULT_BAD_LOGIN:
+                                Dialogs.badLogin(AuthenticatorActivity.this);
+                                break;
+                            case Constants.RESULT_NETWORK_ERROR:
+                                Dialogs.connectionFailed(AuthenticatorActivity.this);
+                                break;
+                            case Constants.RESULT_OK:
+                                setAccount(user, savePw ? password : null);
+                                AuthenticatorActivity.this.finish();
+                                break;
+                            default:
+                                throw new IllegalArgumentException();
                         }
-                        else result = Constants.RESULT_BAD_LOGIN;
+                        unbindService(connection);
                     }
-                    catch (DokuUnauthorizedException e){
-                        e.printStackTrace();
-                        result = Constants.RESULT_BAD_LOGIN;
-                    }
-                } catch (MalformedURLException | DokuException e) {
-                    e.printStackTrace();
-                    result = Constants.RESULT_NETWORK_ERROR;
-                }
-                return result;
+                });
             }
 
             @Override
-            protected void onPostExecute(Integer integer) {
-                switch (integer){
-                    case Constants.RESULT_BAD_LOGIN:
-                        Dialogs.badLogin(AuthenticatorActivity.this);
-                        break;
-                    case Constants.RESULT_NETWORK_ERROR:
-                        Dialogs.connectionFailed(AuthenticatorActivity.this);
-                        break;
-                    case Constants.RESULT_OK:
-                        AuthenticatorActivity.user = user;
-                        AuthenticatorActivity.password = password;
-                        AuthenticatorActivity.this.finish();
-                        break;
-                    default:
-                        throw new IllegalArgumentException();
-                }
+            public void onServiceDisconnected(ComponentName componentName) {
             }
-        }.execute();
+        }, 0);
     }
 
     private void setAccount(String user, String password){
@@ -110,6 +91,7 @@ public class AuthenticatorActivity extends AccountAuthenticatorActivity {
             if(!account.name.equals(user)) {
                 if( Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) accountManager.renameAccount(account,user,null,null);
                 else {
+                    //noinspection deprecation
                     accountManager.removeAccount(account,null,null);
                     account = null;
                 }
@@ -124,19 +106,6 @@ public class AuthenticatorActivity extends AccountAuthenticatorActivity {
         intent.putExtra(AccountManager.KEY_ACCOUNT_TYPE, ACCOUNT_TYPE);
         setAccountAuthenticatorResult(intent.getExtras());
         setResult(RESULT_OK, intent);
-    }
-
-    public static void resetCredentials(){
-        user = null;
-        password = null;
-    }
-
-    public static String getUser(){
-        return user;
-    }
-
-    public static String getPassword(){
-        return password;
     }
 
 

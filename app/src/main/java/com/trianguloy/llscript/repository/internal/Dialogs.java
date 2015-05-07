@@ -8,6 +8,7 @@ import android.content.Intent;
 import android.net.Uri;
 import android.support.annotation.Nullable;
 
+import com.trianguloy.llscript.repository.Constants;
 import com.trianguloy.llscript.repository.IntentHandle;
 import com.trianguloy.llscript.repository.R;
 
@@ -71,6 +72,7 @@ public final class Dialogs {
                         Intent intent = new Intent(Intent.ACTION_VIEW);
                         intent.setData(Uri.parse(context.getString(R.string.link_scriptPagePrefix) + savedPageId.substring(context.getString(R.string.prefix_script).length())));
                         intent.setClass(context, IntentHandle.class);
+                        intent.putExtra(Constants.extraReload, true);
                         context.startActivity(intent);
                         context.finish();
                     }
@@ -81,6 +83,7 @@ public final class Dialogs {
                         Intent intent = new Intent(Intent.ACTION_VIEW);
                         intent.setData(Uri.parse(context.getString(R.string.link_repository)));
                         intent.setClass(context, IntentHandle.class);
+                        intent.putExtra(Constants.extraReload,true);
                         context.startActivity(intent);
                         context.finish();
                     }

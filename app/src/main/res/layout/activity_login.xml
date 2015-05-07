@@ -49,5 +49,5 @@
         android:text="@string/text_rememberPw"
         android:id="@+id/checkRemember" android:layout_below="@+id/password"
         android:layout_alignParentLeft="true" android:layout_alignParentStart="true"
-        android:checked="true"/>
+        android:checked="false"/>
 </RelativeLayout>

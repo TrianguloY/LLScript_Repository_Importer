@@ -127,6 +127,9 @@ public class webViewer extends Activity {
                         &&//and if the time passed is less than five seconds (to avoid be launched after closed, because the intent is kept)
                         intent.getLongExtra(Constants.extraOpenUrlTime, 0) + 5000 > System.currentTimeMillis()
                 ) {
+            if(intent.hasExtra(Constants.extraReload) && intent.getBooleanExtra(Constants.extraReload,false)) {
+                repoHtml = "";
+            }
             changePage(intent.getStringExtra(Constants.extraOpenUrl));
         }
 
@@ -577,11 +580,11 @@ public class webViewer extends Activity {
         //get the name from the repository
         String url = currentUrl;
         Log.d("tag",url);
-        url = url.substring(url.indexOf("/", "http://www".length()));
+        url = url.substring(url.indexOf('/', "http://www".length()));
         int index = repoHtml.indexOf(url);
         String scriptName;
         if (index != -1) {
-            scriptName = repoHtml.substring(repoHtml.indexOf(">", index) + 1, repoHtml.indexOf("<", index)).trim();
+            scriptName = repoHtml.substring(repoHtml.indexOf('>', index) + 1, repoHtml.indexOf('<', index)).trim();
         } else
             //fallback if not found in repo
             scriptName = name;

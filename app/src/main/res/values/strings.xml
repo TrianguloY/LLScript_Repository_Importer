@@ -235,6 +235,7 @@
     </string>
     <string name="text_cantSaveEmpty">You can\'t save an empty page</string>
     <string name="text_useAlways">Use always</string>
+    <string name="text_LoggedInAs">Logged in as:</string>
 
 
 </resources>

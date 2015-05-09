@@ -116,6 +116,7 @@ public class EditorActivity extends Activity {
         switch (layoutResID){
             case R.layout.activity_select_action:
                 state = STATE_CHOOSE_ACTION;
+                if(rpcService.isLoggedIn())((TextView)findViewById(R.id.textUser)).setText(getString(R.string.text_LoggedInAs)+" "+rpcService.getUser());
                 break;
             case R.layout.activity_create:
                 state = STATE_CREATE;

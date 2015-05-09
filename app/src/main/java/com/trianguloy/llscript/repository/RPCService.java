@@ -24,6 +24,7 @@ public class RPCService extends Service {
 
     private boolean login;
     private DokuJClient client;
+    private String username;
 
     @Override
     public void onCreate() {
@@ -49,6 +50,7 @@ public class RPCService extends Service {
     }
 
     public void login(final String user, final String password, @Nullable final Listener<Integer> listener ){
+        username = user;
         Log.d("user", user);
         Log.d("password",password);
         new AsyncTask<Void,Void,Integer>(){
@@ -78,6 +80,10 @@ public class RPCService extends Service {
                     if(listener!=null)listener.onResult(integer);
                     }
             }.execute();
+    }
+
+    public String getUser(){
+        return username;
     }
 
     public void getPage(final String id, final Listener<String> listener){
@@ -155,7 +161,7 @@ public class RPCService extends Service {
         void onResult(@ Nullable T result);
     }
 
-    private class UnauthorizedException extends RuntimeException{}
+    private static class UnauthorizedException extends RuntimeException{}
 
 
 }

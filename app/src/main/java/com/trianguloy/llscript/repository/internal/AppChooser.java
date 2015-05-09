@@ -11,6 +11,7 @@ import android.net.Uri;
 import android.preference.PreferenceManager;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
+import android.widget.CheckBox;
 import android.widget.Toast;
 
 import com.trianguloy.llscript.repository.IntentHandle;
@@ -26,8 +27,9 @@ public class AppChooser extends AlertDialog.Builder {
     private final String onFailureMessage;
     private final OnCloseListener listener;
     private final List<ResolveInfo> activities;
+    private CheckBox checkBox;
 
-    public AppChooser(Context context, Uri action, String title, String onFailureMessage, @Nullable OnCloseListener listener) {
+    public AppChooser(final Context context, Uri action, String title, String onFailureMessage, @Nullable OnCloseListener listener) {
         super(context);
         this.context = context;
         this.action = action;
@@ -43,8 +45,12 @@ public class AppChooser extends AlertDialog.Builder {
             public void onClick(DialogInterface dialog, int which) {
                 ResolveInfo activity = adapter.getItem(which);
                 ActivityInfo activityInfo = activity.activityInfo;
-                launch(new ComponentName(activityInfo.applicationInfo.packageName,
-                        activityInfo.name));
+                ComponentName launch  = new ComponentName(activityInfo.applicationInfo.packageName,
+                        activityInfo.name);
+                launch(launch);
+                if(checkBox.isChecked()){
+                    PreferenceManager.getDefaultSharedPreferences(context).edit().putString(context.getString(R.string.pref_browser),launch.flattenToString()).apply();
+                }
             }
         });
         setNegativeButton(R.string.button_cancel, new DialogInterface.OnClickListener() {
@@ -73,7 +79,14 @@ public class AppChooser extends AlertDialog.Builder {
             if (found) {
                 launch(browser);
                 return super.create();
-            } else return super.show();
+            } else {
+                AlertDialog dialog = super.create();
+                checkBox = new CheckBox(context);
+                checkBox.setText(context.getString(R.string.text_useAlways));
+                dialog.getListView().addFooterView(checkBox);
+                dialog.show();
+                return dialog;
+            }
         } else {
             Toast.makeText(context, onFailureMessage, Toast.LENGTH_SHORT).show();
             return super.create();

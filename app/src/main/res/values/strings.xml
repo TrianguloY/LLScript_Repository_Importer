@@ -234,6 +234,7 @@
     <string name="toast_previewLink">This is a preview. You can\'t actually do anything here
     </string>
     <string name="text_cantSaveEmpty">You can\'t save an empty page</string>
+    <string name="text_useAlways">Use always</string>
 
 
 </resources>

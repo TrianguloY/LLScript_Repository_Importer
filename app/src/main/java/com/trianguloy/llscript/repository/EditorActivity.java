@@ -74,11 +74,13 @@ public class EditorActivity extends Activity {
     private Random random;
     private int state;
     private ServiceConnection connection;
+    private boolean locked;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         state = STATE_NONE;
+        locked = true;
         startService(new Intent(this,RPCService.class));
 
         sharedPref = PreferenceManager.getDefaultSharedPreferences(this);
@@ -113,6 +115,7 @@ public class EditorActivity extends Activity {
     @Override
     public void setContentView(int layoutResID) {
         super.setContentView(layoutResID);
+        locked = false;
         switch (layoutResID){
             case R.layout.activity_select_action:
                 state = STATE_CHOOSE_ACTION;
@@ -214,27 +217,30 @@ public class EditorActivity extends Activity {
     }
 
     public void button(View view){
-        switch (view.getId()){
-            case R.id.buttonCreatePage:
-                createPage();
-                break;
-            case R.id.buttonEditPage:
-                editPage();
-                break;
-            case R.id.buttonCancel:
-                cancelEdit();
-                break;
-            case R.id.buttonSave:
-                savePage();
-                break;
-            case R.id.buttonCreate:
-                commitCreate();
-                break;
-            case R.id.buttonPreview:
-                preview();
-                break;
-            default:
-                throw new IllegalArgumentException();
+        if(!locked) {
+            locked = true;
+            switch (view.getId()) {
+                case R.id.buttonCreatePage:
+                    createPage();
+                    break;
+                case R.id.buttonEditPage:
+                    editPage();
+                    break;
+                case R.id.buttonCancel:
+                    cancelEdit();
+                    break;
+                case R.id.buttonSave:
+                    savePage();
+                    break;
+                case R.id.buttonCreate:
+                    commitCreate();
+                    break;
+                case R.id.buttonPreview:
+                    preview();
+                    break;
+                default:
+                    throw new IllegalArgumentException();
+            }
         }
     }
 
@@ -242,6 +248,7 @@ public class EditorActivity extends Activity {
         rpcService.getPage(getString(R.string.id_scriptRepository), new RPCService.Listener<String>() {
             @Override
             public void onResult(String result) {
+                locked = false;
                 if (result == null) {
                     Dialogs.connectionFailed(EditorActivity.this);
                     return;
@@ -266,8 +273,8 @@ public class EditorActivity extends Activity {
                         repository.categories.add(new RepositoryCategory(StringFunctions.findBetween(line, "|//**", "**//||\\\\ |", 0, false).value, i, 1));
                 }
                 setContentView(R.layout.activity_create);
-                Spinner spinner = (Spinner)findViewById(R.id.spinner);
-                spinner.setAdapter(new CategoryAdapter(EditorActivity.this,repository.categories));
+                Spinner spinner = (Spinner) findViewById(R.id.spinner);
+                spinner.setAdapter(new CategoryAdapter(EditorActivity.this, repository.categories));
 
             }
         });
@@ -277,6 +284,7 @@ public class EditorActivity extends Activity {
         rpcService.getAllPages(new RPCService.Listener<List<Page>>() {
             @Override
             public void onResult(List<Page> result) {
+                locked = false;
                 if (result == null) {
                     Dialogs.connectionFailed(EditorActivity.this);
                     return;
@@ -297,7 +305,10 @@ public class EditorActivity extends Activity {
 
     private void savePage() {
         final String text = editor.getText().toString();
-        if(text.equals("")) Dialogs.cantSaveEmpty(this);
+        if(text.equals("")) {
+            locked = false;
+            Dialogs.cantSaveEmpty(this);
+        }
         else {
             //TODO progressDialog to notify user that saving is going on
             rpcService.putPage(pageId, text, new RPCService.Listener<Boolean>() {
@@ -329,13 +340,20 @@ public class EditorActivity extends Activity {
                             rpcService.putPage(getString(R.string.id_scriptRepository), TextUtils.join("\n", repository.lines), new RPCService.Listener<Boolean>() {
                                 @Override
                                 public void onResult(Boolean result) {
+                                    locked = false;
                                     if(result)Dialogs.saved(EditorActivity.this,pageId);
                                     else Dialogs.connectionFailed(EditorActivity.this);
                                 }
                             });
-                        } else Dialogs.saved(EditorActivity.this,pageId);
+                        } else {
+                            locked = false;
+                            Dialogs.saved(EditorActivity.this,pageId);
+                        }
                     }
-                    else Dialogs.connectionFailed(EditorActivity.this);
+                    else {
+                        locked = false;
+                        Dialogs.connectionFailed(EditorActivity.this);
+                    }
                 }
             });
         }
@@ -357,40 +375,47 @@ public class EditorActivity extends Activity {
                         rpcService.getPage(getString(R.string.id_scriptTemplate), new RPCService.Listener<String>() {
                             @Override
                             public void onResult(String result) {
+                                locked = false;
                                 if(result==null) Dialogs.connectionFailed(EditorActivity.this);
                                 else showPageEditor(result);
                             }
                         });
                     } else showPageEditor("");
-                } else Dialogs.pageAlreadyExists(EditorActivity.this);
+                } else {
+                    locked = false;
+                    Dialogs.pageAlreadyExists(EditorActivity.this);
+                }
             }
         });
     }
 
     public void action(View view) {
         if(state!=STATE_EDIT)throw new IllegalStateException("Can't execute actions when not in editor");
-        switch (view.getId()){
-            case R.id.action_bold:
-                surroundOrAdd("**","**",getString(R.string.text_bold));
-                break;
-            case R.id.action_italic:
-                surroundOrAdd("//","//",getString(R.string.text_italic));
-                break;
-            case R.id.action_underline:
-                surroundOrAdd("__","__",getString(R.string.text_underline));
-                break;
-            case R.id.action_code:
-                surroundOrAdd("<sxh javascript;>","</sxh>",getString(R.string.text_code));
-                break;
-            case R.id.action_unorderedList:
-                surroundOrAdd("  * ","",getString(R.string.text_unorderedList));
-                break;
-            case R.id.action_orderedList:
-                surroundOrAdd("  - ","",getString(R.string.text_orderedList));
-                break;
-            default:
-                if(BuildConfig.DEBUG) Log.i(EditorActivity.class.getSimpleName(),"Ignored action "+view.getId());
-                break;
+        if(!locked) {
+            switch (view.getId()) {
+                case R.id.action_bold:
+                    surroundOrAdd("**", "**", getString(R.string.text_bold));
+                    break;
+                case R.id.action_italic:
+                    surroundOrAdd("//", "//", getString(R.string.text_italic));
+                    break;
+                case R.id.action_underline:
+                    surroundOrAdd("__", "__", getString(R.string.text_underline));
+                    break;
+                case R.id.action_code:
+                    surroundOrAdd("<sxh javascript;>", "</sxh>", getString(R.string.text_code));
+                    break;
+                case R.id.action_unorderedList:
+                    surroundOrAdd("  * ", "", getString(R.string.text_unorderedList));
+                    break;
+                case R.id.action_orderedList:
+                    surroundOrAdd("  - ", "", getString(R.string.text_orderedList));
+                    break;
+                default:
+                    if (BuildConfig.DEBUG)
+                        Log.i(EditorActivity.class.getSimpleName(), "Ignored action " + view.getId());
+                    break;
+            }
         }
     }
 
@@ -400,6 +425,7 @@ public class EditorActivity extends Activity {
         rpcService.putPage(getString(R.string.prefix_script) + tempId, pageText, new RPCService.Listener<Boolean>() {
             @Override
             public void onResult(@Nullable Boolean result) {
+                locked = false;
                 if(!result) Dialogs.connectionFailed(EditorActivity.this);
                 else showPreview(tempId);
             }
@@ -466,6 +492,7 @@ public class EditorActivity extends Activity {
                 .setAdapter(adapter,new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
+                        locked = true;
                         dialog.dismiss();
                         loadPageToEdit(adapter.getItem(which));
                     }
@@ -480,6 +507,7 @@ public class EditorActivity extends Activity {
         rpcService.getPage(pageId, new RPCService.Listener<String>() {
             @Override
             public void onResult(@Nullable String result) {
+                locked = false;
                 if(result == null)Dialogs.connectionFailed(EditorActivity.this);
                 else showPageEditor(result);
             }

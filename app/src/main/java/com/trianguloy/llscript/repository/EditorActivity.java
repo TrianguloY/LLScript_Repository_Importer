@@ -97,8 +97,11 @@ public class EditorActivity extends Activity {
                 onBackPressed();
                 break;
             case R.id.action_logout:
-                stopService(new Intent(this,RPCService.class));
+                stopService(new Intent(this, RPCService.class));
                 finish();
+                break;
+            case R.id.action_settings:
+                startActivity(new Intent(this, SettingsActivity.class));
                 break;
             default:
                 return super.onOptionsItemSelected(item);

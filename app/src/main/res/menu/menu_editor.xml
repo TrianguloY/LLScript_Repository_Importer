@@ -3,4 +3,8 @@
 <item android:id="@+id/action_logout"
       android:title="Logout"
       android:showAsAction="never"/>
+      <item
+          android:id="@+id/action_settings"
+          android:title="@string/action_settings"
+          android:orderInCategory="100" android:showAsAction="never"/>
 </menu>

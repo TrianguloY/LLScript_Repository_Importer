@@ -15,7 +15,6 @@ import android.preference.CheckBoxPreference;
 import android.preference.ListPreference;
 import android.preference.Preference;
 import android.preference.PreferenceActivity;
-import android.support.v4.app.NavUtils;
 import android.view.MenuItem;
 import android.widget.Toast;
 
@@ -96,7 +95,7 @@ public class SettingsActivity extends PreferenceActivity implements SharedPrefer
             //
             // TODO: If Settings has multiple levels, Up should navigate up
             // that hierarchy.
-            NavUtils.navigateUpFromSameTask(this);
+            finish();
             return true;
         }
         return super.onOptionsItemSelected(item);

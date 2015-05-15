@@ -579,7 +579,6 @@ public class webViewer extends Activity {
 
         //get the name from the repository
         String url = currentUrl;
-        Log.d("tag",url);
         url = url.substring(url.indexOf('/', "http://www".length()));
         int index = repoHtml.indexOf(url);
         String scriptName;

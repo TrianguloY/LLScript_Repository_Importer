@@ -6,7 +6,6 @@ import android.os.AsyncTask;
 import android.os.Binder;
 import android.os.IBinder;
 import android.support.annotation.Nullable;
-import android.util.Log;
 
 import java.net.MalformedURLException;
 import java.util.List;
@@ -34,20 +33,12 @@ public class RPCService extends Service {
 
     @Override
     public int onStartCommand(Intent intent, int flags, int startId) {
-        Log.d("service","Started");
         return START_NOT_STICKY;
     }
 
     @Override
     public IBinder onBind(Intent intent) {
-        Log.d("service","bound");
         return new LocalBinder();
-    }
-
-    @Override
-    public void onDestroy() {
-        super.onDestroy();
-        Log.d("Service","stop");
     }
 
     public boolean isLoggedIn(){
@@ -56,8 +47,6 @@ public class RPCService extends Service {
 
     public void login(final String user, final String password, @Nullable final Listener<Integer> listener ){
         username = user;
-        Log.d("user", user);
-        Log.d("password",password);
         new AsyncTask<Void,Void,Integer>(){
             @Override
             protected Integer doInBackground(Void... params) {

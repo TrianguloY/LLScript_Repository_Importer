@@ -30,15 +30,13 @@ https://github.com/TrianguloY/LLScript_Repository_Importer
 
 _Changes_
 V 1.6
-New: Push notifications for Subscriptions (set the time between checks in settings)
-New: Add/Edit pages with a custom UI*
+New: Push notifications for Subscriptions
+New (Beta): Add/Edit pages with a custom UI*
 New: Log catching module
-New: Hide toolbar on Wiki pages, as they might not work properly (can be shown again in settings)
+New: Hide toolbar on Wiki pages, as they might not work properly
 New: Choose browser to use with 'open in browser'
 Improved: Layout on low API devices
-Fixed: Crashes on low API devices
-Fixed: Open in Browser doesn't result in a loop if the app is set as default
-Fixed: Don't show Toast with new Scripts at first install
+Fixed: Miscellaneous
 
 *Permissions: The newly added account permissions are used to store your credentials if you use the editor
 

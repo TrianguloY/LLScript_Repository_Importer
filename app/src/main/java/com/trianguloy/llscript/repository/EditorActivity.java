@@ -169,7 +169,7 @@ public class EditorActivity extends Activity {
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
-        getMenuInflater().inflate(R.menu.menu_editor,menu);
+        getMenuInflater().inflate(R.menu.menu_editor, menu);
         return true;
     }
 
@@ -332,7 +332,16 @@ public class EditorActivity extends Activity {
     }
 
     private void cancelEdit(){
-        setContentView(R.layout.activity_select_action);
+        lock.unlock();
+        if(state == STATE_EDIT && editor.getText().toString().hashCode() != textHash) {
+            Dialogs.unsavedChanges(this, new DialogInterface.OnClickListener() {
+                @Override
+                public void onClick(DialogInterface dialogInterface, int i) {
+                    setContentView(R.layout.activity_select_action);
+                }
+            });
+        }
+        else setContentView(R.layout.activity_select_action);
     }
 
     private void savePage() {
@@ -342,11 +351,11 @@ public class EditorActivity extends Activity {
             Dialogs.cantSaveEmpty(this);
         }
         else {
-            //TODO progressDialog to notify user that saving is going on
             rpcService.putPage(pageId, text, new RPCService.Listener<Boolean>() {
                 @Override
                 public void onResult(Boolean result) {
                     if(result){
+                        textHash = text.hashCode();
                         if (addTo != null) {
                             int index = repository.categories.indexOf(addTo);
                             int addAt = repository.tableEndLine;

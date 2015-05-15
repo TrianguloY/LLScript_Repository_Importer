@@ -9,4 +9,19 @@
         <item name="android:windowIsFloating">true</item>
         <item name="android:backgroundDimEnabled">false</item>
     </style>
+
+    <style name="Theme.Divider">
+        <item name="android:layout_width">match_parent</item>
+        <item name="android:layout_height">10px</item>
+        <item name="android:background">?android:attr/listDivider</item>
+        <item name="android:src">@android:color/darker_gray</item>
+    </style>
+    <style name="Theme.SmallDivider" parent="Theme.Divider">
+    <item name="android:layout_height">5px</item>
+    <item name="android:src">@android:drawable/divider_horizontal_bright</item>
+    </style>
+    <style name="Theme.BorderlessButton">
+        <item name="android:background">?android:attr/selectableItemBackground</item>
+    </style>
+    <style name="Theme.TitleText"/>
 </resources>

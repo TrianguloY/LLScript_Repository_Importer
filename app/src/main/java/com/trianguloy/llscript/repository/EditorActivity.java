@@ -8,7 +8,6 @@ import android.accounts.AuthenticatorException;
 import android.accounts.OperationCanceledException;
 import android.app.Activity;
 import android.content.ComponentName;
-import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.ServiceConnection;
@@ -21,30 +20,28 @@ import android.support.annotation.Nullable;
 import android.text.Editable;
 import android.text.TextUtils;
 import android.util.Log;
-import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
-import android.view.ViewGroup;
 import android.webkit.WebView;
 import android.widget.ArrayAdapter;
-import android.widget.CheckBox;
 import android.widget.EditText;
 import android.widget.ProgressBar;
+import android.widget.RadioButton;
 import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.trianguloy.llscript.repository.internal.CategoryAdapter;
 import com.trianguloy.llscript.repository.internal.Dialogs;
 import com.trianguloy.llscript.repository.internal.DownloadTask;
+import com.trianguloy.llscript.repository.internal.Repository;
 import com.trianguloy.llscript.repository.internal.StringFunctions;
 import com.trianguloy.llscript.repository.internal.WebClient;
 
 import org.acra.ACRA;
 
 import java.io.IOException;
-import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Comparator;
 import java.util.HashSet;
 import java.util.List;
@@ -68,7 +65,7 @@ public class EditorActivity extends Activity {
     private EditText editor;
     private RPCService rpcService;
     private Repository repository;
-    private RepositoryCategory addTo;
+    private Repository.RepositoryCategory addTo;
     private String pageName;
     private String pageText;
     private Random random;
@@ -76,6 +73,7 @@ public class EditorActivity extends Activity {
     private ServiceConnection connection;
     private Lock lock;
     private int textHash=-1;
+    private boolean isTemplate = false;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -119,7 +117,7 @@ public class EditorActivity extends Activity {
             editor = (EditText)findViewById(R.id.editor);
             editor.setText(pageText);
         }
-        else if(state == STATE_EDIT && editor.getText().toString().hashCode() != textHash){
+        else if(changedCode()){
             Dialogs.unsavedChanges(this, new DialogInterface.OnClickListener(){
                 @Override
                 public void onClick(DialogInterface dialogInterface, int i) {
@@ -128,6 +126,10 @@ public class EditorActivity extends Activity {
             });
         }
         else finish();
+    }
+
+    private boolean changedCode(){
+        return  state == STATE_EDIT && editor.getText().toString().hashCode() != textHash;
     }
 
     @Override
@@ -152,6 +154,7 @@ public class EditorActivity extends Activity {
                 break;
             case R.layout.activity_empty:
                 state = STATE_NONE;
+                break;
             default:
                 if(BuildConfig.DEBUG) Log.wtf(EditorActivity.class.getSimpleName(),"Unknown state!");
         }
@@ -172,8 +175,6 @@ public class EditorActivity extends Activity {
         getMenuInflater().inflate(R.menu.menu_editor, menu);
         return true;
     }
-
-
 
     private void connect(){
         connection =  new ServiceConnection() {
@@ -270,10 +271,18 @@ public class EditorActivity extends Activity {
                 case R.id.buttonPreview:
                     preview();
                     break;
+                case R.id.buttonTemplate:
+                    editTemplate();
+                    break;
                 default:
                     throw new IllegalArgumentException();
             }
         }
+    }
+
+    private void editTemplate() {
+        isTemplate = true;
+        showPageEditor(sharedPref.getString(getString(R.string.pref_template), ""));
     }
 
     private void createPage(){
@@ -288,7 +297,7 @@ public class EditorActivity extends Activity {
                 String[] lines = result.split("\n");
                 final String circumflex = "^";
                 repository = new Repository(lines);
-                repository.categories.add(new RepositoryCategory(getString(R.string.text_none), -1, -1));
+                repository.categories.add(new Repository.RepositoryCategory(getString(R.string.text_none), -1, -1));
                 for (int i = 0; i < lines.length; i++) {
                     String line = lines[i];
                     if (!line.startsWith("|") && !line.startsWith(circumflex)) {
@@ -300,9 +309,9 @@ public class EditorActivity extends Activity {
                     }
                     if (repository.tableStartLine == -1) repository.tableStartLine = i;
                     else if (line.startsWith(circumflex))
-                        repository.categories.add(new RepositoryCategory(StringFunctions.findBetween(line, circumflex, "^^^", 0, false).value, i, 0));
+                        repository.categories.add(new Repository.RepositoryCategory(StringFunctions.findBetween(line, circumflex, "^^^", 0, false).value, i, 0));
                     else if (line.startsWith("|//**"))
-                        repository.categories.add(new RepositoryCategory(StringFunctions.findBetween(line, "|//**", "**//||\\\\ |", 0, false).value, i, 1));
+                        repository.categories.add(new Repository.RepositoryCategory(StringFunctions.findBetween(line, "|//**", "**//||\\\\ |", 0, false).value, i, 1));
                 }
                 setContentView(R.layout.activity_create);
                 Spinner spinner = (Spinner) findViewById(R.id.spinner);
@@ -333,7 +342,7 @@ public class EditorActivity extends Activity {
 
     private void cancelEdit(){
         lock.unlock();
-        if(state == STATE_EDIT && editor.getText().toString().hashCode() != textHash) {
+        if(changedCode()) {
             Dialogs.unsavedChanges(this, new DialogInterface.OnClickListener() {
                 @Override
                 public void onClick(DialogInterface dialogInterface, int i) {
@@ -346,7 +355,13 @@ public class EditorActivity extends Activity {
 
     private void savePage() {
         final String text = editor.getText().toString();
-        if(text.equals("")) {
+        if (isTemplate){
+            sharedPref.edit().putString(getString(R.string.pref_template),text).apply();
+            lock.unlock();
+            textHash = text.hashCode();
+            Dialogs.saved(this,null);
+        }
+        else if(text.equals("")) {
             lock.unlock();
             Dialogs.cantSaveEmpty(this);
         }
@@ -403,16 +418,16 @@ public class EditorActivity extends Activity {
     private void commitCreate(){
         pageId = getString(R.string.prefix_script)+((EditText)findViewById(R.id.editId)).getText();
         Spinner spinner = (Spinner) findViewById(R.id.spinner);
-        final RepositoryCategory selected = ((RepositoryCategory)spinner.getSelectedItem());
+        final Repository.RepositoryCategory selected = ((Repository.RepositoryCategory)spinner.getSelectedItem());
         rpcService.getPage(pageId, new RPCService.Listener<String>() {
             @Override
             public void onResult(String result) {
-                if (result != null && !result.equals("")) {
+                if (result == null || result.equals("")) {
                     if (selected.level >= 0) {
                         addTo = selected;
                         pageName = ((EditText) EditorActivity.this.findViewById(R.id.editName)).getText().toString();
                     }
-                    if (((CheckBox) findViewById(R.id.checkTemplate)).isChecked()) {
+                    if (((RadioButton) findViewById(R.id.radioDefault)).isChecked()) {
                         rpcService.getPage(getString(R.string.id_scriptTemplate), new RPCService.Listener<String>() {
                             @Override
                             public void onResult(String result) {
@@ -421,7 +436,11 @@ public class EditorActivity extends Activity {
                                 else showPageEditor(result);
                             }
                         });
-                    } else showPageEditor("");
+                    }
+                    else if(((RadioButton)findViewById(R.id.radioCustom)).isChecked()){
+                        showPageEditor(sharedPref.getString(getString(R.string.pref_template),""));
+                    }
+                    else showPageEditor("");
                 } else {
                     lock.unlock();
                     Dialogs.pageAlreadyExists(EditorActivity.this);
@@ -570,63 +589,6 @@ public class EditorActivity extends Activity {
             editable.insert(end,suffix);
             editable.insert(start,prefix);
             editor.setSelection(start+prefix.length(),end+prefix.length());
-        }
-    }
-
-    private static class Repository{
-        int tableStartLine;
-        int tableEndLine;
-        final List<RepositoryCategory> categories;
-        final List<String> lines;
-
-        public Repository(String[] lines){
-            this.lines = new ArrayList<>(Arrays.asList(lines));
-            categories = new ArrayList<>();
-            tableStartLine = -1;
-            tableEndLine = -1;
-        }
-
-    }
-
-    private static class RepositoryCategory {
-        final String name;
-        final int line;
-        final int level;
-
-        public RepositoryCategory(String name, int line, int level){
-            this.name = name;
-            this.line = line;
-            this.level = level;
-        }
-
-    }
-
-    private static class CategoryAdapter extends ArrayAdapter<RepositoryCategory>{
-
-        private final Context context;
-
-        public CategoryAdapter(Context context, List<RepositoryCategory> objects) {
-            super(context, android.R.layout.simple_list_item_1, objects);
-            this.context = context;
-        }
-
-        @Override
-        public View getView(int position, View convertView, ViewGroup parent) {
-            if(convertView ==null) {
-                LayoutInflater inflater = (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
-                convertView = inflater.inflate(android.R.layout.simple_list_item_1, parent, false);
-            }
-            bindView(position,convertView);
-            return convertView;
-        }
-
-        private void bindView(int position, View row) {
-            ((TextView)row.findViewById(android.R.id.text1)).setText(getItem(position).name);
-        }
-
-        @Override
-        public View getDropDownView(int position, View convertView, ViewGroup parent) {
-            return getView(position,convertView,parent);
         }
     }
 

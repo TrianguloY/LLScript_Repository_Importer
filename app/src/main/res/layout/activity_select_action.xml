@@ -2,20 +2,28 @@
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
               xmlns:tools="http://schemas.android.com/tools" android:orientation="vertical"
               android:layout_width="match_parent"
-              android:layout_height="match_parent" tools:context=".EditorActivity">
+              android:layout_height="match_parent" tools:context=".EditorActivity"
+                android:paddingLeft="@dimen/editor_margin"
+                android:paddingRight="@dimen/editor_margin"
+                android:paddingTop="@dimen/editor_margin"
+                android:paddingBottom="@dimen/editor_margin">
 
     <Button
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:text="@string/button_createPage"
-        android:id="@+id/buttonCreatePage" android:onClick="button"/>
+        android:id="@+id/buttonCreatePage" android:onClick="button"
+        android:layout_below="@+id/imageView"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentStart="true"
+        style="@style/Theme.BorderlessButton"/>
     <Button
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:text="@string/button_editPage"
         android:id="@+id/buttonEditPage" android:onClick="button"
-        android:layout_below="@+id/buttonCreatePage" android:layout_alignParentLeft="true"
-        android:layout_alignParentStart="true"/>
+        android:layout_below="@+id/imageView2" android:layout_centerHorizontal="true"
+        style="@style/Theme.BorderlessButton"/>
     <TextView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
@@ -31,4 +39,44 @@
         android:layout_alignParentEnd="false"
         android:visibility="gone"
         android:layout_centerInParent="true" />
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/title_repository"
+        android:id="@+id/textView4" android:layout_alignParentTop="true"
+        android:layout_alignParentLeft="true" android:layout_alignParentStart="true"
+        style="@style/Theme.TitleText"
+        />
+    <ImageView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:id="@+id/imageView"
+        android:layout_below="@+id/textView4" android:layout_alignParentLeft="true"
+        android:layout_alignParentStart="true" style="@style/Theme.Divider"/>
+    <ImageView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:id="@+id/imageView2"
+        android:layout_below="@+id/buttonCreatePage" android:layout_alignParentLeft="true"
+        android:layout_alignParentStart="true"
+        style="@style/Theme.SmallDivider"/>
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Template"
+        android:id="@+id/textView5" android:layout_below="@+id/buttonEditPage"
+        android:layout_alignParentLeft="true" android:layout_alignParentStart="true"
+        style="@style/Theme.TitleText"/>
+    <ImageView style="@style/Theme.Divider" android:layout_width="match_parent"
+               android:layout_height="wrap_content" android:id="@+id/imageView3"
+               android:layout_below="@+id/textView5" android:layout_alignParentLeft="true"
+               android:layout_alignParentStart="true"/>
+    <Button
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/button_template"
+        android:id="@+id/buttonTemplate" android:layout_below="@+id/imageView3"
+        android:layout_alignParentLeft="true" android:layout_alignParentStart="true"
+        android:layout_alignParentRight="true" android:layout_alignParentEnd="true"
+        style="@style/Theme.BorderlessButton" android:onClick="button"/>
 </RelativeLayout>

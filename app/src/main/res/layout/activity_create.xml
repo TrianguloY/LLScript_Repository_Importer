@@ -36,12 +36,6 @@
         android:id="@+id/editId" android:layout_alignParentTop="true"
         android:layout_toRightOf="@+id/textView2" android:layout_alignParentRight="true"
         android:layout_alignParentEnd="true" android:hint="@string/hint_id"/>
-    <CheckBox
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="@string/text_startTemplate"
-        android:id="@+id/checkTemplate" android:layout_below="@+id/textView2"
-        android:layout_alignParentLeft="true" android:layout_alignParentStart="true"/>
     <Spinner
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
@@ -54,7 +48,7 @@
         android:layout_height="wrap_content"
         android:text="@string/text_addTo"
         android:id="@+id/textView3"
-        android:layout_below="@+id/checkTemplate" android:layout_alignParentLeft="true"
+        android:layout_below="@+id/radioGroup" android:layout_alignParentLeft="true"
         android:layout_alignParentStart="true"/>
     <EditText
         android:layout_width="wrap_content"
@@ -63,4 +57,30 @@
         android:layout_alignParentLeft="true" android:layout_alignParentStart="true"
         android:layout_alignParentRight="true" android:layout_alignParentEnd="true"
         android:hint="@string/hint_nameOrDescription"/>
+    <RadioGroup
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content" android:layout_below="@+id/textView2"
+        android:layout_alignParentLeft="true" android:layout_alignParentStart="true"
+        android:id="@+id/radioGroup" android:checkedButton="@+id/radioEmpty">
+        <RadioButton
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/radio_empty"
+            android:id="@+id/radioEmpty" android:layout_below="@+id/textView2"
+            android:layout_alignParentLeft="true" android:layout_alignParentStart="true"
+            android:checked="false"/>
+        <RadioButton
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/radio_default"
+            android:id="@+id/radioDefault"
+            android:layout_below="@+id/radioEmpty" android:layout_alignParentLeft="true"
+            android:layout_alignParentStart="true"/>
+        <RadioButton
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/radio_custom"
+            android:id="@+id/radioCustom" android:layout_below="@+id/radioDefault"
+            android:layout_alignParentLeft="true" android:layout_alignParentStart="true"/>
+    </RadioGroup>
 </RelativeLayout>

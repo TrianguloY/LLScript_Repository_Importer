@@ -28,15 +28,19 @@ public final class Dialogs {
     private Dialogs(){}
 
     public static void badLogin(Context context){
-        badLogin(context,null);
+        badLogin(context, null);
     }
 
-    public static void badLogin(Context context, @Nullable DialogInterface.OnClickListener onClose) {
+    private static void error(Context context,@Nullable DialogInterface.OnClickListener onClose, String message){
         new AlertDialog.Builder(context)
                 .setTitle(context.getString(R.string.title_error))
-                .setMessage(context.getString(R.string.text_badLogin))
                 .setNeutralButton(R.string.button_ok, onClose)
+                .setMessage(message)
                 .show();
+
+    }
+    public static void badLogin(Context context, @Nullable DialogInterface.OnClickListener onClose) {
+        error(context, onClose, context.getString(R.string.text_badLogin));
     }
 
     public static void connectionFailed(Context context){
@@ -44,49 +48,36 @@ public final class Dialogs {
     }
 
     public static void connectionFailed(Context context,@ Nullable DialogInterface.OnClickListener onClose) {
-        new AlertDialog.Builder(context)
-                .setTitle(context.getString(R.string.title_error))
-                .setMessage(context.getString(R.string.text_cantConnect))
-                .setNeutralButton(R.string.button_ok, onClose)
-                .show();
+        error(context,onClose,context.getString(R.string.text_cantConnect));
     }
 
     public static void pageAlreadyExists(Context context) {
-        new AlertDialog.Builder(context)
-                .setTitle(context.getString(R.string.title_error))
-                .setMessage(context.getString(R.string.text_alreadyExists))
-                .setNeutralButton(R.string.button_ok, null)
+        error(context,null,context.getString(R.string.text_alreadyExists));
+    }
+
+    public static void saved(final Activity context, @Nullable String savedPageId){
+        AlertDialog.Builder builder = new AlertDialog.Builder(context)
+                .setTitle(context.getString(R.string.title_saved))
+                .setMessage(context.getString(R.string.text_doNext));
+        if(savedPageId!=null)
+                builder.setPositiveButton(context.getString(R.string.button_viewPage), showPage(context, context.getString(R.string.link_scriptPagePrefix) + savedPageId.substring(context.getString(R.string.prefix_script).length())));
+        builder.setNeutralButton(context.getString(R.string.button_goHome), showPage(context, context.getString(R.string.link_repository)))
+                .setNegativeButton(context.getString(R.string.button_stay), null)
                 .show();
     }
 
-    public static void saved(final Activity context, final String savedPageId){
-        new AlertDialog.Builder(context)
-                .setTitle(context.getString(R.string.title_saved))
-                .setMessage(context.getString(R.string.text_doNext))
-                .setPositiveButton(context.getString(R.string.button_viewPage), new DialogInterface.OnClickListener() {
-                    @Override
-                    public void onClick(DialogInterface dialog, int which) {
-                        Intent intent = new Intent(Intent.ACTION_VIEW);
-                        intent.setData(Uri.parse(context.getString(R.string.link_scriptPagePrefix) + savedPageId.substring(context.getString(R.string.prefix_script).length())));
-                        intent.setClass(context, IntentHandle.class);
-                        intent.putExtra(Constants.extraReload, true);
-                        context.startActivity(intent);
-                        context.finish();
-                    }
-                })
-                .setNeutralButton(context.getString(R.string.button_goHome), new DialogInterface.OnClickListener() {
-                    @Override
-                    public void onClick(DialogInterface dialog, int which) {
-                        Intent intent = new Intent(Intent.ACTION_VIEW);
-                        intent.setData(Uri.parse(context.getString(R.string.link_repository)));
-                        intent.setClass(context, IntentHandle.class);
-                        intent.putExtra(Constants.extraReload, true);
-                        context.startActivity(intent);
-                        context.finish();
-                    }
-                })
-                .setNegativeButton(context.getString(R.string.button_stay), null)
-                .show();
+    private static DialogInterface.OnClickListener showPage(final Activity context, final String url){
+        return new DialogInterface.OnClickListener(){
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                Intent intent = new Intent(Intent.ACTION_VIEW);
+                intent.setData(Uri.parse(url));
+                intent.setClass(context, IntentHandle.class);
+                intent.putExtra(Constants.extraReload, true);
+                context.startActivity(intent);
+                context.finish();
+            }
+        };
     }
 
     public static void cantSaveEmpty(Context context){
@@ -123,11 +114,10 @@ public final class Dialogs {
                 .show();
     }
 
-    public static void launcherNotFound(final Activity context){
-        new AlertDialog.Builder(context)
+    private static AlertDialog.Builder baseLauncherProblem(final Activity context){
+        return new AlertDialog.Builder(context)
                 .setCancelable(false)
                 .setTitle(R.string.title_warning)
-                .setMessage(R.string.message_launcherNotFound)
                 .setNeutralButton(R.string.button_ok, new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
@@ -137,25 +127,18 @@ public final class Dialogs {
                         context.finish();
                     }
                 })
-                .setIcon(R.drawable.ic_launcher)
+                .setIcon(R.drawable.ic_launcher);
+    }
+
+    public static void launcherNotFound(final Activity context){
+        baseLauncherProblem(context)
+                .setMessage(R.string.message_launcherNotFound)
                 .show();
     }
 
     public static void launcherOutdated(final Activity context){
-        new AlertDialog.Builder(context)
-                .setCancelable(false)
-                .setTitle(R.string.title_warning)
+        baseLauncherProblem(context)
                 .setMessage(R.string.message_outdatedLauncher)
-                .setNeutralButton(R.string.button_ok, new DialogInterface.OnClickListener() {
-                    @Override
-                    public void onClick(DialogInterface dialog, int which) {
-                        Intent i = new Intent(Intent.ACTION_VIEW);
-                        i.setData(Uri.parse(context.getString(R.string.link_playStorePrefix) + Constants.installedPackage));
-                        context.startActivity(i);
-                        context.finish();
-                    }
-                })
-                .setIcon(R.drawable.ic_launcher)
                 .show();
     }
 
@@ -186,23 +169,23 @@ public final class Dialogs {
                 .setView(layout)
                 .setPositiveButton(R.string.button_import, new DialogInterface.OnClickListener() {
                     public void onClick(DialogInterface dialog, int which) {
-                        final int flags = (flagsBoxes[0].isChecked() ? Constants.FLAG_APP_MENU : 0) +
-                                (flagsBoxes[1].isChecked() ? Constants.FLAG_ITEM_MENU : 0) +
-                                (flagsBoxes[2].isChecked() ? Constants.FLAG_CUSTOM_MENU : 0);
-                        onImport.onClick(contentText.getText().toString(), nameText.getText().toString(), flags);
+                        onImport.onClick(contentText.getText().toString(), nameText.getText().toString(), checkBoxToFlag(flagsBoxes));
                     }
                 })
                 .setNeutralButton(R.string.button_share, new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialogInterface, int i) {
-                        final int flags = (flagsBoxes[0].isChecked() ? Constants.FLAG_APP_MENU : 0) +
-                                (flagsBoxes[1].isChecked() ? Constants.FLAG_ITEM_MENU : 0) +
-                                (flagsBoxes[2].isChecked() ? Constants.FLAG_CUSTOM_MENU : 0);
-                        onShare.onClick(contentText.getText().toString(), nameText.getText().toString(), flags);
+                        onShare.onClick(contentText.getText().toString(), nameText.getText().toString(), checkBoxToFlag(flagsBoxes));
                     }
                 })
                 .setNegativeButton(R.string.button_exit, null)
                 .show();
+    }
+
+    private static int checkBoxToFlag(CheckBox[] flagsBoxes){
+        return  (flagsBoxes[0].isChecked() ? Constants.FLAG_APP_MENU : 0) +
+                (flagsBoxes[1].isChecked() ? Constants.FLAG_ITEM_MENU : 0) +
+                (flagsBoxes[2].isChecked() ? Constants.FLAG_CUSTOM_MENU : 0);
     }
 
     public interface OnImportListener{

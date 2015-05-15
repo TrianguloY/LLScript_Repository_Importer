@@ -18,17 +18,20 @@ public final class ServiceManager {
     private ServiceManager(){}
 
     public static void startService(Context context, int interval) {
-        Intent i = new Intent(context, WebService.class);
-        PendingIntent pIntent = PendingIntent.getService(context, 0, i, 0);
-        AlarmManager am = (AlarmManager) context.getSystemService(Activity.ALARM_SERVICE);
-        am.setInexactRepeating(AlarmManager.ELAPSED_REALTIME, SystemClock.elapsedRealtime(), interval, pIntent);
+        getManager(context).setInexactRepeating(AlarmManager.ELAPSED_REALTIME, SystemClock.elapsedRealtime(), interval, getIntent(context));
     }
 
     public static void stopService(Context context) {
+        getManager(context).cancel(getIntent(context));
+    }
+
+    private static PendingIntent getIntent(Context context){
         Intent i = new Intent(context, WebService.class);
-        PendingIntent pIntent = PendingIntent.getService(context, 0, i, 0);
-        AlarmManager am = (AlarmManager) context.getSystemService(Activity.ALARM_SERVICE);
-        am.cancel(pIntent);
+        return  PendingIntent.getService(context, 0, i, 0);
+    }
+
+    private static AlarmManager getManager(Context context){
+        return (AlarmManager) context.getSystemService(Activity.ALARM_SERVICE);
     }
 
     public static void bindService(Context context, ServiceConnection connection) {

@@ -31,9 +31,7 @@ class AccountAuthenticator extends AbstractAccountAuthenticator{
         final Intent intent = new Intent(context, AuthenticatorActivity.class);
         intent.putExtra(AuthenticatorActivity.ACCOUNT_TYPE, accountType);
         intent.putExtra(AccountManager.KEY_ACCOUNT_AUTHENTICATOR_RESPONSE, response);
-        final Bundle bundle = new Bundle();
-        bundle.putParcelable(AccountManager.KEY_INTENT, intent);
-        return bundle;
+        return bundleIntent(intent);
     }
 
     @Override
@@ -57,13 +55,17 @@ class AccountAuthenticator extends AbstractAccountAuthenticator{
         intent.putExtra(AuthenticatorActivity.ACCOUNT_TYPE, account.type);
         intent.putExtra(AuthenticatorActivity.ACCOUNT,account);
         intent.putExtra(AccountManager.KEY_ACCOUNT_AUTHENTICATOR_RESPONSE, response);
-        final Bundle bundle = new Bundle();
-        bundle.putParcelable(AccountManager.KEY_INTENT, intent);
-        return bundle;
+        return bundleIntent(intent);
     }
 
     @Override
     public Bundle hasFeatures(AccountAuthenticatorResponse response, Account account, String[] features) {
         return null;
+    }
+
+    private static Bundle bundleIntent(Intent intent){
+        final Bundle bundle = new Bundle();
+        bundle.putParcelable(AccountManager.KEY_INTENT, intent);
+        return bundle;
     }
 }

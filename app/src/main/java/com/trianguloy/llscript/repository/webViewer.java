@@ -72,7 +72,6 @@ public class webViewer extends Activity {
     private int webViewPositionY = 0;//Contains the positionY that will be applied when the webView finish loading a page
     private Menu menu;
 
-
     //Application functions
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -224,7 +223,6 @@ public class webViewer extends Activity {
         }
         super.onStop();
     }
-
 
     //Initialization
     private boolean checkForLauncher() {
@@ -449,7 +447,6 @@ public class webViewer extends Activity {
         new AppChooser(this, Uri.parse(url), getString(R.string.title_appChooserExternalClicked), getString(R.string.message_noBrowser), null).show();
     }
 
-
     //Script importer
     @SuppressWarnings({"unused", "unusedParameter"})
     public void startImport(View ignored) {
@@ -626,7 +623,6 @@ public class webViewer extends Activity {
         startActivity(Intent.createChooser(share, "Send to..."));
     }
 
-
     //Subscriptions functions
     private void getChangedSubscriptions() {
         final Context context = this;
@@ -637,7 +633,12 @@ public class webViewer extends Activity {
                 binder.getService().getChangedSubscriptions(new WebService.Listener() {
                     @Override
                     public void onFinish(List<String> updated) {
-                        showChangedSubscriptions(updated);
+                        Map<String, String> map = StringFunctions.getAllScriptPagesAndNames(repoHtml);
+                        StringBuilder pages = new StringBuilder();
+                        for (String s : updated) {
+                            pages.append(map.get(StringFunctions.getNameFromUrl(s))).append("\n");
+                        }
+                        Dialogs.changedSubscriptions(webViewer.this, pages.toString());
                     }
 
                     @Override
@@ -653,15 +654,6 @@ public class webViewer extends Activity {
             }
         };
         ServiceManager.bindService(this, connection);
-    }
-
-    private void showChangedSubscriptions(List<String> updatedPages) {
-        Map<String, String> map = StringFunctions.getAllScriptPagesAndNames(repoHtml);
-        StringBuilder pages = new StringBuilder();
-        for (String s : updatedPages) {
-            pages.append(map.get(StringFunctions.getNameFromUrl(s))).append("\n");
-        }
-        Dialogs.changedSubscriptions(this,pages.toString());
     }
 
     private void subscribeToCurrent() {

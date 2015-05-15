@@ -3,10 +3,7 @@ package com.trianguloy.llscript.repository.internal;
 import android.content.Context;
 import android.content.pm.PackageManager;
 import android.content.pm.ResolveInfo;
-import android.view.LayoutInflater;
 import android.view.View;
-import android.view.ViewGroup;
-import android.widget.ArrayAdapter;
 import android.widget.CheckBox;
 import android.widget.ImageView;
 import android.widget.TextView;
@@ -20,33 +17,17 @@ import java.util.List;
  * Adapter to display a list of apps
  * Supports checkable and non-checkable list items
  */
-class AppAdapter extends ArrayAdapter<ResolveInfo> {
+class AppAdapter extends BaseArrayAdapter<ResolveInfo> {
     public static final int NONE = -1;
 
-    private final Context context;
-    private final int resource;
     private int selected = NONE;
 
     public AppAdapter(Context context, List<ResolveInfo> apps, int resource) {
         super(context, resource, apps);
-        this.context = context;
-        this.resource = resource;
     }
 
     @Override
-    public View getView(int position, View convertView,
-                        ViewGroup parent) {
-        if (convertView == null) {
-            LayoutInflater inflater = (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
-            convertView = inflater.inflate(resource, parent, false);
-        }
-
-        bindView(position, convertView);
-
-        return convertView;
-    }
-
-    private void bindView(int position, View row) {
+    protected void bindView(int position, View row) {
         PackageManager pm = context.getPackageManager();
         TextView label = (TextView) row.findViewById(R.id.label);
 

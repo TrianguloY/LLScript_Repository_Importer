@@ -7,7 +7,6 @@ import android.accounts.AccountManagerFuture;
 import android.accounts.AuthenticatorException;
 import android.accounts.OperationCanceledException;
 import android.app.Activity;
-import android.app.AlertDialog;
 import android.content.ComponentName;
 import android.content.Context;
 import android.content.DialogInterface;
@@ -76,6 +75,7 @@ public class EditorActivity extends Activity {
     private int state;
     private ServiceConnection connection;
     private Lock lock;
+    private int textHash=-1;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -118,6 +118,14 @@ public class EditorActivity extends Activity {
             }
             editor = (EditText)findViewById(R.id.editor);
             editor.setText(pageText);
+        }
+        else if(state == STATE_EDIT && editor.getText().toString().hashCode() != textHash){
+            Dialogs.unsavedChanges(this, new DialogInterface.OnClickListener(){
+                @Override
+                public void onClick(DialogInterface dialogInterface, int i) {
+                    finish();
+                }
+            });
         }
         else finish();
     }
@@ -215,17 +223,17 @@ public class EditorActivity extends Activity {
             public void onResult(Integer result) {
                 switch (result) {
                     case Constants.RESULT_BAD_LOGIN:
-                        Dialogs.badLogin(EditorActivity.this, new Runnable() {
+                        Dialogs.badLogin(EditorActivity.this, new DialogInterface.OnClickListener() {
                             @Override
-                            public void run() {
+                            public void onClick(DialogInterface dialogInterface, int i) {
                                 findAccount(true);
                             }
                         });
                         break;
                     case Constants.RESULT_NETWORK_ERROR:
-                        Dialogs.connectionFailed(EditorActivity.this, new Runnable() {
+                        Dialogs.connectionFailed(EditorActivity.this, new DialogInterface.OnClickListener() {
                             @Override
-                            public void run() {
+                            public void onClick(DialogInterface dialogInterface, int i) {
                                 finish();
                             }
                         });
@@ -513,18 +521,14 @@ public class EditorActivity extends Activity {
                 return StringFunctions.getNameForPageFromPref(sharedPref,EditorActivity.this,lhs).toLowerCase().compareTo(StringFunctions.getNameForPageFromPref(sharedPref, EditorActivity.this, rhs).toLowerCase());
             }
         });
-        new AlertDialog.Builder(this)
-                .setAdapter(adapter,new DialogInterface.OnClickListener() {
-                    @Override
-                    public void onClick(DialogInterface dialog, int which) {
-                        lock.lock();
-                        dialog.dismiss();
-                        loadPageToEdit(adapter.getItem(which));
-                    }
-                })
-                .setNegativeButton(R.string.button_cancel, null)
-                .setTitle(getString(R.string.title_selectPage))
-                .show();
+        Dialogs.selectPageToEdit(this, adapter, new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialogInterface, int i) {
+                lock.lock();
+                dialogInterface.dismiss();
+                loadPageToEdit(adapter.getItem(i));
+            }
+        });
     }
 
     private void loadPageToEdit(String id){
@@ -543,6 +547,7 @@ public class EditorActivity extends Activity {
         setContentView(R.layout.activity_edit);
         editor = (EditText)findViewById(R.id.editor);
         editor.setText(text);
+        if(textHash==-1) textHash = text.hashCode();
     }
 
     private void surroundOrAdd(String prefix, String suffix, String text){

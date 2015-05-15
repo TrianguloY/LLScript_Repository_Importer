@@ -1,7 +1,6 @@
 package com.trianguloy.llscript.repository;
 
 import android.app.Activity;
-import android.app.AlertDialog;
 import android.content.ComponentName;
 import android.content.Context;
 import android.content.DialogInterface;
@@ -10,7 +9,6 @@ import android.content.ServiceConnection;
 import android.content.SharedPreferences;
 import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager;
-import android.graphics.Color;
 import android.net.Uri;
 import android.net.http.HttpResponseCache;
 import android.os.Build;
@@ -23,15 +21,13 @@ import android.view.KeyEvent;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
-import android.view.ViewGroup;
 import android.webkit.WebView;
 import android.widget.Button;
-import android.widget.CheckBox;
-import android.widget.EditText;
 import android.widget.ProgressBar;
 import android.widget.Toast;
 
 import com.trianguloy.llscript.repository.internal.AppChooser;
+import com.trianguloy.llscript.repository.internal.Dialogs;
 import com.trianguloy.llscript.repository.internal.DownloadTask;
 import com.trianguloy.llscript.repository.internal.ServiceManager;
 import com.trianguloy.llscript.repository.internal.StringFunctions;
@@ -250,21 +246,7 @@ public class webViewer extends Activity {
 
         if (Constants.installedPackage.equals("") || pi == null) {
             //Non of the apps were found
-            new AlertDialog.Builder(this)
-                    .setCancelable(false)
-                    .setTitle(getString(R.string.title_launcherNotFound))
-                    .setMessage(getString(R.string.message_launcherNotFound))
-                    .setNeutralButton(R.string.button_ok, new DialogInterface.OnClickListener() {
-                        @Override
-                        public void onClick(DialogInterface dialog, int which) {
-                            Intent i = new Intent(Intent.ACTION_VIEW);
-                            i.setData(Uri.parse(getString(R.string.link_playStorePrefix) + Constants.packages[1]));
-                            startActivity(i);
-                            finish();
-                        }
-                    })
-                    .setIcon(R.drawable.ic_launcher)
-                    .show();
+            Dialogs.launcherNotFound(this);
             return true;
         }
 
@@ -272,21 +254,7 @@ public class webViewer extends Activity {
         //Checks the version of the launcher
 
         if ((pi.versionCode % 1000) < Constants.minimumNecessaryVersion) {
-            new AlertDialog.Builder(this)
-                    .setCancelable(false)
-                    .setTitle(getString(R.string.title_outdatedLauncher))
-                    .setMessage(getString(R.string.message_outdatedLauncher))
-                    .setNeutralButton(R.string.button_ok, new DialogInterface.OnClickListener() {
-                        @Override
-                        public void onClick(DialogInterface dialog, int which) {
-                            Intent i = new Intent(Intent.ACTION_VIEW);
-                            i.setData(Uri.parse(getString(R.string.link_playStorePrefix) + Constants.installedPackage));
-                            startActivity(i);
-                            finish();
-                        }
-                    })
-                    .setIcon(R.drawable.ic_launcher)
-                    .show();
+            Dialogs.launcherOutdated(this);
             return true;
         }
 
@@ -329,7 +297,12 @@ public class webViewer extends Activity {
             @Override
             public void onError() {
                 progressBar.setVisibility(View.GONE);
-                showNoPageLoaded(currentUrl);
+                Dialogs.noPageLoaded(webViewer.this, new DialogInterface.OnClickListener() {
+                    public void onClick(DialogInterface dialog, int which) {
+                        progressBar.setVisibility(View.VISIBLE);
+                        new DownloadTask(downloadTaskListener).execute(currentUrl);
+                    }
+                });
             }
         };
 
@@ -476,28 +449,6 @@ public class webViewer extends Activity {
         new AppChooser(this, Uri.parse(url), getString(R.string.title_appChooserExternalClicked), getString(R.string.message_noBrowser), null).show();
     }
 
-    private void showNoPageLoaded(final String url) {
-        //When the page couldn't be loaded
-        progressBar.setVisibility(View.GONE);
-        new AlertDialog.Builder(this)
-                .setTitle(R.string.title_noPageFound)
-                .setMessage(R.string.message_noPageFound)
-                .setPositiveButton(R.string.button_retry, new DialogInterface.OnClickListener() {
-                    public void onClick(DialogInterface dialog, int which) {
-                        progressBar.setVisibility(View.VISIBLE);
-                        new DownloadTask(downloadTaskListener).execute(url);
-                    }
-                })
-                .setNegativeButton(R.string.button_exit, new DialogInterface.OnClickListener() {
-                    public void onClick(DialogInterface dialog, int which) {
-                        finish();
-                    }
-                })
-                .setIcon(R.drawable.ic_launcher)
-                .setCancelable(false)
-                .show();
-    }
-
 
     //Script importer
     @SuppressWarnings({"unused", "unusedParameter"})
@@ -566,11 +517,18 @@ public class webViewer extends Activity {
         //switch based on the number of scripts found
         if (rawCodes.size() > 1) {
             //more than one script founds
-            showMoreThanOneScriptFound(names.toArray(new String[names.size()]), rawCodes.toArray(new String[rawCodes.size()]), aboutScript);
+            final String about = aboutScript;
+            Dialogs.moreThanOneScriptFound(this, names.toArray(new String[names.size()]), new DialogInterface.OnClickListener() {
+                @Override
+                public void onClick(DialogInterface dialog, int which) {
+                    dialog.dismiss();//Necessary, this is launched when clicking an item, not when clicking a button
+                    showImportScript(names.get(which), rawCodes.get(which), about);
+                }
+            });
         } else if (rawCodes.size() > 0) {
             oneScriptFound(names.get(0), rawCodes.get(0), aboutScript);
         } else {
-            showNoScriptFound();
+            Dialogs.noScriptFound(this);
         }
     }
 
@@ -592,21 +550,6 @@ public class webViewer extends Activity {
 
     }
 
-    private void showMoreThanOneScriptFound(final String[] names, final String[] rawCodes, final String about) {
-        //More than one script found select one of them to import
-        new AlertDialog.Builder(this)
-                .setTitle(R.string.title_severalScriptsFound)
-                .setIcon(R.drawable.ic_launcher)
-                .setSingleChoiceItems(names, android.R.layout.simple_list_item_single_choice, new DialogInterface.OnClickListener() {
-                    public void onClick(DialogInterface dialog, int which) {
-                        dialog.dismiss();//Necessary, this is launched when clicking an item, not when clicking a button
-                        showImportScript(names[which], rawCodes[which], about);
-                    }
-                })
-                .setNegativeButton(R.string.button_cancel, null)
-                .show();
-    }
-
     private void showImportScript(String scriptName, String rawCode, String aboutString) {
         //show the alert to import a single script
         String[] lines = rawCode.split("\n");
@@ -619,80 +562,29 @@ public class webViewer extends Activity {
         if (sharedPref.getBoolean(getString(R.string.pref_aboutScript), true))
             code = aboutString + code;
 
-        //the alert dialog
-        View layout = getLayoutInflater().inflate(R.layout.confirm_alert, (ViewGroup) findViewById(R.id.webView).getRootView(), false);
-        if (Build.VERSION.SDK_INT < Build.VERSION_CODES.HONEYCOMB) layout.setBackgroundColor(Color.WHITE);
-        final EditText contentText = ((EditText) layout.findViewById(R.id.editText2));
-        contentText.setText(code);
-        final EditText nameText = ((EditText) layout.findViewById(R.id.editText));
-        nameText.setText(scriptName);
-        final CheckBox[] flagsBoxes = {
-                (CheckBox) layout.findViewById(R.id.checkBox1),
-                (CheckBox) layout.findViewById(R.id.checkBox2),
-                (CheckBox) layout.findViewById(R.id.checkBox3)};
-
-        new AlertDialog.Builder(this)
-                .setTitle(R.string.title_importer)
-                .setIcon(R.drawable.ic_launcher)
-                .setView(layout)
-                .setPositiveButton(R.string.button_import, new DialogInterface.OnClickListener() {
-                    public void onClick(DialogInterface dialog, int which) {
-                        sendScriptToLauncher(contentText, nameText, flagsBoxes);
-                        if (!StringFunctions.getMapFromPref(sharedPref, getString(R.string.pref_subs)).keySet().contains(currentUrl))
-                            showSubscribe();
-                    }
-                })
-                .setNeutralButton(R.string.button_share, new DialogInterface.OnClickListener() {
-                    public void onClick(DialogInterface dialog, int which) {
-                        shareAsText(contentText, nameText, flagsBoxes);
-                    }
-                })
-                .setNegativeButton(R.string.button_exit, null)
-                .show();
+        Dialogs.importScript(this, code, scriptName, new Dialogs.OnImportListener() {
+            @Override
+            public void onClick(String code, String name, int flags) {
+                sendScriptToLauncher(code, name, flags);
+                if (!StringFunctions.getMapFromPref(sharedPref, getString(R.string.pref_subs)).keySet().contains(currentUrl))
+                    Dialogs.subscribe(webViewer.this, new DialogInterface.OnClickListener() {
+                        @Override
+                        public void onClick(DialogInterface dialogInterface, int i) {
+                            subscribeToCurrent();
+                        }
+                    });
+            }
+        }, new Dialogs.OnImportListener() {
+            @Override
+            public void onClick(String code, String name, int flags) {
+                shareAsText(code, name, flags);
+            }
+        });
     }
-
-    private void showSubscribe() {
-        new AlertDialog.Builder(this)
-                .setTitle(getString(R.string.title_subscribe))
-                .setMessage(getString(R.string.message_subscribeAsk))
-                .setNegativeButton(R.string.button_cancel, null)
-                .setPositiveButton(R.string.button_ok, new DialogInterface.OnClickListener() {
-                    @Override
-                    public void onClick(DialogInterface dialog, int which) {
-                        subscribeToCurrent();
-                    }
-                })
-                .show();
-    }
-
-    private void showNoScriptFound() {
-        //alert to show that no script is found
-        new AlertDialog.Builder(this)
-                .setTitle(R.string.title_importer)
-                .setNegativeButton(R.string.button_exit, null)/* new DialogInterface.OnClickListener() {
-                    public void onClick(DialogInterface dialog, int which) {}
-                })*/
-                .setPositiveButton(R.string.text_googlePlus, new DialogInterface.OnClickListener() {
-                    public void onClick(DialogInterface dialog, int which) {
-                        Intent j = new Intent(Intent.ACTION_VIEW);
-                        j.setData(Uri.parse(getString(R.string.link_playStoreImporter)));
-                        startActivity(j);
-                    }
-                })
-                .setIcon(R.drawable.ic_launcher)
-                .setMessage(R.string.message_noScriptFound)
-                .show();
-    }
-
 
     //Send & share functions
-    private void sendScriptToLauncher(EditText contentText, EditText nameText, CheckBox[] flagsBoxes) {
+    private void sendScriptToLauncher(String code, String scriptName, int flags) {
         // let's import the script
-        final String code = contentText.getText().toString();
-        final String scriptName = nameText.getText().toString();
-        final int flags = (flagsBoxes[0].isChecked() ? Constants.FLAG_APP_MENU : 0) +
-                (flagsBoxes[1].isChecked() ? Constants.FLAG_ITEM_MENU : 0) +
-                (flagsBoxes[2].isChecked() ? Constants.FLAG_CUSTOM_MENU : 0);
         Intent intent = new Intent(this, ScriptImporter.class);
         intent.putExtra(Constants.extraCode, code);
         intent.putExtra(Constants.extraName, scriptName);
@@ -700,23 +592,31 @@ public class webViewer extends Activity {
         startService(intent);
     }
 
-    private void shareAsText(EditText contentText, EditText nameText, CheckBox[] flagsBoxes) {
+    private void shareAsText(String code, String scriptName, int flags) {
         //share the code as plain text
 
         StringBuilder text = new StringBuilder("");
 
         //flags
         text.append("//Flags: ");
-        if (flagsBoxes[0].isChecked()) text.append("app ");
-        if (flagsBoxes[1].isChecked()) text.append("item ");
-        if (flagsBoxes[2].isChecked()) text.append("custom ");
+        if (flags>=Constants.FLAG_CUSTOM_MENU) {
+            text.append("app ");
+            flags -= Constants.FLAG_CUSTOM_MENU;
+        }
+        if (flags>=Constants.FLAG_ITEM_MENU) {
+            text.append("item ");
+            flags -= Constants.FLAG_ITEM_MENU;
+        }
+        if (flags>=Constants.FLAG_APP_MENU) {
+            text.append("custom ");
+        }
         text.append("\n");
 
         //name
         text.append("//Name: ")
-                .append(nameText.getText())
+                .append(scriptName)
                 .append("\n")
-                .append(contentText.getText());
+                .append(code);
 
         text.append("\n");
 
@@ -757,15 +657,11 @@ public class webViewer extends Activity {
 
     private void showChangedSubscriptions(List<String> updatedPages) {
         Map<String, String> map = StringFunctions.getAllScriptPagesAndNames(repoHtml);
-        StringBuffer pages = new StringBuffer();
+        StringBuilder pages = new StringBuilder();
         for (String s : updatedPages) {
             pages.append(map.get(StringFunctions.getNameFromUrl(s))).append("\n");
         }
-        new AlertDialog.Builder(this)
-                .setTitle(getString(R.string.title_updatedSubs))
-                .setMessage(pages)
-                .setNeutralButton(R.string.button_ok, null)
-                .show();
+        Dialogs.changedSubscriptions(this,pages.toString());
     }
 
     private void subscribeToCurrent() {

@@ -8,9 +8,9 @@ public final class Constants {
     private Constants(){}
 
     //script flags
-    static final int FLAG_APP_MENU = 2;
-    static final int FLAG_ITEM_MENU = 4;
-    static final int FLAG_CUSTOM_MENU = 8;
+    public static final int FLAG_APP_MENU = 2;
+    public static final int FLAG_ITEM_MENU = 4;
+    public static final int FLAG_CUSTOM_MENU = 8;
 
 
     //Legacy variables. To remove with loadInLauncher
@@ -40,8 +40,8 @@ public final class Constants {
 
     //package constants
     public static final String activityRunScript = "net.pierrox.lightning_launcher.activities.Dashboard";
-    static final String[] packages = new String[]{"net.pierrox.lightning_launcher_extreme", "net.pierrox.lightning_launcher"};
-    static String installedPackage = "";
+    public static final String[] packages = new String[]{"net.pierrox.lightning_launcher_extreme", "net.pierrox.lightning_launcher"};
+    public static String installedPackage = "";
     public static final int minimumNecessaryVersion = 225; // valid for both packages. Number module 1000
 
     //sharedPrefs

@@ -236,6 +236,12 @@
     <string name="text_cantSaveEmpty">You can\'t save an empty page</string>
     <string name="text_useAlways">Use always</string>
     <string name="text_LoggedInAs">Logged in as:</string>
+    <string name="title_warning">Warning</string>
+    <string name="text_unsavedChanges">There are unsaved changes. Are you sure you want to quit?
+    </string>
+    <string name="button_yes">Yes</string>
+    <string name="title_logout">Logout</string>
+    <string name="text_questionmark">\?</string>
 
 
 </resources>

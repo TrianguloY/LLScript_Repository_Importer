@@ -44,6 +44,11 @@ public class RPCService extends Service {
         return new LocalBinder();
     }
 
+    @Override
+    public void onDestroy() {
+        super.onDestroy();
+        Log.d("Service","stop");
+    }
 
     public boolean isLoggedIn(){
         return login;

@@ -15,6 +15,7 @@ import android.os.Build;
 import android.os.Bundle;
 import android.os.IBinder;
 import android.preference.PreferenceManager;
+import android.support.annotation.NonNull;
 import android.text.Html;
 import android.util.Log;
 import android.view.KeyEvent;
@@ -83,33 +84,38 @@ public class webViewer extends Activity {
 
         //initialize variables
         sharedPref = PreferenceManager.getDefaultSharedPreferences(this);
-        backStack = new Stack<>();
-        currentUrl = getString(R.string.link_repository);
+        if(savedInstanceState!=null && restore(savedInstanceState)){
+            initializeWeb();
+        }
+        else {
+            backStack = new Stack<>();
+            currentUrl = getString(R.string.link_repository);
 
-        //parse the Intent
-        onNewIntent(getIntent());
+            //parse the Intent
+            onNewIntent(getIntent());
 
 
-        if (sharedPref.contains(Constants.keyId)) {
-            //To move from the previous version to the new one, to remove on next releases
-            int id = sharedPref.getInt(Constants.keyId, -1);
-            sharedPref.edit().remove(Constants.keyId).apply();
+            if (sharedPref.contains(Constants.keyId)) {
+                //To move from the previous version to the new one, to remove on next releases
+                int id = sharedPref.getInt(Constants.keyId, -1);
+                sharedPref.edit().remove(Constants.keyId).apply();
 
-            if (id != -1) {
-                Intent intent = new Intent(Intent.ACTION_VIEW);
-                intent.setComponent(new ComponentName(Constants.installedPackage, Constants.activityRunScript));
-                intent.putExtra(Constants.RunActionExtra, Constants.RunActionKey);
-                intent.putExtra(Constants.RunDataExtra, "" + id);
-                startActivity(intent);
-                finish();
-                return;
+                if (id != -1) {
+                    Intent intent = new Intent(Intent.ACTION_VIEW);
+                    intent.setComponent(new ComponentName(Constants.installedPackage, Constants.activityRunScript));
+                    intent.putExtra(Constants.RunActionExtra, Constants.RunActionKey);
+                    intent.putExtra(Constants.RunDataExtra, "" + id);
+                    startActivity(intent);
+                    finish();
+                    return;
+                }
+
             }
 
+            //Normal activity
+            initializeWeb();
+            getChangedSubscriptions();
         }
-
-        //Normal activity
-        initializeWeb();
-        getChangedSubscriptions();
     }
 
     @Override
@@ -230,6 +236,38 @@ public class webViewer extends Activity {
         super.onStop();
     }
 
+    @Override
+    protected void onSaveInstanceState(@NonNull Bundle outState) {
+        super.onSaveInstanceState(outState);
+        Log.d("webViewer","onSaveInstanceState");
+        ArrayList<String> temp = new ArrayList<>(backStack.size());
+        for(backClass b : backStack){
+            temp.add(StringFunctions.backClassToString(b));
+        }
+        outState.putStringArrayList(getString(R.string.key_backStack), temp);
+        outState.putString(getString(R.string.key_currentUrl), currentUrl);
+        outState.putString(getString(R.string.key_currentHtml), currentHtml);
+        outState.putString(getString(R.string.key_repoHtml),repoHtml);
+    }
+
+    private boolean restore(@NonNull Bundle savedInstanceState) {
+        Log.d("webViewer", "onRestoreInstanceState");
+        if(savedInstanceState.containsKey(getString(R.string.key_backStack))) {
+            backStack = new Stack<>();
+            ArrayList<String> temp = savedInstanceState.getStringArrayList(getString(R.string.key_backStack));
+            for (String s:temp){
+                backStack.add(StringFunctions.stringToBackClass(s));
+            }
+        }
+        if(savedInstanceState.containsKey(getString(R.string.key_currentUrl)))
+            currentUrl = savedInstanceState.getString(getString(R.string.key_currentUrl));
+        if(savedInstanceState.containsKey(getString(R.string.key_currentHtml)))
+            currentHtml = savedInstanceState.getString(getString(R.string.key_currentHtml));
+        if(savedInstanceState.containsKey(getString(R.string.key_repoHtml)))
+            repoHtml = savedInstanceState.getString(getString(R.string.key_repoHtml));
+        return backStack!=null && currentUrl!=null && currentHtml != null && repoHtml != null;
+    }
+
     //Initialization
     private boolean checkForLauncher() {
 
@@ -285,8 +323,6 @@ public class webViewer extends Activity {
                     StringFunctions.valueAndIndex val = StringFunctions.findBetween(result, "<div class=\"tools group\">", "<hr class=\"a11y\" />", 0, false);
                     currentHtml = result.substring(0, val.from) + result.substring(val.to, result.length());
                 }
-                //open spoilers, as the cannot be opened without javascript enabled (which would be a security issue)
-                //currentHtml = currentHtml.replace("display: none","display");
                 if (currentUrl.equals(getString(R.string.link_repository))) {
                     repoHtml = currentHtml;
 
@@ -412,6 +448,7 @@ public class webViewer extends Activity {
             if (repoHtml.equals("")) {
                 new DownloadTask(downloadTaskListener).execute(url);
             } else {
+                progressBar.setVisibility(View.GONE);
                 currentHtml = repoHtml;
                 display();
             }
@@ -419,11 +456,16 @@ public class webViewer extends Activity {
             // script page
             if (!currentUrl.equals(url)) {
                 backStack.push(new backClass(currentUrl, webView.getScrollY()));
+                currentUrl = url;
+                webViewPositionY = positionY;
+                progressBar.setVisibility(View.VISIBLE);
+                new DownloadTask(downloadTaskListener).execute(url);
             }
-            currentUrl = url;
-            webViewPositionY = positionY;
-            progressBar.setVisibility(View.VISIBLE);
-            new DownloadTask(downloadTaskListener).execute(url);
+            else {
+                progressBar.setVisibility(View.GONE);
+                if (menu != null) onPrepareOptionsMenu(menu);
+                display();
+            }
         } else
             //external page
             showExternalPageLinkClicked(url);
@@ -709,11 +751,11 @@ public class webViewer extends Activity {
     }
 
 
-    private static class backClass {
-        final String url;
-        final int posY;
+    public static class backClass {
+        public final String url;
+        public final int posY;
 
-        backClass(String u, int p) {
+        public backClass(String u, int p) {
             url = u;
             posY = p;
         }

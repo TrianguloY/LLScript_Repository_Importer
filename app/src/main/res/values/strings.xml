@@ -248,6 +248,10 @@
     </string>
     <string name="action_share">Share</string>
     <string name="title_share">Share</string>
+    <string name="key_backStack">backStack</string>
+    <string name="key_currentUrl">currentUrl</string>
+    <string name="key_currentHtml">currentHtml</string>
+    <string name="key_repoHtml">repoHtml</string>
 
 
 </resources>

@@ -170,6 +170,12 @@ public class webViewer extends Activity {
             case R.id.editor:
                 startActivity(new Intent(this, EditorActivity.class));
                 break;
+            case R.id.action_share:
+                Intent share = new Intent(Intent.ACTION_SEND);
+                share.setType("text/plain");
+                share.putExtra(Intent.EXTRA_TEXT, currentUrl);
+                startActivity(Intent.createChooser(share, getString(R.string.title_share)));
+                break;
             default:
                 return super.onOptionsItemSelected(item);
         }

@@ -246,6 +246,8 @@
     <!-- unsorted-->
     <string name="dummy" tools:ignore="UnusedResources">Dummy string to force new ones to be below
     </string>
+    <string name="action_share">Share</string>
+    <string name="title_share">Share</string>
 
 
 </resources>

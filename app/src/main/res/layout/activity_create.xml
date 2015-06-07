@@ -8,7 +8,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content" android:layout_alignParentBottom="true"
         android:layout_alignParentLeft="true" android:layout_alignParentStart="true"
-        >
+        android:id="@+id/linearLayout3">
         <Button
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
@@ -21,66 +21,76 @@
             android:text="@string/button_create"
             android:id="@+id/buttonCreate" android:layout_weight="1" android:onClick="button"/>
     </LinearLayout>
-    <TextView
-        android:layout_width="wrap_content"
-        android:layout_height="match_parent"
-        android:text="@string/prefix_script"
-        android:id="@+id/textView2"
-        android:layout_alignBottom="@+id/editId" android:layout_alignParentLeft="true"
-        android:layout_alignParentStart="true"
-        android:layout_alignParentTop="true"
-        android:gravity="center_vertical"/>
-    <EditText
+    <ScrollView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:id="@+id/editId" android:layout_alignParentTop="true"
-        android:layout_toRightOf="@+id/textView2" android:layout_alignParentRight="true"
-        android:layout_alignParentEnd="true" android:hint="@string/hint_id"/>
-    <Spinner
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:id="@+id/spinner"
-        android:layout_below="@+id/textView3" android:layout_alignParentLeft="true"
-        android:layout_alignParentStart="true" android:layout_alignParentRight="true"
-        android:layout_alignParentEnd="true"/>
-    <TextView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="@string/text_addTo"
-        android:id="@+id/textView3"
-        android:layout_below="@+id/radioGroup" android:layout_alignParentLeft="true"
-        android:layout_alignParentStart="true"/>
-    <EditText
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:id="@+id/editName" android:layout_below="@+id/spinner"
-        android:layout_alignParentLeft="true" android:layout_alignParentStart="true"
-        android:layout_alignParentRight="true" android:layout_alignParentEnd="true"
-        android:hint="@string/hint_nameOrDescription"/>
-    <RadioGroup
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content" android:layout_below="@+id/textView2"
-        android:layout_alignParentLeft="true" android:layout_alignParentStart="true"
-        android:id="@+id/radioGroup" android:checkedButton="@+id/radioEmpty">
-        <RadioButton
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="@string/radio_empty"
-            android:id="@+id/radioEmpty" android:layout_below="@+id/textView2"
-            android:layout_alignParentLeft="true" android:layout_alignParentStart="true"
-            android:checked="false"/>
-        <RadioButton
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="@string/radio_default"
-            android:id="@+id/radioDefault"
-            android:layout_below="@+id/radioEmpty" android:layout_alignParentLeft="true"
-            android:layout_alignParentStart="true"/>
-        <RadioButton
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="@string/radio_custom"
-            android:id="@+id/radioCustom" android:layout_below="@+id/radioDefault"
-            android:layout_alignParentLeft="true" android:layout_alignParentStart="true"/>
-    </RadioGroup>
+        android:id="@+id/scrollView" android:layout_above="@+id/linearLayout3"
+        android:layout_alignParentTop="true">
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:text="@string/prefix_script"
+                android:id="@+id/textView2"
+                android:layout_alignBottom="@+id/editId" android:layout_alignParentLeft="true"
+                android:layout_alignParentStart="true"
+                android:layout_alignParentTop="true"
+                android:gravity="center_vertical"/>
+            <EditText
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:id="@+id/editId" android:layout_alignParentTop="true"
+                android:layout_toRightOf="@+id/textView2" android:layout_alignParentRight="true"
+                android:layout_alignParentEnd="true" android:hint="@string/hint_id"/>
+            <Spinner
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:id="@+id/spinner"
+                android:layout_below="@+id/textView3" android:layout_alignParentLeft="true"
+                android:layout_alignParentStart="true" android:layout_alignParentRight="true"
+                android:layout_alignParentEnd="true"/>
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/text_addTo"
+                android:id="@+id/textView3"
+                android:layout_below="@+id/radioGroup" android:layout_alignParentLeft="true"
+                android:layout_alignParentStart="true"/>
+            <EditText
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:id="@+id/editName" android:layout_below="@+id/spinner"
+                android:layout_alignParentLeft="true" android:layout_alignParentStart="true"
+                android:layout_alignParentRight="true" android:layout_alignParentEnd="true"
+                android:hint="@string/hint_nameOrDescription"/>
+            <RadioGroup
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content" android:layout_below="@+id/textView2"
+                android:layout_alignParentLeft="true" android:layout_alignParentStart="true"
+                android:id="@+id/radioGroup" android:checkedButton="@+id/radioEmpty">
+                <RadioButton
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="@string/radio_empty"
+                    android:id="@+id/radioEmpty" android:layout_below="@+id/textView2"
+                    android:layout_alignParentLeft="true" android:layout_alignParentStart="true"
+                    android:checked="false"/>
+                <RadioButton
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="@string/radio_default"
+                    android:id="@+id/radioDefault"
+                    android:layout_below="@+id/radioEmpty" android:layout_alignParentLeft="true"
+                    android:layout_alignParentStart="true"/>
+                <RadioButton
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="@string/radio_custom"
+                    android:id="@+id/radioCustom" android:layout_below="@+id/radioDefault"
+                    android:layout_alignParentLeft="true" android:layout_alignParentStart="true"/>
+            </RadioGroup>
+        </RelativeLayout>
+    </ScrollView>
 </RelativeLayout>

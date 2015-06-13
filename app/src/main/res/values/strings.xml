@@ -15,6 +15,7 @@
     <string name="action_subscribe">Subscribe</string>
     <string name="action_unsubscribe">Unsubscribe</string>
     <string name="action_editor">Editor</string>
+    <string name="action_share">Share</string>
 
     <!-- webviewer -->
     <string name="button_importToLauncher">Search and import…</string>
@@ -100,6 +101,9 @@
     <!-- alert page exists -->
     <string name="title_error">Error</string>
     <string name="text_alreadyExists">Page already exists. Please choose another ID</string>
+
+    <!-- alert (other) -->
+    <string name="title_share">Share</string>
 
     <!-- Subscriptions -->
     <string name="title_subscribe">Subscribe</string>
@@ -243,15 +247,21 @@
     <string name="id_scriptRepository">script_repository</string>
     <string name="id_scriptTemplate">script_template</string>
 
-    <!-- unsorted-->
-    <string name="dummy" tools:ignore="UnusedResources">Dummy string to force new ones to be below
-    </string>
-    <string name="action_share">Share</string>
-    <string name="title_share">Share</string>
+    <!-- State keys -->
     <string name="key_backStack">backStack</string>
     <string name="key_currentUrl">currentUrl</string>
     <string name="key_currentHtml">currentHtml</string>
     <string name="key_repoHtml">repoHtml</string>
+    <string name="key_state">state</string>
+    <string name="key_pageText">pageText</string>
+    <string name="key_pageName">pageName</string>
+    <string name="key_pageId">pageId</string>
+    <string name="key_textHash">textHash</string>
+    <string name="key_isTemplate">isTemplate</string>
+
+    <!-- unsorted-->
+    <string name="dummy" tools:ignore="UnusedResources">Dummy string to force new ones to be below
+    </string>
 
 
 </resources>

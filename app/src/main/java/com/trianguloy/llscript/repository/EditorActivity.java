@@ -16,6 +16,7 @@ import android.os.Build;
 import android.os.Bundle;
 import android.os.IBinder;
 import android.preference.PreferenceManager;
+import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.text.Editable;
 import android.text.TextUtils;
@@ -69,15 +70,17 @@ public class EditorActivity extends Activity {
     private String pageName;
     private String pageText;
     private Random random;
-    private int state;
+    private int state = STATE_NONE;
     private ServiceConnection connection;
     private Lock lock;
     private int textHash=-1;
     private boolean isTemplate = false;
+    private Bundle savedInstanceState;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        this.savedInstanceState = savedInstanceState;
         lock = new Lock();
         setContentView(R.layout.activity_empty);
         lock.lock();
@@ -176,15 +179,57 @@ public class EditorActivity extends Activity {
         return true;
     }
 
+    @Override
+    protected void onSaveInstanceState(Bundle outState) {
+        super.onSaveInstanceState(outState);
+        outState.putInt(getString(R.string.key_state), state);
+        if(state == STATE_EDIT){
+            pageText = editor.getText().toString();
+        }
+        if(state == STATE_EDIT || state  == STATE_PREVIEW) {
+            outState.putString(getString(R.string.key_pageText), pageText);
+            outState.putString(getString(R.string.key_pageName), pageName);
+            outState.putString(getString(R.string.key_pageId), pageId);
+            outState.putInt(getString(R.string.key_textHash), textHash);
+            outState.putBoolean(getString(R.string.key_isTemplate), isTemplate);
+        }
+    }
+
+    private void restore(@NonNull Bundle restoreState){
+        if(restoreState.containsKey(getString(R.string.key_state))){
+            switch (restoreState.getInt(getString(R.string.key_state))){
+                case STATE_NONE:
+                case STATE_CHOOSE_ACTION:
+                    setContentView(R.layout.activity_select_action);
+                    break;
+                case STATE_CREATE:
+                    createPage();
+                    break;
+                case STATE_EDIT:
+                case STATE_PREVIEW:
+                    pageText = restoreState.getString(getString(R.string.key_pageText));
+                    pageName = restoreState.getString(getString(R.string.key_pageName));
+                    pageId = restoreState.getString(getString(R.string.key_pageId));
+                    textHash = restoreState.getInt(getString(R.string.key_textHash));
+                    isTemplate = restoreState.getBoolean(getString(R.string.key_isTemplate));
+                    showPageEditor(pageText);
+                    break;
+            }
+        }
+
+    }
+
     private void connect(){
         connection =  new ServiceConnection() {
             @Override
             public void onServiceConnected(ComponentName componentName, IBinder iBinder) {
                 rpcService = ((RPCService.LocalBinder) iBinder).getService();
-                if (!rpcService.isLoggedIn()) {
+                if (rpcService.isLoggedIn()) {
+                    if(savedInstanceState!=null)restore(savedInstanceState);
+                    else setContentView(R.layout.activity_select_action);
+                } else {
                     findAccount(false);
                 }
-                else setContentView(R.layout.activity_select_action);
             }
 
             @Override
@@ -240,7 +285,8 @@ public class EditorActivity extends Activity {
                         });
                         break;
                     case Constants.RESULT_OK:
-                        setContentView(R.layout.activity_select_action);
+                        if(savedInstanceState!=null)restore(savedInstanceState);
+                        else setContentView(R.layout.activity_select_action);
                         break;
                     default:
                         throw new IllegalArgumentException();
@@ -316,7 +362,6 @@ public class EditorActivity extends Activity {
                 setContentView(R.layout.activity_create);
                 Spinner spinner = (Spinner) findViewById(R.id.spinner);
                 spinner.setAdapter(new CategoryAdapter(EditorActivity.this, repository.categories));
-
             }
         });
     }
@@ -575,6 +620,7 @@ public class EditorActivity extends Activity {
         setContentView(R.layout.activity_edit);
         editor = (EditText)findViewById(R.id.editor);
         editor.setText(text);
+        pageText = text;
         if(textHash==-1) textHash = text.hashCode();
     }
 

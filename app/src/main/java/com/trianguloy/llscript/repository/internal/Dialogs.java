@@ -150,6 +150,14 @@ public final class Dialogs {
                 .show();
     }
 
+    public static void newScripts(Context context,String newScripts,boolean single){
+        new AlertDialog.Builder(context)
+                .setTitle(single?context.getString(R.string.toast_oneNewScript):context.getString(R.string.toast_severalNewScripts))
+                .setMessage(newScripts)
+                .setNeutralButton(R.string.button_ok, null)
+                .show();
+    }
+
     public static void importScript(Activity context, final String code, String scriptName, final OnImportListener onImport, final OnImportListener onShare){
 
         View layout = context.getLayoutInflater().inflate(R.layout.confirm_alert, (ViewGroup) context.findViewById(R.id.webView).getRootView(), false);

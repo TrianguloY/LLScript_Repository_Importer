@@ -180,6 +180,18 @@
         <item>604800000</item>
     </string-array>
     <string name="val_intervalDefault">86400000</string>
+    <string-array name="val_notify">
+        <item>None</item>
+        <item>Toast</item>
+        <item>Dialog</item>
+    </string-array>
+    <string-array name="val_notifyId">
+        <item>0</item>
+        <item>1</item>
+        <item>2</item>
+    </string-array>
+    <string name="val_newItemDefault">1</string>
+    <string name="val_changedSubDefault">2</string>
 
     <!-- Manifest -->
     <string name="permission_description">Allows to import scripts into LL without User
@@ -262,6 +274,10 @@
     <!-- unsorted-->
     <string name="dummy" tools:ignore="UnusedResources">Dummy string to force new ones to be below
     </string>
+    <string name="pref_newScripts">newScripts</string>
+    <string name="title_newScripts">Notify for new Scripts</string>
+    <string name="pref_changedSubs">changedSubs</string>
+    <string name="title_changedSubs">Notify for changed Subscriptions</string>
 
 
 </resources>

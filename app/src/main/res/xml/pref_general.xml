@@ -17,11 +17,6 @@
             android:title="@string/title_browser"
             android:summary="@string/summary_browser"
             android:key="@string/pref_browser"/>
-        <CheckBoxPreference
-            android:key="@string/pref_showTools"
-            android:title="@string/title_showTools"
-            android:summary="@string/summary_showTools"
-            android:defaultValue="false"/>
     </PreferenceCategory>
     <PreferenceCategory android:title="@string/title_notifications">
         <CheckBoxPreference
@@ -38,6 +33,26 @@
     <PreferenceCategory android:title="@string/title_editor">
         <Preference android:title="@string/title_resetPw"
             android:key="@string/pref_resetPw"/>
+    </PreferenceCategory>
+    <PreferenceCategory android:title="Look &amp; Feel">
+        <CheckBoxPreference
+            android:key="@string/pref_showTools"
+            android:title="@string/title_showTools"
+            android:summary="@string/summary_showTools"
+            android:defaultValue="false"/>
+        <ListPreference
+            android:key="@string/pref_newScripts"
+            android:title="@string/title_newScripts"
+            android:entries="@array/val_notify"
+            android:entryValues="@array/val_notifyId"
+            android:defaultValue="@string/val_newItemDefault"/>
+        <ListPreference
+            android:key="@string/pref_changedSubs"
+            android:title="@string/title_changedSubs"
+            android:entries="@array/val_notify"
+            android:entryValues="@array/val_notifyId"
+            android:defaultValue="@string/val_changedSubDefault"/>
+
     </PreferenceCategory>
     <PreferenceCategory android:title="@string/title_links">
         <Preference android:title="@string/text_playStore">

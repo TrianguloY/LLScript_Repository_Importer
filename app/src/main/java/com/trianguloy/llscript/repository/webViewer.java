@@ -52,6 +52,10 @@ import java.util.TimerTask;
 
 public class webViewer extends Activity {
 
+    private static final int SHOW_NONE = 0;
+    private static final int SHOW_TOAST = 1;
+    private static final int SHOW_DIALOG = 2;
+
     //Elements
     private WebView webView; //webView element
     private Button button; //button element
@@ -411,13 +415,20 @@ public class webViewer extends Activity {
                 ArrayList<String> newScriptNames = new ArrayList<>();
                 for (String s : newScripts) newScriptNames.add(map.get(s));
                 StringBuilder names = new StringBuilder();
-                if (newScriptNames.size() == 1){
-                    names.append(getString(R.string.toast_oneNewScript)).append("\n").append(newScriptNames.get(0));
+                for (int i = 0; i < newScriptNames.size(); i++) {
+                    names.append(newScriptNames.get(i)).append("\n");
                 }
-                else {
-                    names.append(getString(R.string.toast_severalNewScripts));
-                    for (int i = 0; i < newScriptNames.size(); i++)
-                        names.append("\n").append(newScriptNames.get(i));
+                names.deleteCharAt(names.length()-1);
+                int showAs = sharedPref.getInt(getString(R.string.pref_newScripts),1);
+                switch (showAs){
+                    case SHOW_NONE:
+                        break;
+                    case SHOW_TOAST:
+                        Toast.makeText(webViewer.this,(newScriptNames.size()==1?getString(R.string.toast_oneNewScript):getString(R.string.toast_severalNewScripts))+names.toString(),Toast.LENGTH_LONG);
+                        break;
+                    case SHOW_DIALOG:
+                        Dialogs.newScripts(this,names.toString(),newScriptNames.size()==1);
+                        break;
                 }
                 Toast.makeText(this,  names.toString(), Toast.LENGTH_LONG).show();
             }
@@ -686,7 +697,17 @@ public class webViewer extends Activity {
                         for (String s : updated) {
                             pages.append(map.get(StringFunctions.getNameFromUrl(s))).append("\n");
                         }
-                        Dialogs.changedSubscriptions(webViewer.this, pages.toString());
+                        int showAs = sharedPref.getInt(getString(R.string.pref_changedSubs),2);
+                        switch (showAs){
+                            case SHOW_NONE:
+                                break;
+                            case SHOW_TOAST:
+                                Toast.makeText(webViewer.this,pages.toString(),Toast.LENGTH_LONG);
+                                break;
+                            case SHOW_DIALOG:
+                                Dialogs.changedSubscriptions(webViewer.this, pages.toString());
+                                break;
+                        }
                     }
 
                     @Override

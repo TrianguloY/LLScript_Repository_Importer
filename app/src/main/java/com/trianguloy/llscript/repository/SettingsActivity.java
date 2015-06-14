@@ -15,6 +15,7 @@ import android.preference.CheckBoxPreference;
 import android.preference.ListPreference;
 import android.preference.Preference;
 import android.preference.PreferenceActivity;
+import android.preference.PreferenceManager;
 import android.view.MenuItem;
 import android.widget.Toast;
 
@@ -39,6 +40,7 @@ public class SettingsActivity extends PreferenceActivity implements SharedPrefer
         super.onCreate(savedInstanceState);
         setupActionBar();
         addPreferencesFromResource(R.xml.pref_general);
+        PreferenceManager.setDefaultValues(this,R.xml.pref_general,false);
 
         ListPreference listPreference = (ListPreference) findPreference(getString(R.string.pref_notificationInterval));
         listPreference.setSummary(listPreference.getEntry());
@@ -53,10 +55,14 @@ public class SettingsActivity extends PreferenceActivity implements SharedPrefer
             public boolean onPreferenceClick(Preference preference) {
                 accountManager.clearPassword(accounts[0]);
                 resetPwPref.setEnabled(false);
-                Toast.makeText(SettingsActivity.this,getString(R.string.toast_resetPw),Toast.LENGTH_SHORT).show();
+                Toast.makeText(SettingsActivity.this, getString(R.string.toast_resetPw), Toast.LENGTH_SHORT).show();
                 return true;
             }
         });
+        ListPreference newScript = (ListPreference) findPreference(getString(R.string.pref_newScripts));
+        newScript.setSummary(newScript.getEntry());
+        ListPreference changedSubs = (ListPreference) findPreference(getString(R.string.pref_changedSubs));
+        changedSubs.setSummary(changedSubs.getEntry());
     }
 
     @Override
@@ -144,6 +150,12 @@ public class SettingsActivity extends PreferenceActivity implements SharedPrefer
             else stopService();
             ListPreference listPreference = (ListPreference) findPreference(getString(R.string.pref_notificationInterval));
             listPreference.setEnabled(checkBoxPreference.isChecked());
+        }else if (key.equals(getString(R.string.pref_newScripts))) {
+            ListPreference listPreference = (ListPreference) findPreference(key);
+            listPreference.setSummary(listPreference.getEntry());
+        }else if (key.equals(getString(R.string.pref_changedSubs))) {
+            ListPreference listPreference = (ListPreference) findPreference(key);
+            listPreference.setSummary(listPreference.getEntry());
         }
     }
 

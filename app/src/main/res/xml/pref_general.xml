@@ -35,6 +35,9 @@
             android:key="@string/pref_resetPw"/>
     </PreferenceCategory>
     <PreferenceCategory android:title="Look &amp; Feel">
+        <CheckBoxPreference android:key="@string/key_theme"
+                            android:title="@string/title_theme"
+                            android:defaultValue="false"/>
         <CheckBoxPreference
             android:key="@string/pref_showTools"
             android:title="@string/title_showTools"

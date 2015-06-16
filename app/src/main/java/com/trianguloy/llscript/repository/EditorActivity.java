@@ -81,12 +81,13 @@ public class EditorActivity extends Activity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         this.savedInstanceState = savedInstanceState;
+        sharedPref = PreferenceManager.getDefaultSharedPreferences(this);
+        RepositoryImporter.setTheme(this,sharedPref);
         lock = new Lock();
         setContentView(R.layout.activity_empty);
         lock.lock();
         startService(new Intent(this,RPCService.class));
 
-        sharedPref = PreferenceManager.getDefaultSharedPreferences(this);
         random = new Random();
         connect();
     }

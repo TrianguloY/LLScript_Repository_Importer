@@ -19,6 +19,7 @@ import android.preference.PreferenceManager;
 import android.view.MenuItem;
 import android.widget.Toast;
 
+import com.trianguloy.llscript.repository.internal.Dialogs;
 import com.trianguloy.llscript.repository.internal.ServiceManager;
 
 /**
@@ -37,10 +38,14 @@ public class SettingsActivity extends PreferenceActivity implements SharedPrefer
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
+        PreferenceManager.setDefaultValues(this, R.xml.pref_general, false);
+        RepositoryImporter.setTheme(this, PreferenceManager.getDefaultSharedPreferences(this));
+
         super.onCreate(savedInstanceState);
+
         setupActionBar();
         addPreferencesFromResource(R.xml.pref_general);
-        PreferenceManager.setDefaultValues(this,R.xml.pref_general,false);
+
 
         ListPreference listPreference = (ListPreference) findPreference(getString(R.string.pref_notificationInterval));
         listPreference.setSummary(listPreference.getEntry());
@@ -63,6 +68,14 @@ public class SettingsActivity extends PreferenceActivity implements SharedPrefer
         newScript.setSummary(newScript.getEntry());
         ListPreference changedSubs = (ListPreference) findPreference(getString(R.string.pref_changedSubs));
         changedSubs.setSummary(changedSubs.getEntry());
+        CheckBoxPreference theme = (CheckBoxPreference)findPreference(getString(R.string.key_theme));
+        theme.setOnPreferenceChangeListener(new Preference.OnPreferenceChangeListener() {
+            @Override
+            public boolean onPreferenceChange(Preference preference, Object newValue) {
+                Dialogs.themeChanged(SettingsActivity.this);
+                return true;
+            }
+        });
     }
 
     @Override

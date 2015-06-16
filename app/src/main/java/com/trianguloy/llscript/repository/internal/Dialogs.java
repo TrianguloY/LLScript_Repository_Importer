@@ -1,7 +1,9 @@
 package com.trianguloy.llscript.repository.internal;
 
 import android.app.Activity;
+import android.app.AlarmManager;
 import android.app.AlertDialog;
+import android.app.PendingIntent;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
@@ -39,6 +41,7 @@ public final class Dialogs {
                 .show();
 
     }
+
     public static void badLogin(Context context, @Nullable DialogInterface.OnClickListener onClose) {
         error(context, onClose, context.getString(R.string.text_badLogin));
     }
@@ -48,7 +51,7 @@ public final class Dialogs {
     }
 
     public static void connectionFailed(Context context,@ Nullable DialogInterface.OnClickListener onClose) {
-        error(context,onClose,context.getString(R.string.text_cantConnect));
+        error(context, onClose, context.getString(R.string.text_cantConnect));
     }
 
     public static void pageAlreadyExists(Context context) {
@@ -196,8 +199,22 @@ public final class Dialogs {
                 (flagsBoxes[2].isChecked() ? Constants.FLAG_CUSTOM_MENU : 0);
     }
 
-    public interface OnImportListener{
-        void onClick(String code, String name, int flags);
+    public static void themeChanged(final Context context) {
+        new AlertDialog.Builder(context)
+                .setTitle(context.getString(R.string.title_themeChanged))
+                .setMessage(context.getString(R.string.message_themeChanged))
+                .setPositiveButton(R.string.button_yes, new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        Intent i = new Intent(context, IntentHandle.class);
+                        PendingIntent pendingIntent = PendingIntent.getActivity(context, 0, i, PendingIntent.FLAG_CANCEL_CURRENT);
+                        AlarmManager am = (AlarmManager) context.getSystemService(Context.ALARM_SERVICE);
+                        am.set(AlarmManager.RTC, System.currentTimeMillis() + 100, pendingIntent);
+                        System.exit(0);
+                    }
+                })
+                .setNegativeButton(R.string.button_no,null)
+                .show();
     }
 
     public static void moreThanOneScriptFound(Context context,final String[] names,DialogInterface.OnClickListener onSelect){
@@ -247,5 +264,9 @@ public final class Dialogs {
                 .setNegativeButton(R.string.button_cancel, null)
                 .setPositiveButton(R.string.button_ok, onConfirm)
                 .show();
+    }
+
+    public interface OnImportListener{
+        void onClick(String code, String name, int flags);
     }
 }

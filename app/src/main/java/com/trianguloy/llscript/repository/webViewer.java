@@ -88,6 +88,7 @@ public class webViewer extends Activity {
 
         //initialize variables
         sharedPref = PreferenceManager.getDefaultSharedPreferences(this);
+        RepositoryImporter.setTheme(this,sharedPref);
         if(savedInstanceState!=null && restore(savedInstanceState)){
             initializeWeb();
         }

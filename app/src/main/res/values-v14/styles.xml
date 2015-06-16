@@ -2,6 +2,7 @@
 <resources>
 
     <style name="Theme" parent="android:Theme.DeviceDefault.Light"/>
+    <style name="Theme.Dark" parent="android:Theme.DeviceDefault"/>
     <style name="Theme.TitleText">
         <item name="android:textAllCaps">true</item>
     </style>

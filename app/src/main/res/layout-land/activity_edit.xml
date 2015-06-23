@@ -45,32 +45,32 @@
         android:layout_height="wrap_content" android:layout_alignParentTop="true"
         android:layout_alignParentLeft="true" android:layout_alignParentStart="true"
         android:id="@+id/linearLayout2" android:layout_above="@+id/linearLayout">
-        <ImageButton
+        <com.trianguloy.llscript.repository.internal.ThemedImageButton
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:id="@+id/action_bold" android:src="@drawable/ic_bold" android:layout_weight="1"
             android:onClick="action" tools:ignore="ContentDescription"/>
-        <ImageButton
+        <com.trianguloy.llscript.repository.internal.ThemedImageButton
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:id="@+id/action_italic" android:src="@drawable/ic_italic"
             android:layout_weight="1" android:onClick="action" tools:ignore="ContentDescription"/>
-        <ImageButton
+        <com.trianguloy.llscript.repository.internal.ThemedImageButton
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:id="@+id/action_underline" android:src="@drawable/ic_underline"
             android:layout_weight="1" android:onClick="action" tools:ignore="ContentDescription"/>
-        <ImageButton
+        <com.trianguloy.llscript.repository.internal.ThemedImageButton
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:id="@+id/action_code" android:src="@drawable/ic_code" android:layout_weight="1"
             android:onClick="action" tools:ignore="ContentDescription"/>
-        <ImageButton
+        <com.trianguloy.llscript.repository.internal.ThemedImageButton
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:id="@+id/action_unorderedList" android:src="@drawable/ic_unordered_list"
             android:layout_weight="1" android:onClick="action" tools:ignore="ContentDescription"/>
-        <ImageButton
+        <com.trianguloy.llscript.repository.internal.ThemedImageButton
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:id="@+id/action_orderedList" android:src="@drawable/ic_ordered_list"

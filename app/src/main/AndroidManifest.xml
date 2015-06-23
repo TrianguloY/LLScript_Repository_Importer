@@ -19,6 +19,7 @@
     <application
         android:name=".RepositoryImporter"
         android:allowBackup="true"
+        android:hardwareAccelerated="true"
         android:icon="@drawable/ic_launcher"
         android:label="@string/app_name"
         android:supportsRtl="false"

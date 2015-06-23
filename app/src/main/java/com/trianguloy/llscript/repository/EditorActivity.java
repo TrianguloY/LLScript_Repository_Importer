@@ -181,7 +181,7 @@ public class EditorActivity extends Activity {
     }
 
     @Override
-    protected void onSaveInstanceState(Bundle outState) {
+    protected void onSaveInstanceState(@NonNull Bundle outState) {
         super.onSaveInstanceState(outState);
         outState.putInt(getString(R.string.key_state), state);
         if(state == STATE_EDIT){

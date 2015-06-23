@@ -74,22 +74,20 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:text="@string/radio_empty"
-                    android:id="@+id/radioEmpty" android:layout_below="@+id/textView2"
-                    android:layout_alignParentLeft="true" android:layout_alignParentStart="true"
+                    android:id="@+id/radioEmpty"
                     android:checked="false"/>
                 <RadioButton
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:text="@string/radio_default"
                     android:id="@+id/radioDefault"
-                    android:layout_below="@+id/radioEmpty" android:layout_alignParentLeft="true"
-                    android:layout_alignParentStart="true"/>
+                    />
                 <RadioButton
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:text="@string/radio_custom"
-                    android:id="@+id/radioCustom" android:layout_below="@+id/radioDefault"
-                    android:layout_alignParentLeft="true" android:layout_alignParentStart="true"/>
+                    android:id="@+id/radioCustom"
+                    />
             </RadioGroup>
         </RelativeLayout>
     </ScrollView>

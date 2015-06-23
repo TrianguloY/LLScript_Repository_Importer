@@ -244,7 +244,6 @@ public class webViewer extends Activity {
     @Override
     protected void onSaveInstanceState(@NonNull Bundle outState) {
         super.onSaveInstanceState(outState);
-        Log.d("webViewer","onSaveInstanceState");
         ArrayList<String> temp = new ArrayList<>(backStack.size());
         for(backClass b : backStack){
             temp.add(StringFunctions.backClassToString(b));
@@ -256,7 +255,6 @@ public class webViewer extends Activity {
     }
 
     private boolean restore(@NonNull Bundle savedInstanceState) {
-        Log.d("webViewer", "onRestoreInstanceState");
         if(savedInstanceState.containsKey(getString(R.string.key_backStack))) {
             backStack = new Stack<>();
             ArrayList<String> temp = savedInstanceState.getStringArrayList(getString(R.string.key_backStack));
@@ -703,7 +701,7 @@ public class webViewer extends Activity {
                             case SHOW_NONE:
                                 break;
                             case SHOW_TOAST:
-                                Toast.makeText(webViewer.this,pages.toString(),Toast.LENGTH_LONG);
+                                Toast.makeText(webViewer.this,pages.toString(),Toast.LENGTH_LONG).show();
                                 break;
                             case SHOW_DIALOG:
                                 Dialogs.changedSubscriptions(webViewer.this, pages.toString());

@@ -9,6 +9,7 @@ import java.util.List;
 
 /**
  * Created by Lukas on 15.05.2015.
+ * Adapter to show the repository categories
  */
 public class CategoryAdapter extends BaseArrayAdapter<Repository.RepositoryCategory> {
 

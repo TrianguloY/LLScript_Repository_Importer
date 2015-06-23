@@ -531,6 +531,7 @@ public class EditorActivity extends Activity {
         rpcService.putPage(getString(R.string.prefix_script) + tempId, pageText, new RPCService.Listener<Boolean>() {
             @Override
             public void onResult(@Nullable Boolean result) {
+                if(result==null) result = false;
                 lock.unlock();
                 if(!result) Dialogs.connectionFailed(EditorActivity.this);
                 else showPreview(tempId);

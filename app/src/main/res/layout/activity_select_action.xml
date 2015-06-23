@@ -52,25 +52,26 @@
         android:layout_height="wrap_content"
         android:id="@+id/imageView"
         android:layout_below="@+id/textView4" android:layout_alignParentLeft="true"
-        android:layout_alignParentStart="true" style="@style/Theme.Divider"/>
+        android:layout_alignParentStart="true" style="@style/Theme.Divider"
+        tools:ignore="ContentDescription"/>
     <ImageView
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:id="@+id/imageView2"
         android:layout_below="@+id/buttonCreatePage" android:layout_alignParentLeft="true"
         android:layout_alignParentStart="true"
-        style="@style/Theme.SmallDivider"/>
+        style="@style/Theme.SmallDivider" tools:ignore="ContentDescription"/>
     <TextView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Template"
+        android:text="@string/title_template"
         android:id="@+id/textView5" android:layout_below="@+id/buttonEditPage"
         android:layout_alignParentLeft="true" android:layout_alignParentStart="true"
         style="@style/Theme.TitleText"/>
     <ImageView style="@style/Theme.Divider" android:layout_width="match_parent"
                android:layout_height="wrap_content" android:id="@+id/imageView3"
                android:layout_below="@+id/textView5" android:layout_alignParentLeft="true"
-               android:layout_alignParentStart="true"/>
+               android:layout_alignParentStart="true" tools:ignore="ContentDescription"/>
     <Button
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"

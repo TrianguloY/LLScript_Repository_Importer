@@ -59,6 +59,7 @@ public class AuthenticatorActivity extends AccountAuthenticatorActivity {
                 rpcService.login(user, password, new RPCService.Listener<Integer>() {
                     @Override
                     public void onResult(@Nullable Integer result) {
+                        if(result == null) result = Constants.RESULT_NETWORK_ERROR;
                         switch (result) {
                             case Constants.RESULT_BAD_LOGIN:
                                 Dialogs.badLogin(AuthenticatorActivity.this);

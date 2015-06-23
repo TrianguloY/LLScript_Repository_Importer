@@ -213,7 +213,6 @@
     <string name="button_save">Save</string>
     <string name="button_create">Create</string>
     <string name="hint_id">unique_id</string>
-    <string name="text_startTemplate">Start with Template</string>
     <string name="text_none">None</string>
     <string name="prefix_script">script_</string>
     <string name="prefix_temp">temp_</string>
@@ -284,6 +283,7 @@
     <string name="message_themeChanged">To apply the Changes the app has to be restarted. Do you
         want to restart now?
     </string>
+    <string name="title_template">Template</string>
 
 
 </resources>

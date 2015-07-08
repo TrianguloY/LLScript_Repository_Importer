@@ -22,7 +22,7 @@ android {
 
 dependencies {
     compile fileTree(dir: 'libs', include: ['*.jar'])
-    compile 'com.android.support:support-annotations:21.0.3'
+    compile 'com.android.support:support-annotations:22.2.0'
     compile 'com.android.support:support-v4:22.2.0'
     compile 'ch.acra:acra:4.3.0'
     compile 'fr.turri:dokujclient:3.3.0'

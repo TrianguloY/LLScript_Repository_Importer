@@ -5,6 +5,7 @@ package com.trianguloy.llscript.repository;
  * Static constants used in the project (like R.strings, but also other types)
  */
 public final class Constants {
+
     private Constants(){}
 
     //script flags
@@ -57,6 +58,9 @@ public final class Constants {
     public static final String extraOpenUrl = "openUrl";
     public static final String extraOpenUrlTime = "openUrlTime";
     public static final String extraReload = "reload";
+
+
+    public static String extraLauncherProblem = "launcherProblem";
 
     //Run script parameters
     public static final String RunActionExtra = "a";

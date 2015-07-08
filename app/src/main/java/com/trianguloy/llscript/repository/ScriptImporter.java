@@ -6,6 +6,8 @@ import android.content.Intent;
 import android.os.IBinder;
 import android.widget.Toast;
 
+import com.trianguloy.llscript.repository.internal.Utils;
+
 import org.json.JSONException;
 import org.json.JSONObject;
 
@@ -21,11 +23,20 @@ public class ScriptImporter extends Service {
 
         if (intent.hasExtra(Constants.extraCode) && intent.hasExtra(Constants.extraName)) {
             ComponentName componentName = intent.hasExtra(Constants.extraReceiver) ? ComponentName.unflattenFromString(intent.getStringExtra(Constants.extraReceiver)) : null;
-            boolean forceUpdate = intent.getBooleanExtra(Constants.extraForceUpdate, false);
-            if (componentName == null) {
-                componentName = new ComponentName(this, webViewer.class);
+            if (Utils.checkForLauncher(this)) {
+                if (componentName == null) {
+                    componentName = new ComponentName(this, webViewer.class);
+                }
+                boolean forceUpdate = intent.getBooleanExtra(Constants.extraForceUpdate, false);
+                installScript(intent.getStringExtra(Constants.extraCode), intent.getStringExtra(Constants.extraName), intent.getIntExtra(Constants.extraFlags, 0), componentName, forceUpdate);
             }
-            installScript(intent.getStringExtra(Constants.extraCode), intent.getStringExtra(Constants.extraName), intent.getIntExtra(Constants.extraFlags, 0), componentName, forceUpdate);
+            else if(componentName!=null){
+                //callback for other apps, NYI in scriptlib
+                Intent response = new Intent("android.intent.action.MAIN");
+                response.setComponent(componentName);
+                response.putExtra(Constants.extraLauncherProblem,true);
+                startActivity(intent);
+            }
         }
         stopSelf();
         return super.onStartCommand(intent, flags, startId);

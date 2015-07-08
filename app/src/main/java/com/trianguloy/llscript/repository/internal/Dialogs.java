@@ -4,6 +4,7 @@ import android.app.Activity;
 import android.app.AlarmManager;
 import android.app.AlertDialog;
 import android.app.PendingIntent;
+import android.app.Service;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
@@ -13,6 +14,7 @@ import android.os.Build;
 import android.support.annotation.Nullable;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.WindowManager;
 import android.widget.CheckBox;
 import android.widget.EditText;
 import android.widget.ListAdapter;
@@ -117,7 +119,7 @@ public final class Dialogs {
                 .show();
     }
 
-    private static AlertDialog.Builder baseLauncherProblem(final Activity context){
+    private static AlertDialog baseLauncherProblem(final Context context){
         return new AlertDialog.Builder(context)
                 .setCancelable(false)
                 .setTitle(R.string.title_warning)
@@ -126,23 +128,29 @@ public final class Dialogs {
                     public void onClick(DialogInterface dialog, int which) {
                         Intent i = new Intent(Intent.ACTION_VIEW);
                         i.setData(Uri.parse(context.getString(R.string.link_playStorePrefix) + Constants.packages[1]));
+                        if(context instanceof Service)i.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
                         context.startActivity(i);
-                        context.finish();
+                        if(context instanceof Activity)((Activity)context).finish();
                     }
                 })
-                .setIcon(R.drawable.ic_launcher);
+                .setIcon(R.drawable.ic_launcher)
+                .create();
     }
 
-    public static void launcherNotFound(final Activity context){
-        baseLauncherProblem(context)
-                .setMessage(R.string.message_launcherNotFound)
-                .show();
+    public static void launcherNotFound(final Context context){
+        AlertDialog dialog =  baseLauncherProblem(context);
+        dialog.setMessage(context.getString(R.string.message_launcherNotFound));
+        if(context instanceof Service)
+            dialog.getWindow().setType(WindowManager.LayoutParams.TYPE_SYSTEM_ALERT);
+        dialog.show();
     }
 
-    public static void launcherOutdated(final Activity context){
-        baseLauncherProblem(context)
-                .setMessage(R.string.message_outdatedLauncher)
-                .show();
+    public static void launcherOutdated(final Context context){
+        AlertDialog dialog =  baseLauncherProblem(context);
+        dialog.setMessage(context.getString(R.string.message_outdatedLauncher));
+        if(context instanceof Service)
+            dialog.getWindow().setType(WindowManager.LayoutParams.TYPE_SYSTEM_ALERT);
+        dialog.show();
     }
 
     public static void changedSubscriptions(Context context,String changed){

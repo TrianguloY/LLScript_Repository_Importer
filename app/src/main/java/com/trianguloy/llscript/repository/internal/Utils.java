@@ -1,6 +1,5 @@
 package com.trianguloy.llscript.repository.internal;
 
-import android.app.Activity;
 import android.content.Context;
 import android.content.SharedPreferences;
 import android.content.pm.PackageInfo;
@@ -26,7 +25,7 @@ import java.util.Set;
 
 /**
  * Created by TrianguloY on 26/01/2015.
- * Reads a given Resource to a string
+ * Collection of Utilities
  */
 public final class Utils {
     private Utils(){}
@@ -181,7 +180,7 @@ public final class Utils {
 
 
     //Checks for the launcher installed and sets it in the Constants variable. Returns false if no launcher was found
-    public static boolean checkForLauncher(Activity context) {
+    public static boolean checkForLauncher(Context context) {
 
         //checks the installed package, extreme or not
         PackageManager pm = context.getPackageManager();

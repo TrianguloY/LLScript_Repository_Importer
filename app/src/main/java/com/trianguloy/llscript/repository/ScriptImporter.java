@@ -35,6 +35,7 @@ public class ScriptImporter extends Service {
                 Intent response = new Intent("android.intent.action.MAIN");
                 response.setComponent(componentName);
                 response.putExtra(Constants.extraLauncherProblem,true);
+                response.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
                 startActivity(intent);
             }
         }

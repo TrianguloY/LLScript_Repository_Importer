@@ -1,11 +1,15 @@
 package com.trianguloy.llscript.repository.internal;
 
+import android.app.Activity;
 import android.content.Context;
 import android.content.SharedPreferences;
+import android.content.pm.PackageInfo;
+import android.content.pm.PackageManager;
 import android.os.Build;
 import android.util.Log;
 
 import com.trianguloy.llscript.repository.BuildConfig;
+import com.trianguloy.llscript.repository.Constants;
 import com.trianguloy.llscript.repository.R;
 import com.trianguloy.llscript.repository.webViewer;
 
@@ -26,6 +30,26 @@ import java.util.Set;
  */
 public final class Utils {
     private Utils(){}
+
+    //class used in findBetween
+    public static class valueAndIndex {
+        public final String value;
+        public final int from;
+        public final int to;
+
+        public valueAndIndex(String v, int f, int t) {
+            value = v;
+            from = f;
+            to = t;
+        }
+
+        public valueAndIndex() {
+            value = null;
+            from = -1;
+            to = -1;
+        }
+    }
+
 
     //This function returns the string between beginning and ending in source starting from index, and the position o the matches (including the searched strings). If backwards is true it uses lastIndexOf
     public static valueAndIndex findBetween(String source, String beginning, String ending, int index, boolean backwards) {
@@ -155,22 +179,41 @@ public final class Utils {
         }
     }
 
-    public static class valueAndIndex {
-        public final String value;
-        public final int from;
-        public final int to;
 
-        public valueAndIndex(String v, int f, int t) {
-            value = v;
-            from = f;
-            to = t;
+    //Checks for the launcher installed and sets it in the Constants variable. Returns false if no launcher was found
+    public static boolean checkForLauncher(Activity context) {
+
+        //checks the installed package, extreme or not
+        PackageManager pm = context.getPackageManager();
+        PackageInfo pi = null;
+        Constants.installedPackage = "";
+
+        for (String p : Constants.packages) {
+            try {
+                pi = pm.getPackageInfo(p, PackageManager.GET_ACTIVITIES);
+                Constants.installedPackage = p;
+                break;
+            } catch (PackageManager.NameNotFoundException ignored) {
+                //empty, it just don't breaks and go to next iteration
+            }
         }
 
-        public valueAndIndex() {
-            value = null;
-            from = -1;
-            to = -1;
+        if (Constants.installedPackage.equals("") || pi == null) {
+            //Non of the apps were found
+            Dialogs.launcherNotFound(context);
+            return false;
         }
+
+
+        //Checks the version of the launcher
+
+        if ((pi.versionCode % 1000) < Constants.minimumNecessaryVersion) {
+            Dialogs.launcherOutdated(context);
+            return false;
+        }
+
+
+        return true;
     }
 
 }

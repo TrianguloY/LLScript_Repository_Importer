@@ -82,7 +82,7 @@ public class webViewer extends Activity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        if (checkForLauncher()) {
+        if (!Utils.checkForLauncher(this)) {
             return;
         }
 
@@ -271,41 +271,6 @@ public class webViewer extends Activity {
         return backStack!=null && currentUrl!=null && currentHtml != null && repoHtml != null;
     }
 
-    //Initialization
-    private boolean checkForLauncher() {
-
-        //checks the installed package, extreme or not
-        PackageManager pm = getPackageManager();
-        PackageInfo pi = null;
-        Constants.installedPackage = "";
-
-        for (String p : Constants.packages) {
-            try {
-                pi = pm.getPackageInfo(p, PackageManager.GET_ACTIVITIES);
-                Constants.installedPackage = p;
-                break;
-            } catch (PackageManager.NameNotFoundException ignored) {
-                //empty, it just don't breaks and go to next iteration
-            }
-        }
-
-        if (Constants.installedPackage.equals("") || pi == null) {
-            //Non of the apps were found
-            Dialogs.launcherNotFound(this);
-            return true;
-        }
-
-
-        //Checks the version of the launcher
-
-        if ((pi.versionCode % 1000) < Constants.minimumNecessaryVersion) {
-            Dialogs.launcherOutdated(this);
-            return true;
-        }
-
-
-        return false;
-    }
 
     private void initializeWeb() {
         //Main Activity. Run on onCreate when normal launch

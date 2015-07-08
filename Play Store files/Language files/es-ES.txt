@@ -30,6 +30,14 @@ https://github.com/TrianguloY/LLScript_Repository_Importer
 
 
 _Changes_
+V 1.7
+Nuevo: Tema oscuro
+Nuevo: Compartir la página actual
+Mejorado: Ajustes para los diálogos de nuevos scripts
+Editor mejorado: Modo apaisado, más ajustes, guardar estado
+Arreglado: Crash al usar el servicio para importar
+Arreglado: Algunos problemas con diálogos
+
 V 1.6
 Nuevo: Notificaciones Push para las suscripciones
 Nuevo (Beta): Añadir/Editar páginas con una interfaz dedicada*

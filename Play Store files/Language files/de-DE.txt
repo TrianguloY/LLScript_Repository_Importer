@@ -29,6 +29,14 @@ https://github.com/TrianguloY/LLScript_Repository_Importer
 
 
 _Changes_
+V 1.7
+Neu: Dunkles Thema
+Neu: Link zur aktuellen Seite teilen
+Verbessert: Einstellungen für 'neues Script' Dialoge
+Verbessert(Editor): Querformat, mehr Einstellungen, Status wird gespeichert
+Fix: Crash beim Importieren eines Scripts aus einer anderen App
+Fix: Verschiedene Fehler in Dialogen
+
 V 1.6
 Neu: Benachrichtigungen in der Statusleiste für Abonnements
 Neu (Beta): Seiten bearbeiten oder hinzufügen mit eigener Benutzeroberfläche*

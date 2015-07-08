@@ -24,8 +24,8 @@ import java.util.Set;
  * Created by TrianguloY on 26/01/2015.
  * Reads a given Resource to a string
  */
-public final class StringFunctions {
-    private StringFunctions(){}
+public final class Utils {
+    private Utils(){}
 
     //This function returns the string between beginning and ending in source starting from index, and the position o the matches (including the searched strings). If backwards is true it uses lastIndexOf
     public static valueAndIndex findBetween(String source, String beginning, String ending, int index, boolean backwards) {
@@ -104,7 +104,7 @@ public final class StringFunctions {
     }
 
     public static int pageToHash(String html) {
-        String newHash = StringFunctions.findBetween(html, "<div class=\"docInfo\">", "</div>", -1, false).value;
+        String newHash = Utils.findBetween(html, "<div class=\"docInfo\">", "</div>", -1, false).value;
         if (newHash == null) return -1;
         else return newHash.hashCode();
     }
@@ -118,7 +118,7 @@ public final class StringFunctions {
             if (!s.startsWith("repository\"") && !s.startsWith("template\""))//exclude the repository itself and the script template
             {
                 String page = s.substring(0, s.indexOf('"'));
-                String name = StringFunctions.findBetween(html, page + "\">", "<", 0, false).value;
+                String name = Utils.findBetween(html, page + "\">", "<", 0, false).value;
                 scripts.put(page, name);
             }
         }

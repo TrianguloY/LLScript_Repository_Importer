@@ -33,7 +33,7 @@ public class SubTextView extends TextView {
             key = (String) text;
             String prefix = context.getString(R.string.prefix_script);
             if(key.startsWith(prefix))key = key.substring(prefix.length());
-            super.setText(StringFunctions.getNameForPageFromPref(PreferenceManager.getDefaultSharedPreferences(context), context, key), type);
+            super.setText(Utils.getNameForPageFromPref(PreferenceManager.getDefaultSharedPreferences(context), context, key), type);
         }
     }
 

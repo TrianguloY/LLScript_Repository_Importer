@@ -31,7 +31,7 @@ import com.trianguloy.llscript.repository.internal.AppChooser;
 import com.trianguloy.llscript.repository.internal.Dialogs;
 import com.trianguloy.llscript.repository.internal.DownloadTask;
 import com.trianguloy.llscript.repository.internal.ServiceManager;
-import com.trianguloy.llscript.repository.internal.StringFunctions;
+import com.trianguloy.llscript.repository.internal.Utils;
 import com.trianguloy.llscript.repository.internal.WebClient;
 
 import java.io.File;
@@ -246,7 +246,7 @@ public class webViewer extends Activity {
         super.onSaveInstanceState(outState);
         ArrayList<String> temp = new ArrayList<>(backStack.size());
         for(backClass b : backStack){
-            temp.add(StringFunctions.backClassToString(b));
+            temp.add(Utils.backClassToString(b));
         }
         outState.putStringArrayList(getString(R.string.key_backStack), temp);
         outState.putString(getString(R.string.key_currentUrl), currentUrl);
@@ -259,7 +259,7 @@ public class webViewer extends Activity {
             backStack = new Stack<>();
             ArrayList<String> temp = savedInstanceState.getStringArrayList(getString(R.string.key_backStack));
             for (String s:temp){
-                backStack.add(StringFunctions.stringToBackClass(s));
+                backStack.add(Utils.stringToBackClass(s));
             }
         }
         if(savedInstanceState.containsKey(getString(R.string.key_currentUrl)))
@@ -323,7 +323,7 @@ public class webViewer extends Activity {
                     currentHtml = result;
                 } else {
                     //remove tools
-                    StringFunctions.valueAndIndex val = StringFunctions.findBetween(result, "<div class=\"tools group\">", "<hr class=\"a11y\" />", 0, false);
+                    Utils.valueAndIndex val = Utils.findBetween(result, "<div class=\"tools group\">", "<hr class=\"a11y\" />", 0, false);
                     currentHtml = result.substring(0, val.from) + result.substring(val.to, result.length());
                 }
                 if (currentUrl.equals(getString(R.string.link_repository))) {
@@ -387,7 +387,7 @@ public class webViewer extends Activity {
         //legacy code
         // old method: if the page was changed with the previous method hash of page
         if (sharedPref.contains(getString(R.string.pref_repoHash))) {
-            int newHash = StringFunctions.pageToHash(repoHtml);
+            int newHash = Utils.pageToHash(repoHtml);
             if (newHash != -1 && sharedPref.getInt(getString(R.string.pref_repoHash), -1) != newHash && !sharedPref.contains(getString(R.string.pref_Scripts))) {
                 //show the toast only if the page has changed based on the previous method and the new method is not found
                 Toast.makeText(getApplicationContext(), R.string.toast_repoChanged, Toast.LENGTH_SHORT).show();
@@ -397,20 +397,20 @@ public class webViewer extends Activity {
         }
 
         //new method: based on the scripts found
-        Map<String, String> map = StringFunctions.getAllScriptPagesAndNames(repoHtml);
+        Map<String, String> map = Utils.getAllScriptPagesAndNames(repoHtml);
         HashMap<String, Object> temp = new HashMap<>();
         for (Map.Entry<String, String> entry : map.entrySet()) {
             temp.put(entry.getKey(), entry.getValue());
         }
-        StringFunctions.saveMapToPref(sharedPref, getString(R.string.pref_pageNames), temp);
+        Utils.saveMapToPref(sharedPref, getString(R.string.pref_pageNames), temp);
         Set<String> currentScripts = map.keySet();
         if (sharedPref.contains(getString(R.string.pref_Scripts))) {
-            Set<String> oldScripts = StringFunctions.getSetFromPref(sharedPref, getString(R.string.pref_Scripts));
+            Set<String> oldScripts = Utils.getSetFromPref(sharedPref, getString(R.string.pref_Scripts));
             HashSet<String> newScripts = new HashSet<>(currentScripts);
             newScripts.removeAll(oldScripts);
             if (!newScripts.isEmpty()) {
                 //found new Scripts
-                StringFunctions.saveSetToPref(sharedPref, getString(R.string.pref_Scripts), currentScripts);
+                Utils.saveSetToPref(sharedPref, getString(R.string.pref_Scripts), currentScripts);
                 ArrayList<String> newScriptNames = new ArrayList<>();
                 for (String s : newScripts) newScriptNames.add(map.get(s));
                 StringBuilder names = new StringBuilder();
@@ -433,7 +433,7 @@ public class webViewer extends Activity {
             }
         } else {
             //No info about previous scripts. Only save the current scripts
-            StringFunctions.saveSetToPref(sharedPref, getString(R.string.pref_Scripts), currentScripts);
+            Utils.saveSetToPref(sharedPref, getString(R.string.pref_Scripts), currentScripts);
         }
     }
 
@@ -493,8 +493,8 @@ public class webViewer extends Activity {
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.HONEYCOMB) getActionBar().setDisplayHomeAsUpEnabled(false);
         } else {
             button.setVisibility(View.VISIBLE);
-            setTitle(StringFunctions.getNameForPageFromPref(sharedPref, this, StringFunctions.getNameFromUrl(currentUrl)));
-            boolean sub = StringFunctions.getMapFromPref(sharedPref, getString(R.string.pref_subs)).containsKey(currentUrl);
+            setTitle(Utils.getNameForPageFromPref(sharedPref, this, Utils.getNameFromUrl(currentUrl)));
+            boolean sub = Utils.getMapFromPref(sharedPref, getString(R.string.pref_subs)).containsKey(currentUrl);
             setSubscriptionState(sub ? SUBSCRIBED : NOT_SUBSCRIBED);
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.HONEYCOMB) getActionBar().setDisplayHomeAsUpEnabled(true);
         }
@@ -518,17 +518,17 @@ public class webViewer extends Activity {
         //Starts searching all scripts
         for (String aStart : Constants.beginning) {
             //starting found
-            StringFunctions.valueAndIndex found = new StringFunctions.valueAndIndex(null, -1, 0);
+            Utils.valueAndIndex found = new Utils.valueAndIndex(null, -1, 0);
             do {
                 //searches for a match
-                found = StringFunctions.findBetween(currentHtml, aStart, Constants.ending, found.to, false);
+                found = Utils.findBetween(currentHtml, aStart, Constants.ending, found.to, false);
                 if (found.value != null) {
                     //if it is found, it adds it to the list
                     rawCodes.add(found.value.trim());
                     //Assumes the script name is just before the code, and searches for it
-                    StringFunctions.valueAndIndex name = new StringFunctions.valueAndIndex(null, found.from, -1);
+                    Utils.valueAndIndex name = new Utils.valueAndIndex(null, found.from, -1);
                     do {
-                        name = StringFunctions.findBetween(currentHtml, ">", "<", name.from, true);
+                        name = Utils.findBetween(currentHtml, ">", "<", name.from, true);
                         if (name.value == null) {
                             names.add("Name not found");
                             break;
@@ -550,7 +550,7 @@ public class webViewer extends Activity {
         //TODO search the flags
 
         //About script: purpose, author, link
-        aboutScript = StringFunctions.findBetween(currentHtml, "id=\"about_the_script\">", "</ul>", -1, false).value;
+        aboutScript = Utils.findBetween(currentHtml, "id=\"about_the_script\">", "</ul>", -1, false).value;
         if (aboutScript != null) {
 
             //remove html tags
@@ -621,7 +621,7 @@ public class webViewer extends Activity {
             @Override
             public void onClick(String code, String name, int flags) {
                 sendScriptToLauncher(code, name, flags);
-                if (!StringFunctions.getMapFromPref(sharedPref, getString(R.string.pref_subs)).keySet().contains(currentUrl))
+                if (!Utils.getMapFromPref(sharedPref, getString(R.string.pref_subs)).keySet().contains(currentUrl))
                     Dialogs.subscribe(webViewer.this, new DialogInterface.OnClickListener() {
                         @Override
                         public void onClick(DialogInterface dialogInterface, int i) {
@@ -691,10 +691,10 @@ public class webViewer extends Activity {
                 binder.getService().getChangedSubscriptions(new WebService.Listener() {
                     @Override
                     public void onFinish(List<String> updated) {
-                        Map<String, String> map = StringFunctions.getAllScriptPagesAndNames(repoHtml);
+                        Map<String, String> map = Utils.getAllScriptPagesAndNames(repoHtml);
                         StringBuilder pages = new StringBuilder();
                         for (String s : updated) {
-                            pages.append(map.get(StringFunctions.getNameFromUrl(s))).append("\n");
+                            pages.append(map.get(Utils.getNameFromUrl(s))).append("\n");
                         }
                         int showAs = sharedPref.getInt(getString(R.string.pref_changedSubs),2);
                         switch (showAs){
@@ -725,17 +725,17 @@ public class webViewer extends Activity {
     }
 
     private void subscribeToCurrent() {
-        Map<String, Object> subs = StringFunctions.getMapFromPref(sharedPref, getString(R.string.pref_subs));
-        subs.put(currentUrl, StringFunctions.pageToHash(currentHtml));
-        StringFunctions.saveMapToPref(sharedPref, getString(R.string.pref_subs), subs);
+        Map<String, Object> subs = Utils.getMapFromPref(sharedPref, getString(R.string.pref_subs));
+        subs.put(currentUrl, Utils.pageToHash(currentHtml));
+        Utils.saveMapToPref(sharedPref, getString(R.string.pref_subs), subs);
         Toast.makeText(this, getString(R.string.toast_subscribeSuccessful), Toast.LENGTH_SHORT).show();
         setSubscriptionState(SUBSCRIBED);
     }
 
     private void unsubscribeCurrent() {
-        Map<String, Object> subs = StringFunctions.getMapFromPref(sharedPref, getString(R.string.pref_subs));
+        Map<String, Object> subs = Utils.getMapFromPref(sharedPref, getString(R.string.pref_subs));
         subs.remove(currentUrl);
-        StringFunctions.saveMapToPref(sharedPref, getString(R.string.pref_subs), subs);
+        Utils.saveMapToPref(sharedPref, getString(R.string.pref_subs), subs);
         Toast.makeText(this, getString(R.string.toast_unsubscribeSuccessful), Toast.LENGTH_SHORT).show();
         setSubscriptionState(NOT_SUBSCRIBED);
 

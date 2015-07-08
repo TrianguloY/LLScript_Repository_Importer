@@ -37,7 +37,7 @@ import com.trianguloy.llscript.repository.internal.CategoryAdapter;
 import com.trianguloy.llscript.repository.internal.Dialogs;
 import com.trianguloy.llscript.repository.internal.DownloadTask;
 import com.trianguloy.llscript.repository.internal.Repository;
-import com.trianguloy.llscript.repository.internal.StringFunctions;
+import com.trianguloy.llscript.repository.internal.Utils;
 import com.trianguloy.llscript.repository.internal.WebClient;
 
 import org.acra.ACRA;
@@ -356,9 +356,9 @@ public class EditorActivity extends Activity {
                     }
                     if (repository.tableStartLine == -1) repository.tableStartLine = i;
                     else if (line.startsWith(circumflex))
-                        repository.categories.add(new Repository.RepositoryCategory(StringFunctions.findBetween(line, circumflex, "^^^", 0, false).value, i, 0));
+                        repository.categories.add(new Repository.RepositoryCategory(Utils.findBetween(line, circumflex, "^^^", 0, false).value, i, 0));
                     else if (line.startsWith("|//**"))
-                        repository.categories.add(new Repository.RepositoryCategory(StringFunctions.findBetween(line, "|//**", "**//||\\\\ |", 0, false).value, i, 1));
+                        repository.categories.add(new Repository.RepositoryCategory(Utils.findBetween(line, "|//**", "**//||\\\\ |", 0, false).value, i, 1));
                 }
                 setContentView(R.layout.activity_create);
                 Spinner spinner = (Spinner) findViewById(R.id.spinner);
@@ -569,7 +569,7 @@ public class EditorActivity extends Activity {
             public void onFinish(String result) {
                 if (!sharedPref.getBoolean(getString(R.string.pref_showTools), false)) {
                     //remove tools
-                    StringFunctions.valueAndIndex val = StringFunctions.findBetween(result, "<div class=\"tools group\">", "<hr class=\"a11y\" />", 0, false);
+                    Utils.valueAndIndex val = Utils.findBetween(result, "<div class=\"tools group\">", "<hr class=\"a11y\" />", 0, false);
                     result = result.substring(0, val.from) + result.substring(val.to, result.length());
                 }
                 webView.loadDataWithBaseURL(getString(R.string.link_server),result,"text/html","UTF-8",null);
@@ -593,7 +593,7 @@ public class EditorActivity extends Activity {
         adapter.sort(new Comparator<String>() {
             @Override
             public int compare(String lhs, String rhs) {
-                return StringFunctions.getNameForPageFromPref(sharedPref,EditorActivity.this,lhs).toLowerCase().compareTo(StringFunctions.getNameForPageFromPref(sharedPref, EditorActivity.this, rhs).toLowerCase());
+                return Utils.getNameForPageFromPref(sharedPref, EditorActivity.this, lhs).toLowerCase().compareTo(Utils.getNameForPageFromPref(sharedPref, EditorActivity.this, rhs).toLowerCase());
             }
         });
         Dialogs.selectPageToEdit(this, adapter, new DialogInterface.OnClickListener() {

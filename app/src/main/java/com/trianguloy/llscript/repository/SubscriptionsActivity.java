@@ -11,7 +11,7 @@ import android.widget.ArrayAdapter;
 import android.widget.ListView;
 
 import com.trianguloy.llscript.repository.internal.Dialogs;
-import com.trianguloy.llscript.repository.internal.StringFunctions;
+import com.trianguloy.llscript.repository.internal.Utils;
 
 import java.util.Map;
 
@@ -28,11 +28,11 @@ public class SubscriptionsActivity extends Activity implements ListView.OnItemCl
         setContentView(R.layout.activity_subscriptions);
         ListView subsList = (ListView) findViewById(R.id.sub_list);
         sharedPref = PreferenceManager.getDefaultSharedPreferences(this);
-        subsMap = StringFunctions.getMapFromPref(sharedPref, getString(R.string.pref_subs));
+        subsMap = Utils.getMapFromPref(sharedPref, getString(R.string.pref_subs));
         if (subsMap.size() > 0) {
             adapter = new ArrayAdapter<>(this, R.layout.sub_list_item);
             for (String s : subsMap.keySet()) {
-                adapter.add(StringFunctions.getNameFromUrl(s));
+                adapter.add(Utils.getNameFromUrl(s));
             }
             subsList.setAdapter(adapter);
             subsList.setOnItemClickListener(this);
@@ -42,7 +42,7 @@ public class SubscriptionsActivity extends Activity implements ListView.OnItemCl
 
     @Override
     public void onItemClick(AdapterView<?> parent, View view, final int position, long id) {
-        Dialogs.removeSubscription(this,StringFunctions.getNameForPageFromPref(sharedPref, this, adapter.getItem(position)),new DialogInterface.OnClickListener() {
+        Dialogs.removeSubscription(this, Utils.getNameForPageFromPref(sharedPref, this, adapter.getItem(position)),new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialog, int which) {
                 String p = adapter.getItem(position);
@@ -50,7 +50,7 @@ public class SubscriptionsActivity extends Activity implements ListView.OnItemCl
                 for (String s : subsMap.keySet()) {
                     if (s.contains(p)) {
                         subsMap.remove(s);
-                        StringFunctions.saveMapToPref(sharedPref, getString(R.string.pref_subs), subsMap);
+                        Utils.saveMapToPref(sharedPref, getString(R.string.pref_subs), subsMap);
                         break;
                     }
                 }

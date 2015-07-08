@@ -12,7 +12,7 @@ import android.preference.PreferenceManager;
 import android.support.v4.app.NotificationCompat;
 
 import com.trianguloy.llscript.repository.internal.DownloadTask;
-import com.trianguloy.llscript.repository.internal.StringFunctions;
+import com.trianguloy.llscript.repository.internal.Utils;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -42,7 +42,7 @@ public class WebService extends Service {
 
     public void getChangedSubscriptions(final Listener listener) {
         if (sharedPref.contains(getString(R.string.pref_subs))) {
-            final Map<String, Object> pages = StringFunctions.getMapFromPref(sharedPref, getString(R.string.pref_subs));
+            final Map<String, Object> pages = Utils.getMapFromPref(sharedPref, getString(R.string.pref_subs));
             if (pages.size() > 0) {
                 counter = pages.size();
                 final ArrayList<String> updated = new ArrayList<>();
@@ -53,13 +53,13 @@ public class WebService extends Service {
                         @Override
                         public void onFinish(String result) {
                             counter--;
-                            int hash = StringFunctions.pageToHash(result);
+                            int hash = Utils.pageToHash(result);
                             if (hash != -1 && hash != (int) pages.get(p)) {
                                 updated.add(p);
                                 pages.put(p, hash);
                             }
                             if (counter == 0 && updated.size() > 0) {
-                                StringFunctions.saveMapToPref(sharedPref, getString(R.string.pref_subs), pages);
+                                Utils.saveMapToPref(sharedPref, getString(R.string.pref_subs), pages);
                                 listener.onFinish(updated);
                             }
                         }
@@ -90,10 +90,10 @@ public class WebService extends Service {
     private void pushNotification(List<String> updated) {
         NotificationCompat.Builder builder = new NotificationCompat.Builder(this);
         builder.setContentTitle(getString(R.string.title_updatedPages));
-        builder.setContentText(updated.size() == 1 ? StringFunctions.getNameForPageFromPref(sharedPref, this, StringFunctions.getNameFromUrl(updated.get(0))) : updated.size() + " " + getString(R.string.text_updatedPages));
+        builder.setContentText(updated.size() == 1 ? Utils.getNameForPageFromPref(sharedPref, this, Utils.getNameFromUrl(updated.get(0))) : updated.size() + " " + getString(R.string.text_updatedPages));
         NotificationCompat.InboxStyle inboxStyle = new NotificationCompat.InboxStyle();
         for (String s : updated) {
-            inboxStyle.addLine(StringFunctions.getNameForPageFromPref(sharedPref, this, StringFunctions.getNameFromUrl(s)));
+            inboxStyle.addLine(Utils.getNameForPageFromPref(sharedPref, this, Utils.getNameFromUrl(s)));
         }
         builder.setStyle(inboxStyle);
         builder.setSmallIcon(R.drawable.ic_notification);

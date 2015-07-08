@@ -36,7 +36,7 @@ public class ScriptImporter extends Service {
                 response.setComponent(componentName);
                 response.putExtra(Constants.extraLauncherProblem,true);
                 response.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-                startActivity(intent);
+                startActivity(response);
             }
         }
         stopSelf();

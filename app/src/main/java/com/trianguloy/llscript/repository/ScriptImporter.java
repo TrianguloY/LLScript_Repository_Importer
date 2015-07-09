@@ -25,14 +25,14 @@ public class ScriptImporter extends Service {
             ComponentName componentName = intent.hasExtra(Constants.extraReceiver) ? ComponentName.unflattenFromString(intent.getStringExtra(Constants.extraReceiver)) : null;
             if (Utils.checkForLauncher(this)) {
                 if (componentName == null) {
-                    componentName = new ComponentName(this, webViewer.class);
+                    componentName = new ComponentName(this, IntentHandle.class);
                 }
                 boolean forceUpdate = intent.getBooleanExtra(Constants.extraForceUpdate, false);
                 installScript(intent.getStringExtra(Constants.extraCode), intent.getStringExtra(Constants.extraName), intent.getIntExtra(Constants.extraFlags, 0), componentName, forceUpdate);
             }
             else if(componentName!=null){
                 //callback for other apps, NYI in scriptlib
-                Intent response = new Intent("android.intent.action.MAIN");
+                Intent response = new Intent(Intent.ACTION_VIEW);
                 response.setComponent(componentName);
                 response.putExtra(Constants.extraLauncherProblem,true);
                 response.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);

@@ -60,6 +60,7 @@ public final class Constants {
     public static final String extraReload = "reload";
 
 
+    public static final String extraLoadedScriptId = "loadedScriptId";
     public static final String extraLauncherProblem = "launcherProblem";
 
     //Run script parameters

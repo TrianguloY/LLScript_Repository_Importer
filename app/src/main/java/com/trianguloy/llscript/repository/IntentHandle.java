@@ -30,14 +30,18 @@ public class IntentHandle extends Activity {
                         finish();
                     }
                 }).show();
-            } else {
+            }
+            else if(intent.hasExtra(Constants.extraLoadedScriptId)){
+                //loaded a script, return to page
+                openWebViewer();
+            }
+            else {
                 Toast.makeText(getApplicationContext(), getString(R.string.toast_badString), Toast.LENGTH_LONG).show();
                 finish();
             }
         } else {
             //bad intent
             openWebViewer();
-            finish();
         }
     }
 

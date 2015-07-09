@@ -5,8 +5,8 @@ try{
     data=null;
 }
 
-var intent=new Intent("android.intent.action.MAIN");
-intent.setComponent(ComponentName.unflattenFromString("com.trianguloy.llscript.repository/com.trianguloy.llscript.repository.webViewer"));
+var intent=new Intent("android.intent.action.View");
+intent.setComponent(ComponentName.unflattenFromString("com.trianguloy.llscript.repository/com.trianguloy.llscript.repository.IntentHandle"));
 
 if(data==null){
 

@@ -131,10 +131,12 @@ public class webViewer extends Activity {
                         &&//and if the time passed is less than five seconds (to avoid be launched after closed, because the intent is kept)
                         intent.getLongExtra(Constants.extraOpenUrlTime, 0) + 5000 > System.currentTimeMillis()
                 ) {
+            boolean invalidate = false;
             if(intent.hasExtra(Constants.extraReload) && intent.getBooleanExtra(Constants.extraReload,false)) {
                 repoHtml = "";
+                invalidate = true;
             }
-            changePage(intent.getStringExtra(Constants.extraOpenUrl));
+            changePage(intent.getStringExtra(Constants.extraOpenUrl),0,invalidate);
         }
 
 
@@ -405,7 +407,11 @@ public class webViewer extends Activity {
         changePage(url, 0);
     }
 
-    private void changePage(String url, int positionY) {
+    private void changePage(String url, int positionY){
+        changePage(url,positionY,false);
+    }
+
+    private void changePage(String url, int positionY, boolean invalidate) {
         //Change the page of the webView to the passed one
         if (downloadTaskListener == null) {
             //The activity is not yet loaded. The url is kept as the currentUrl, so it gets loaded when the activity do so
@@ -427,7 +433,7 @@ public class webViewer extends Activity {
             }
         } else if (url.startsWith(getString(R.string.link_scriptPagePrefix))) {
             // script page
-            if (!currentUrl.equals(url)) {
+            if (!currentUrl.equals(url) || invalidate) {
                 backStack.push(new backClass(currentUrl, webView.getScrollY()));
                 currentUrl = url;
                 webViewPositionY = positionY;

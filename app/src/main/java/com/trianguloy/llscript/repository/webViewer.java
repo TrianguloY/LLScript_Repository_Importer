@@ -132,7 +132,7 @@ public class webViewer extends Activity {
                         intent.getLongExtra(Constants.extraOpenUrlTime, 0) + 5000 > System.currentTimeMillis()
                 ) {
             boolean invalidate = false;
-            if(intent.hasExtra(Constants.extraReload) && intent.getBooleanExtra(Constants.extraReload,false)) {
+            if(intent.getBooleanExtra(Constants.extraReload,false)) {
                 repoHtml = "";
                 invalidate = true;
             }
@@ -345,7 +345,7 @@ public class webViewer extends Activity {
             }
         }
 
-        changePage(currentUrl);
+        changePage(currentUrl,0,true);
     }
 
     private void showNewScripts() {
@@ -434,7 +434,7 @@ public class webViewer extends Activity {
         } else if (url.startsWith(getString(R.string.link_scriptPagePrefix))) {
             // script page
             if (!currentUrl.equals(url) || invalidate) {
-                backStack.push(new backClass(currentUrl, webView.getScrollY()));
+                if(!currentUrl.equals(url)) backStack.push(new backClass(currentUrl, webView.getScrollY()));
                 currentUrl = url;
                 webViewPositionY = positionY;
                 progressBar.setVisibility(View.VISIBLE);

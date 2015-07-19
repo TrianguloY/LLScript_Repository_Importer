@@ -1,5 +1,6 @@
 package com.trianguloy.llscript.repository;
 
+import android.app.Notification;
 import android.app.NotificationManager;
 import android.app.PendingIntent;
 import android.app.Service;
@@ -9,7 +10,6 @@ import android.graphics.BitmapFactory;
 import android.os.Binder;
 import android.os.IBinder;
 import android.preference.PreferenceManager;
-import android.support.v4.app.NotificationCompat;
 
 import com.trianguloy.llscript.repository.internal.DownloadTask;
 import com.trianguloy.llscript.repository.internal.Utils;
@@ -88,10 +88,10 @@ public class WebService extends Service {
     }
 
     private void pushNotification(List<String> updated) {
-        NotificationCompat.Builder builder = new NotificationCompat.Builder(this);
+        Notification.Builder builder = new Notification.Builder(this);
         builder.setContentTitle(getString(R.string.title_updatedPages));
         builder.setContentText(updated.size() == 1 ? Utils.getNameForPageFromPref(sharedPref, this, Utils.getNameFromUrl(updated.get(0))) : updated.size() + " " + getString(R.string.text_updatedPages));
-        NotificationCompat.InboxStyle inboxStyle = new NotificationCompat.InboxStyle();
+        Notification.InboxStyle inboxStyle = new Notification.InboxStyle();
         for (String s : updated) {
             inboxStyle.addLine(Utils.getNameForPageFromPref(sharedPref, this, Utils.getNameFromUrl(s)));
         }

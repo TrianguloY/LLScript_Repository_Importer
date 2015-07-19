@@ -61,12 +61,18 @@ public final class Constants {
 
 
     public static final String extraLoadedScriptId = "loadedScriptId";
-    public static final String extraLauncherProblem = "launcherProblem";
+    public static final String extraStatus = "status";
+
+    public static final int STATUS_LAUNCHER_PROBLEM = 3;
+    public static final int STATUS_UPDATE_CONFIRMATION_REQUIRED = 2;
+    public static final int STATUS_OK = 1;
 
     //Run script parameters
     public static final String RunActionExtra = "a";
     public static final String RunDataExtra = "d";
     public static final int RunActionKey = 35;
+    public static final String RunBackgroundExtra ="t";
+    public static final int RunBackgroundKey = 3;
 
     //Script JSON names for script drop
     public static final String ScriptName = "name";

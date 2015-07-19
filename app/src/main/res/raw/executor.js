@@ -1,3 +1,14 @@
+var ScriptName = "name";
+var ScriptFlags = "flags";
+var ScriptCode = "code";
+var extraStatus = "status";
+var extraLoadedScriptId = "loadedScriptId";
+
+var STATUS_LAUNCHER_PROBLEM = 3;
+var STATUS_UPDATE_CONFIRMATION_REQUIRED = 2;
+var STATUS_OK = 1;
+
+
 var data=LL.getEvent().getData();
 try{
     data=JSON.parse(data);
@@ -33,15 +44,20 @@ for(var t=0;t<scripts.getLength();++t){
     //if duplicated, only the last one (oldest in most cases)
 }
 
+
+intent.setComponent(ComponentName.unflattenFromString(data.returnTo));
+
 if(match==null){
 
 //Not found. Create
     match = LL.createScript(data.name,data.code,data.flags);
+    intent.putExtra(extraStatus,STATUS_OK);
     toast="Script imported successfully.\nAvailable in the launcher";
 
 }else if(match.getText()==data.code){
 
 //same name and code. Updated flags
+    intent.putExtra(extraStatus,STATUS_OK);
     toast="Script already imported";
     //2,4,8 <-> app_menu,item_menu,custom_menu
     match.setFlag(2,((data.flags>>1)&1)==1);
@@ -51,17 +67,21 @@ if(match==null){
 }else{
 
 //same name, different code
-    if(data.forceUpdate || confirm("There is a script with the same name but different code. Do you want to update it?")){
-    //update
+    if(data.forceUpdate){
+        //update
         match.setText(data.code);
+        intent.putExtra(extraStatus,STATUS_OK);
         toast="Script updated";
     }else{
-    //don't update
-        toast="Not imported";
+    //ask caller what to do
+    intent.putExtra(extraStatus,STATUS_UPDATE_CONFIRMATION_REQUIRED);
+    //send parameters back for convenience
+    intent.putExtra(ScriptName,data.name);
+    intent.putExtra(ScriptCode,data.code);
+    intent.putExtra(ScriptFlags,data.flags);
     }
 }
-intent.setComponent(ComponentName.unflattenFromString(data.returnTo));
-intent.putExtra("loadedScriptId",match.getId());
+intent.putExtra(extraLoadedScriptId,match.getId());
 
-Android.makeNewToast(toast, true).show();
+if(toast!="")Android.makeNewToast(toast, true).show();
 LL.startActivity(intent);

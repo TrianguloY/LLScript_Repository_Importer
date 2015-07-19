@@ -7,6 +7,7 @@ import android.os.Bundle;
 import android.widget.Toast;
 
 import com.trianguloy.llscript.repository.internal.AppChooser;
+import com.trianguloy.llscript.repository.internal.Dialogs;
 
 
 public class IntentHandle extends Activity {
@@ -31,9 +32,19 @@ public class IntentHandle extends Activity {
                     }
                 }).show();
             }
-            else if(intent.hasExtra(Constants.extraLoadedScriptId)){
-                //loaded a script, return to page
-                openWebViewer();
+            else if(intent.hasExtra(Constants.extraStatus)){
+                int status = (int)intent.getDoubleExtra(Constants.extraStatus,0);
+                switch (status){
+                    case Constants.STATUS_OK:
+                        //loaded a script, return to page
+                        openWebViewer();
+                        break;
+                    case Constants.STATUS_UPDATE_CONFIRMATION_REQUIRED:
+                        Dialogs.confirmUpdate(this,intent.getStringExtra(Constants.ScriptName),intent.getStringExtra(Constants.ScriptCode),intent.getStringExtra(Constants.ScriptFlags));
+                        break;
+                    default:
+                        throw new IllegalArgumentException("Invalid status code returned from script: "+status);
+                }
             }
             else {
                 Toast.makeText(getApplicationContext(), getString(R.string.toast_badString), Toast.LENGTH_LONG).show();
@@ -45,11 +56,11 @@ public class IntentHandle extends Activity {
         }
     }
 
-    private void openWebViewer(){
+    public void openWebViewer(){
         openWebViewer(null,false);
     }
 
-    private void openWebViewer(String url,boolean reload) {
+    public void openWebViewer(String url,boolean reload) {
         Intent intent = new Intent(this, webViewer.class);
         if (url != null) intent.putExtra(Constants.extraOpenUrl, url);
         intent.putExtra(Constants.extraOpenUrlTime, System.currentTimeMillis());

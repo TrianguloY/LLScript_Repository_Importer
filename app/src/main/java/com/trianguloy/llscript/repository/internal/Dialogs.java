@@ -22,6 +22,7 @@ import android.widget.ListAdapter;
 import com.trianguloy.llscript.repository.Constants;
 import com.trianguloy.llscript.repository.IntentHandle;
 import com.trianguloy.llscript.repository.R;
+import com.trianguloy.llscript.repository.ScriptImporter;
 
 /**
  * Created by Lukas on 28.04.2015.
@@ -271,6 +272,30 @@ public final class Dialogs {
                 .setMessage(R.string.message_subscribeAsk)
                 .setNegativeButton(R.string.button_cancel, null)
                 .setPositiveButton(R.string.button_ok, onConfirm)
+                .show();
+    }
+
+    public static void confirmUpdate(final IntentHandle context, final String scriptName, final String code, final String flags) {
+        new AlertDialog.Builder(context)
+                .setTitle("Confirm update")
+                .setMessage("There is a script with the same name but different code. Do you want to update it?")
+                .setNegativeButton(R.string.button_no, new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        context.openWebViewer();
+                    }
+                })
+                .setPositiveButton(R.string.button_yes, new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        Intent intent = new Intent(context, ScriptImporter.class);
+                        intent.putExtra(Constants.extraCode, code);
+                        intent.putExtra(Constants.extraName, scriptName);
+                        intent.putExtra(Constants.extraFlags, flags);
+                        intent.putExtra(Constants.extraForceUpdate,true);
+                        context.startService(intent);
+                    }
+                })
                 .show();
     }
 

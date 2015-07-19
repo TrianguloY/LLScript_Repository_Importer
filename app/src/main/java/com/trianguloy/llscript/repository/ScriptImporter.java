@@ -31,10 +31,10 @@ public class ScriptImporter extends Service {
                 installScript(intent.getStringExtra(Constants.extraCode), intent.getStringExtra(Constants.extraName), intent.getIntExtra(Constants.extraFlags, 0), componentName, forceUpdate);
             }
             else if(componentName!=null){
-                //callback for other apps, NYI in scriptlib
+                //callback for other apps
                 Intent response = new Intent(Intent.ACTION_VIEW);
                 response.setComponent(componentName);
-                response.putExtra(Constants.extraLauncherProblem,true);
+                response.putExtra(Constants.extraStatus,Constants.STATUS_LAUNCHER_PROBLEM);
                 response.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
                 startActivity(response);
             }
@@ -67,11 +67,13 @@ public class ScriptImporter extends Service {
 
 
     private void sendIntent(JSONObject data) {
-        Intent i = new Intent(Intent.ACTION_VIEW);
+        Intent i = new Intent();
         i.setComponent(new ComponentName(Constants.installedPackage, Constants.activityRunScript));
         i.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
         i.putExtra(Constants.RunActionExtra, Constants.RunActionKey);
+        //i.putExtra(Constants.RunBackgroundExtra,Constants.RunBackgroundKey);
         i.putExtra(Constants.RunDataExtra, Constants.managerId + "/" + data.toString());
         startActivity(i);
+
     }
 }

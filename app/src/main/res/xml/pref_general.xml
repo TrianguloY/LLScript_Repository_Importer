@@ -17,6 +17,11 @@
             android:title="@string/title_browser"
             android:summary="@string/summary_browser"
             android:key="@string/pref_browser"/>
+        <CheckBoxPreference
+            android:title="@string/title_preferDedicated"
+            android:summary="@string/summary_preferDedicated"
+            android:key="@string/pref_preferDedicated"
+            android:defaultValue="true"/>
     </PreferenceCategory>
     <PreferenceCategory android:title="@string/title_notifications">
         <CheckBoxPreference

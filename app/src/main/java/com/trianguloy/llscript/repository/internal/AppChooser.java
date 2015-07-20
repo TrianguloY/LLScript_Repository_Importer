@@ -5,6 +5,7 @@ import android.content.ComponentName;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.content.pm.ActivityInfo;
 import android.content.pm.ResolveInfo;
 import android.net.Uri;
@@ -28,6 +29,7 @@ public class AppChooser extends AlertDialog.Builder {
     private final OnCloseListener listener;
     private final List<ResolveInfo> activities;
     private CheckBox checkBox;
+    private SharedPreferences sharedPref;
 
     public AppChooser(final Context context, Uri action, String title, String onFailureMessage, @Nullable OnCloseListener listener) {
         super(context);
@@ -35,6 +37,7 @@ public class AppChooser extends AlertDialog.Builder {
         this.action = action;
         this.onFailureMessage = onFailureMessage;
         this.listener = listener;
+        this.sharedPref = PreferenceManager.getDefaultSharedPreferences(context);
         Intent i = new Intent(Intent.ACTION_VIEW);
         i.setData(action);
         activities = getAppList(context, i);
@@ -49,7 +52,7 @@ public class AppChooser extends AlertDialog.Builder {
                         activityInfo.name);
                 launch(launch);
                 if(checkBox.isChecked()){
-                    PreferenceManager.getDefaultSharedPreferences(context).edit().putString(context.getString(R.string.pref_browser),launch.flattenToString()).apply();
+                    sharedPref.edit().putString(context.getString(R.string.pref_browser),launch.flattenToString()).apply();
                 }
             }
         });
@@ -65,14 +68,32 @@ public class AppChooser extends AlertDialog.Builder {
     @Override
     public AlertDialog show() {
         if (activities.size() > 0) {
-            String defaultBrowser = PreferenceManager.getDefaultSharedPreferences(context).getString(context.getString(R.string.pref_browser), "");
-            ComponentName browser = ComponentName.unflattenFromString(defaultBrowser);
+            ComponentName browser =null;
             boolean found = false;
-            if (browser != null) {
-                for (ResolveInfo info : activities) {
-                    if (info.activityInfo.name.equals(browser.getClassName()) && info.activityInfo.packageName.equals(browser.getPackageName())) {
-                        found = true;
-                        break;
+            if(sharedPref.getBoolean(context.getString(R.string.pref_preferDedicated),false)) {
+                Intent testIntent = new Intent(Intent.ACTION_VIEW);
+                testIntent.setData(Uri.parse(context.getString(R.string.link_repository)));
+                List<ResolveInfo> defaultActivites = getAppList(context, testIntent);
+                if (activities.size() > defaultActivites.size()) {
+                    for (ResolveInfo info : activities) {
+                        if (!defaultActivites.contains(info)) {
+                            browser = new ComponentName(info.activityInfo.applicationInfo.packageName,
+                                    info.activityInfo.name);
+                            found = true;
+                            break;
+                        }
+                    }
+                }
+            }
+            if(!found) {
+                String defaultBrowser = PreferenceManager.getDefaultSharedPreferences(context).getString(context.getString(R.string.pref_browser), "");
+                browser = ComponentName.unflattenFromString(defaultBrowser);
+                if (browser != null) {
+                    for (ResolveInfo info : activities) {
+                        if (info.activityInfo.name.equals(browser.getClassName()) && info.activityInfo.packageName.equals(browser.getPackageName())) {
+                            found = true;
+                            break;
+                        }
                     }
                 }
             }

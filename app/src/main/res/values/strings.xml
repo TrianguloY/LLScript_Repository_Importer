@@ -284,6 +284,9 @@
         want to restart now?
     </string>
     <string name="title_template">Template</string>
+    <string name="pref_preferDedicated">preferDedicated</string>
+    <string name="title_preferDedicated">Prefer dedicated Apps</string>
+    <string name="summary_preferDedicated">Use e.g. Google Plus App instead of the browser</string>
 
 
 </resources>

@@ -29,7 +29,7 @@ public class AppChooser extends AlertDialog.Builder {
     private final OnCloseListener listener;
     private final List<ResolveInfo> activities;
     private CheckBox checkBox;
-    private SharedPreferences sharedPref;
+    private final SharedPreferences sharedPref;
 
     public AppChooser(final Context context, Uri action, String title, String onFailureMessage, @Nullable OnCloseListener listener) {
         super(context);

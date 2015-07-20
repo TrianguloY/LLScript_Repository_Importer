@@ -60,7 +60,7 @@ public class IntentHandle extends Activity {
         openWebViewer(null,false);
     }
 
-    public void openWebViewer(String url,boolean reload) {
+    private void openWebViewer(String url, boolean reload) {
         Intent intent = new Intent(this, webViewer.class);
         if (url != null) intent.putExtra(Constants.extraOpenUrl, url);
         intent.putExtra(Constants.extraOpenUrlTime, System.currentTimeMillis());

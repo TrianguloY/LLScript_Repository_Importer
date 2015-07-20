@@ -40,7 +40,7 @@ public class IntentHandle extends Activity {
                         openWebViewer();
                         break;
                     case Constants.STATUS_UPDATE_CONFIRMATION_REQUIRED:
-                        Dialogs.confirmUpdate(this,intent.getStringExtra(Constants.ScriptName),intent.getStringExtra(Constants.ScriptCode),intent.getStringExtra(Constants.ScriptFlags));
+                        Dialogs.confirmUpdate(this,intent.getStringExtra(Constants.ScriptName),intent.getStringExtra(Constants.ScriptCode),(int)intent.getDoubleExtra(Constants.ScriptFlags,0));
                         break;
                     default:
                         throw new IllegalArgumentException("Invalid status code returned from script: "+status);

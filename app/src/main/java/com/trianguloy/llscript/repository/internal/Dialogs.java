@@ -275,7 +275,7 @@ public final class Dialogs {
                 .show();
     }
 
-    public static void confirmUpdate(final IntentHandle context, final String scriptName, final String code, final String flags) {
+    public static void confirmUpdate(final IntentHandle context, final String scriptName, final String code, final int flags) {
         new AlertDialog.Builder(context)
                 .setTitle("Confirm update")
                 .setMessage("There is a script with the same name but different code. Do you want to update it?")

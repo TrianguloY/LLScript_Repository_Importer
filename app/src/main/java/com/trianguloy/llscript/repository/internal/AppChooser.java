@@ -70,6 +70,7 @@ public class AppChooser extends AlertDialog.Builder {
         if (activities.size() > 0) {
             ComponentName browser =null;
             boolean found = false;
+            String name = context.getString(R.string.text_browser);
             if(sharedPref.getBoolean(context.getString(R.string.pref_preferDedicated),false)) {
                 Intent testIntent = new Intent(Intent.ACTION_VIEW);
                 testIntent.setData(Uri.parse(context.getString(R.string.link_repository)));
@@ -79,6 +80,7 @@ public class AppChooser extends AlertDialog.Builder {
                         if (!defaultActivites.contains(info)) {
                             browser = new ComponentName(info.activityInfo.applicationInfo.packageName,
                                     info.activityInfo.name);
+                            name = (String) info.activityInfo.applicationInfo.loadLabel(context.getPackageManager());
                             found = true;
                             break;
                         }
@@ -92,6 +94,7 @@ public class AppChooser extends AlertDialog.Builder {
                     for (ResolveInfo info : activities) {
                         if (info.activityInfo.name.equals(browser.getClassName()) && info.activityInfo.packageName.equals(browser.getPackageName())) {
                             found = true;
+                            name = (String) info.activityInfo.applicationInfo.loadLabel(context.getPackageManager());
                             break;
                         }
                     }
@@ -99,6 +102,7 @@ public class AppChooser extends AlertDialog.Builder {
             }
             if (found) {
                 launch(browser);
+                Toast.makeText(context,context.getString(R.string.toast_externalLink)+name+context.getString(R.string.toast_tripleDot),Toast.LENGTH_SHORT).show();
                 return super.create();
             } else {
                 AlertDialog dialog = super.create();

@@ -15,3 +15,9 @@
 #-keepclassmembers class fqcn.of.javascript.interface.for.webview {
 #   public *;
 #}
+
+-keepattributes Signature,RuntimeVisibleAnnotations,AnnotationDefault,*Annotation*
+
+-keep public class * extends android.content.Context
+-keep public class org.acra.** {*;}
+-dontwarn **

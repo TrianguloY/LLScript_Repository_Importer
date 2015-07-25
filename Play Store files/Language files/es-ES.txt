@@ -13,61 +13,68 @@ _Complete description_
 Necesitas tener Lightning Launcher instalado para que funcione correctamente.
 https://play.google.com/store/apps/details?id=net.pierrox.lightning_launcher_extreme
 
-La aplicaciÛn no se encuentra traducida al EspaÒol. El idioma utilizado es InglÈs.
+La aplicaci√≥n no se encuentra traducida al Espa√±ol. El idioma utilizado es Ingl√©s.
 
 *********
 
-Esta aplicaciÛn consiste en un visor web que te permite navegar por el repositorio de script de la wiki de Lightning Launcher. Cuando est·s en la p·gina de un script, pulsa el boton de descarga para importarlo (o compartirlo como texto)
+Esta aplicaci√≥n consiste en un visor web que te permite navegar por el repositorio de script de la wiki de Lightning Launcher. Cuando est√°s en la p√°gina de un script, pulsa el boton de descarga para importarlo (o compartirlo como texto)
 
-Una aplicaciÛn hecha por Lukas Morawietz y TrianguloY.
+Una aplicaci√≥n hecha por Lukas Morawietz y TrianguloY.
 
-P·gina de Lightning Launcher en Google+
+P√°gina de Lightning Launcher en Google+
 https://plus.google.com/communities/109017480579703391739
 
-Puedes ver el cÛdigo fuente aquÌ:
+Puedes ver el c√≥digo fuente aqu√≠:
 https://github.com/TrianguloY/LLScript_Repository_Importer
 
 
 
 _Changes_
+V 1.8
+Arreglado: Problemas de p√°ginas sin cargar
+Mejorado: Abrir en aplicacion externa
+Mejorado: Tama√±o del apk disminuido
+API: Mejorada la detecci√≥n de cambios
+
+
 V 1.7
 Nuevo: Tema oscuro
-Nuevo: Compartir la p·gina actual
-Mejorado: Ajustes para los di·logos de nuevos scripts
-Editor mejorado: Modo apaisado, m·s ajustes, guardar estado
+Nuevo: Compartir la p√°gina actual
+Mejorado: Ajustes para los di√°logos de nuevos scripts
+Editor mejorado: Modo apaisado, m√°s ajustes, guardar estado
 Arreglado: Crash al usar el servicio para importar
-Arreglado: Algunos problemas con di·logos
+Arreglado: Algunos problemas con di√°logos
 
 V 1.6
 Nuevo: Notificaciones Push para las suscripciones
-Nuevo (Beta): AÒadir/Editar p·ginas con una interfaz dedicada*
+Nuevo (Beta): A√±adir/Editar p√°ginas con una interfaz dedicada*
 Nuevo: Modulo para capturar logs
-Nuevo: Ocultar la barra de herramientas en las p·ginas de la Wiki, pues pueden no funcionar correctamente
+Nuevo: Ocultar la barra de herramientas en las p√°ginas de la Wiki, pues pueden no funcionar correctamente
 Nuevo: Elegir navegador para usar con 'open in browser'
-Mejorado: DisposiciÛn en dispositivos con API baja
+Mejorado: Disposici√≥n en dispositivos con API baja
 Arreglado: Varios bugs
 
 *Permisos: Los nuevos permisos de cuentas son usados para almacenar tus credenciales si usas el editor
 
 V 1.5
-IMPORTANTE: Requiere versiÛn mÌnima de LL. En caso contrario pedir· actualizar.
+IMPORTANTE: Requiere versi√≥n m√≠nima de LL. En caso contrario pedir√° actualizar.
 Nuevo: Ajustes
-Nuevo: Suscripciones - Ser·s notificado si una p·gina a la que te has suscrito es actualizada.
-Nuevo: Boton de atras en la barra de acciÛn.
-Mejorado: No requiere instalaciÛn de un script extra
-Mejorado: Se muestra en nombre de la p·gina en lugar del identificador si es posible
+Nuevo: Suscripciones - Ser√°s notificado si una p√°gina a la que te has suscrito es actualizada.
+Nuevo: Boton de atras en la barra de acci√≥n.
+Mejorado: No requiere instalaci√≥n de un script extra
+Mejorado: Se muestra en nombre de la p√°gina en lugar del identificador si es posible
 Mejorado: Textos
 Arreglado: Funciona con la version de prueba de LL
 
 V 1.4
-Mejorado: El mensaje te dice quÈ script del repositorio ha cambiado
-Mejorado: Nuevo mÈtodo de carga de scripts (sin cambios para el usuario)
+Mejorado: El mensaje te dice qu√© script del repositorio ha cambiado
+Mejorado: Nuevo m√©todo de carga de scripts (sin cambios para el usuario)
 Archivos: Nuevo icono
 
 V 1.3
-Nuevo: Adjuntar el 'Acerca de este script' al principio del cÛdigo, puede ser desactivado, activado por defecto
+Nuevo: Adjuntar el 'Acerca de este script' al principio del c√≥digo, puede ser desactivado, activado por defecto
 Nuevo: Mensaje si el repositorio ha cambiado
-Mejorado: Recuerda la posiciÛn al volver
+Mejorado: Recuerda la posici√≥n al volver
 Arreglado: Bug al importar via root
 Arreglado: error de JSON
 
@@ -76,8 +83,8 @@ Arreglado: crash al abrir desde LL
 
 V 1.2
 IMPORTANTE: Debido a un ligero cambio en la manera en la que se guardan los datos, el Manager script necesita ser cargado de nuevo. Simplemente sigue los pasos como la primera vez
-Ahora puedes abrir enlaces relativos al repositorio directamente en la aplicaciÛn
-AÒadida pulsaciÛn larga en el botÛn de atras para cerrar
+Ahora puedes abrir enlaces relativos al repositorio directamente en la aplicaci√≥n
+A√±adida pulsaci√≥n larga en el bot√≥n de atras para cerrar
 
 V 1.1
 Quitados los menus de desarrollo en lugar de inhabilitarlos

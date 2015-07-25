@@ -29,6 +29,12 @@ https://github.com/TrianguloY/LLScript_Repository_Importer
 
 
 _Changes_
+V 1.8
+Fix: Seitenladefehler
+Verbessert: Öffnen externer Apps
+Verbessert: Größe reduziert
+API: Verbesserte Updateverwaltung
+
 V 1.7
 Neu: Dunkles Thema
 Neu: Link zur aktuellen Seite teilen

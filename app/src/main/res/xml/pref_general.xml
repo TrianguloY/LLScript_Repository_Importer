@@ -39,7 +39,7 @@
         <Preference android:title="@string/title_resetPw"
             android:key="@string/pref_resetPw"/>
     </PreferenceCategory>
-    <PreferenceCategory android:title="Look &amp; Feel">
+    <PreferenceCategory android:title="@string/title_lookAndFeel">
         <CheckBoxPreference android:key="@string/key_theme"
                             android:title="@string/title_theme"
                             android:defaultValue="false"/>
@@ -60,7 +60,23 @@
             android:entries="@array/val_notify"
             android:entryValues="@array/val_notifyId"
             android:defaultValue="@string/val_changedSubDefault"/>
-
+    </PreferenceCategory>
+    <PreferenceCategory android:title="@string/title_behaviour">
+        <CheckBoxPreference
+            android:key="@string/pref_directReturn"
+            android:title="@string/title_directReturn"
+            android:summary="@string/summary_directReturn"
+            android:defaultValue="false"/>
+        <CheckBoxPreference
+            android:key="@string/pref_longPressClose"
+            android:title="@string/title_longPressClose"
+            android:summary="@string/summary_longPressClose"
+            android:defaultValue="true"/>
+        <CheckBoxPreference
+            android:key="@string/pref_singleClose"
+            android:title="@string/title_singleClose"
+            android:summary="@string/summary_singleClose"
+            android:defaultValue="false"/>
     </PreferenceCategory>
     <PreferenceCategory android:title="@string/title_links">
         <Preference android:title="@string/text_playStore">

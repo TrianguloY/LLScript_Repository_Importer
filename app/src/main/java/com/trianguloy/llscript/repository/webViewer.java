@@ -86,11 +86,10 @@ public class webViewer extends Activity {
 
         //initialize variables
         sharedPref = PreferenceManager.getDefaultSharedPreferences(this);
-        RepositoryImporter.setTheme(this,sharedPref);
-        if(savedInstanceState!=null && restore(savedInstanceState)){
+        RepositoryImporter.setTheme(this, sharedPref);
+        if (savedInstanceState != null && restore(savedInstanceState)) {
             initializeWeb();
-        }
-        else {
+        } else {
             backStack = new Stack<>();
             currentUrl = getString(R.string.link_repository);
 
@@ -124,19 +123,18 @@ public class webViewer extends Activity {
     @Override
     protected void onNewIntent(Intent intent) {
 
-        if (
-                intent.hasExtra(Constants.extraOpenUrl)
-                        &&//if has both extras
-                        intent.hasExtra(Constants.extraOpenUrlTime)
-                        &&//and if the time passed is less than five seconds (to avoid be launched after closed, because the intent is kept)
-                        intent.getLongExtra(Constants.extraOpenUrlTime, 0) + 5000 > System.currentTimeMillis()
+        if (intent.hasExtra(Constants.extraOpenUrl)
+                &&//if has both extras
+                intent.hasExtra(Constants.extraOpenUrlTime)
+                &&//and if the time passed is less than five seconds (to avoid be launched after closed, because the intent is kept)
+                intent.getLongExtra(Constants.extraOpenUrlTime, 0) + 5000 > System.currentTimeMillis()
                 ) {
             boolean invalidate = false;
-            if(intent.getBooleanExtra(Constants.extraReload,false)) {
+            if (intent.getBooleanExtra(Constants.extraReload, false)) {
                 repoHtml = "";
                 invalidate = true;
             }
-            changePage(intent.getStringExtra(Constants.extraOpenUrl),0,invalidate);
+            changePage(intent.getStringExtra(Constants.extraOpenUrl), 0, invalidate);
         }
 
 
@@ -196,7 +194,7 @@ public class webViewer extends Activity {
 
     @Override
     public void onBackPressed() {
-        if (!currentUrl.equals(getString(R.string.link_repository))) {
+        if (!currentUrl.equals(getString(R.string.link_repository)) && (!sharedPref.getBoolean(getString(R.string.pref_directReturn),false) || !backStack.empty())) {
             //not on the home page
             if (backStack.empty()) {
                 changePage(getString(R.string.link_repository));
@@ -206,7 +204,7 @@ public class webViewer extends Activity {
                 changePage(currentUrl, previous.posY);
             }
 
-        } else if (!close) {
+        } else if (!close || sharedPref.getBoolean(getString(R.string.pref_singleClose),false)) {
             //Press back while the toast is still displayed to close
             Toast.makeText(getApplicationContext(), R.string.toast_backToClose, Toast.LENGTH_SHORT).show();
             close = true;
@@ -223,7 +221,7 @@ public class webViewer extends Activity {
 
     @Override
     public boolean onKeyLongPress(int keyCode, KeyEvent event) {
-        if (keyCode == KeyEvent.KEYCODE_BACK) {
+        if (keyCode == KeyEvent.KEYCODE_BACK && sharedPref.getBoolean(getString(R.string.pref_longPressClose),true)) {
             finish();
             return true;
         }
@@ -245,30 +243,30 @@ public class webViewer extends Activity {
     protected void onSaveInstanceState(@NonNull Bundle outState) {
         super.onSaveInstanceState(outState);
         ArrayList<String> temp = new ArrayList<>(backStack.size());
-        for(backClass b : backStack){
+        for (backClass b : backStack) {
             temp.add(Utils.backClassToString(b));
         }
         outState.putStringArrayList(getString(R.string.key_backStack), temp);
         outState.putString(getString(R.string.key_currentUrl), currentUrl);
         outState.putString(getString(R.string.key_currentHtml), currentHtml);
-        outState.putString(getString(R.string.key_repoHtml),repoHtml);
+        outState.putString(getString(R.string.key_repoHtml), repoHtml);
     }
 
     private boolean restore(@NonNull Bundle savedInstanceState) {
-        if(savedInstanceState.containsKey(getString(R.string.key_backStack))) {
+        if (savedInstanceState.containsKey(getString(R.string.key_backStack))) {
             backStack = new Stack<>();
             ArrayList<String> temp = savedInstanceState.getStringArrayList(getString(R.string.key_backStack));
-            for (String s:temp){
+            for (String s : temp) {
                 backStack.add(Utils.stringToBackClass(s));
             }
         }
-        if(savedInstanceState.containsKey(getString(R.string.key_currentUrl)))
+        if (savedInstanceState.containsKey(getString(R.string.key_currentUrl)))
             currentUrl = savedInstanceState.getString(getString(R.string.key_currentUrl));
-        if(savedInstanceState.containsKey(getString(R.string.key_currentHtml)))
+        if (savedInstanceState.containsKey(getString(R.string.key_currentHtml)))
             currentHtml = savedInstanceState.getString(getString(R.string.key_currentHtml));
-        if(savedInstanceState.containsKey(getString(R.string.key_repoHtml)))
+        if (savedInstanceState.containsKey(getString(R.string.key_repoHtml)))
             repoHtml = savedInstanceState.getString(getString(R.string.key_repoHtml));
-        return backStack!=null && currentUrl!=null && currentHtml != null && repoHtml != null;
+        return backStack != null && currentUrl != null && currentHtml != null && repoHtml != null;
     }
 
 
@@ -318,7 +316,7 @@ public class webViewer extends Activity {
             @Override
             public boolean shouldOverrideUrlLoading(WebView view, String url) {
                 //prevent login and register, broken because cookies are missing
-                if(url.contains("&do=login")||url.contains("&do=register"))return true;
+                if (url.contains("&do=login") || url.contains("&do=register")) return true;
                 if (!currentUrl.equals(url)) {
                     //link clicked
                     changePage(url);
@@ -345,7 +343,7 @@ public class webViewer extends Activity {
             }
         }
 
-        changePage(currentUrl,0,true);
+        changePage(currentUrl, 0, true);
     }
 
     private void showNewScripts() {
@@ -382,19 +380,19 @@ public class webViewer extends Activity {
                 for (int i = 0; i < newScriptNames.size(); i++) {
                     names.append(newScriptNames.get(i)).append("\n");
                 }
-                names.deleteCharAt(names.length()-1);
-                int showAs = sharedPref.getInt(getString(R.string.pref_newScripts),1);
-                switch (showAs){
+                names.deleteCharAt(names.length() - 1);
+                int showAs = sharedPref.getInt(getString(R.string.pref_newScripts), 1);
+                switch (showAs) {
                     case SHOW_NONE:
                         break;
                     case SHOW_TOAST:
-                        Toast.makeText(webViewer.this,(newScriptNames.size()==1?getString(R.string.toast_oneNewScript):getString(R.string.toast_severalNewScripts))+names.toString(),Toast.LENGTH_LONG);
+                        Toast.makeText(webViewer.this, (newScriptNames.size() == 1 ? getString(R.string.toast_oneNewScript) : getString(R.string.toast_severalNewScripts)) + names.toString(), Toast.LENGTH_LONG);
                         break;
                     case SHOW_DIALOG:
-                        Dialogs.newScripts(this,names.toString(),newScriptNames.size()==1);
+                        Dialogs.newScripts(this, names.toString(), newScriptNames.size() == 1);
                         break;
                 }
-                Toast.makeText(this,  names.toString(), Toast.LENGTH_LONG).show();
+                Toast.makeText(this, names.toString(), Toast.LENGTH_LONG).show();
             }
         } else {
             //No info about previous scripts. Only save the current scripts
@@ -407,8 +405,8 @@ public class webViewer extends Activity {
         changePage(url, 0);
     }
 
-    private void changePage(String url, int positionY){
-        changePage(url,positionY,false);
+    private void changePage(String url, int positionY) {
+        changePage(url, positionY, false);
     }
 
     private void changePage(String url, int positionY, boolean invalidate) {
@@ -434,13 +432,13 @@ public class webViewer extends Activity {
         } else if (url.startsWith(getString(R.string.link_scriptPagePrefix))) {
             // script page
             if (!currentUrl.equals(url) || invalidate) {
-                if(!currentUrl.equals(url)) backStack.push(new backClass(currentUrl, webView.getScrollY()));
+                if (!currentUrl.equals(url))
+                    backStack.push(new backClass(currentUrl, webView.getScrollY()));
                 currentUrl = url;
                 webViewPositionY = positionY;
                 progressBar.setVisibility(View.VISIBLE);
                 new DownloadTask(downloadTaskListener).execute(url);
-            }
-            else {
+            } else {
                 progressBar.setVisibility(View.GONE);
                 if (menu != null) onPrepareOptionsMenu(menu);
                 display();
@@ -459,13 +457,15 @@ public class webViewer extends Activity {
             button.setVisibility(View.GONE);
             setTitle(R.string.action_mainPage);
             setSubscriptionState(CANT_SUBSCRIBE);
-            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.HONEYCOMB) getActionBar().setDisplayHomeAsUpEnabled(false);
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.HONEYCOMB)
+                getActionBar().setDisplayHomeAsUpEnabled(false);
         } else {
             button.setVisibility(View.VISIBLE);
             setTitle(Utils.getNameForPageFromPref(sharedPref, this, Utils.getNameFromUrl(currentUrl)));
             boolean sub = Utils.getMapFromPref(sharedPref, getString(R.string.pref_subs)).containsKey(currentUrl);
             setSubscriptionState(sub ? SUBSCRIBED : NOT_SUBSCRIBED);
-            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.HONEYCOMB) getActionBar().setDisplayHomeAsUpEnabled(true);
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.HONEYCOMB)
+                getActionBar().setDisplayHomeAsUpEnabled(true);
         }
     }
 
@@ -623,15 +623,15 @@ public class webViewer extends Activity {
 
         //flags
         text.append("//Flags: ");
-        if (flags>=Constants.FLAG_CUSTOM_MENU) {
+        if (flags >= Constants.FLAG_CUSTOM_MENU) {
             text.append("app ");
             flags -= Constants.FLAG_CUSTOM_MENU;
         }
-        if (flags>=Constants.FLAG_ITEM_MENU) {
+        if (flags >= Constants.FLAG_ITEM_MENU) {
             text.append("item ");
             flags -= Constants.FLAG_ITEM_MENU;
         }
-        if (flags>=Constants.FLAG_APP_MENU) {
+        if (flags >= Constants.FLAG_APP_MENU) {
             text.append("custom ");
         }
         text.append("\n");
@@ -665,12 +665,12 @@ public class webViewer extends Activity {
                         for (String s : updated) {
                             pages.append(map.get(Utils.getNameFromUrl(s))).append("\n");
                         }
-                        int showAs = sharedPref.getInt(getString(R.string.pref_changedSubs),2);
-                        switch (showAs){
+                        int showAs = sharedPref.getInt(getString(R.string.pref_changedSubs), 2);
+                        switch (showAs) {
                             case SHOW_NONE:
                                 break;
                             case SHOW_TOAST:
-                                Toast.makeText(webViewer.this,pages.toString(),Toast.LENGTH_LONG).show();
+                                Toast.makeText(webViewer.this, pages.toString(), Toast.LENGTH_LONG).show();
                                 break;
                             case SHOW_DIALOG:
                                 Dialogs.changedSubscriptions(webViewer.this, pages.toString());
@@ -732,7 +732,7 @@ public class webViewer extends Activity {
                 unsub = true;
                 break;
             default:
-                throw new IllegalArgumentException("Invalid Argument: "+state);
+                throw new IllegalArgumentException("Invalid Argument: " + state);
         }
         menu.findItem(R.id.action_subscribe).setVisible(sub);
         menu.findItem(R.id.action_unsubscribe).setVisible(unsub);
@@ -749,7 +749,6 @@ public class webViewer extends Activity {
             posY = p;
         }
     }
-
 
 
 }

@@ -290,6 +290,20 @@
     <string name="toast_externalLink">"External link. Opening in "</string>
     <string name="toast_tripleDot">…</string>
     <string name="text_browser">browser</string>
+    <string name="pref_directReturn">directReturn</string>
+    <string name="pref_longPressClose">longPressClose</string>
+    <string name="pref_singleClose">singleClose</string>
+    <string name="title_lookAndFeel"><![CDATA[Look & Feel]]></string>
+    <string name="title_behaviour">Behaviour</string>
+    <string name="title_directReturn">Directly return to external apps</string>
+    <string name="summary_directReturn">If unchecked the Index will be shown when navigating back
+    </string>
+    <string name="title_longPressClose">Long press to close</string>
+    <string name="summary_longPressClose">Close the app by Long pressing back everywhere</string>
+    <string name="title_singleClose">Close on single back press</string>
+    <string name="summary_singleClose">If unchecked you\'ll need to double click back to close the
+        app
+    </string>
 
 
 </resources>

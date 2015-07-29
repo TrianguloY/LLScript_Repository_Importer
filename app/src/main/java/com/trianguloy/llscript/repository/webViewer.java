@@ -204,7 +204,7 @@ public class webViewer extends Activity {
                 changePage(currentUrl, previous.posY);
             }
 
-        } else if (!close || sharedPref.getBoolean(getString(R.string.pref_singleClose),false)) {
+        } else if (!close && !sharedPref.getBoolean(getString(R.string.pref_singleClose),false)) {
             //Press back while the toast is still displayed to close
             Toast.makeText(getApplicationContext(), R.string.toast_backToClose, Toast.LENGTH_SHORT).show();
             close = true;

@@ -92,7 +92,7 @@ public class WebService extends Service {
         if(Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN) {
             Notification.Builder builder = new Notification.Builder(this);
             builder.setContentTitle(getString(R.string.title_updatedPages));
-            builder.setContentText(updated.size() == 1 ? Utils.getNameForPageFromPref(sharedPref, this, Utils.getNameFromUrl(updated.get(0))) : updated.size() + " " + getString(R.string.text_updatedPages));
+            builder.setContentText(getStringUpdated(updated));
             Notification.InboxStyle inboxStyle = new Notification.InboxStyle();
             for (String s : updated) {
                 inboxStyle.addLine(Utils.getNameForPageFromPref(sharedPref, this, Utils.getNameFromUrl(s)));
@@ -109,10 +109,14 @@ public class WebService extends Service {
             Notification not = new Notification(R.drawable.ic_notification, null, System.currentTimeMillis());
             //noinspection deprecation
             not.setLatestEventInfo(this, getString(R.string.title_updatedPages),
-                    updated.size() == 1 ? Utils.getNameForPageFromPref(sharedPref, this, Utils.getNameFromUrl(updated.get(0))) : updated.size() + " " + getString(R.string.text_updatedPages),
+                    getStringUpdated(updated),
                     PendingIntent.getActivity(this, 0, new Intent(this, webViewer.class), PendingIntent.FLAG_UPDATE_CURRENT));
             ((NotificationManager) this.getSystemService(NOTIFICATION_SERVICE)).notify(0, not);
         }
+    }
+
+    private String getStringUpdated(List<String> updated){
+        return updated.size() == 1 ? Utils.getNameForPageFromPref(sharedPref, this, Utils.getNameFromUrl(updated.get(0))) : updated.size() + " " + getString(R.string.text_updatedPages);
     }
 
     public class LocalBinder extends Binder {

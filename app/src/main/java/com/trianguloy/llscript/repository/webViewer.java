@@ -1,5 +1,6 @@
 package com.trianguloy.llscript.repository;
 
+import android.app.ActionBar;
 import android.app.Activity;
 import android.content.ComponentName;
 import android.content.Context;
@@ -196,7 +197,7 @@ public class webViewer extends Activity {
 
     @Override
     public void onBackPressed() {
-        if (!currentUrl.equals(getString(R.string.link_repository)) && (!sharedPref.getBoolean(getString(R.string.pref_directReturn),false) || !backStack.empty())) {
+        if (!currentUrl.equals(getString(R.string.link_repository)) && (!sharedPref.getBoolean(getString(R.string.pref_directReturn), false) || !backStack.empty())) {
             //not on the home page
             if (backStack.empty()) {
                 changePage(getString(R.string.link_repository));
@@ -206,7 +207,7 @@ public class webViewer extends Activity {
                 changePage(currentUrl, previous.posY);
             }
 
-        } else if (!close && !sharedPref.getBoolean(getString(R.string.pref_singleClose),false)) {
+        } else if (!close && !sharedPref.getBoolean(getString(R.string.pref_singleClose), false)) {
             //Press back while the toast is still displayed to close
             Toast.makeText(getApplicationContext(), R.string.toast_backToClose, Toast.LENGTH_SHORT).show();
             close = true;
@@ -223,7 +224,7 @@ public class webViewer extends Activity {
 
     @Override
     public boolean onKeyLongPress(int keyCode, KeyEvent event) {
-        if (keyCode == KeyEvent.KEYCODE_BACK && sharedPref.getBoolean(getString(R.string.pref_longPressClose),true)) {
+        if (keyCode == KeyEvent.KEYCODE_BACK && sharedPref.getBoolean(getString(R.string.pref_longPressClose), true)) {
             finish();
             return true;
         }
@@ -258,6 +259,7 @@ public class webViewer extends Activity {
         if (savedInstanceState.containsKey(getString(R.string.key_backStack))) {
             backStack = new Stack<>();
             ArrayList<String> temp = savedInstanceState.getStringArrayList(getString(R.string.key_backStack));
+            assert temp != null;
             for (String s : temp) {
                 backStack.add(Utils.stringToBackClass(s));
             }
@@ -297,7 +299,6 @@ public class webViewer extends Activity {
                     //Function to check if the page has changed since the last visit
                     showNewScripts();
                 }
-                progressBar.setVisibility(View.GONE);
                 if (menu != null) onPrepareOptionsMenu(menu);
                 display();
             }
@@ -330,6 +331,7 @@ public class webViewer extends Activity {
             public void onPageFinished(WebView view, String url) {
                 super.onPageFinished(view, url);
                 webView.scrollTo(0, webViewPositionY);
+                progressBar.setVisibility(View.GONE);
             }
         });
         webView.getSettings().setJavaScriptEnabled(true);
@@ -427,7 +429,6 @@ public class webViewer extends Activity {
             if (repoHtml.equals("")) {
                 new DownloadTask(downloadTaskListener).execute(url);
             } else {
-                progressBar.setVisibility(View.GONE);
                 currentHtml = repoHtml;
                 display();
             }
@@ -441,7 +442,6 @@ public class webViewer extends Activity {
                 progressBar.setVisibility(View.VISIBLE);
                 new DownloadTask(downloadTaskListener).execute(url);
             } else {
-                progressBar.setVisibility(View.GONE);
                 if (menu != null) onPrepareOptionsMenu(menu);
                 display();
             }
@@ -459,15 +459,21 @@ public class webViewer extends Activity {
             button.setVisibility(View.GONE);
             setTitle(R.string.action_mainPage);
             setSubscriptionState(CANT_SUBSCRIBE);
-            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.HONEYCOMB)
-                getActionBar().setDisplayHomeAsUpEnabled(false);
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.HONEYCOMB) {
+                ActionBar bar = getActionBar();
+                assert bar != null;
+                bar.setDisplayHomeAsUpEnabled(false);
+            }
         } else {
             button.setVisibility(View.VISIBLE);
             setTitle(Utils.getNameForPageFromPref(sharedPref, this, Utils.getNameFromUrl(currentUrl)));
             boolean sub = Utils.getMapFromPref(sharedPref, getString(R.string.pref_subs)).containsKey(currentUrl);
             setSubscriptionState(sub ? SUBSCRIBED : NOT_SUBSCRIBED);
-            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.HONEYCOMB)
-                getActionBar().setDisplayHomeAsUpEnabled(true);
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.HONEYCOMB) {
+                ActionBar bar = getActionBar();
+                assert bar != null;
+                bar.setDisplayHomeAsUpEnabled(true);
+            }
         }
     }
 

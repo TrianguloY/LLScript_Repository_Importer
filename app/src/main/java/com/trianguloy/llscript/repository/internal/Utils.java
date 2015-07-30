@@ -152,7 +152,7 @@ public final class Utils {
         if(page.startsWith("script_"))page = page.substring(ctx.getString(R.string.prefix_script).length());
         String result = (String) getMapFromPref(pref, ctx.getString(R.string.pref_pageNames)).get(page);
         if (result != null) return result.trim();
-        if (BuildConfig.DEBUG) Log.i("StringFunctions", "Failed to find script name for " + page);
+        if (BuildConfig.DEBUG) Log.i(Utils.class.getSimpleName(), "Failed to find script name for " + page);
         return page;
     }
 

@@ -3,6 +3,7 @@ package com.trianguloy.llscript.repository;
 import android.accounts.Account;
 import android.accounts.AccountManager;
 import android.annotation.TargetApi;
+import android.app.ActionBar;
 import android.app.AlarmManager;
 import android.content.ComponentName;
 import android.content.Context;
@@ -68,7 +69,7 @@ public class SettingsActivity extends PreferenceActivity implements SharedPrefer
         newScript.setSummary(newScript.getEntry());
         ListPreference changedSubs = (ListPreference) findPreference(getString(R.string.pref_changedSubs));
         changedSubs.setSummary(changedSubs.getEntry());
-        CheckBoxPreference theme = (CheckBoxPreference)findPreference(getString(R.string.key_theme));
+        CheckBoxPreference theme = (CheckBoxPreference) findPreference(getString(R.string.key_theme));
         theme.setOnPreferenceChangeListener(new Preference.OnPreferenceChangeListener() {
             @Override
             public boolean onPreferenceChange(Preference preference, Object newValue) {
@@ -97,7 +98,9 @@ public class SettingsActivity extends PreferenceActivity implements SharedPrefer
     private void setupActionBar() {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.HONEYCOMB) {
             // Show the Up button in the action bar.
-            getActionBar().setDisplayHomeAsUpEnabled(true);
+            ActionBar bar = getActionBar();
+            assert bar != null;
+            bar.setDisplayHomeAsUpEnabled(true);
         }
     }
 
@@ -163,10 +166,10 @@ public class SettingsActivity extends PreferenceActivity implements SharedPrefer
             else stopService();
             ListPreference listPreference = (ListPreference) findPreference(getString(R.string.pref_notificationInterval));
             listPreference.setEnabled(checkBoxPreference.isChecked());
-        }else if (key.equals(getString(R.string.pref_newScripts))) {
+        } else if (key.equals(getString(R.string.pref_newScripts))) {
             ListPreference listPreference = (ListPreference) findPreference(key);
             listPreference.setSummary(listPreference.getEntry());
-        }else if (key.equals(getString(R.string.pref_changedSubs))) {
+        } else if (key.equals(getString(R.string.pref_changedSubs))) {
             ListPreference listPreference = (ListPreference) findPreference(key);
             listPreference.setSummary(listPreference.getEntry());
         }

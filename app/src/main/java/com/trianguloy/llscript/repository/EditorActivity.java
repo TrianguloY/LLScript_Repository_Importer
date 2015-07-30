@@ -6,6 +6,7 @@ import android.accounts.AccountManagerCallback;
 import android.accounts.AccountManagerFuture;
 import android.accounts.AuthenticatorException;
 import android.accounts.OperationCanceledException;
+import android.app.ActionBar;
 import android.app.Activity;
 import android.content.ComponentName;
 import android.content.DialogInterface;
@@ -97,7 +98,6 @@ public class EditorActivity extends Activity {
         super.onNewIntent(intent);
         lock.lock();
         String action = intent.getAction();
-        Log.d("tag", action);
         if (action != null && !action.equals(getString(R.string.link_repository)) &&
                 action.startsWith(getString(R.string.link_scriptPagePrefix)) && sharedPref.getBoolean(getString(R.string.pref_directEdit), false))
             pageId = action.substring(action.indexOf(getString(R.string.prefix_script)));
@@ -130,7 +130,9 @@ public class EditorActivity extends Activity {
         if (state == STATE_PREVIEW) {
             setContentView(R.layout.activity_edit);
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.HONEYCOMB) {
-                getActionBar().setDisplayHomeAsUpEnabled(false);
+                ActionBar bar = getActionBar();
+                assert bar != null;
+                bar.setDisplayHomeAsUpEnabled(false);
             }
             editor = (EditText) findViewById(R.id.editor);
             editor.setText(pageText);
@@ -177,8 +179,10 @@ public class EditorActivity extends Activity {
                     Log.wtf(EditorActivity.class.getSimpleName(), "Unknown state!");
         }
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.HONEYCOMB) {
-            if (showActionBar) getActionBar().show();
-            else getActionBar().hide();
+            ActionBar bar = getActionBar();
+            assert bar != null;
+            if (showActionBar) bar.show();
+            else bar.hide();
         }
     }
 
@@ -595,7 +599,9 @@ public class EditorActivity extends Activity {
             }
         }).execute(getString(R.string.link_scriptPagePrefix) + tempId);
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.HONEYCOMB) {
-            getActionBar().setDisplayHomeAsUpEnabled(true);
+            ActionBar bar = getActionBar();
+            assert bar != null;
+            bar.setDisplayHomeAsUpEnabled(true);
         }
     }
 
@@ -662,13 +668,15 @@ public class EditorActivity extends Activity {
         public void lock() {
             state = true;
             final ProgressBar bar = (ProgressBar) findViewById(R.id.progressBar);
-            if (bar != null) bar.setVisibility(View.VISIBLE);
+            assert bar != null;
+            bar.setVisibility(View.VISIBLE);
         }
 
         public void unlock() {
             state = false;
             final ProgressBar bar = (ProgressBar) findViewById(R.id.progressBar);
-            if (bar != null) bar.setVisibility(View.GONE);
+            assert bar != null;
+            bar.setVisibility(View.GONE);
         }
 
         public boolean isLocked() {

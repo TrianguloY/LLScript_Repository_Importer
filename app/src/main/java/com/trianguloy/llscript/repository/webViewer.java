@@ -177,7 +177,9 @@ public class webViewer extends Activity {
                 onBackPressed();
                 break;
             case R.id.editor:
-                startActivity(new Intent(this, EditorActivity.class));
+                Intent i = new Intent(this, EditorActivity.class);
+                i.setAction(currentUrl);
+                startActivity(i);
                 break;
             case R.id.action_share:
                 Intent share = new Intent(Intent.ACTION_SEND);

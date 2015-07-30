@@ -73,7 +73,7 @@ public class EditorActivity extends Activity {
     private int state = STATE_NONE;
     private ServiceConnection connection;
     private Lock lock;
-    private int textHash=-1;
+    private int textHash = -1;
     private boolean isTemplate = false;
     private Bundle savedInstanceState;
 
@@ -82,19 +82,33 @@ public class EditorActivity extends Activity {
         super.onCreate(savedInstanceState);
         this.savedInstanceState = savedInstanceState;
         sharedPref = PreferenceManager.getDefaultSharedPreferences(this);
-        RepositoryImporter.setTheme(this,sharedPref);
+        RepositoryImporter.setTheme(this, sharedPref);
         lock = new Lock();
         setContentView(R.layout.activity_empty);
         lock.lock();
-        startService(new Intent(this,RPCService.class));
+        startService(new Intent(this, RPCService.class));
 
         random = new Random();
-        connect();
+        onNewIntent(getIntent());
+    }
+
+    @Override
+    protected void onNewIntent(Intent intent) {
+        super.onNewIntent(intent);
+        lock.lock();
+        String action = intent.getAction();
+        Log.d("tag", action);
+        if (action != null && !action.equals(getString(R.string.link_repository)) &&
+                action.startsWith(getString(R.string.link_scriptPagePrefix)) && sharedPref.getBoolean(getString(R.string.pref_directEdit), false))
+            pageId = action.substring(action.indexOf(getString(R.string.prefix_script)));
+        else pageId = null;
+        if (rpcService != null && rpcService.isLoggedIn()) load();
+        else connect();
     }
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
-        switch (item.getItemId()){
+        switch (item.getItemId()) {
             case android.R.id.home:
                 onBackPressed();
                 break;
@@ -113,27 +127,25 @@ public class EditorActivity extends Activity {
 
     @Override
     public void onBackPressed() {
-        if(state == STATE_PREVIEW){
+        if (state == STATE_PREVIEW) {
             setContentView(R.layout.activity_edit);
-            if(Build.VERSION.SDK_INT>=Build.VERSION_CODES.HONEYCOMB){
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.HONEYCOMB) {
                 getActionBar().setDisplayHomeAsUpEnabled(false);
             }
-            editor = (EditText)findViewById(R.id.editor);
+            editor = (EditText) findViewById(R.id.editor);
             editor.setText(pageText);
-        }
-        else if(changedCode()){
-            Dialogs.unsavedChanges(this, new DialogInterface.OnClickListener(){
+        } else if (changedCode()) {
+            Dialogs.unsavedChanges(this, new DialogInterface.OnClickListener() {
                 @Override
                 public void onClick(DialogInterface dialogInterface, int i) {
                     finish();
                 }
             });
-        }
-        else finish();
+        } else finish();
     }
 
-    private boolean changedCode(){
-        return  state == STATE_EDIT && editor.getText().toString().hashCode() != textHash;
+    private boolean changedCode() {
+        return state == STATE_EDIT && editor.getText().toString().hashCode() != textHash;
     }
 
     @Override
@@ -141,10 +153,11 @@ public class EditorActivity extends Activity {
         super.setContentView(layoutResID);
         lock.unlock();
         boolean showActionBar = true;
-        switch (layoutResID){
+        switch (layoutResID) {
             case R.layout.activity_select_action:
                 state = STATE_CHOOSE_ACTION;
-                if(rpcService.isLoggedIn())((TextView)findViewById(R.id.textUser)).setText(getString(R.string.text_LoggedInAs)+" "+rpcService.getUser());
+                if (rpcService.isLoggedIn())
+                    ((TextView) findViewById(R.id.textUser)).setText(getString(R.string.text_LoggedInAs) + " " + rpcService.getUser());
                 break;
             case R.layout.activity_create:
                 state = STATE_CREATE;
@@ -160,9 +173,10 @@ public class EditorActivity extends Activity {
                 state = STATE_NONE;
                 break;
             default:
-                if(BuildConfig.DEBUG) Log.wtf(EditorActivity.class.getSimpleName(),"Unknown state!");
+                if (BuildConfig.DEBUG)
+                    Log.wtf(EditorActivity.class.getSimpleName(), "Unknown state!");
         }
-        if(Build.VERSION.SDK_INT>=Build.VERSION_CODES.HONEYCOMB) {
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.HONEYCOMB) {
             if (showActionBar) getActionBar().show();
             else getActionBar().hide();
         }
@@ -171,7 +185,7 @@ public class EditorActivity extends Activity {
     @Override
     protected void onDestroy() {
         super.onDestroy();
-        if (connection!=null)unbindService(connection);
+        if (connection != null) unbindService(connection);
     }
 
     @Override
@@ -184,10 +198,10 @@ public class EditorActivity extends Activity {
     protected void onSaveInstanceState(@NonNull Bundle outState) {
         super.onSaveInstanceState(outState);
         outState.putInt(getString(R.string.key_state), state);
-        if(state == STATE_EDIT){
+        if (state == STATE_EDIT) {
             pageText = editor.getText().toString();
         }
-        if(state == STATE_EDIT || state  == STATE_PREVIEW) {
+        if (state == STATE_EDIT || state == STATE_PREVIEW) {
             outState.putString(getString(R.string.key_pageText), pageText);
             outState.putString(getString(R.string.key_pageName), pageName);
             outState.putString(getString(R.string.key_pageId), pageId);
@@ -196,9 +210,9 @@ public class EditorActivity extends Activity {
         }
     }
 
-    private void restore(@NonNull Bundle restoreState){
-        if(restoreState.containsKey(getString(R.string.key_state))){
-            switch (restoreState.getInt(getString(R.string.key_state))){
+    private void restore(@NonNull Bundle restoreState) {
+        if (restoreState.containsKey(getString(R.string.key_state))) {
+            switch (restoreState.getInt(getString(R.string.key_state))) {
                 case STATE_NONE:
                 case STATE_CHOOSE_ACTION:
                     setContentView(R.layout.activity_select_action);
@@ -217,17 +231,15 @@ public class EditorActivity extends Activity {
                     break;
             }
         }
-
     }
 
-    private void connect(){
-        connection =  new ServiceConnection() {
+    private void connect() {
+        connection = new ServiceConnection() {
             @Override
             public void onServiceConnected(ComponentName componentName, IBinder iBinder) {
                 rpcService = ((RPCService.LocalBinder) iBinder).getService();
                 if (rpcService.isLoggedIn()) {
-                    if(savedInstanceState!=null)restore(savedInstanceState);
-                    else setContentView(R.layout.activity_select_action);
+                    load();
                 } else {
                     findAccount(false);
                 }
@@ -241,7 +253,13 @@ public class EditorActivity extends Activity {
         bindService(new Intent(this, RPCService.class), connection, 0);
     }
 
-    private void findAccount(boolean passwordInvalid){
+    private void load() {
+        if (pageId != null) loadPageToEdit(pageId);
+        else if (savedInstanceState != null) restore(savedInstanceState);
+        else setContentView(R.layout.activity_select_action);
+    }
+
+    private void findAccount(boolean passwordInvalid) {
         AccountManager accountManager = AccountManager.get(this);
         Account[] accounts = accountManager.getAccountsByType(getString(R.string.account_type));
         AccountManagerCallback<Bundle> callback = new AccountManagerCallback<Bundle>() {
@@ -286,8 +304,7 @@ public class EditorActivity extends Activity {
                         });
                         break;
                     case Constants.RESULT_OK:
-                        if(savedInstanceState!=null)restore(savedInstanceState);
-                        else setContentView(R.layout.activity_select_action);
+                        load();
                         break;
                     default:
                         throw new IllegalArgumentException();
@@ -296,8 +313,8 @@ public class EditorActivity extends Activity {
         });
     }
 
-    public void button(View view){
-        if(!lock.isLocked()) {
+    public void button(View view) {
+        if (!lock.isLocked()) {
             lock.lock();
             switch (view.getId()) {
                 case R.id.buttonCreatePage:
@@ -332,7 +349,7 @@ public class EditorActivity extends Activity {
         showPageEditor(sharedPref.getString(getString(R.string.pref_template), ""));
     }
 
-    private void createPage(){
+    private void createPage() {
         rpcService.getPage(getString(R.string.id_scriptRepository), new RPCService.Listener<String>() {
             @Override
             public void onResult(String result) {
@@ -386,36 +403,33 @@ public class EditorActivity extends Activity {
         });
     }
 
-    private void cancelEdit(){
+    private void cancelEdit() {
         lock.unlock();
-        if(changedCode()) {
+        if (changedCode()) {
             Dialogs.unsavedChanges(this, new DialogInterface.OnClickListener() {
                 @Override
                 public void onClick(DialogInterface dialogInterface, int i) {
                     setContentView(R.layout.activity_select_action);
                 }
             });
-        }
-        else setContentView(R.layout.activity_select_action);
+        } else setContentView(R.layout.activity_select_action);
     }
 
     private void savePage() {
         final String text = editor.getText().toString();
-        if (isTemplate){
-            sharedPref.edit().putString(getString(R.string.pref_template),text).apply();
+        if (isTemplate) {
+            sharedPref.edit().putString(getString(R.string.pref_template), text).apply();
             lock.unlock();
             textHash = text.hashCode();
-            Dialogs.saved(this,null);
-        }
-        else if(text.equals("")) {
+            Dialogs.saved(this, null);
+        } else if (text.equals("")) {
             lock.unlock();
             Dialogs.cantSaveEmpty(this);
-        }
-        else {
+        } else {
             rpcService.putPage(pageId, text, new RPCService.Listener<Boolean>() {
                 @Override
                 public void onResult(Boolean result) {
-                    if(result){
+                    if (result) {
                         textHash = text.hashCode();
                         if (addTo != null) {
                             int index = repository.categories.indexOf(addTo);
@@ -443,16 +457,15 @@ public class EditorActivity extends Activity {
                                 @Override
                                 public void onResult(Boolean result) {
                                     lock.unlock();
-                                    if(result)Dialogs.saved(EditorActivity.this,pageId);
+                                    if (result) Dialogs.saved(EditorActivity.this, pageId);
                                     else Dialogs.connectionFailed(EditorActivity.this);
                                 }
                             });
                         } else {
                             lock.unlock();
-                            Dialogs.saved(EditorActivity.this,pageId);
+                            Dialogs.saved(EditorActivity.this, pageId);
                         }
-                    }
-                    else {
+                    } else {
                         lock.unlock();
                         Dialogs.connectionFailed(EditorActivity.this);
                     }
@@ -461,10 +474,10 @@ public class EditorActivity extends Activity {
         }
     }
 
-    private void commitCreate(){
-        pageId = getString(R.string.prefix_script)+((EditText)findViewById(R.id.editId)).getText();
+    private void commitCreate() {
+        pageId = getString(R.string.prefix_script) + ((EditText) findViewById(R.id.editId)).getText();
         Spinner spinner = (Spinner) findViewById(R.id.spinner);
-        final Repository.RepositoryCategory selected = ((Repository.RepositoryCategory)spinner.getSelectedItem());
+        final Repository.RepositoryCategory selected = ((Repository.RepositoryCategory) spinner.getSelectedItem());
         rpcService.getPage(pageId, new RPCService.Listener<String>() {
             @Override
             public void onResult(String result) {
@@ -482,11 +495,9 @@ public class EditorActivity extends Activity {
                                 else showPageEditor(result);
                             }
                         });
-                    }
-                    else if(((RadioButton)findViewById(R.id.radioCustom)).isChecked()){
-                        showPageEditor(sharedPref.getString(getString(R.string.pref_template),""));
-                    }
-                    else showPageEditor("");
+                    } else if (((RadioButton) findViewById(R.id.radioCustom)).isChecked()) {
+                        showPageEditor(sharedPref.getString(getString(R.string.pref_template), ""));
+                    } else showPageEditor("");
                 } else {
                     lock.unlock();
                     Dialogs.pageAlreadyExists(EditorActivity.this);
@@ -496,8 +507,9 @@ public class EditorActivity extends Activity {
     }
 
     public void action(View view) {
-        if(state!=STATE_EDIT)throw new IllegalStateException("Can't execute actions when not in editor");
-        if(!lock.isLocked()) {
+        if (state != STATE_EDIT)
+            throw new IllegalStateException("Can't execute actions when not in editor");
+        if (!lock.isLocked()) {
             switch (view.getId()) {
                 case R.id.action_bold:
                     surroundOrAdd("**", "**", getString(R.string.text_bold));
@@ -525,36 +537,36 @@ public class EditorActivity extends Activity {
         }
     }
 
-    private void preview(){
-        final String tempId = getString(R.string.prefix_temp)+ random.nextInt();
+    private void preview() {
+        final String tempId = getString(R.string.prefix_temp) + random.nextInt();
         pageText = editor.getText().toString();
         rpcService.putPage(getString(R.string.prefix_script) + tempId, pageText, new RPCService.Listener<Boolean>() {
             @Override
             public void onResult(@Nullable Boolean result) {
-                if(result==null) result = false;
+                if (result == null) result = false;
                 lock.unlock();
-                if(!result) Dialogs.connectionFailed(EditorActivity.this);
+                if (!result) Dialogs.connectionFailed(EditorActivity.this);
                 else showPreview(tempId);
             }
         });
     }
 
-    private void showPreview(final String tempId){
+    private void showPreview(final String tempId) {
         setContentView(R.layout.activity_preview);
         lock.lock();
-        final WebView webView = (WebView)findViewById(R.id.webPreview);
+        final WebView webView = (WebView) findViewById(R.id.webPreview);
         webView.getSettings().setJavaScriptEnabled(true);
         //noinspection deprecation
         webView.setWebViewClient(new WebClient() {
             @Override
             public void onPageFinished(WebView view, String url) {
                 super.onPageFinished(view, url);
-                rpcService.putPage("script_" + tempId, "",null);
+                rpcService.putPage("script_" + tempId, "", null);
             }
 
             @Override
             public boolean shouldOverrideUrlLoading(WebView view, String url) {
-                Toast.makeText(EditorActivity.this,getString(R.string.toast_previewLink),Toast.LENGTH_SHORT).show();
+                Toast.makeText(EditorActivity.this, getString(R.string.toast_previewLink), Toast.LENGTH_SHORT).show();
                 return true;
             }
         });
@@ -572,7 +584,7 @@ public class EditorActivity extends Activity {
                     Utils.valueAndIndex val = Utils.findBetween(result, "<div class=\"tools group\">", "<hr class=\"a11y\" />", 0, false);
                     result = result.substring(0, val.from) + result.substring(val.to, result.length());
                 }
-                webView.loadDataWithBaseURL(getString(R.string.link_server),result,"text/html","UTF-8",null);
+                webView.loadDataWithBaseURL(getString(R.string.link_server), result, "text/html", "UTF-8", null);
                 lock.unlock();
             }
 
@@ -582,14 +594,14 @@ public class EditorActivity extends Activity {
                 lock.unlock();
             }
         }).execute(getString(R.string.link_scriptPagePrefix) + tempId);
-        if(Build.VERSION.SDK_INT>=Build.VERSION_CODES.HONEYCOMB){
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.HONEYCOMB) {
             getActionBar().setDisplayHomeAsUpEnabled(true);
         }
     }
 
-    private void showSelectPageToEdit(final Page[] pages){
-        final ArrayAdapter<String> adapter = new ArrayAdapter<>(this,R.layout.sub_list_item);
-        for (Page p:pages)adapter.add(p.id());
+    private void showSelectPageToEdit(final Page[] pages) {
+        final ArrayAdapter<String> adapter = new ArrayAdapter<>(this, R.layout.sub_list_item);
+        for (Page p : pages) adapter.add(p.id());
         adapter.sort(new Comparator<String>() {
             @Override
             public int compare(String lhs, String rhs) {
@@ -606,7 +618,7 @@ public class EditorActivity extends Activity {
         });
     }
 
-    private void loadPageToEdit(String id){
+    private void loadPageToEdit(String id) {
         pageId = id;
         rpcService.getPage(pageId, new RPCService.Listener<String>() {
             @Override
@@ -618,45 +630,48 @@ public class EditorActivity extends Activity {
         });
     }
 
-    private void showPageEditor(String text){
+    private void showPageEditor(String text) {
         setContentView(R.layout.activity_edit);
-        editor = (EditText)findViewById(R.id.editor);
+        editor = (EditText) findViewById(R.id.editor);
         editor.setText(text);
         pageText = text;
-        if(textHash==-1) textHash = text.hashCode();
+        if (textHash == -1) textHash = text.hashCode();
     }
 
-    private void surroundOrAdd(String prefix, String suffix, String text){
+    private void surroundOrAdd(String prefix, String suffix, String text) {
         int start = editor.getSelectionStart();
         int end = editor.getSelectionEnd();
         Editable editable = editor.getEditableText();
         if (start == end) {
-            editable.insert(start==-1?0:start,prefix+text+suffix);
+            editable.insert(start == -1 ? 0 : start, prefix + text + suffix);
             editor.setSelection(start + prefix.length(), start + prefix.length() + text.length());
         } else {
-            editable.insert(end,suffix);
-            editable.insert(start,prefix);
-            editor.setSelection(start+prefix.length(),end+prefix.length());
+            editable.insert(end, suffix);
+            editable.insert(start, prefix);
+            editor.setSelection(start + prefix.length(), end + prefix.length());
         }
     }
 
     private class Lock {
         boolean state;
-        public Lock(){
+
+        public Lock() {
             state = true;
-        }
-        public void lock(){
-            state = true;
-            final ProgressBar bar = (ProgressBar)findViewById(R.id.progressBar);
-            if(bar!=null)bar.setVisibility(View.VISIBLE);
         }
 
-        public void unlock(){
-            state = false;
-            final ProgressBar bar = (ProgressBar)findViewById(R.id.progressBar);
-            if(bar!=null)bar.setVisibility(View.GONE);
+        public void lock() {
+            state = true;
+            final ProgressBar bar = (ProgressBar) findViewById(R.id.progressBar);
+            if (bar != null) bar.setVisibility(View.VISIBLE);
         }
-        public boolean isLocked(){
+
+        public void unlock() {
+            state = false;
+            final ProgressBar bar = (ProgressBar) findViewById(R.id.progressBar);
+            if (bar != null) bar.setVisibility(View.GONE);
+        }
+
+        public boolean isLocked() {
             return state;
         }
 

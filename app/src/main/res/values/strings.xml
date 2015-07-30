@@ -304,6 +304,7 @@
     <string name="summary_singleClose">If unchecked you\'ll need to double click back to close the
         app
     </string>
+    <string name="pref_directEdit">directEdit</string>
 
 
 </resources>

@@ -77,6 +77,11 @@
             android:title="@string/title_singleClose"
             android:summary="@string/summary_singleClose"
             android:defaultValue="false"/>
+        <CheckBoxPreference
+            android:key="@string/pref_directEdit"
+            android:title="Directly edit pages"
+            android:summary="Open the editor for the current page"
+            android:defaultValue="true"/>
     </PreferenceCategory>
     <PreferenceCategory android:title="@string/title_links">
         <Preference android:title="@string/text_playStore">

@@ -14,6 +14,7 @@ import dw.xmlrpc.exception.DokuException;
 
 /**
  * Created by Lukas on 02.08.2015.
+ * Performs all DokuJClient jobs
  */
 public class RPCManager {
 

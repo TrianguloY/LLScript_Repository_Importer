@@ -127,11 +127,6 @@
         <activity android:name=".auth.AuthenticatorActivity"
                   android:excludeFromRecents="true"
             android:label="@string/button_login"/>
-
-        <service android:name=".RPCService"
-                 android:enabled="true"
-                 android:exported="false"
-            android:stopWithTask="true"/>
     </application>
 
 </manifest>

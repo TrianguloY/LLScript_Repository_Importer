@@ -168,12 +168,14 @@
 
     <!--preference values -->
     <string-array name="val_intervalTexts">
+        <item>Every Minute</item>
         <item>Hourly</item>
         <item>Every 12 hours</item>
         <item>Daily</item>
         <item>Weekly</item>
     </string-array>
     <string-array name="val_intervalValues">
+        <item>60000</item>
         <item>3600000</item>
         <item>43200000</item>
         <item>86400000</item>

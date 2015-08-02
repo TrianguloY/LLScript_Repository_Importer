@@ -10,7 +10,6 @@ import android.app.ActionBar;
 import android.app.Activity;
 import android.content.DialogInterface;
 import android.content.Intent;
-import android.content.ServiceConnection;
 import android.content.SharedPreferences;
 import android.os.Build;
 import android.os.Bundle;
@@ -69,7 +68,6 @@ public class EditorActivity extends Activity {
     private String pageText;
     private Random random;
     private int state = STATE_NONE;
-    private ServiceConnection connection;
     private Lock lock;
     private int textHash = -1;
     private boolean isTemplate = false;
@@ -180,12 +178,6 @@ public class EditorActivity extends Activity {
             if (showActionBar) bar.show();
             else bar.hide();
         }
-    }
-
-    @Override
-    protected void onDestroy() {
-        super.onDestroy();
-        if (connection != null) unbindService(connection);
     }
 
     @Override
@@ -466,7 +458,7 @@ public class EditorActivity extends Activity {
             public void onResult(RPCManager.Result<String> result) {
                 if (result.getStatus() == RESULT_OK) {
                     String r = result.getResult();
-                    if (r == null || r == "") {
+                    if (r == null || r.equals("")) {
                         if (selected.level >= 0) {
                             addTo = selected;
                             pageName = ((EditText) EditorActivity.this.findViewById(R.id.editName)).getText().toString();

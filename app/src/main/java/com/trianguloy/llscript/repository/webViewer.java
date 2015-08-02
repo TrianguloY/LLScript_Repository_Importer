@@ -86,20 +86,14 @@ public class webViewer extends Activity {
         if (savedInstanceState != null && restore(savedInstanceState)) {
             initializeWeb();
         } else {
-            backStack = new Stack<>();
-            currentUrl = getString(R.string.link_repository);
-
-            //parse the Intent
-            onNewIntent(getIntent());
-
-            //Normal activity
-            initializeWeb();
-            getChangedSubscriptions();
+            if(upgradeFromOldVersion()) init();
         }
     }
 
+
     @Override
     protected void onNewIntent(Intent intent) {
+        getChangedSubscriptions();
 
         if (intent.hasExtra(Constants.extraOpenUrl)
                 &&//if has both extras
@@ -250,6 +244,17 @@ public class webViewer extends Activity {
     }
 
 
+    private void init(){
+        backStack = new Stack<>();
+        currentUrl = getString(R.string.link_repository);
+
+        //parse the Intent
+        onNewIntent(getIntent());
+
+        //Normal activity
+        initializeWeb();
+    }
+
     private void initializeWeb() {
         //Main Activity. Run on onCreate when normal launch
         setContentView(R.layout.activity_webviewer);
@@ -361,7 +366,7 @@ public class webViewer extends Activity {
                     names.append(newScriptNames.get(i)).append("\n");
                 }
                 names.deleteCharAt(names.length() - 1);
-                int showAs = sharedPref.getInt(getString(R.string.pref_newScripts), 1);
+                int showAs = Integer.valueOf(sharedPref.getString(getString(R.string.pref_newScripts), "2"));
                 switch (showAs) {
                     case SHOW_NONE:
                         break;
@@ -641,12 +646,11 @@ public class webViewer extends Activity {
                 if(result.getStatus() == RPCManager.RESULT_OK) {
                     List<String> updated = result.getResult();
                     if (updated.size() > 0) {
-                        Map<String, String> map = Utils.getAllScriptPagesAndNames(repoHtml);
                         StringBuilder pages = new StringBuilder();
                         for (String s : updated) {
-                            pages.append(map.get(Utils.getNameFromUrl(s))).append("\n");
+                            pages.append(Utils.getNameForPageFromPref(sharedPref,s)).append("\n");
                         }
-                        int showAs = sharedPref.getInt(getString(R.string.pref_changedSubs), 2);
+                        int showAs = Integer.valueOf(sharedPref.getString(getString(R.string.pref_changedSubs), "2"));
                         switch (showAs) {
                             case SHOW_NONE:
                                 break;
@@ -657,6 +661,7 @@ public class webViewer extends Activity {
                                 Dialogs.changedSubscriptions(webViewer.this, pages.toString());
                                 break;
                         }
+                        RPCManager.setTimestampToCurrent(sharedPref,null);
                     }
                 }
             }
@@ -664,7 +669,7 @@ public class webViewer extends Activity {
     }
 
     private void subscribeToCurrent() {
-        Set<String> subs = Utils.getSetFromPref(sharedPref, getString(R.string.pref_subscriptions));
+        HashSet<String> subs = (HashSet<String>)Utils.getSetFromPref(sharedPref, getString(R.string.pref_subscriptions));
         subs.add(Utils.getNameFromUrl(currentUrl));
         Utils.saveSetToPref(sharedPref, getString(R.string.pref_subscriptions), subs);
         Toast.makeText(this, getString(R.string.toast_subscribeSuccessful), Toast.LENGTH_SHORT).show();
@@ -712,6 +717,42 @@ public class webViewer extends Activity {
         menu.findItem(R.id.action_subscribe).setVisible(sub);
         menu.findItem(R.id.action_unsubscribe).setVisible(unsub);
 
+    }
+
+    //return false to block loading
+    private boolean upgradeFromOldVersion() {
+        SharedPreferences sharedPref = PreferenceManager.getDefaultSharedPreferences(this);
+
+        if (sharedPref.contains(getString(R.string.pref_subs))) {
+            Map<String, Object> map = Utils.getMapFromPref(sharedPref, getString(R.string.pref_subs));
+            HashSet<String> set = new HashSet<>();
+            for (String page : map.keySet()) {
+                set.add(Utils.getNameFromUrl(page));
+            }
+            Utils.saveSetToPref(sharedPref, getString(R.string.pref_subscriptions), set);
+            sharedPref.edit().remove(getString(R.string.pref_subs)).apply();
+        }
+
+        if (!sharedPref.contains(getString(R.string.pref_timestamp))) {
+            RPCManager.setTimestampToCurrent(sharedPref, new RPCManager.Listener<Integer>() {
+                @Override
+                public void onResult(RPCManager.Result<Integer> result) {
+                    if(result.getStatus() == RPCManager.RESULT_OK){
+                        init();
+                    }
+                    else {
+                        Dialogs.connectionFailed(webViewer.this, new DialogInterface.OnClickListener() {
+                            @Override
+                            public void onClick(DialogInterface dialog, int which) {
+                                finish();
+                            }
+                        });
+                    }
+                }
+            });
+            return false;
+        }
+        return true;
     }
 
 

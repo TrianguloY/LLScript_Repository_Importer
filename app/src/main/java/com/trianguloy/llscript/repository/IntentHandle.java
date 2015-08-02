@@ -2,19 +2,12 @@ package com.trianguloy.llscript.repository;
 
 import android.app.Activity;
 import android.content.Intent;
-import android.content.SharedPreferences;
 import android.net.Uri;
 import android.os.Bundle;
-import android.preference.PreferenceManager;
 import android.widget.Toast;
 
 import com.trianguloy.llscript.repository.internal.AppChooser;
 import com.trianguloy.llscript.repository.internal.Dialogs;
-import com.trianguloy.llscript.repository.internal.RPCManager;
-import com.trianguloy.llscript.repository.internal.Utils;
-
-import java.util.HashSet;
-import java.util.Map;
 
 
 public class IntentHandle extends Activity {
@@ -22,7 +15,6 @@ public class IntentHandle extends Activity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        upgradeFromOldVersion();
         Intent intent = getIntent();
 
         //manages the received intent, run automatically when the activity is running and is called again
@@ -74,22 +66,5 @@ public class IntentHandle extends Activity {
         intent.addFlags(Intent.FLAG_ACTIVITY_REORDER_TO_FRONT);
         startActivity(intent);
         finish();
-    }
-
-    private void upgradeFromOldVersion() {
-        SharedPreferences sharedPref = PreferenceManager.getDefaultSharedPreferences(this);
-
-        if (sharedPref.contains(getString(R.string.pref_subs))) {
-            Map<String, Object> map = Utils.getMapFromPref(sharedPref, getString(R.string.pref_subs));
-            HashSet<String> set = new HashSet<>();
-            for (String page : map.keySet()) {
-                set.add(Utils.getNameFromUrl(page));
-            }
-            Utils.saveSetToPref(sharedPref, getString(R.string.pref_subscriptions), set);
-            sharedPref.edit().remove(getString(R.string.pref_subs)).apply();
-        }
-        if(!sharedPref.contains(getString(R.string.pref_timestamp))){
-            RPCManager.setTimestampToCurrent(sharedPref);
-        }
     }
 }

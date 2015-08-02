@@ -178,7 +178,6 @@ public class RPCManager {
                                     changedSubs.add(page);
                                 }
                             }
-                            setTimestampToCurrent(sharedPref);
                             return new Result<>(RESULT_OK, changedSubs);
                         }
                     } catch (DokuException e) {
@@ -190,19 +189,21 @@ public class RPCManager {
         }
     }
 
-    public static void setTimestampToCurrent(final SharedPreferences sharedPref) {
-        new AsyncTask<Void, Void, Void>() {
+    public static void setTimestampToCurrent(final SharedPreferences sharedPref, Listener<Integer> listener) {
+        new ListenedTask<Integer>(listener) {
 
             @Override
-            protected Void doInBackground(Void... params) {
+            protected Result<Integer> doInBackground(Void... params) {
                 try {
                     if (init()) {
-                        sharedPref.edit().putInt(Utils.getString(R.string.pref_timestamp), client.getTime()).apply();
+                        int timestamp = client.getTime();
+                        sharedPref.edit().putInt(Utils.getString(R.string.pref_timestamp),timestamp ).apply();
+                        return new Result<>(RESULT_OK, timestamp);
                     }
                 } catch (DokuException e) {
                     e.printStackTrace();
                 }
-                return null;
+                return new Result<>(RESULT_NETWORK_ERROR);
             }
         }.execute();
     }

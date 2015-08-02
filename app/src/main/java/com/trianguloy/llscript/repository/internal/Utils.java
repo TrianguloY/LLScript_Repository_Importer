@@ -16,7 +16,6 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
-import java.util.Collections;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Iterator;
@@ -93,7 +92,7 @@ public final class Utils {
     public static Set<String> getSetFromPref(SharedPreferences pref, String key) {
         if (pref.contains(key)) {
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.HONEYCOMB)
-                return pref.getStringSet(key, Collections.<String>emptySet());
+                return pref.getStringSet(key, new HashSet<String>());
             HashSet<String> set = new HashSet<>();
             JSONArray array;
             try {
@@ -106,7 +105,7 @@ public final class Utils {
                 e.printStackTrace();
             }
         }
-        return Collections.emptySet();
+        return new HashSet<>();
     }
 
     public static void saveMapToPref(SharedPreferences pref, String key, Map<String, Object> map) {

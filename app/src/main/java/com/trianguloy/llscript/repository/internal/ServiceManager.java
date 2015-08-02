@@ -5,7 +5,6 @@ import android.app.AlarmManager;
 import android.app.PendingIntent;
 import android.content.Context;
 import android.content.Intent;
-import android.content.ServiceConnection;
 import android.os.SystemClock;
 
 import com.trianguloy.llscript.repository.WebService;
@@ -32,14 +31,6 @@ public final class ServiceManager {
 
     private static AlarmManager getManager(Context context){
         return (AlarmManager) context.getSystemService(Activity.ALARM_SERVICE);
-    }
-
-    public static void bindService(Context context, ServiceConnection connection) {
-        context.bindService(new Intent(context, WebService.class), connection, Activity.BIND_AUTO_CREATE);
-    }
-
-    public static void unbindService(Context context, ServiceConnection connection) {
-        context.unbindService(connection);
     }
 
 

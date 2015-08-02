@@ -155,6 +155,7 @@ public final class Dialogs {
     }
 
     public static void changedSubscriptions(Context context,String changed){
+        //TODO: make page names clickable
         new AlertDialog.Builder(context)
                 .setTitle(R.string.title_updatedSubs)
                 .setMessage(changed)

@@ -154,7 +154,7 @@ public final class Utils {
     }
 
     public static String getNameForPageFromPref(SharedPreferences pref, String page) {
-        if (page.startsWith("script_"))
+        if (page.startsWith(getString(R.string.prefix_script)))
             page = page.substring(getString(R.string.prefix_script).length());
         String result = (String) getMapFromPref(pref, getString(R.string.pref_pageNames)).get(page);
         if (result != null) return result.trim();

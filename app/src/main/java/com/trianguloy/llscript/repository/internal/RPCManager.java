@@ -1,15 +1,19 @@
 package com.trianguloy.llscript.repository.internal;
 
+import android.content.SharedPreferences;
 import android.os.AsyncTask;
 import android.support.annotation.Nullable;
 
 import com.trianguloy.llscript.repository.R;
 
 import java.net.MalformedURLException;
+import java.util.ArrayList;
 import java.util.List;
+import java.util.Set;
 
 import dw.xmlrpc.DokuJClient;
 import dw.xmlrpc.Page;
+import dw.xmlrpc.PageChange;
 import dw.xmlrpc.exception.DokuException;
 
 /**
@@ -67,7 +71,7 @@ public class RPCManager {
             protected Result<Void> doInBackground(Void... params) {
                 int result = RESULT_NETWORK_ERROR;
                 try {
-                    if(init()) {
+                    if (init()) {
                         Object[] parameters = new Object[]{user, password};
                         login = ((boolean) client.genericQuery("dokuwiki.login", parameters)) ? LOGIN_USER : NOT_LOGGED_IN;
                         if (login == LOGIN_USER) {
@@ -84,10 +88,10 @@ public class RPCManager {
     }
 
     public static void logout() {
-        new ListenedTask<Void>(null) {
+        new AsyncTask<Void, Void, Void>() {
 
             @Override
-            protected Result<Void> doInBackground(Void... params) {
+            protected Void doInBackground(Void... params) {
                 if (login > NOT_LOGGED_IN) {
                     try {
                         client.logoff();
@@ -137,7 +141,7 @@ public class RPCManager {
         return login == LOGIN_USER ? username : Utils.getString(R.string.text_defaultUser);
     }
 
-    public static void putPage(final String id, final String text, final Listener<Void> listener) {
+    public static void putPage(final String id, final String text, Listener<Void> listener) {
         new ListenedTask<Void>(listener) {
             @Override
             protected Result<Void> doInBackground(Void... voids) {
@@ -153,6 +157,52 @@ public class RPCManager {
                     e.printStackTrace();
                 }
                 return new Result<>(result);
+            }
+        }.execute();
+    }
+
+    public static void getChangedSubscriptions(final SharedPreferences sharedPref, Listener<List<String>> listener) {
+        final int timestamp = sharedPref.getInt(Utils.getString(R.string.pref_timestamp), 0);
+        final Set<String> subscriptions = Utils.getSetFromPref(sharedPref, Utils.getString(R.string.pref_subscriptions));
+        if (subscriptions.size() > 0) {
+            new ListenedTask<List<String>>(listener) {
+                @Override
+                protected Result<List<String>> doInBackground(Void... voids) {
+                    try {
+                        if (init()) {
+                            List<PageChange> changes = client.getRecentChanges(timestamp);
+                            List<String> changedSubs = new ArrayList<>();
+                            for (PageChange change : changes) {
+                                String page = change.pageId().substring(Utils.getString(R.string.prefix_script).length());
+                                if (subscriptions.contains(page)) {
+                                    changedSubs.add(page);
+                                }
+                            }
+                            setTimestampToCurrent(sharedPref);
+                            return new Result<>(RESULT_OK, changedSubs);
+                        }
+                    } catch (DokuException e) {
+                        e.printStackTrace();
+                    }
+                    return new Result<>(RESULT_NETWORK_ERROR);
+                }
+            }.execute();
+        }
+    }
+
+    public static void setTimestampToCurrent(final SharedPreferences sharedPref) {
+        new AsyncTask<Void, Void, Void>() {
+
+            @Override
+            protected Void doInBackground(Void... params) {
+                try {
+                    if (init()) {
+                        sharedPref.edit().putInt(Utils.getString(R.string.pref_timestamp), client.getTime()).apply();
+                    }
+                } catch (DokuException e) {
+                    e.printStackTrace();
+                }
+                return null;
             }
         }.execute();
     }

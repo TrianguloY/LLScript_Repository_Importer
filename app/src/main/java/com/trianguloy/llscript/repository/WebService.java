@@ -12,17 +12,14 @@ import android.os.Build;
 import android.os.IBinder;
 import android.preference.PreferenceManager;
 
-import com.trianguloy.llscript.repository.internal.DownloadTask;
+import com.trianguloy.llscript.repository.internal.RPCManager;
 import com.trianguloy.llscript.repository.internal.Utils;
 
-import java.util.ArrayList;
 import java.util.List;
-import java.util.Map;
 
 public class WebService extends Service {
 
     private SharedPreferences sharedPref;
-    private int counter;
 
     @Override
     public void onCreate() {
@@ -38,52 +35,16 @@ public class WebService extends Service {
 
     @Override
     public IBinder onBind(Intent intent) {
-        return new LocalBinder();
-    }
-
-    public void getChangedSubscriptions(final Listener listener) {
-        if (sharedPref.contains(getString(R.string.pref_subs))) {
-            final Map<String, Object> pages = Utils.getMapFromPref(sharedPref, getString(R.string.pref_subs));
-            if (pages.size() > 0) {
-                counter = pages.size();
-                final ArrayList<String> updated = new ArrayList<>();
-                for (final String page : pages.keySet())
-                    new DownloadTask(new DownloadTask.Listener() {
-                        private final String p = page;
-
-                        @Override
-                        public void onFinish(String result) {
-                            counter--;
-                            int hash = Utils.pageToHash(result);
-                            if (hash != -1 && hash != (int) pages.get(p)) {
-                                updated.add(p);
-                                pages.put(p, hash);
-                            }
-                            if (counter == 0 && updated.size() > 0) {
-                                Utils.saveMapToPref(sharedPref, getString(R.string.pref_subs), pages);
-                                listener.onFinish(updated);
-                            }
-                        }
-
-                        @Override
-                        public void onError() {
-                            listener.onError();
-                        }
-                    }).execute(page);
-            }
-        }
+        throw new UnsupportedOperationException();
     }
 
     private void check() {
-        getChangedSubscriptions(new Listener() {
+        RPCManager.getChangedSubscriptions(sharedPref, new RPCManager.Listener<List<String>>() {
             @Override
-            public void onFinish(List<String> updated) {
-                if (updated.size() > 0) pushNotification(updated);
-            }
-
-            @Override
-            public void onError() {
-
+            public void onResult(RPCManager.Result<List<String>> result) {
+                if(result.getStatus() == RPCManager.RESULT_OK){
+                    pushNotification(result.getResult());
+                }
             }
         });
     }
@@ -123,11 +84,5 @@ public class WebService extends Service {
         public WebService getService() {
             return WebService.this;
         }
-    }
-
-    public interface Listener {
-        void onFinish(List<String> updated);
-
-        void onError();
     }
 }

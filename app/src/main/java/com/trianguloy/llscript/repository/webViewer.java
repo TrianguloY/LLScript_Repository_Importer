@@ -2,21 +2,16 @@ package com.trianguloy.llscript.repository;
 
 import android.app.ActionBar;
 import android.app.Activity;
-import android.content.ComponentName;
-import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
-import android.content.ServiceConnection;
 import android.content.SharedPreferences;
 import android.net.Uri;
 import android.net.http.HttpResponseCache;
 import android.os.Build;
 import android.os.Bundle;
-import android.os.IBinder;
 import android.preference.PreferenceManager;
 import android.support.annotation.NonNull;
 import android.text.Html;
-import android.util.Log;
 import android.view.KeyEvent;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -29,7 +24,7 @@ import android.widget.Toast;
 import com.trianguloy.llscript.repository.internal.AppChooser;
 import com.trianguloy.llscript.repository.internal.Dialogs;
 import com.trianguloy.llscript.repository.internal.DownloadTask;
-import com.trianguloy.llscript.repository.internal.ServiceManager;
+import com.trianguloy.llscript.repository.internal.RPCManager;
 import com.trianguloy.llscript.repository.internal.Utils;
 import com.trianguloy.llscript.repository.internal.WebClient;
 
@@ -97,24 +92,6 @@ public class webViewer extends Activity {
             //parse the Intent
             onNewIntent(getIntent());
 
-
-            if (sharedPref.contains(Constants.keyId)) {
-                //To move from the previous version to the new one, to remove on next releases
-                int id = sharedPref.getInt(Constants.keyId, -1);
-                sharedPref.edit().remove(Constants.keyId).apply();
-
-                if (id != -1) {
-                    Intent intent = new Intent(Intent.ACTION_VIEW);
-                    intent.setComponent(new ComponentName(Constants.installedPackage, Constants.activityRunScript));
-                    intent.putExtra(Constants.RunActionExtra, Constants.RunActionKey);
-                    intent.putExtra(Constants.RunDataExtra, "" + id);
-                    startActivity(intent);
-                    finish();
-                    return;
-                }
-
-            }
-
             //Normal activity
             initializeWeb();
             getChangedSubscriptions();
@@ -132,7 +109,6 @@ public class webViewer extends Activity {
                 ) {
             boolean invalidate = false;
             if (intent.getBooleanExtra(Constants.extraReload, false)) {
-                repoHtml = "";
                 invalidate = true;
             }
             changePage(intent.getStringExtra(Constants.extraOpenUrl), 0, invalidate);
@@ -467,8 +443,7 @@ public class webViewer extends Activity {
         } else {
             button.setVisibility(View.VISIBLE);
             setTitle(Utils.getNameForPageFromPref(sharedPref, Utils.getNameFromUrl(currentUrl)));
-            boolean sub = Utils.getMapFromPref(sharedPref, getString(R.string.pref_subs)).containsKey(currentUrl);
-            setSubscriptionState(sub ? SUBSCRIBED : NOT_SUBSCRIBED);
+            setSubscriptionState(isSubscribed() ? SUBSCRIBED : NOT_SUBSCRIBED);
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.HONEYCOMB) {
                 ActionBar bar = getActionBar();
                 assert bar != null;
@@ -598,7 +573,7 @@ public class webViewer extends Activity {
             @Override
             public void onClick(String code, String name, int flags) {
                 sendScriptToLauncher(code, name, flags);
-                if (!Utils.getMapFromPref(sharedPref, getString(R.string.pref_subs)).keySet().contains(currentUrl))
+                if (!isSubscribed())
                     Dialogs.subscribe(webViewer.this, new DialogInterface.OnClickListener() {
                         @Override
                         public void onClick(DialogInterface dialogInterface, int i) {
@@ -660,14 +635,12 @@ public class webViewer extends Activity {
 
     //Subscriptions functions
     private void getChangedSubscriptions() {
-        final Context context = this;
-        ServiceConnection connection = new ServiceConnection() {
+        RPCManager.getChangedSubscriptions(sharedPref, new RPCManager.Listener<List<String>>() {
             @Override
-            public void onServiceConnected(ComponentName name, IBinder service) {
-                WebService.LocalBinder binder = (WebService.LocalBinder) service;
-                binder.getService().getChangedSubscriptions(new WebService.Listener() {
-                    @Override
-                    public void onFinish(List<String> updated) {
+            public void onResult(RPCManager.Result<List<String>> result) {
+                if(result.getStatus() == RPCManager.RESULT_OK) {
+                    List<String> updated = result.getResult();
+                    if (updated.size() > 0) {
                         Map<String, String> map = Utils.getAllScriptPagesAndNames(repoHtml);
                         StringBuilder pages = new StringBuilder();
                         for (String s : updated) {
@@ -685,37 +658,31 @@ public class webViewer extends Activity {
                                 break;
                         }
                     }
-
-                    @Override
-                    public void onError() {
-                        if (BuildConfig.DEBUG) Log.i("Subscriptions", "Ignored Error");
-                    }
-                });
-                ServiceManager.unbindService(context, this);
+                }
             }
-
-            @Override
-            public void onServiceDisconnected(ComponentName name) {
-            }
-        };
-        ServiceManager.bindService(this, connection);
+        });
     }
 
     private void subscribeToCurrent() {
-        Map<String, Object> subs = Utils.getMapFromPref(sharedPref, getString(R.string.pref_subs));
-        subs.put(currentUrl, Utils.pageToHash(currentHtml));
-        Utils.saveMapToPref(sharedPref, getString(R.string.pref_subs), subs);
+        Set<String> subs = Utils.getSetFromPref(sharedPref, getString(R.string.pref_subscriptions));
+        subs.add(Utils.getNameFromUrl(currentUrl));
+        Utils.saveSetToPref(sharedPref, getString(R.string.pref_subscriptions), subs);
         Toast.makeText(this, getString(R.string.toast_subscribeSuccessful), Toast.LENGTH_SHORT).show();
         setSubscriptionState(SUBSCRIBED);
     }
 
     private void unsubscribeCurrent() {
-        Map<String, Object> subs = Utils.getMapFromPref(sharedPref, getString(R.string.pref_subs));
-        subs.remove(currentUrl);
-        Utils.saveMapToPref(sharedPref, getString(R.string.pref_subs), subs);
+        Set<String> subs = Utils.getSetFromPref(sharedPref, getString(R.string.pref_subscriptions));
+        subs.remove(Utils.getNameFromUrl(currentUrl));
+        Utils.saveSetToPref(sharedPref, getString(R.string.pref_subscriptions), subs);
         Toast.makeText(this, getString(R.string.toast_unsubscribeSuccessful), Toast.LENGTH_SHORT).show();
         setSubscriptionState(NOT_SUBSCRIBED);
 
+    }
+
+    private boolean isSubscribed(){
+        return Utils.getSetFromPref(sharedPref, getString(R.string.pref_subscriptions))
+            .contains(Utils.getNameFromUrl(currentUrl));
     }
 
     private static final int CANT_SUBSCRIBE = -1;

@@ -3,23 +3,18 @@ package com.trianguloy.llscript.repository.auth;
 import android.accounts.Account;
 import android.accounts.AccountAuthenticatorActivity;
 import android.accounts.AccountManager;
-import android.content.ComponentName;
 import android.content.Intent;
-import android.content.ServiceConnection;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
-import android.os.IBinder;
-import android.support.annotation.Nullable;
 import android.view.View;
 import android.widget.CheckBox;
 import android.widget.EditText;
 
-import com.trianguloy.llscript.repository.Constants;
 import com.trianguloy.llscript.repository.R;
-import com.trianguloy.llscript.repository.RPCService;
 import com.trianguloy.llscript.repository.internal.AppChooser;
 import com.trianguloy.llscript.repository.internal.Dialogs;
+import com.trianguloy.llscript.repository.internal.RPCManager;
 
 /**
  * Created by Lukas on 27.04.2015.
@@ -42,63 +37,51 @@ public class AuthenticatorActivity extends AccountAuthenticatorActivity {
         Intent intent = getIntent();
         accountType = intent.getStringExtra(ACCOUNT_TYPE);
         account = intent.getParcelableExtra(ACCOUNT);
-        if(account!=null)((EditText) findViewById(R.id.username)).setText(account.name);
+        if (account != null) ((EditText) findViewById(R.id.username)).setText(account.name);
 
     }
 
     @SuppressWarnings("UnusedParameters")
-    public void login(View ignored){
+    public void login(View ignored) {
         final String user = ((EditText) findViewById(R.id.username)).getText().toString();
         final String password = ((EditText) findViewById(R.id.password)).getText().toString();
-        final boolean savePw = ((CheckBox)findViewById(R.id.checkRemember)).isChecked();
-        bindService(new Intent(this, RPCService.class), new ServiceConnection() {
+        final boolean savePw = ((CheckBox) findViewById(R.id.checkRemember)).isChecked();
+        RPCManager.login(user, password, new RPCManager.Listener<Void>() {
             @Override
-            public void onServiceConnected(ComponentName componentName, IBinder iBinder) {
-                final ServiceConnection connection = this;
-                RPCService rpcService = ((RPCService.LocalBinder) iBinder).getService();
-                rpcService.login(user, password, new RPCService.Listener<Integer>() {
-                    @Override
-                    public void onResult(@Nullable Integer result) {
-                        if(result == null) result = Constants.RESULT_NETWORK_ERROR;
-                        switch (result) {
-                            case Constants.RESULT_BAD_LOGIN:
-                                Dialogs.badLogin(AuthenticatorActivity.this);
-                                break;
-                            case Constants.RESULT_NETWORK_ERROR:
-                                Dialogs.connectionFailed(AuthenticatorActivity.this);
-                                break;
-                            case Constants.RESULT_OK:
-                                setAccount(user, savePw ? password : null);
-                                AuthenticatorActivity.this.finish();
-                                break;
-                            default:
-                                throw new IllegalArgumentException();
-                        }
-                        unbindService(connection);
-                    }
-                });
+            public void onResult(RPCManager.Result<Void> result) {
+                switch (result.getStatus()) {
+                    case RPCManager.RESULT_BAD_LOGIN:
+                        Dialogs.badLogin(AuthenticatorActivity.this);
+                        break;
+                    case RPCManager.RESULT_NETWORK_ERROR:
+                        Dialogs.connectionFailed(AuthenticatorActivity.this);
+                        break;
+                    case RPCManager.RESULT_OK:
+                        setAccount(user, savePw ? password : null);
+                        AuthenticatorActivity.this.finish();
+                        break;
+                    default:
+                        throw new IllegalArgumentException();
+                }
             }
-
-            @Override
-            public void onServiceDisconnected(ComponentName componentName) {
-            }
-        }, 0);
+        });
     }
 
-    private void setAccount(String user, String password){
+    private void setAccount(String user, String password) {
         AccountManager accountManager = AccountManager.get(AuthenticatorActivity.this);
-        if(account != null){
-            accountManager.setPassword(account,password);
-            if(!account.name.equals(user)) {
-                if( Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) accountManager.renameAccount(account,user,null,null);
+        if (account != null) {
+            accountManager.setPassword(account, password);
+            if (!account.name.equals(user)) {
+                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP)
+                    accountManager.renameAccount(account, user, null, null);
                 else {
                     //noinspection deprecation
-                    accountManager.removeAccount(account,null,null);
+                    accountManager.removeAccount(account, null, null);
                     account = null;
                 }
             }
         }
-        if(account ==  null) {
+        if (account == null) {
             Account account = new Account(user, accountType);
             accountManager.addAccountExplicitly(account, password, null);
         }

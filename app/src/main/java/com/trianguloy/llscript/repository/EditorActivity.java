@@ -8,17 +8,14 @@ import android.accounts.AuthenticatorException;
 import android.accounts.OperationCanceledException;
 import android.app.ActionBar;
 import android.app.Activity;
-import android.content.ComponentName;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.ServiceConnection;
 import android.content.SharedPreferences;
 import android.os.Build;
 import android.os.Bundle;
-import android.os.IBinder;
 import android.preference.PreferenceManager;
 import android.support.annotation.NonNull;
-import android.support.annotation.Nullable;
 import android.text.Editable;
 import android.text.TextUtils;
 import android.util.Log;
@@ -37,6 +34,7 @@ import android.widget.Toast;
 import com.trianguloy.llscript.repository.internal.CategoryAdapter;
 import com.trianguloy.llscript.repository.internal.Dialogs;
 import com.trianguloy.llscript.repository.internal.DownloadTask;
+import com.trianguloy.llscript.repository.internal.RPCManager;
 import com.trianguloy.llscript.repository.internal.Repository;
 import com.trianguloy.llscript.repository.internal.Utils;
 import com.trianguloy.llscript.repository.internal.WebClient;
@@ -65,7 +63,6 @@ public class EditorActivity extends Activity {
     private SharedPreferences sharedPref;
     private String pageId;
     private EditText editor;
-    private RPCService rpcService;
     private Repository repository;
     private Repository.RepositoryCategory addTo;
     private String pageName;
@@ -87,7 +84,6 @@ public class EditorActivity extends Activity {
         lock = new Lock();
         setContentView(R.layout.activity_empty);
         lock.lock();
-        startService(new Intent(this, RPCService.class));
 
         random = new Random();
         onNewIntent(getIntent());
@@ -102,8 +98,8 @@ public class EditorActivity extends Activity {
                 action.startsWith(getString(R.string.link_scriptPagePrefix)) && sharedPref.getBoolean(getString(R.string.pref_directEdit), false))
             pageId = action.substring(action.indexOf(getString(R.string.prefix_script)));
         else pageId = null;
-        if (rpcService != null && rpcService.isLoggedIn()) load();
-        else connect();
+        if (RPCManager.isLoggedIn() >= RPCManager.LOGIN_USER) load();
+        else findAccount(false);
     }
 
     @Override
@@ -113,7 +109,7 @@ public class EditorActivity extends Activity {
                 onBackPressed();
                 break;
             case R.id.action_logout:
-                stopService(new Intent(this, RPCService.class));
+                RPCManager.logout();
                 finish();
                 break;
             case R.id.action_settings:
@@ -158,8 +154,8 @@ public class EditorActivity extends Activity {
         switch (layoutResID) {
             case R.layout.activity_select_action:
                 state = STATE_CHOOSE_ACTION;
-                if (rpcService.isLoggedIn())
-                    ((TextView) findViewById(R.id.textUser)).setText(getString(R.string.text_LoggedInAs) + " " + rpcService.getUser());
+                if (RPCManager.isLoggedIn() > RPCManager.NOT_LOGGED_IN)
+                    ((TextView) findViewById(R.id.textUser)).setText(getString(R.string.text_LoggedInAs) + " " + RPCManager.getUser());
                 break;
             case R.layout.activity_create:
                 state = STATE_CREATE;
@@ -237,26 +233,6 @@ public class EditorActivity extends Activity {
         }
     }
 
-    private void connect() {
-        connection = new ServiceConnection() {
-            @Override
-            public void onServiceConnected(ComponentName componentName, IBinder iBinder) {
-                rpcService = ((RPCService.LocalBinder) iBinder).getService();
-                if (rpcService.isLoggedIn()) {
-                    load();
-                } else {
-                    findAccount(false);
-                }
-            }
-
-            @Override
-            public void onServiceDisconnected(ComponentName componentName) {
-
-            }
-        };
-        bindService(new Intent(this, RPCService.class), connection, 0);
-    }
-
     private void load() {
         if (pageId != null) loadPageToEdit(pageId);
         else if (savedInstanceState != null) restore(savedInstanceState);
@@ -287,11 +263,12 @@ public class EditorActivity extends Activity {
     }
 
     private void login(final String user, final String password) {
-        rpcService.login(user, password, new RPCService.Listener<Integer>() {
+        RPCManager.login(user, password, new RPCManager.Listener<Void>() {
+
             @Override
-            public void onResult(Integer result) {
-                switch (result) {
-                    case Constants.RESULT_BAD_LOGIN:
+            public void onResult(RPCManager.Result<Void> result) {
+                switch (result.getStatus()) {
+                    case RPCManager.RESULT_BAD_LOGIN:
                         Dialogs.badLogin(EditorActivity.this, new DialogInterface.OnClickListener() {
                             @Override
                             public void onClick(DialogInterface dialogInterface, int i) {
@@ -299,7 +276,7 @@ public class EditorActivity extends Activity {
                             }
                         });
                         break;
-                    case Constants.RESULT_NETWORK_ERROR:
+                    case RPCManager.RESULT_NETWORK_ERROR:
                         Dialogs.connectionFailed(EditorActivity.this, new DialogInterface.OnClickListener() {
                             @Override
                             public void onClick(DialogInterface dialogInterface, int i) {
@@ -307,7 +284,7 @@ public class EditorActivity extends Activity {
                             }
                         });
                         break;
-                    case Constants.RESULT_OK:
+                    case RPCManager.RESULT_OK:
                         load();
                         break;
                     default:
@@ -354,15 +331,15 @@ public class EditorActivity extends Activity {
     }
 
     private void createPage() {
-        rpcService.getPage(getString(R.string.id_scriptRepository), new RPCService.Listener<String>() {
+        RPCManager.getPage(getString(R.string.id_scriptRepository), new RPCManager.Listener<String>() {
             @Override
-            public void onResult(String result) {
+            public void onResult(RPCManager.Result<String> result) {
                 lock.unlock();
-                if (result == null) {
+                if (result.getStatus() != RPCManager.RESULT_OK) {
                     Dialogs.connectionFailed(EditorActivity.this);
                     return;
                 }
-                String[] lines = result.split("\n");
+                String[] lines = result.getResult().split("\n");
                 final String circumflex = "^";
                 repository = new Repository(lines);
                 repository.categories.add(new Repository.RepositoryCategory(getString(R.string.text_none), -1, -1));
@@ -389,16 +366,16 @@ public class EditorActivity extends Activity {
     }
 
     private void editPage() {
-        rpcService.getAllPages(new RPCService.Listener<List<Page>>() {
+        RPCManager.getAllPages(new RPCManager.Listener<List<Page>>() {
             @Override
-            public void onResult(List<Page> result) {
+            public void onResult(RPCManager.Result<List<Page>> result) {
                 lock.unlock();
-                if (result == null) {
+                if (result.getStatus() != RPCManager.RESULT_OK) {
                     Dialogs.connectionFailed(EditorActivity.this);
                     return;
                 }
                 final HashSet<Page> pages = new HashSet<>();
-                for (Page p : result) {
+                for (Page p : result.getResult()) {
                     if (p.id().startsWith(getString(R.string.prefix_script))) pages.add(p);
                 }
                 Page[] array = pages.toArray(new Page[pages.size()]);
@@ -430,10 +407,11 @@ public class EditorActivity extends Activity {
             lock.unlock();
             Dialogs.cantSaveEmpty(this);
         } else {
-            rpcService.putPage(pageId, text, new RPCService.Listener<Boolean>() {
+            RPCManager.putPage(pageId, text, new RPCManager.Listener<Void>() {
                 @Override
-                public void onResult(Boolean result) {
-                    if (result) {
+                public void onResult(RPCManager.Result<Void> result) {
+                    //TODO: handle RESULT_NEED_RW
+                    if (result.getStatus() == RPCManager.RESULT_OK) {
                         textHash = text.hashCode();
                         if (addTo != null) {
                             int index = repository.categories.indexOf(addTo);
@@ -457,11 +435,12 @@ public class EditorActivity extends Activity {
                                     "[[" + pageId + ((pageName == null) ? "" : " |" + pageName) + "]]" +
                                     ((addTo.level == 0) ? "||\\\\ |" : "|\\\\ |");
                             repository.lines.add(addAt, add);
-                            rpcService.putPage(getString(R.string.id_scriptRepository), TextUtils.join("\n", repository.lines), new RPCService.Listener<Boolean>() {
+                            RPCManager.putPage(getString(R.string.id_scriptRepository), TextUtils.join("\n", repository.lines), new RPCManager.Listener<Void>() {
                                 @Override
-                                public void onResult(Boolean result) {
+                                public void onResult(RPCManager.Result<Void> result) {
                                     lock.unlock();
-                                    if (result) Dialogs.saved(EditorActivity.this, pageId);
+                                    //TODO: handle RESULT_NEED_RW
+                                    if (result.getStatus() == RPCManager.RESULT_OK) Dialogs.saved(EditorActivity.this, pageId);
                                     else Dialogs.connectionFailed(EditorActivity.this);
                                 }
                             });
@@ -482,29 +461,39 @@ public class EditorActivity extends Activity {
         pageId = getString(R.string.prefix_script) + ((EditText) findViewById(R.id.editId)).getText();
         Spinner spinner = (Spinner) findViewById(R.id.spinner);
         final Repository.RepositoryCategory selected = ((Repository.RepositoryCategory) spinner.getSelectedItem());
-        rpcService.getPage(pageId, new RPCService.Listener<String>() {
+        RPCManager.getPage(pageId, new RPCManager.Listener<String>() {
             @Override
-            public void onResult(String result) {
-                if (result == null || result.equals("")) {
-                    if (selected.level >= 0) {
-                        addTo = selected;
-                        pageName = ((EditText) EditorActivity.this.findViewById(R.id.editName)).getText().toString();
+            public void onResult(RPCManager.Result<String> result) {
+                if (result.getStatus() == RESULT_OK) {
+                    String r = result.getResult();
+                    if (r == null || r == "") {
+                        if (selected.level >= 0) {
+                            addTo = selected;
+                            pageName = ((EditText) EditorActivity.this.findViewById(R.id.editName)).getText().toString();
+                        }
+                        if (((RadioButton) findViewById(R.id.radioDefault)).isChecked()) {
+                            RPCManager.getPage(getString(R.string.id_scriptTemplate), new RPCManager.Listener<String>() {
+                                @Override
+                                public void onResult(RPCManager.Result<String> result) {
+                                    lock.unlock();
+                                    if (result.getStatus() == RPCManager.RESULT_OK) {
+                                        showPageEditor(result.getResult());
+                                    } else {
+                                        Dialogs.connectionFailed(EditorActivity.this);
+                                    }
+                                }
+                            });
+                        } else if (((RadioButton) findViewById(R.id.radioCustom)).isChecked()) {
+                            showPageEditor(sharedPref.getString(getString(R.string.pref_template), ""));
+                        } else showPageEditor("");
+                    } else {
+                        lock.unlock();
+                        Dialogs.pageAlreadyExists(EditorActivity.this);
                     }
-                    if (((RadioButton) findViewById(R.id.radioDefault)).isChecked()) {
-                        rpcService.getPage(getString(R.string.id_scriptTemplate), new RPCService.Listener<String>() {
-                            @Override
-                            public void onResult(String result) {
-                                lock.unlock();
-                                if (result == null) Dialogs.connectionFailed(EditorActivity.this);
-                                else showPageEditor(result);
-                            }
-                        });
-                    } else if (((RadioButton) findViewById(R.id.radioCustom)).isChecked()) {
-                        showPageEditor(sharedPref.getString(getString(R.string.pref_template), ""));
-                    } else showPageEditor("");
-                } else {
+                }
+                else {
                     lock.unlock();
-                    Dialogs.pageAlreadyExists(EditorActivity.this);
+                    Dialogs.connectionFailed(EditorActivity.this);
                 }
             }
         });
@@ -544,13 +533,16 @@ public class EditorActivity extends Activity {
     private void preview() {
         final String tempId = getString(R.string.prefix_temp) + random.nextInt();
         pageText = editor.getText().toString();
-        rpcService.putPage(getString(R.string.prefix_script) + tempId, pageText, new RPCService.Listener<Boolean>() {
+        RPCManager.putPage(getString(R.string.prefix_script) + tempId, pageText, new RPCManager.Listener<Void>() {
             @Override
-            public void onResult(@Nullable Boolean result) {
-                if (result == null) result = false;
+            public void onResult(RPCManager.Result<Void> result) {
                 lock.unlock();
-                if (!result) Dialogs.connectionFailed(EditorActivity.this);
-                else showPreview(tempId);
+                //TODO: handle RESULT_NEED_RW
+                if (result.getStatus() == RPCManager.RESULT_OK) {
+                    showPreview(tempId);
+                } else {
+                    Dialogs.connectionFailed(EditorActivity.this);
+                }
             }
         });
     }
@@ -565,7 +557,7 @@ public class EditorActivity extends Activity {
             @Override
             public void onPageFinished(WebView view, String url) {
                 super.onPageFinished(view, url);
-                rpcService.putPage("script_" + tempId, "", null);
+                RPCManager.putPage("script_" + tempId, "", null);
             }
 
             @Override
@@ -611,7 +603,7 @@ public class EditorActivity extends Activity {
         adapter.sort(new Comparator<String>() {
             @Override
             public int compare(String lhs, String rhs) {
-                return Utils.getNameForPageFromPref(sharedPref, EditorActivity.this, lhs).toLowerCase().compareTo(Utils.getNameForPageFromPref(sharedPref, EditorActivity.this, rhs).toLowerCase());
+                return Utils.getNameForPageFromPref(sharedPref, lhs).toLowerCase().compareTo(Utils.getNameForPageFromPref(sharedPref, rhs).toLowerCase());
             }
         });
         Dialogs.selectPageToEdit(this, adapter, new DialogInterface.OnClickListener() {
@@ -626,12 +618,15 @@ public class EditorActivity extends Activity {
 
     private void loadPageToEdit(String id) {
         pageId = id;
-        rpcService.getPage(pageId, new RPCService.Listener<String>() {
+        RPCManager.getPage(pageId, new RPCManager.Listener<String>() {
             @Override
-            public void onResult(@Nullable String result) {
+            public void onResult(RPCManager.Result<String> result) {
                 lock.unlock();
-                if (result == null) Dialogs.connectionFailed(EditorActivity.this);
-                else showPageEditor(result);
+                if (result.getStatus() == RPCManager.RESULT_OK) {
+                    showPageEditor(result.getResult());
+                } else {
+                    Dialogs.connectionFailed(EditorActivity.this);
+                }
             }
         });
     }

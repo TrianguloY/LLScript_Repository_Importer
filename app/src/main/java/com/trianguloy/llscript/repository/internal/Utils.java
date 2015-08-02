@@ -28,7 +28,11 @@ import java.util.Set;
  * Collection of Utilities
  */
 public final class Utils {
-    private Utils(){}
+
+    private static Context context;
+
+    private Utils() {
+    }
 
     //class used in findBetween
     public static class valueAndIndex {
@@ -81,7 +85,8 @@ public final class Utils {
     }
 
     public static void saveSetToPref(SharedPreferences pref, String key, Set<String> set) {
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.HONEYCOMB) pref.edit().putStringSet(key, set).apply();
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.HONEYCOMB)
+            pref.edit().putStringSet(key, set).apply();
         else pref.edit().putString(key, new JSONArray(set).toString()).apply();
     }
 
@@ -148,11 +153,13 @@ public final class Utils {
         return scripts;
     }
 
-    public static String getNameForPageFromPref(SharedPreferences pref, Context ctx, String page) {
-        if(page.startsWith("script_"))page = page.substring(ctx.getString(R.string.prefix_script).length());
-        String result = (String) getMapFromPref(pref, ctx.getString(R.string.pref_pageNames)).get(page);
+    public static String getNameForPageFromPref(SharedPreferences pref, String page) {
+        if (page.startsWith("script_"))
+            page = page.substring(getString(R.string.prefix_script).length());
+        String result = (String) getMapFromPref(pref, getString(R.string.pref_pageNames)).get(page);
         if (result != null) return result.trim();
-        if (BuildConfig.DEBUG) Log.i(Utils.class.getSimpleName(), "Failed to find script name for " + page);
+        if (BuildConfig.DEBUG)
+            Log.i(Utils.class.getSimpleName(), "Failed to find script name for " + page);
         return page;
     }
 
@@ -161,17 +168,17 @@ public final class Utils {
         return url.substring(url.indexOf(idScript) + idScript.length());
     }
 
-    public static String backClassToString(webViewer.backClass b){
+    public static String backClassToString(webViewer.backClass b) {
         JSONArray array = new JSONArray();
         array.put(b.url);
         array.put(b.posY);
         return array.toString();
     }
 
-    public static webViewer.backClass stringToBackClass(String s){
+    public static webViewer.backClass stringToBackClass(String s) {
         try {
             JSONArray array = new JSONArray(s);
-            return new webViewer.backClass((String)array.get(0),(int)array.get(1));
+            return new webViewer.backClass((String) array.get(0), (int) array.get(1));
         } catch (JSONException e) {
             e.printStackTrace();
             return null;
@@ -213,6 +220,16 @@ public final class Utils {
 
 
         return true;
+    }
+
+    //Methods for retrieving strings in a non-context-environment
+    public static void setContext(Context context) {
+        Utils.context = context;
+    }
+
+    public static String getString(int resId) {
+        if (context == null) throw new RuntimeException("Context not initialized");
+        return context.getString(resId);
     }
 
 }

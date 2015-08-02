@@ -80,8 +80,4 @@ public final class Constants {
     public static final String ScriptCode = "code";
     public static final String ScriptReturnResultTo = "returnTo";
 
-    //internal return values in AsyncTasks
-    public static final int RESULT_OK = 1;
-    public static final int RESULT_NETWORK_ERROR = 0;
-    public static final int RESULT_BAD_LOGIN = -1;
 }

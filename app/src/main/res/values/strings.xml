@@ -305,6 +305,7 @@
         app
     </string>
     <string name="pref_directEdit">directEdit</string>
+    <string name="text_defaultUser">Anonymous</string>
 
 
 </resources>

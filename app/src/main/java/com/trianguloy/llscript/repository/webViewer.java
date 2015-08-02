@@ -466,7 +466,7 @@ public class webViewer extends Activity {
             }
         } else {
             button.setVisibility(View.VISIBLE);
-            setTitle(Utils.getNameForPageFromPref(sharedPref, this, Utils.getNameFromUrl(currentUrl)));
+            setTitle(Utils.getNameForPageFromPref(sharedPref, Utils.getNameFromUrl(currentUrl)));
             boolean sub = Utils.getMapFromPref(sharedPref, getString(R.string.pref_subs)).containsKey(currentUrl);
             setSubscriptionState(sub ? SUBSCRIBED : NOT_SUBSCRIBED);
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.HONEYCOMB) {

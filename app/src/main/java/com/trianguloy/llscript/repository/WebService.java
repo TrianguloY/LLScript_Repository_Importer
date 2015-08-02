@@ -95,7 +95,7 @@ public class WebService extends Service {
             builder.setContentText(getStringUpdated(updated));
             Notification.InboxStyle inboxStyle = new Notification.InboxStyle();
             for (String s : updated) {
-                inboxStyle.addLine(Utils.getNameForPageFromPref(sharedPref, this, Utils.getNameFromUrl(s)));
+                inboxStyle.addLine(Utils.getNameForPageFromPref(sharedPref, Utils.getNameFromUrl(s)));
             }
             builder.setStyle(inboxStyle);
             builder.setSmallIcon(R.drawable.ic_notification);
@@ -116,7 +116,7 @@ public class WebService extends Service {
     }
 
     private String getStringUpdated(List<String> updated){
-        return updated.size() == 1 ? Utils.getNameForPageFromPref(sharedPref, this, Utils.getNameFromUrl(updated.get(0))) : updated.size() + " " + getString(R.string.text_updatedPages);
+        return updated.size() == 1 ? Utils.getNameForPageFromPref(sharedPref, Utils.getNameFromUrl(updated.get(0))) : updated.size() + " " + getString(R.string.text_updatedPages);
     }
 
     public class LocalBinder extends Binder {

@@ -172,9 +172,8 @@ public class webViewer extends Activity {
             if (backStack.empty()) {
                 changePage(getString(R.string.link_repository));
             } else {
-                backClass previous = backStack.pop();
-                currentUrl = previous.url;
-                changePage(currentUrl, previous.posY);
+                backClass previous = backStack.peek();
+                changePage(previous.url, previous.posY);
             }
 
         } else if (!close && !sharedPref.getBoolean(getString(R.string.pref_singleClose), false)) {
@@ -280,7 +279,6 @@ public class webViewer extends Activity {
                     //Function to check if the page has changed since the last visit
                     showNewScripts();
                 }
-                if (menu != null) onPrepareOptionsMenu(menu);
                 display();
             }
 
@@ -404,10 +402,11 @@ public class webViewer extends Activity {
 
         if (url.equals(getString(R.string.link_repository))) {
             //main page
+            if(!currentUrl.equals(url))progressBar.setVisibility(View.VISIBLE);
             currentUrl = url;
             backStack.clear();
             webViewPositionY = positionY;
-            if (repoHtml.equals("")) {
+            if (repoHtml.equals("") || invalidate) {
                 new DownloadTask(downloadTaskListener).execute(url);
             } else {
                 currentHtml = repoHtml;
@@ -416,14 +415,15 @@ public class webViewer extends Activity {
         } else if (url.startsWith(getString(R.string.link_scriptPagePrefix))) {
             // script page
             if (!currentUrl.equals(url) || invalidate) {
-                if (!currentUrl.equals(url))
-                    backStack.push(new backClass(currentUrl, webView.getScrollY()));
+                if (!currentUrl.equals(url)) {
+                    if(!backStack.empty() && url.equals(backStack.peek().url))backStack.pop();
+                    else backStack.push(new backClass(currentUrl, webView.getScrollY()));
+                }
                 currentUrl = url;
                 webViewPositionY = positionY;
                 progressBar.setVisibility(View.VISIBLE);
                 new DownloadTask(downloadTaskListener).execute(url);
             } else {
-                if (menu != null) onPrepareOptionsMenu(menu);
                 display();
             }
         } else
@@ -432,6 +432,7 @@ public class webViewer extends Activity {
     }
 
     private void display() {
+        if (menu != null) onPrepareOptionsMenu(menu);
         //display a page
         webView.loadDataWithBaseURL(getString(R.string.link_server), currentHtml, "text/html", "utf-8", null);
 
@@ -476,7 +477,7 @@ public class webViewer extends Activity {
         for (String aStart : Constants.beginning) {
             //starting found
             Utils.valueAndIndex found = new Utils.valueAndIndex(null, -1, 0);
-            do {
+            while (true) {
                 //searches for a match
                 found = Utils.findBetween(currentHtml, aStart, Constants.ending, found.to, false);
                 if (found.value != null) {
@@ -484,7 +485,7 @@ public class webViewer extends Activity {
                     rawCodes.add(found.value.trim());
                     //Assumes the script name is just before the code, and searches for it
                     Utils.valueAndIndex name = new Utils.valueAndIndex(null, found.from, -1);
-                    do {
+                    while (true) {
                         name = Utils.findBetween(currentHtml, ">", "<", name.from, true);
                         if (name.value == null) {
                             names.add("Name not found");
@@ -495,13 +496,12 @@ public class webViewer extends Activity {
                             names.add(name.value);
                             break;
                         }
-                    } while (true);
-
+                    }
                 } else {
                     //if not found, another starting token
                     break;
                 }
-            } while (true);
+            }
         }
 
         //TODO search the flags

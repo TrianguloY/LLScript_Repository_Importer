@@ -30,11 +30,6 @@
             android:configChanges="orientation|screenSize"
             android:label="@string/label_repoImporter"
             android:excludeFromRecents="false">
-            <intent-filter>
-                <action android:name="android.intent.action.MAIN" />
-
-                <category android:name="android.intent.category.LAUNCHER" />
-            </intent-filter>
         </activity>
 
         <service
@@ -91,7 +86,7 @@
             android:theme="@android:style/Theme.Dialog" />
         <activity
             android:name=".IntentHandle"
-            android:label="@string/label_intent_handle"
+            android:label="@string/label_repoImporter"
             android:theme="@style/Theme.Transparent" >
             <intent-filter>
                 <action android:name="android.intent.action.VIEW" />
@@ -104,6 +99,11 @@
                     android:pathPattern="/android/applications/lightning_launcher/wiki/doku\\.php"
                     android:scheme="http" />
                 <!-- \\?id\\=script\\_.* -->
+            </intent-filter>
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+
+                <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
         <activity android:name=".EditorActivity"

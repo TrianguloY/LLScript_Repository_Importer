@@ -10,7 +10,6 @@ import android.util.Log;
 import com.trianguloy.llscript.repository.BuildConfig;
 import com.trianguloy.llscript.repository.Constants;
 import com.trianguloy.llscript.repository.R;
-import com.trianguloy.llscript.repository.webViewer;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -167,23 +166,6 @@ public final class Utils {
         return url.substring(url.indexOf(idScript) + idScript.length());
     }
 
-    public static String backClassToString(webViewer.backClass b) {
-        JSONArray array = new JSONArray();
-        array.put(b.url);
-        array.put(b.posY);
-        return array.toString();
-    }
-
-    public static webViewer.backClass stringToBackClass(String s) {
-        try {
-            JSONArray array = new JSONArray(s);
-            return new webViewer.backClass((String) array.get(0), (int) array.get(1));
-        } catch (JSONException e) {
-            e.printStackTrace();
-            return null;
-        }
-    }
-
 
     //Checks for the launcher installed and sets it in the Constants variable. Returns false if no launcher was found
     public static boolean checkForLauncher(Context context) {
@@ -229,6 +211,11 @@ public final class Utils {
     public static String getString(int resId) {
         if (context == null) throw new RuntimeException("Context not initialized");
         return context.getString(resId);
+    }
+
+    public static Context getContext() {
+        if (context == null) throw new RuntimeException("Context not initialized");
+        return context;
     }
 
 }

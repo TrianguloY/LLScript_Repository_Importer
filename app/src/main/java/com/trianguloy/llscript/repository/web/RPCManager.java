@@ -1,10 +1,11 @@
-package com.trianguloy.llscript.repository.internal;
+package com.trianguloy.llscript.repository.web;
 
 import android.content.SharedPreferences;
 import android.os.AsyncTask;
 import android.support.annotation.Nullable;
 
 import com.trianguloy.llscript.repository.R;
+import com.trianguloy.llscript.repository.internal.Utils;
 
 import java.net.MalformedURLException;
 import java.util.ArrayList;
@@ -20,7 +21,7 @@ import dw.xmlrpc.exception.DokuException;
  * Created by Lukas on 02.08.2015.
  * Performs all DokuJClient jobs
  */
-public class RPCManager {
+public final class RPCManager {
 
     //internal return values in AsyncTasks
     public static final int RESULT_OK = 1;
@@ -197,8 +198,25 @@ public class RPCManager {
                 try {
                     if (init()) {
                         int timestamp = client.getTime();
-                        sharedPref.edit().putInt(Utils.getString(R.string.pref_timestamp),timestamp ).apply();
+                        sharedPref.edit().putInt(Utils.getString(R.string.pref_timestamp), timestamp).apply();
                         return new Result<>(RESULT_OK, timestamp);
+                    }
+                } catch (DokuException e) {
+                    e.printStackTrace();
+                }
+                return new Result<>(RESULT_NETWORK_ERROR);
+            }
+        }.execute();
+    }
+
+    public static void getPageTimestamp(final String id, Listener<Integer> listener) {
+        new ListenedTask<Integer>(listener) {
+
+            @Override
+            protected Result<Integer> doInBackground(Void... params) {
+                try {
+                    if (init()) {
+                        return new Result<>(RESULT_OK, client.getPageInfo(id).version());
                     }
                 } catch (DokuException e) {
                     e.printStackTrace();
@@ -235,7 +253,7 @@ public class RPCManager {
         }
     }
 
-    private static abstract class ListenedTask<T> extends AsyncTask<Void, Void, Result<T>> {
+    private abstract static class ListenedTask<T> extends AsyncTask<Void, Void, Result<T>> {
         private final Listener<T> listener;
 
         public ListenedTask(@Nullable Listener<T> listener) {

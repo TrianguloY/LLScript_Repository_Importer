@@ -7,14 +7,15 @@ import android.content.Context;
 import android.content.Intent;
 import android.os.SystemClock;
 
-import com.trianguloy.llscript.repository.WebService;
+import com.trianguloy.llscript.repository.web.WebService;
 
 /**
  * Created by Lukas on 12.12.2014.
  * A small set of static methods required at several places, targeting the service
  */
 public final class ServiceManager {
-    private ServiceManager(){}
+    private ServiceManager() {
+    }
 
     public static void startService(Context context, int interval) {
         getManager(context).setInexactRepeating(AlarmManager.ELAPSED_REALTIME, SystemClock.elapsedRealtime(), interval, getIntent(context));
@@ -24,12 +25,12 @@ public final class ServiceManager {
         getManager(context).cancel(getIntent(context));
     }
 
-    private static PendingIntent getIntent(Context context){
+    private static PendingIntent getIntent(Context context) {
         Intent i = new Intent(context, WebService.class);
-        return  PendingIntent.getService(context, 0, i, 0);
+        return PendingIntent.getService(context, 0, i, 0);
     }
 
-    private static AlarmManager getManager(Context context){
+    private static AlarmManager getManager(Context context) {
         return (AlarmManager) context.getSystemService(Activity.ALARM_SERVICE);
     }
 

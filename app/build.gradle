@@ -30,4 +30,5 @@ dependencies {
     compile 'com.android.support:support-annotations:22.2.1'
     compile 'ch.acra:acra:4.3.0'
     compile 'fr.turri:dokujclient:3.3.0'
+    compile 'com.google.code.gson:gson:2.3.1'
 }

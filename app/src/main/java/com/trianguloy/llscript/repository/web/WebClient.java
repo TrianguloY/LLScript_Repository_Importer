@@ -1,4 +1,4 @@
-package com.trianguloy.llscript.repository.internal;
+package com.trianguloy.llscript.repository.web;
 
 import android.annotation.TargetApi;
 import android.net.http.HttpResponseCache;

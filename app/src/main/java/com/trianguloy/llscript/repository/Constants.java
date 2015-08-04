@@ -6,48 +6,26 @@ package com.trianguloy.llscript.repository;
  */
 public final class Constants {
 
-    private Constants(){}
+    private Constants() {
+    }
 
     //script flags
     public static final int FLAG_APP_MENU = 2;
     public static final int FLAG_ITEM_MENU = 4;
     public static final int FLAG_CUSTOM_MENU = 8;
 
-
-    //Legacy variables. To remove with loadInLauncher
-        //Id of the script
-        static final String INTENT_EXTRA_SCRIPT_ID = "i";
-        // Optional: or'ed combination of the FLAG_* constants above (default is 0)
-        static final String INTENT_EXTRA_SCRIPT_FLAGS = "f";
-        //Optional: name of the script (default is the activity name)
-        static final String INTENT_EXTRA_SCRIPT_NAME = "n";
-        //Optional: execute the script right after loading it (default is false)
-        static final String INTENT_EXTRA_EXECUTE_ON_LOAD = "e";
-        /**
-         * Optional: delete the script right after loading and (presumably) executing it.
-         * This is useful when the script is meant to configure the home screen, create items or
-         * install some other scripts, and is no longer needed after this initial setup (default is false).
-         */
-        static final String INTENT_EXTRA_DELETE_AFTER_EXECUTION = "d";
-
-
-
     //App constants
     public static final int managerId = -3;
 
     //Where to search in the HTML source
-    static final String[] beginning = {"class=\"brush: javascript\">", "class=\"brush: javascript;\">", "class=\"code\">"};
-    static final String ending = "</pre>";
+    public static final String[] beginning = {"class=\"brush: javascript\">", "class=\"brush: javascript;\">", "class=\"code\">"};
+    public static final String ending = "</pre>";
 
     //package constants
     public static final String activityRunScript = "net.pierrox.lightning_launcher.activities.Dashboard";
     public static final String[] packages = new String[]{"net.pierrox.lightning_launcher_extreme", "net.pierrox.lightning_launcher"};
     public static String installedPackage = "";
     public static final int minimumNecessaryVersion = 225; // valid for both packages. Number module 1000
-
-    //sharedPrefs
-    @Deprecated
-    public static final String keyId = "id";
 
     //Intent Extras
     public static final String extraCode = "code";
@@ -70,7 +48,7 @@ public final class Constants {
     public static final String RunActionExtra = "a";
     public static final String RunDataExtra = "d";
     public static final int RunActionKey = 35;
-    public static final String RunBackgroundExtra ="t";
+    public static final String RunBackgroundExtra = "t";
     public static final int RunBackgroundKey = 3;
 
     //Script JSON names for script drop
@@ -79,5 +57,7 @@ public final class Constants {
     public static final String ScriptForceUpdate = "forceUpdate";
     public static final String ScriptCode = "code";
     public static final String ScriptReturnResultTo = "returnTo";
+
+    public static final int BUFFER_SIZE = 1024;
 
 }

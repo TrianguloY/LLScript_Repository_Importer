@@ -26,7 +26,7 @@
         android:supportsRtl="false"
         android:theme="@style/Theme" >
         <activity
-            android:name=".webViewer"
+            android:name=".web.WebViewer"
             android:configChanges="orientation|screenSize"
             android:label="@string/label_repoImporter"
             android:excludeFromRecents="false">
@@ -49,10 +49,10 @@
             android:name=".SettingsActivity"
             android:excludeFromRecents="false"
             android:label="@string/label_settings"
-            android:parentActivityName=".webViewer" >
+            android:parentActivityName=".web.WebViewer" >
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
-                android:value="com.trianguloy.llscript.repository.webViewer" />
+                android:value=".web.WebViewer" />
         </activity>
         <activity
             android:name=".SubscriptionsActivity"
@@ -65,7 +65,7 @@
         </activity>
 
         <service
-            android:name=".WebService"
+            android:name=".web.WebService"
             android:enabled="true"
             android:exported="false" >
         </service>

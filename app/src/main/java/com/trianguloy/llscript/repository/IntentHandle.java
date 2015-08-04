@@ -8,6 +8,7 @@ import android.widget.Toast;
 
 import com.trianguloy.llscript.repository.internal.AppChooser;
 import com.trianguloy.llscript.repository.internal.Dialogs;
+import com.trianguloy.llscript.repository.web.WebViewer;
 
 
 public class IntentHandle extends Activity {
@@ -59,7 +60,7 @@ public class IntentHandle extends Activity {
     }
 
     private void openWebViewer(String url, boolean reload) {
-        Intent intent = new Intent(this, webViewer.class);
+        Intent intent = new Intent(this, WebViewer.class);
         if (url != null) intent.putExtra(Constants.extraOpenUrl, url);
         intent.putExtra(Constants.extraOpenUrlTime, System.currentTimeMillis());
         intent.putExtra(Constants.extraReload, reload);

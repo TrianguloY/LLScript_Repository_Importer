@@ -32,11 +32,11 @@ import android.widget.Toast;
 
 import com.trianguloy.llscript.repository.internal.CategoryAdapter;
 import com.trianguloy.llscript.repository.internal.Dialogs;
-import com.trianguloy.llscript.repository.internal.DownloadTask;
-import com.trianguloy.llscript.repository.internal.RPCManager;
 import com.trianguloy.llscript.repository.internal.Repository;
 import com.trianguloy.llscript.repository.internal.Utils;
-import com.trianguloy.llscript.repository.internal.WebClient;
+import com.trianguloy.llscript.repository.web.DownloadTask;
+import com.trianguloy.llscript.repository.web.RPCManager;
+import com.trianguloy.llscript.repository.web.WebClient;
 
 import org.acra.ACRA;
 
@@ -432,7 +432,8 @@ public class EditorActivity extends Activity {
                                 public void onResult(RPCManager.Result<Void> result) {
                                     lock.unlock();
                                     //TODO: handle RESULT_NEED_RW
-                                    if (result.getStatus() == RPCManager.RESULT_OK) Dialogs.saved(EditorActivity.this, pageId);
+                                    if (result.getStatus() == RPCManager.RESULT_OK)
+                                        Dialogs.saved(EditorActivity.this, pageId);
                                     else Dialogs.connectionFailed(EditorActivity.this);
                                 }
                             });
@@ -482,8 +483,7 @@ public class EditorActivity extends Activity {
                         lock.unlock();
                         Dialogs.pageAlreadyExists(EditorActivity.this);
                     }
-                }
-                else {
+                } else {
                     lock.unlock();
                     Dialogs.connectionFailed(EditorActivity.this);
                 }
@@ -566,7 +566,8 @@ public class EditorActivity extends Activity {
         });
         new DownloadTask(new DownloadTask.Listener() {
             @Override
-            public void onFinish(String result) {
+            public void onFinish(DownloadTask.Result res) {
+                String result = res.html;
                 if (!sharedPref.getBoolean(getString(R.string.pref_showTools), false)) {
                     //remove tools
                     Utils.valueAndIndex val = Utils.findBetween(result, "<div class=\"tools group\">", "<hr class=\"a11y\" />", 0, false);

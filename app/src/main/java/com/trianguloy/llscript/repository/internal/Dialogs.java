@@ -30,13 +30,14 @@ import com.trianguloy.llscript.repository.ScriptImporter;
  * May hold all Dialogs in future
  */
 public final class Dialogs {
-    private Dialogs(){}
+    private Dialogs() {
+    }
 
-    public static void badLogin(Context context){
+    public static void badLogin(Context context) {
         badLogin(context, null);
     }
 
-    private static void error(Context context,@Nullable DialogInterface.OnClickListener onClose, String message){
+    private static void error(Context context, @Nullable DialogInterface.OnClickListener onClose, String message) {
         new AlertDialog.Builder(context)
                 .setTitle(context.getString(R.string.title_error))
                 .setNeutralButton(R.string.button_ok, onClose)
@@ -49,31 +50,31 @@ public final class Dialogs {
         error(context, onClose, context.getString(R.string.text_badLogin));
     }
 
-    public static void connectionFailed(Context context){
+    public static void connectionFailed(Context context) {
         connectionFailed(context, null);
     }
 
-    public static void connectionFailed(Context context,@ Nullable DialogInterface.OnClickListener onClose) {
+    public static void connectionFailed(Context context, @Nullable DialogInterface.OnClickListener onClose) {
         error(context, onClose, context.getString(R.string.text_cantConnect));
     }
 
     public static void pageAlreadyExists(Context context) {
-        error(context,null,context.getString(R.string.text_alreadyExists));
+        error(context, null, context.getString(R.string.text_alreadyExists));
     }
 
-    public static void saved(final Activity context, @Nullable String savedPageId){
+    public static void saved(final Activity context, @Nullable String savedPageId) {
         AlertDialog.Builder builder = new AlertDialog.Builder(context)
                 .setTitle(context.getString(R.string.title_saved))
                 .setMessage(context.getString(R.string.text_doNext));
-        if(savedPageId!=null)
-                builder.setPositiveButton(context.getString(R.string.button_viewPage), showPage(context, context.getString(R.string.link_scriptPagePrefix) + savedPageId.substring(context.getString(R.string.prefix_script).length())));
+        if (savedPageId != null)
+            builder.setPositiveButton(context.getString(R.string.button_viewPage), showPage(context, context.getString(R.string.link_scriptPagePrefix) + savedPageId.substring(context.getString(R.string.prefix_script).length())));
         builder.setNeutralButton(context.getString(R.string.button_goHome), showPage(context, context.getString(R.string.link_repository)))
                 .setNegativeButton(context.getString(R.string.button_stay), null)
                 .show();
     }
 
-    private static DialogInterface.OnClickListener showPage(final Activity context, final String url){
-        return new DialogInterface.OnClickListener(){
+    private static DialogInterface.OnClickListener showPage(final Activity context, final String url) {
+        return new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialog, int which) {
                 Intent intent = new Intent(Intent.ACTION_VIEW);
@@ -86,7 +87,7 @@ public final class Dialogs {
         };
     }
 
-    public static void cantSaveEmpty(Context context){
+    public static void cantSaveEmpty(Context context) {
         new AlertDialog.Builder(context)
                 .setTitle(context.getString(R.string.title_error))
                 .setMessage(context.getString(R.string.text_cantSaveEmpty))
@@ -94,7 +95,7 @@ public final class Dialogs {
                 .show();
     }
 
-    public static void unsavedChanges(Context context, @Nullable DialogInterface.OnClickListener onConfirm){
+    public static void unsavedChanges(Context context, @Nullable DialogInterface.OnClickListener onConfirm) {
         new AlertDialog.Builder(context)
                 .setTitle(context.getString(R.string.title_warning))
                 .setMessage(context.getString(R.string.text_unsavedChanges))
@@ -103,7 +104,7 @@ public final class Dialogs {
                 .show();
     }
 
-    public static void selectPageToEdit(Context context, ListAdapter adapter, DialogInterface.OnClickListener listener){
+    public static void selectPageToEdit(Context context, ListAdapter adapter, DialogInterface.OnClickListener listener) {
         new AlertDialog.Builder(context)
                 .setAdapter(adapter, listener)
                 .setNegativeButton(R.string.button_cancel, null)
@@ -111,7 +112,7 @@ public final class Dialogs {
                 .show();
     }
 
-    public static void removeSubscription(Context context,String which, DialogInterface.OnClickListener onConfirm){
+    public static void removeSubscription(Context context, String which, DialogInterface.OnClickListener onConfirm) {
         new AlertDialog.Builder(context)
                 .setTitle(R.string.title_remove)
                 .setMessage(context.getString(R.string.message_remove) + which + context.getString(R.string.text_questionmark))
@@ -120,7 +121,7 @@ public final class Dialogs {
                 .show();
     }
 
-    private static AlertDialog baseLauncherProblem(final Context context){
+    private static AlertDialog baseLauncherProblem(final Context context) {
         return new AlertDialog.Builder(context)
                 .setCancelable(false)
                 .setTitle(R.string.title_warning)
@@ -129,32 +130,32 @@ public final class Dialogs {
                     public void onClick(DialogInterface dialog, int which) {
                         Intent i = new Intent(Intent.ACTION_VIEW);
                         i.setData(Uri.parse(context.getString(R.string.link_playStorePrefix) + Constants.packages[1]));
-                        if(context instanceof Service)i.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+                        if (context instanceof Service) i.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
                         context.startActivity(i);
-                        if(context instanceof Activity)((Activity)context).finish();
+                        if (context instanceof Activity) ((Activity) context).finish();
                     }
                 })
                 .setIcon(R.drawable.ic_launcher)
                 .create();
     }
 
-    public static void launcherNotFound(final Context context){
-        AlertDialog dialog =  baseLauncherProblem(context);
+    public static void launcherNotFound(final Context context) {
+        AlertDialog dialog = baseLauncherProblem(context);
         dialog.setMessage(context.getString(R.string.message_launcherNotFound));
-        if(context instanceof Service)
+        if (context instanceof Service)
             dialog.getWindow().setType(WindowManager.LayoutParams.TYPE_SYSTEM_ALERT);
         dialog.show();
     }
 
-    public static void launcherOutdated(final Context context){
-        AlertDialog dialog =  baseLauncherProblem(context);
+    public static void launcherOutdated(final Context context) {
+        AlertDialog dialog = baseLauncherProblem(context);
         dialog.setMessage(context.getString(R.string.message_outdatedLauncher));
-        if(context instanceof Service)
+        if (context instanceof Service)
             dialog.getWindow().setType(WindowManager.LayoutParams.TYPE_SYSTEM_ALERT);
         dialog.show();
     }
 
-    public static void changedSubscriptions(Context context,String changed){
+    public static void changedSubscriptions(Context context, String changed) {
         //TODO: make page names clickable
         new AlertDialog.Builder(context)
                 .setTitle(R.string.title_updatedSubs)
@@ -163,18 +164,19 @@ public final class Dialogs {
                 .show();
     }
 
-    public static void newScripts(Context context,String newScripts,boolean single){
+    public static void newScripts(Context context, String newScripts, boolean single) {
         new AlertDialog.Builder(context)
-                .setTitle(single?context.getString(R.string.toast_oneNewScript):context.getString(R.string.toast_severalNewScripts))
+                .setTitle(single ? context.getString(R.string.toast_oneNewScript) : context.getString(R.string.toast_severalNewScripts))
                 .setMessage(newScripts)
                 .setNeutralButton(R.string.button_ok, null)
                 .show();
     }
 
-    public static void importScript(Activity context, final String code, String scriptName, final OnImportListener onImport, final OnImportListener onShare){
+    public static void importScript(Activity context, final String code, String scriptName, final OnImportListener onImport, final OnImportListener onShare) {
 
         View layout = context.getLayoutInflater().inflate(R.layout.confirm_alert, (ViewGroup) context.findViewById(R.id.webView).getRootView(), false);
-        if (Build.VERSION.SDK_INT < Build.VERSION_CODES.HONEYCOMB) layout.setBackgroundColor(Color.WHITE);
+        if (Build.VERSION.SDK_INT < Build.VERSION_CODES.HONEYCOMB)
+            layout.setBackgroundColor(Color.WHITE);
         final EditText contentText = ((EditText) layout.findViewById(R.id.editText2));
         contentText.setText(code);
         final EditText nameText = ((EditText) layout.findViewById(R.id.editText));
@@ -203,8 +205,8 @@ public final class Dialogs {
                 .show();
     }
 
-    private static int checkBoxToFlag(CheckBox[] flagsBoxes){
-        return  (flagsBoxes[0].isChecked() ? Constants.FLAG_APP_MENU : 0) +
+    private static int checkBoxToFlag(CheckBox[] flagsBoxes) {
+        return (flagsBoxes[0].isChecked() ? Constants.FLAG_APP_MENU : 0) +
                 (flagsBoxes[1].isChecked() ? Constants.FLAG_ITEM_MENU : 0) +
                 (flagsBoxes[2].isChecked() ? Constants.FLAG_CUSTOM_MENU : 0);
     }
@@ -223,11 +225,11 @@ public final class Dialogs {
                         System.exit(0);
                     }
                 })
-                .setNegativeButton(R.string.button_no,null)
+                .setNegativeButton(R.string.button_no, null)
                 .show();
     }
 
-    public static void moreThanOneScriptFound(Context context,final String[] names,DialogInterface.OnClickListener onSelect){
+    public static void moreThanOneScriptFound(Context context, final String[] names, DialogInterface.OnClickListener onSelect) {
         new AlertDialog.Builder(context)
                 .setTitle(R.string.title_severalScriptsFound)
                 .setIcon(R.drawable.ic_launcher)
@@ -236,14 +238,16 @@ public final class Dialogs {
                 .show();
     }
 
-    public static void noPageLoaded(final Activity context,DialogInterface.OnClickListener onRetry){
+    public static void noPageLoaded(final Context context, DialogInterface.OnClickListener onRetry) {
         new AlertDialog.Builder(context)
                 .setTitle(R.string.title_noPageFound)
                 .setMessage(R.string.message_noPageFound)
                 .setPositiveButton(R.string.button_retry, onRetry)
                 .setNegativeButton(R.string.button_exit, new DialogInterface.OnClickListener() {
                     public void onClick(DialogInterface dialog, int which) {
-                        context.finish();
+                        if (context instanceof Activity) {
+                            ((Activity) context).finish();
+                        }
                     }
                 })
                 .setIcon(R.drawable.ic_launcher)
@@ -251,7 +255,7 @@ public final class Dialogs {
                 .show();
     }
 
-    public static void noScriptFound(final Context context){
+    public static void noScriptFound(final Context context) {
         new AlertDialog.Builder(context)
                 .setTitle(R.string.title_importer)
                 .setNegativeButton(R.string.button_exit, null)
@@ -267,7 +271,7 @@ public final class Dialogs {
                 .show();
     }
 
-    public static void subscribe(Context context,DialogInterface.OnClickListener onConfirm){
+    public static void subscribe(Context context, DialogInterface.OnClickListener onConfirm) {
         new AlertDialog.Builder(context)
                 .setTitle(R.string.title_subscribe)
                 .setMessage(R.string.message_subscribeAsk)
@@ -293,14 +297,14 @@ public final class Dialogs {
                         intent.putExtra(Constants.extraCode, code);
                         intent.putExtra(Constants.extraName, scriptName);
                         intent.putExtra(Constants.extraFlags, flags);
-                        intent.putExtra(Constants.extraForceUpdate,true);
+                        intent.putExtra(Constants.extraForceUpdate, true);
                         context.startService(intent);
                     }
                 })
                 .show();
     }
 
-    public interface OnImportListener{
+    public interface OnImportListener {
         void onClick(String code, String name, int flags);
     }
 }

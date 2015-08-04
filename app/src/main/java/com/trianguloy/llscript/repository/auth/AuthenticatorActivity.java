@@ -14,7 +14,7 @@ import android.widget.EditText;
 import com.trianguloy.llscript.repository.R;
 import com.trianguloy.llscript.repository.internal.AppChooser;
 import com.trianguloy.llscript.repository.internal.Dialogs;
-import com.trianguloy.llscript.repository.internal.RPCManager;
+import com.trianguloy.llscript.repository.web.RPCManager;
 
 /**
  * Created by Lukas on 27.04.2015.

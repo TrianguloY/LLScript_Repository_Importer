@@ -63,7 +63,7 @@ action#net.pierrox.lightning_launcher.script.ENUMERATE
 ADDED from AndroidManifest.xml:26:17
 	android:name
 		ADDED from AndroidManifest.xml:26:25
-activity#com.trianguloy.llscript.repository.webViewer
+activity#com.trianguloy.llscript.repository.web.webViewer
 ADDED from AndroidManifest.xml:29:9
 	android:label
 		ADDED from AndroidManifest.xml:32:13

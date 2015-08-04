@@ -1,4 +1,4 @@
-package com.trianguloy.llscript.repository;
+package com.trianguloy.llscript.repository.web;
 
 import android.app.Notification;
 import android.app.NotificationManager;
@@ -11,7 +11,8 @@ import android.os.Build;
 import android.os.IBinder;
 import android.preference.PreferenceManager;
 
-import com.trianguloy.llscript.repository.internal.RPCManager;
+import com.trianguloy.llscript.repository.IntentHandle;
+import com.trianguloy.llscript.repository.R;
 import com.trianguloy.llscript.repository.internal.Utils;
 
 import java.util.List;

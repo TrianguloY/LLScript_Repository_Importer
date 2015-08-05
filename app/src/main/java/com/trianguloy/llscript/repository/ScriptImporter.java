@@ -29,12 +29,11 @@ public class ScriptImporter extends Service {
                 }
                 boolean forceUpdate = intent.getBooleanExtra(Constants.extraForceUpdate, false);
                 installScript(intent.getStringExtra(Constants.extraCode), intent.getStringExtra(Constants.extraName), intent.getIntExtra(Constants.extraFlags, 0), componentName, forceUpdate);
-            }
-            else if(componentName!=null){
+            } else if (componentName != null) {
                 //callback for other apps
                 Intent response = new Intent(Intent.ACTION_VIEW);
                 response.setComponent(componentName);
-                response.putExtra(Constants.extraStatus,Constants.STATUS_LAUNCHER_PROBLEM);
+                response.putExtra(Constants.extraStatus, Constants.STATUS_LAUNCHER_PROBLEM);
                 response.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
                 startActivity(response);
             }

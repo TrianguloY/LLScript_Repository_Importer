@@ -111,7 +111,7 @@ public class ManagedWebView extends WebView {
                             PageCacheManager.Page page = PageCacheManager.getPage(id);
                             if (result.getResult() > page.timestamp) {
                                 downloadPage(url);
-                            } else if (!url.equals(backStack.peek().url)) {
+                            } else if (backStack.empty() || !url.equals(backStack.peek().url)) {
                                 showPage(url, page.html);
                             }
                         } else Dialogs.connectionFailed(context);

@@ -67,6 +67,8 @@ public class WebViewer extends Activity {
 
     private Menu menu;
 
+    private Bundle savedInstanceState;
+
     //Application functions
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -79,12 +81,8 @@ public class WebViewer extends Activity {
         //initialize variables
         sharedPref = PreferenceManager.getDefaultSharedPreferences(this);
         RepositoryImporter.setTheme(this, sharedPref);
-        sentUrl = getString(R.string.link_repository);
-        if (savedInstanceState != null && restore(savedInstanceState)) {
-            initializeWeb();
-        } else {
-            if(upgradeFromOldVersion()) init();
-        }
+        this.savedInstanceState = savedInstanceState;
+        if (upgradeFromOldVersion()) init();
     }
 
     @Override
@@ -98,13 +96,14 @@ public class WebViewer extends Activity {
                 intent.getLongExtra(Constants.extraOpenUrlTime, 0) + 5000 > System.currentTimeMillis()
                 ) {
             sentUrl = intent.getStringExtra(Constants.extraOpenUrl);
-            if(webView!=null)loadSentUrl();
+            if (webView != null) loadSentUrl();
         }
         super.onNewIntent(intent);
     }
 
-    private void loadSentUrl(){
-        if(!sentUrl.equals(getString(R.string.link_repository)) && !sharedPref.getBoolean(getString(R.string.pref_directReturn),false) && !webView.hasPage()){
+    private void loadSentUrl() {
+        if (sentUrl == null) sentUrl = getString(R.string.link_repository);
+        if (!sentUrl.equals(getString(R.string.link_repository)) && !sharedPref.getBoolean(getString(R.string.pref_directReturn), false) && !webView.hasPage()) {
             webView.dropOnStackWithoutShowing(getString(R.string.link_repository));
         }
         webView.show(sentUrl);
@@ -165,7 +164,7 @@ public class WebViewer extends Activity {
 
     @Override
     public void onBackPressed() {
-        if(webView.backPossible())webView.performBack();
+        if (webView.backPossible()) webView.performBack();
         else if (!close && !sharedPref.getBoolean(getString(R.string.pref_singleClose), false)) {
             //Press back while the toast is still displayed to close
             Toast.makeText(getApplicationContext(), R.string.toast_backToClose, Toast.LENGTH_SHORT).show();
@@ -202,21 +201,21 @@ public class WebViewer extends Activity {
         super.onStop();
     }
 
-    //TODO reimplement instance saving for the new webview
     @Override
     protected void onSaveInstanceState(@NonNull Bundle outState) {
         super.onSaveInstanceState(outState);
+        if (webView != null) {
+            webView.saveToInstanceState(outState);
+        }
     }
 
     private boolean restore(@NonNull Bundle savedInstanceState) {
-        return false;
+        return webView.restoreFromInstanceState(savedInstanceState);
     }
 
-
-    private void init(){
+    private void init() {
         //parse the Intent
         onNewIntent(getIntent());
-
         //Normal activity
         initializeWeb();
     }
@@ -240,7 +239,7 @@ public class WebViewer extends Activity {
                 WebViewer.this.pageChanged(url);
             }
         });
-        webView.setShowTools(sharedPref.getBoolean(getString(R.string.pref_showTools),false));
+        webView.setShowTools(sharedPref.getBoolean(getString(R.string.pref_showTools), false));
 
         //install cache
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.ICE_CREAM_SANDWICH) {
@@ -252,8 +251,9 @@ public class WebViewer extends Activity {
                 e.printStackTrace();
             }
         }
-
-        loadSentUrl();
+        if (savedInstanceState == null || !restore(savedInstanceState)) {
+            loadSentUrl();
+        }
     }
 
     //TODO only check again if timestamp has changed
@@ -312,8 +312,8 @@ public class WebViewer extends Activity {
         }
     }
 
-    private void pageChanged(String url){
-        if(url.equals(getString(R.string.link_repository))){
+    private void pageChanged(String url) {
+        if (url.equals(getString(R.string.link_repository))) {
             button.setVisibility(View.GONE);
             setTitle(R.string.action_mainPage);
             setSubscriptionState(CANT_SUBSCRIBE);
@@ -323,8 +323,7 @@ public class WebViewer extends Activity {
                 bar.setDisplayHomeAsUpEnabled(false);
             }
             showNewScripts();
-        }
-        else{
+        } else {
             button.setVisibility(View.VISIBLE);
             setTitle(Utils.getNameForPageFromPref(sharedPref, Utils.getNameFromUrl(url)));
             boolean sub = Utils.getSetFromPref(sharedPref, getString(R.string.pref_subscriptions)).contains(url);
@@ -519,12 +518,12 @@ public class WebViewer extends Activity {
         RPCManager.getChangedSubscriptions(sharedPref, new RPCManager.Listener<List<String>>() {
             @Override
             public void onResult(RPCManager.Result<List<String>> result) {
-                if(result.getStatus() == RPCManager.RESULT_OK) {
+                if (result.getStatus() == RPCManager.RESULT_OK) {
                     List<String> updated = result.getResult();
                     if (updated.size() > 0) {
                         StringBuilder pages = new StringBuilder();
                         for (String s : updated) {
-                            pages.append(Utils.getNameForPageFromPref(sharedPref,s)).append("\n");
+                            pages.append(Utils.getNameForPageFromPref(sharedPref, s)).append("\n");
                         }
                         int showAs = Integer.valueOf(sharedPref.getString(getString(R.string.pref_changedSubs), "2"));
                         switch (showAs) {
@@ -537,7 +536,7 @@ public class WebViewer extends Activity {
                                 Dialogs.changedSubscriptions(WebViewer.this, pages.toString());
                                 break;
                         }
-                        RPCManager.setTimestampToCurrent(sharedPref,null);
+                        RPCManager.setTimestampToCurrent(sharedPref, null);
                     }
                 }
             }
@@ -545,7 +544,7 @@ public class WebViewer extends Activity {
     }
 
     private void subscribeToCurrent() {
-        HashSet<String> subs = (HashSet<String>)Utils.getSetFromPref(sharedPref, getString(R.string.pref_subscriptions));
+        HashSet<String> subs = (HashSet<String>) Utils.getSetFromPref(sharedPref, getString(R.string.pref_subscriptions));
         subs.add(Utils.getNameFromUrl(webView.getUrl()));
         Utils.saveSetToPref(sharedPref, getString(R.string.pref_subscriptions), subs);
         Toast.makeText(this, getString(R.string.toast_subscribeSuccessful), Toast.LENGTH_SHORT).show();
@@ -561,7 +560,7 @@ public class WebViewer extends Activity {
 
     }
 
-    private boolean isSubscribed(){
+    private boolean isSubscribed() {
         return Utils.getSetFromPref(sharedPref, getString(R.string.pref_subscriptions))
                 .contains(Utils.getNameFromUrl(webView.getUrl()));
     }
@@ -613,10 +612,9 @@ public class WebViewer extends Activity {
             RPCManager.setTimestampToCurrent(sharedPref, new RPCManager.Listener<Integer>() {
                 @Override
                 public void onResult(RPCManager.Result<Integer> result) {
-                    if(result.getStatus() == RPCManager.RESULT_OK){
+                    if (result.getStatus() == RPCManager.RESULT_OK) {
                         init();
-                    }
-                    else {
+                    } else {
                         Dialogs.connectionFailed(WebViewer.this, new DialogInterface.OnClickListener() {
                             @Override
                             public void onClick(DialogInterface dialog, int which) {

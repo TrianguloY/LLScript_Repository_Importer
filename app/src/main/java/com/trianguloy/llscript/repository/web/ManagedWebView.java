@@ -3,9 +3,12 @@ package com.trianguloy.llscript.repository.web;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.net.Uri;
+import android.os.Bundle;
 import android.util.AttributeSet;
 import android.webkit.WebView;
 
+import com.google.common.reflect.TypeToken;
+import com.google.gson.Gson;
 import com.trianguloy.llscript.repository.R;
 import com.trianguloy.llscript.repository.internal.AppChooser;
 import com.trianguloy.llscript.repository.internal.Dialogs;
@@ -114,6 +117,9 @@ public class ManagedWebView extends WebView {
                             } else if (backStack.empty() || !url.equals(backStack.peek().url)) {
                                 showPage(url, page.html);
                             }
+                            else {
+                                loading(false);
+                            }
                         } else Dialogs.connectionFailed(context);
                     }
                 });
@@ -163,7 +169,7 @@ public class ManagedWebView extends WebView {
 
     @Override
     public String getUrl() {
-        if (backStack.empty()) throw new IllegalStateException("Getting url from empty Stack");
+        if (backStack.empty()) return null;
         return backStack.peek().url;
     }
 
@@ -187,6 +193,25 @@ public class ManagedWebView extends WebView {
 
     public void setShowTools(boolean showTools) {
         this.showTools = showTools;
+    }
+
+    public void saveToInstanceState(Bundle savedInstanceState){
+        Gson gson = new Gson();
+        savedInstanceState.putString(context.getString(R.string.key_backStack), gson.toJson(backStack));
+        savedInstanceState.putString(context.getString(R.string.key_repoHtml), repoHtml);
+    }
+
+    public boolean restoreFromInstanceState(Bundle savedInstanceState){
+        Gson gson = new Gson();
+        Stack<HistoryElement> backStack = gson.fromJson(savedInstanceState.getString(context.getString(R.string.key_backStack)),new TypeToken<Stack<HistoryElement>>(){}.getType());
+        String repoHtml = savedInstanceState.getString(context.getString(R.string.key_repoHtml));
+        if(repoHtml != null && backStack != null && !backStack.empty()){
+            this.backStack = backStack;
+            this.repoHtml = repoHtml;
+            show(backStack.pop().url);
+            return true;
+        }
+        else return false;
     }
 
     private static class HistoryElement {

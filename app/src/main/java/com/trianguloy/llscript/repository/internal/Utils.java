@@ -5,6 +5,7 @@ import android.content.SharedPreferences;
 import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager;
 import android.os.Build;
+import android.support.annotation.NonNull;
 import android.util.Log;
 
 import com.trianguloy.llscript.repository.BuildConfig;
@@ -161,9 +162,11 @@ public final class Utils {
         return page;
     }
 
-    public static String getNameFromUrl(String url) {
+    public static String getNameFromUrl(@NonNull String url) {
         final String idScript = "?id=script_";
-        return url.substring(url.indexOf(idScript) + idScript.length());
+        int index = url.indexOf(idScript);
+        if(index == -1) return url;
+        return url.substring(index + idScript.length());
     }
 
 

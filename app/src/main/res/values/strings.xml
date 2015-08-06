@@ -87,9 +87,8 @@
     <string name="message_noBrowser">No browser found</string>
 
     <!--alert crash-->
-    <string name="text_crash">Repository Importer has crashed. Do you want to send a Log via
-        email?
-    </string>
+    <string name="title_crash">Repository Importer has crashed</string>
+    <string name="text_crash">Please send the log to the developers. Feel free to add a comment.</string>
 
     <!-- alert NetworkProblem -->
     <string name="text_cantConnect">Can\'t connect to server</string>
@@ -258,8 +257,6 @@
 
     <!-- State keys -->
     <string name="key_backStack">backStack</string>
-    <string name="key_currentUrl">currentUrl</string>
-    <string name="key_currentHtml">currentHtml</string>
     <string name="key_repoHtml">repoHtml</string>
     <string name="key_state">state</string>
     <string name="key_pageText">pageText</string>

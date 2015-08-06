@@ -59,5 +59,11 @@ public final class Constants {
     public static final String ScriptReturnResultTo = "returnTo";
 
     public static final int BUFFER_SIZE = 1024;
+    public static final int TEN_MEGABYTE = 10 * 1024 * 1024;
+    public static final int HUNDRED_MILLISECONDS = 100;
+    public static final int FIVE_SECONDS = 5000;
+    public static final int TWO_SECONDS = 2000; //equals default TOAST_LENGTH_SHORT
+    public static final int RGB_MAX = 255;
+    public static final int VERSIONCODE_MODULO = 1000;//versioncode difference between the two packages
 
 }

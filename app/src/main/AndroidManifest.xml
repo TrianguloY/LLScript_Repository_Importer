@@ -83,7 +83,8 @@
             android:excludeFromRecents="true"
             android:finishOnTaskLaunch="true"
             android:launchMode="singleInstance"
-            android:theme="@android:style/Theme.Dialog" />
+            android:process=":error_report"
+            android:theme="@style/Theme.Dialog"/>
         <activity
             android:name=".IntentHandle"
             android:label="@string/label_repoImporter"

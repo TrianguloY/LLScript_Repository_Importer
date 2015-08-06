@@ -30,6 +30,7 @@ import com.trianguloy.llscript.repository.ScriptImporter;
  * May hold all Dialogs in future
  */
 public final class Dialogs {
+
     private Dialogs() {
     }
 
@@ -221,7 +222,7 @@ public final class Dialogs {
                         Intent i = new Intent(context, IntentHandle.class);
                         PendingIntent pendingIntent = PendingIntent.getActivity(context, 0, i, PendingIntent.FLAG_CANCEL_CURRENT);
                         AlarmManager am = (AlarmManager) context.getSystemService(Context.ALARM_SERVICE);
-                        am.set(AlarmManager.RTC, System.currentTimeMillis() + 100, pendingIntent);
+                        am.set(AlarmManager.RTC, System.currentTimeMillis() + Constants.HUNDRED_MILLISECONDS, pendingIntent);
                         System.exit(0);
                     }
                 })

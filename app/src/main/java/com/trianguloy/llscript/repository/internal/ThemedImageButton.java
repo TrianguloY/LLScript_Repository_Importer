@@ -9,6 +9,7 @@ import android.view.ContextThemeWrapper;
 import android.widget.ImageButton;
 
 import com.trianguloy.llscript.repository.BuildConfig;
+import com.trianguloy.llscript.repository.Constants;
 import com.trianguloy.llscript.repository.R;
 
 import java.lang.reflect.InvocationTargetException;
@@ -34,9 +35,9 @@ public class ThemedImageButton extends ImageButton {
         }
         if(themeResId == R.style.Theme_Dark){
             float[] cn = {
-                    -1.0f, 0, 0, 0, 255, //red
-                    0, -1.0f, 0, 0, 255, //green
-                    0, 0, -1.0f, 0, 255, //blue
+                    -1.0f, 0, 0, 0, Constants.RGB_MAX, //red
+                    0, -1.0f, 0, 0, Constants.RGB_MAX, //green
+                    0, 0, -1.0f, 0, Constants.RGB_MAX, //blue
                     0, 0, 0, 1.0f, 0 //alpha
             };
             ColorFilter colorFilter = new ColorMatrixColorFilter(cn);

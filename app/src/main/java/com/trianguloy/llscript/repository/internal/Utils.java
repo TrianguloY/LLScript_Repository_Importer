@@ -197,7 +197,7 @@ public final class Utils {
 
         //Checks the version of the launcher
 
-        if ((pi.versionCode % 1000) < Constants.minimumNecessaryVersion) {
+        if ((pi.versionCode % Constants.VERSIONCODE_MODULO) < Constants.minimumNecessaryVersion) {
             Dialogs.launcherOutdated(context);
             return false;
         }

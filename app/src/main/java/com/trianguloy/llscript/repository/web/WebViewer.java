@@ -93,7 +93,7 @@ public class WebViewer extends Activity {
                 &&//if has both extras
                 intent.hasExtra(Constants.extraOpenUrlTime)
                 &&//and if the time passed is less than five seconds (to avoid be launched after closed, because the intent is kept)
-                intent.getLongExtra(Constants.extraOpenUrlTime, 0) + 5000 > System.currentTimeMillis()
+                intent.getLongExtra(Constants.extraOpenUrlTime, 0) + Constants.FIVE_SECONDS > System.currentTimeMillis()
                 ) {
             sentUrl = intent.getStringExtra(Constants.extraOpenUrl);
             if (webView != null) loadSentUrl();
@@ -175,7 +175,7 @@ public class WebViewer extends Activity {
                     //when the toast disappear
                     close = false;
                 }
-            }, 2000);//2000ms is the default time for the TOAST_LENGTH_SHORT
+            }, Constants.TWO_SECONDS);//2000ms is the default time for the TOAST_LENGTH_SHORT
         } else
             finish();
     }
@@ -245,7 +245,7 @@ public class WebViewer extends Activity {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.ICE_CREAM_SANDWICH) {
             try {
                 File httpCacheDir = new File(getCacheDir(), "http");
-                long httpCacheSize = 10 * 1024 * 1024; // 10 MiB
+                long httpCacheSize = Constants.TEN_MEGABYTE; // 10 MiB
                 HttpResponseCache.install(httpCacheDir, httpCacheSize);
             } catch (IOException e) {
                 e.printStackTrace();

@@ -9,6 +9,7 @@ import com.trianguloy.llscript.repository.internal.PageCacheManager;
 import com.trianguloy.llscript.repository.internal.Utils;
 
 import org.acra.ACRA;
+import org.acra.ReportField;
 import org.acra.ReportingInteractionMode;
 import org.acra.annotation.ReportsCrashes;
 
@@ -17,10 +18,11 @@ import org.acra.annotation.ReportsCrashes;
  * Represents the application
  */
 @ReportsCrashes(
-        formKey = "",
         mailTo = "repository.importer@gmail.com",
         mode = ReportingInteractionMode.DIALOG,
-        resDialogText = R.string.text_crash
+        resDialogTitle = R.string.title_crash,
+        resDialogText = R.string.text_crash,
+        customReportContent = {ReportField.ANDROID_VERSION, ReportField.APP_VERSION_NAME, ReportField.PHONE_MODEL, ReportField.BRAND, ReportField.STACK_TRACE}
 )
 public class RepositoryImporter extends Application {
     @Override

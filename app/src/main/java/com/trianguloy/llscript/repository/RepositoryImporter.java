@@ -26,7 +26,7 @@ public class RepositoryImporter extends Application {
     @Override
     public void onCreate() {
         super.onCreate();
-        ACRA.init(this);
+        if(!BuildConfig.DEBUG)ACRA.init(this);
         if (PreferenceManager.getDefaultSharedPreferences(this).getBoolean(getString(R.string.key_theme), false))
             setTheme(R.style.Theme_Dark);
         Utils.setContext(this);

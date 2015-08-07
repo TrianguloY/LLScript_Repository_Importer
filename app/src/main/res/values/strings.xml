@@ -12,6 +12,7 @@
     <string name="action_unsubscribe">Unsubscribe</string>
     <string name="action_editor">Editor</string>
     <string name="action_share">Share</string>
+    <string name="menu_crash">Click to crash</string>
 
     <!-- webviewer -->
     <string name="button_importToLauncher">Search and import…</string>
@@ -37,6 +38,8 @@
     <string name="summary_showTools">Some of them might not work, search can\'t be used in-app.
         Might require App restart to apply.
     </string>
+    <string name="title_newScripts">Notify for new Scripts</string>
+    <string name="title_changedSubs">Notify for changed Subscriptions</string>
     <string name="title_editor">Editor</string>
     <string name="title_resetPw">Reset saved password</string>
     <string name="toast_resetPw">Password cleared</string>
@@ -44,6 +47,29 @@
     <string name="title_notifications">Notifications</string>
     <string name="title_pushNotifications">Push Notifications</string>
     <string name="title_interval">Update Interval</string>
+    <string name="key_theme">theme</string>
+    <string name="title_theme">Use dark theme</string>
+    <string name="title_preferDedicated">Prefer dedicated Apps</string>
+    <string name="summary_preferDedicated">Use e.g. Google Plus App instead of the browser</string>
+    <string name="title_lookAndFeel"><![CDATA[Look & Feel]]></string>
+    <string name="title_behaviour">Behaviour</string>
+    <string name="title_directReturn">Directly return to external apps</string>
+    <string name="summary_directReturn">If unchecked the Index will be shown when navigating back
+    </string>
+    <string name="title_longPressClose">Long press to close</string>
+    <string name="summary_longPressClose">Close the app by Long pressing back everywhere</string>
+    <string name="title_singleClose">Close on single back press</string>
+    <string name="summary_singleClose">If unchecked you\'ll need to double click back to close the
+        app
+    </string>
+
+
+    <!-- alert settings -->
+    <string name="title_themeChanged">Theme Changed</string>
+    <string name="message_themeChanged">To apply the Changes the app has to be restarted. Do you
+        want to restart now?
+    </string>
+
 
     <!-- alert confirm and import -->
     <string name="title_importer">Script Importer</string>
@@ -115,6 +141,7 @@
     <string name="toast_unsubscribeSuccessful">Successfully unsubscribed</string>
     <string name="text_noSubs">No Subscriptions</string>
 
+
     <!-- generic buttons -->
     <string name="button_cancel">Cancel</string>
     <string name="button_exit">Exit</string>
@@ -147,6 +174,8 @@
     </string>
     <string name="toast_previewLink">This is a preview. You can\'t actually do anything here
     </string>
+    <string name="toast_externalLink">"External link. Opening in "</string>
+    <string name="toast_tripleDot">…</string>
 
     <!--preference keys -->
     <string name="pref_aboutScript">aboutScript</string>
@@ -161,6 +190,14 @@
     <string name="pref_showTools">showTools</string>
     <string name="pref_resetPw">reset_pw</string>
     <string name="pref_template">template</string>
+    <string name="pref_newScripts">newScripts</string>
+    <string name="pref_preferDedicated">preferDedicated</string>
+    <string name="pref_directReturn">directReturn</string>
+    <string name="pref_longPressClose">longPressClose</string>
+    <string name="pref_singleClose">singleClose</string>
+    <string name="pref_directEdit">directEdit</string>
+    <string name="pref_timestamp">timestamp</string>
+    <string name="pref_changedSubs">changedSubs</string>
 
     <!--preference values -->
     <string-array name="val_intervalTexts">
@@ -241,6 +278,7 @@
     <string name="radio_empty">Start Empty</string>
     <string name="radio_default">Start with default template</string>
     <string name="radio_custom">Start with custom template</string>
+    <string name="title_template">Template</string>
 
     <!-- Authentication -->
     <string name="text_badLogin">Bad Login values</string>
@@ -249,7 +287,11 @@
     <string name="button_login">Login</string>
     <string name="button_register">Register ↗</string>
     <string name="text_login">Login with your Wiki account:</string>
+    <string name="text_defaultUser">Anonymous</string>
 
+
+    <!-- app chooser -->
+    <string name="text_browser">browser</string>
 
     <!-- Page IDs -->
     <string name="id_scriptRepository">script_repository</string>
@@ -268,40 +310,6 @@
     <!-- unsorted-->
     <string name="dummy" tools:ignore="UnusedResources">Dummy string to force new ones to be below
     </string>
-    <string name="pref_newScripts">newScripts</string>
-    <string name="title_newScripts">Notify for new Scripts</string>
-    <string name="pref_changedSubs">changedSubs</string>
-    <string name="title_changedSubs">Notify for changed Subscriptions</string>
-    <string name="key_theme">theme</string>
-    <string name="title_theme">Use dark theme</string>
-    <string name="title_themeChanged">Theme Changed</string>
-    <string name="message_themeChanged">To apply the Changes the app has to be restarted. Do you
-        want to restart now?
-    </string>
-    <string name="title_template">Template</string>
-    <string name="pref_preferDedicated">preferDedicated</string>
-    <string name="title_preferDedicated">Prefer dedicated Apps</string>
-    <string name="summary_preferDedicated">Use e.g. Google Plus App instead of the browser</string>
-    <string name="toast_externalLink">"External link. Opening in "</string>
-    <string name="toast_tripleDot">…</string>
-    <string name="text_browser">browser</string>
-    <string name="pref_directReturn">directReturn</string>
-    <string name="pref_longPressClose">longPressClose</string>
-    <string name="pref_singleClose">singleClose</string>
-    <string name="title_lookAndFeel"><![CDATA[Look & Feel]]></string>
-    <string name="title_behaviour">Behaviour</string>
-    <string name="title_directReturn">Directly return to external apps</string>
-    <string name="summary_directReturn">If unchecked the Index will be shown when navigating back
-    </string>
-    <string name="title_longPressClose">Long press to close</string>
-    <string name="summary_longPressClose">Close the app by Long pressing back everywhere</string>
-    <string name="title_singleClose">Close on single back press</string>
-    <string name="summary_singleClose">If unchecked you\'ll need to double click back to close the
-        app
-    </string>
-    <string name="pref_directEdit">directEdit</string>
-    <string name="text_defaultUser">Anonymous</string>
-    <string name="pref_timestamp">timestamp</string>
 
 
 </resources>

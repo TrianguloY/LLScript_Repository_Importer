@@ -38,5 +38,8 @@
           android:orderInCategory="6"
           android:showAsAction="never"/>
 
-
+    <item android:id="@+id/debug"
+          android:title="@string/menu_crash"
+          android:orderInCategory="99"
+          android:showAsAction="never"/>
 </menu>

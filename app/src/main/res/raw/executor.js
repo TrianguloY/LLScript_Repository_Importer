@@ -56,13 +56,13 @@ if(match==null){
 
 }else if(match.getText()==data.code){
 
-//same name and code. Updated flags
+//same name and code. Update flags
     intent.putExtra(extraStatus,STATUS_OK);
-    toast="Script already imported";
+    toast="Script already imported. Flags updated.";
     //2,4,8 <-> app_menu,item_menu,custom_menu
     match.setFlag(2,((data.flags>>1)&1)==1);
     match.setFlag(4,((data.flags>>2)&1)==1);
-    match.setFlag(8,((data.flags>>3)&1)==1);
+    if(((data.flags>>3)&1)==1)match.setFlag(8,((data.flags>>3)&1)==1);//only set the flag if necessary, don't remove it
 
 }else{
 
@@ -70,6 +70,11 @@ if(match==null){
     if(data.forceUpdate){
         //update
         match.setText(data.code);
+        //2,4,8 <-> app_menu,item_menu,custom_menu
+        match.setFlag(2,((data.flags>>1)&1)==1);
+        match.setFlag(4,((data.flags>>2)&1)==1);
+        if(((data.flags>>3)&1)==1)match.setFlag(8,((data.flags>>3)&1)==1);//only set the flag if necessary, don't remove it
+
         intent.putExtra(extraStatus,STATUS_OK);
         toast="Script updated";
     }else{

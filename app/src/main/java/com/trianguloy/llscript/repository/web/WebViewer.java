@@ -5,6 +5,7 @@ import android.app.Activity;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.content.pm.ApplicationInfo;
 import android.net.Uri;
 import android.net.http.HttpResponseCache;
 import android.os.Build;
@@ -20,6 +21,7 @@ import android.widget.Button;
 import android.widget.ProgressBar;
 import android.widget.Toast;
 
+import com.trianguloy.llscript.repository.BuildConfig;
 import com.trianguloy.llscript.repository.Constants;
 import com.trianguloy.llscript.repository.EditorActivity;
 import com.trianguloy.llscript.repository.R;
@@ -30,6 +32,8 @@ import com.trianguloy.llscript.repository.internal.AppChooser;
 import com.trianguloy.llscript.repository.internal.Dialogs;
 import com.trianguloy.llscript.repository.internal.PageCacheManager;
 import com.trianguloy.llscript.repository.internal.Utils;
+
+import org.acra.ACRA;
 
 import java.io.File;
 import java.io.IOException;
@@ -115,6 +119,12 @@ public class WebViewer extends Activity {
         // Inflate the menu; this adds items to the action bar if it is present.
         getMenuInflater().inflate(R.menu.menu_webviewer, menu);
 
+
+        //Debug crash button
+        if(!BuildConfig.DEBUG){
+            menu.findItem(R.id.debug).setVisible(false);
+        }
+
         return true;
     }
 
@@ -154,6 +164,10 @@ public class WebViewer extends Activity {
                 share.setType("text/plain");
                 share.putExtra(Intent.EXTRA_TEXT, webView.getUrl());
                 startActivity(Intent.createChooser(share, getString(R.string.title_share)));
+                break;
+            case R.id.debug:
+                Intent readyToCrash = null;
+                readyToCrash.getAction();
                 break;
             default:
                 return super.onOptionsItemSelected(item);
@@ -221,7 +235,7 @@ public class WebViewer extends Activity {
     }
 
     private void initializeWeb() {
-        //Main Activity. Run on onCreate when normal launch
+        //Main Activity. Run on onCreate->init when normal launch
         setContentView(R.layout.activity_webviewer);
 
         //initialize vars

@@ -1,7 +1,8 @@
 .gradle/
 gradle/
 local.properties
-.idea/
+.idea/*
+!.idea/.name
 build/
 *.iml
 *.apk

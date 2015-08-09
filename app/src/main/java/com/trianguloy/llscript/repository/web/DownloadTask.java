@@ -38,9 +38,10 @@ public class DownloadTask extends AsyncTask<String, Void, DownloadTask.Result> {
                 byte[] buff = new byte[Constants.BUFFER_SIZE];
                 inputStream = connection.getInputStream();
                 input = new BufferedInputStream(inputStream);
-                while ((count = input.read(buff)) > 0) {
+                while ((count = input.read(buff)) > 0 && !isCancelled()) {
                     builder.append(new String(buff, 0, count, "UTF-8"));
                 }
+                if(isCancelled())return null;
             } finally {
                 connection.disconnect();
                 if (input != null) input.close();

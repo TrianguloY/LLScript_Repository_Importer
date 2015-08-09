@@ -3,8 +3,10 @@ package com.trianguloy.llscript.repository.web;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.net.Uri;
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.util.AttributeSet;
+import android.util.Log;
 import android.webkit.WebView;
 
 import com.google.common.reflect.TypeToken;
@@ -27,9 +29,13 @@ public class ManagedWebView extends WebView {
     private Stack<HistoryElement> backStack;
     private int posY;
     private String repoHtml;
+
     private Listener listener;
     private DownloadTask.Listener downloadTaskListener;
     private boolean showTools;
+
+    private String loadingId;
+    private AsyncTask ongoingTask;
 
     public ManagedWebView(Context context) {
         super(context);
@@ -103,11 +109,17 @@ public class ManagedWebView extends WebView {
         this.listener = listener;
     }
 
+    public Listener getListener() {
+        return listener;
+    }
+
     public void show(final String url) {
         if (url.startsWith(context.getString(R.string.link_scriptPagePrefix))) {
             final String id = Utils.getNameFromUrl(url);
+            if(!id.equals(loadingId))cancel();
+            loadingId = id;
             if (PageCacheManager.hasPage(id)) {
-                RPCManager.getPageTimestamp(context.getString(R.string.prefix_script) + id, new RPCManager.Listener<Integer>() {
+                ongoingTask = RPCManager.getPageTimestamp(context.getString(R.string.prefix_script) + id, new RPCManager.Listener<Integer>() {
                     @Override
                     public void onResult(RPCManager.Result<Integer> result) {
                         if (result.getStatus() == RPCManager.RESULT_OK) {
@@ -130,29 +142,39 @@ public class ManagedWebView extends WebView {
     }
 
     private void showPage(String url, String html) {
-        if (!showTools) {
-            //remove tools
-            Utils.valueAndIndex val = Utils.findBetween(html, "<div class=\"tools group\">", "<hr class=\"a11y\" />", 0, false);
-            html = html.substring(0, val.from) + html.substring(val.to, html.length());
-        }
-        if (context.getString(R.string.link_repository).equals(url)) repoHtml = html;
-        loading(true);
-        HistoryElement current = null;
-        if (!backStack.empty()) current = backStack.pop();
-        posY = 0;
-        if (backStack.empty() || !url.equals(backStack.peek().url)) {
-            if (current != null && !current.url.equals(url)) {
-                current.posY = getScrollY();
-                backStack.push(current);
+        if(Utils.getNameFromUrl(url).equals(loadingId)) {
+            if (!showTools) {
+                //remove tools
+                Utils.valueAndIndex val = Utils.findBetween(html, "<div class=\"tools group\">", "<hr class=\"a11y\" />", 0, false);
+                html = html.substring(0, val.from) + html.substring(val.to, html.length());
             }
-            backStack.push(new HistoryElement(url));
-        } else posY = backStack.peek().posY;
-        loadDataWithBaseURL(context.getString(R.string.link_server), html, "text/html", "utf-8", null);
+            if (context.getString(R.string.link_repository).equals(url)) repoHtml = html;
+            loading(true);
+            HistoryElement current = null;
+            if (!backStack.empty()) current = backStack.pop();
+            posY = 0;
+            if (backStack.empty() || !url.equals(backStack.peek().url)) {
+                if (current != null && !current.url.equals(url)) {
+                    current.posY = getScrollY();
+                    backStack.push(current);
+                }
+                backStack.push(new HistoryElement(url));
+            } else posY = backStack.peek().posY;
+            loadDataWithBaseURL(context.getString(R.string.link_server), html, "text/html", "utf-8", null);
+            ongoingTask = null;
+        }
     }
 
     private void downloadPage(final String url) {
         loading(true);
-        new DownloadTask(downloadTaskListener).execute(url);
+        ongoingTask = new DownloadTask(downloadTaskListener).execute(url);
+    }
+
+    private void cancel(){
+        if(ongoingTask != null){
+            Log.d("Cancel", String.valueOf(ongoingTask.cancel(true)));
+        }
+        stopLoading();
     }
 
     public boolean backPossible() {

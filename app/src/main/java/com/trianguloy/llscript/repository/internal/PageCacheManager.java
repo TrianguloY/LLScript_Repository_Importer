@@ -4,12 +4,12 @@ import android.content.Context;
 
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
-import com.trianguloy.llscript.repository.Constants;
 
 import java.io.File;
-import java.io.FileInputStream;
-import java.io.FileOutputStream;
+import java.io.FileReader;
+import java.io.FileWriter;
 import java.io.IOException;
+import java.lang.reflect.Type;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -27,6 +27,8 @@ public final class PageCacheManager {
     private static boolean initialized = false;
     private static int persistHash = -1;
     private static Map<String, Page> pages;
+    private static final Type mapType = new TypeToken<HashMap<String, Page>>() {
+    }.getType();
 
     private static void init() {
         initialized = true;
@@ -37,8 +39,7 @@ public final class PageCacheManager {
         try {
             if (pages == null) {
                 if (file.exists()) {
-                    pages = gson.fromJson(readFileToString(file), new TypeToken<HashMap<String, Page>>() {
-                    }.getType());
+                    pages = gson.fromJson(new FileReader(file), mapType);
                 } else {
                     //noinspection ResultOfMethodCallIgnored
                     file.createNewFile();
@@ -55,10 +56,15 @@ public final class PageCacheManager {
     public static void persist() {
         if (initialized) {
             int hash = pages.hashCode();
+            assert file.exists();
             if (hash != persistHash) {
-                writeStringToFile(gson.toJson(pages), file);
+                try {
+                    gson.toJson(pages, new FileWriter(file));
+                    persistHash = hash;
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
             }
-            persistHash = hash;
         }
     }
 
@@ -84,40 +90,6 @@ public final class PageCacheManager {
     public static boolean hasPage(String id) {
         if (!initialized) init();
         return pages.containsKey(id);
-    }
-
-    private static String readFileToString(File file) {
-        try {
-            FileInputStream stream = null;
-            try {
-                stream = new FileInputStream(file);
-                StringBuilder builder = new StringBuilder();
-                byte[] buffer = new byte[Constants.BUFFER_SIZE];
-                int n;
-                while ((n = stream.read(buffer)) != -1) {
-                    builder.append(new String(buffer, 0, n));
-                }
-                return builder.toString();
-            } finally {
-                if (stream != null) stream.close();
-            }
-        } catch (IOException e) {
-            throw new FatalFileException(e);
-        }
-    }
-
-    private static void writeStringToFile(String string, File file) {
-        try {
-            FileOutputStream stream = null;
-            try {
-                stream = new FileOutputStream(file);
-                stream.write(string.getBytes());
-            } finally {
-                if (stream != null) stream.close();
-            }
-        } catch (IOException e) {
-            throw new FatalFileException(e);
-        }
     }
 
     private static class FatalFileException extends RuntimeException {

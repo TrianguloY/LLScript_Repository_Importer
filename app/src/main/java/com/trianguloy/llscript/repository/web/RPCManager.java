@@ -209,8 +209,8 @@ public final class RPCManager {
         }.execute();
     }
 
-    public static void getPageTimestamp(final String id, Listener<Integer> listener) {
-        new ListenedTask<Integer>(listener) {
+    public static AsyncTask getPageTimestamp(final String id, Listener<Integer> listener) {
+        return new ListenedTask<Integer>(listener) {
 
             @Override
             protected Result<Integer> doInBackground(Void... params) {

@@ -22,7 +22,6 @@
     <item name="android:src">@android:drawable/divider_horizontal_bright</item>
     </style>
     <style name="Theme.BorderlessButton">
-        <item name="android:background">?android:attr/selectableItemBackground</item>
     </style>
     <style name="Theme.TitleText"/>
     <style name="Theme.BaseDialog" parent="android:Theme.Dialog"/>

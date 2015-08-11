@@ -3,6 +3,7 @@ package com.trianguloy.llscript.repository.internal;
 import android.content.Context;
 
 import com.google.gson.Gson;
+import com.google.gson.JsonSyntaxException;
 import com.google.gson.reflect.TypeToken;
 
 import java.io.File;
@@ -39,7 +40,12 @@ public final class PageCacheManager {
         try {
             if (pages == null) {
                 if (file.exists()) {
-                    pages = gson.fromJson(new FileReader(file), mapType);
+                    try {
+                        pages = gson.fromJson(new FileReader(file), mapType);
+                    }
+                    catch (JsonSyntaxException e){
+                        e.printStackTrace();
+                    }
                 } else {
                     //noinspection ResultOfMethodCallIgnored
                     file.createNewFile();

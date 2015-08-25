@@ -6,6 +6,7 @@ package com.trianguloy.llscript.repository;
  */
 public final class Constants {
 
+
     private Constants() {
     }
 
@@ -36,6 +37,7 @@ public final class Constants {
     public static final String extraOpenUrl = "openUrl";
     public static final String extraOpenUrlTime = "openUrlTime";
     public static final String extraReload = "reload";
+    public static final String extraForward = "forward";
 
 
     public static final String extraStatus = "status";

@@ -38,8 +38,14 @@ public class ScriptImporter extends Service {
                 startActivity(response);
             }
         }
+        else if(intent.hasExtra(Constants.extraForward)){
+            Intent forward = intent.getParcelableExtra(Constants.extraForward);
+            forward.setPackage(Constants.installedPackage);
+            forward.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+            startActivity(forward);
+        }
         stopSelf();
-        return super.onStartCommand(intent, flags, startId);
+        return START_NOT_STICKY;
     }
 
     @Override

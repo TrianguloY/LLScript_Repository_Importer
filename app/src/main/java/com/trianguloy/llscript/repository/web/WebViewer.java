@@ -5,7 +5,6 @@ import android.app.Activity;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
-import android.content.pm.ApplicationInfo;
 import android.net.Uri;
 import android.net.http.HttpResponseCache;
 import android.os.Build;
@@ -32,8 +31,6 @@ import com.trianguloy.llscript.repository.internal.AppChooser;
 import com.trianguloy.llscript.repository.internal.Dialogs;
 import com.trianguloy.llscript.repository.internal.PageCacheManager;
 import com.trianguloy.llscript.repository.internal.Utils;
-
-import org.acra.ACRA;
 
 import java.io.File;
 import java.io.IOException;
@@ -166,9 +163,7 @@ public class WebViewer extends Activity {
                 startActivity(Intent.createChooser(share, getString(R.string.title_share)));
                 break;
             case R.id.debug:
-                Intent readyToCrash = null;
-                readyToCrash.getAction();
-                break;
+                throw new RuntimeException("This crash was intended");
             default:
                 return super.onOptionsItemSelected(item);
         }

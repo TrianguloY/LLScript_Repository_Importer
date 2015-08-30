@@ -38,6 +38,7 @@ public final class Constants {
     public static final String extraOpenUrlTime = "openUrlTime";
     public static final String extraReload = "reload";
     public static final String extraForward = "forward";
+    public static final String extraBackground = "background";
 
 
     public static final String extraStatus = "status";

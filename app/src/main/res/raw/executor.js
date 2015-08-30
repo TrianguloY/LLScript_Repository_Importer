@@ -18,7 +18,7 @@ try{
 
 var intent=new Intent("android.intent.action.View");
 intent.setComponent(ComponentName.unflattenFromString("com.trianguloy.llscript.repository/com.trianguloy.llscript.repository.IntentHandle"));
-intent.addFlags(Intent.FLAG_ACTIVITY_NO_ANIMATION + Intent.FLAG_ACTIVITY_REORDER_TO_FRONT);
+intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK + Intent.FLAG_ACTIVITY_REORDER_TO_FRONT);
 
 if(data==null){
 
@@ -90,4 +90,4 @@ if(match==null){
 intent.putExtra(extraLoadedScriptId,match.getId());
 
 if(toast!="")Android.makeNewToast(toast, true).show();
-LL.startActivity(intent);
+LL.getContext().startActivity(intent);

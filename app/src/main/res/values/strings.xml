@@ -181,7 +181,8 @@
     <string name="pref_aboutScript">aboutScript</string>
     <string name="pref_Scripts">scripts</string>
     <string name="pref_repoHash">repoHash</string>
-    <string name="pref_subs">subscriptions</string><!-- ← Deprecated-->
+    <string name="pref_subs">subscriptions</string>
+    <!-- ← Deprecated-->
     <string name="pref_subscriptions">subscriptions2</string>
     <string name="pref_pageNames">page_name_map</string>
     <string name="pref_notifications">notify</string>
@@ -310,6 +311,9 @@
     <!-- unsorted-->
     <string name="dummy" tools:ignore="UnusedResources">Dummy string to force new ones to be below
     </string>
+    <string name="intent_actionBackgroundReceiver">com.twofortyfouram.locale.intent.action.FIRE_SETTING</string>
+    <string name="intent_backgroundReceiverClass">net.pierrox.lightning_launcher.util.FireReceiver</string>
+    <string name="intent_backgroundReceiverExtraBundle">com.twofortyfouram.locale.intent.extra.BUNDLE</string>
 
 
 </resources>

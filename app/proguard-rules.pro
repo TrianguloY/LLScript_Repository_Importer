@@ -19,5 +19,10 @@
 -keepattributes Signature,RuntimeVisibleAnnotations,AnnotationDefault,*Annotation*
 
 -keep public class * extends android.content.Context
--keep public class org.acra.** {*;}
+-keep class org.acra.** {*;}
+-keep interface org.acra.** {*;}
+-keep class com.google.gson.** {*;}
+-keep interface com.google.gson.** {*;}
+-keep class dw.xmlrpc.** {*;}
+-keep interface dw.xmlrpc.** {*;}
 -dontwarn **

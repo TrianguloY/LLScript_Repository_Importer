@@ -47,7 +47,7 @@
         </service>
 
         <activity
-            android:name=".SettingsActivity"
+            android:name=".settings.SettingsActivity"
             android:excludeFromRecents="false"
             android:label="@string/label_settings"
             android:parentActivityName=".web.WebViewer" >
@@ -56,13 +56,13 @@
                 android:value=".web.WebViewer" />
         </activity>
         <activity
-            android:name=".SubscriptionsActivity"
+            android:name=".settings.SubscriptionsActivity"
             android:excludeFromRecents="false"
             android:label="@string/label_subscriptionsDialog"
-            android:parentActivityName=".SettingsActivity" >
+            android:parentActivityName=".settings.SettingsActivity" >
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
-                android:value="com.trianguloy.llscript.repository.SettingsActivity" />
+                android:value=".settings.SettingsActivity" />
         </activity>
 
         <service
@@ -108,7 +108,7 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <activity android:name=".EditorActivity"
+        <activity android:name=".editor.EditorActivity"
                   android:excludeFromRecents="false"
             android:windowSoftInputMode="adjustResize"/>
 

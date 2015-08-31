@@ -1,4 +1,4 @@
-package com.trianguloy.llscript.repository;
+package com.trianguloy.llscript.repository.editor;
 
 import android.accounts.Account;
 import android.accounts.AccountManager;
@@ -30,10 +30,12 @@ import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.trianguloy.llscript.repository.internal.CategoryAdapter;
+import com.trianguloy.llscript.repository.BuildConfig;
+import com.trianguloy.llscript.repository.R;
+import com.trianguloy.llscript.repository.RepositoryImporter;
 import com.trianguloy.llscript.repository.internal.Dialogs;
-import com.trianguloy.llscript.repository.internal.Repository;
 import com.trianguloy.llscript.repository.internal.Utils;
+import com.trianguloy.llscript.repository.settings.SettingsActivity;
 import com.trianguloy.llscript.repository.web.DownloadTask;
 import com.trianguloy.llscript.repository.web.RPCManager;
 import com.trianguloy.llscript.repository.web.WebClient;

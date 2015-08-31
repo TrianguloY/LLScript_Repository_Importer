@@ -1,4 +1,4 @@
-package com.trianguloy.llscript.repository.internal;
+package com.trianguloy.llscript.repository.settings;
 
 import android.content.ComponentName;
 import android.content.Context;
@@ -15,6 +15,8 @@ import android.widget.AdapterView;
 import android.widget.ListView;
 
 import com.trianguloy.llscript.repository.R;
+import com.trianguloy.llscript.repository.internal.AppAdapter;
+import com.trianguloy.llscript.repository.internal.AppChooser;
 
 import java.util.List;
 

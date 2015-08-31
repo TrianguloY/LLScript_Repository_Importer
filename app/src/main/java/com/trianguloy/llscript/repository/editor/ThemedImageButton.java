@@ -1,4 +1,4 @@
-package com.trianguloy.llscript.repository.internal;
+package com.trianguloy.llscript.repository.editor;
 
 import android.content.Context;
 import android.graphics.ColorFilter;

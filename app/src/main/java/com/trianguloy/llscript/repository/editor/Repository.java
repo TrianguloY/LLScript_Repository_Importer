@@ -1,4 +1,4 @@
-package com.trianguloy.llscript.repository.internal;
+package com.trianguloy.llscript.repository.editor;
 
 import java.util.ArrayList;
 import java.util.Arrays;

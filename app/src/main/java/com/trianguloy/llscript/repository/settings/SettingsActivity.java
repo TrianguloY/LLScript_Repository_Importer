@@ -1,4 +1,4 @@
-package com.trianguloy.llscript.repository;
+package com.trianguloy.llscript.repository.settings;
 
 import android.accounts.Account;
 import android.accounts.AccountManager;
@@ -20,8 +20,11 @@ import android.preference.PreferenceManager;
 import android.view.MenuItem;
 import android.widget.Toast;
 
+import com.trianguloy.llscript.repository.BootBroadcastReceiver;
+import com.trianguloy.llscript.repository.R;
+import com.trianguloy.llscript.repository.RepositoryImporter;
 import com.trianguloy.llscript.repository.internal.Dialogs;
-import com.trianguloy.llscript.repository.internal.ServiceManager;
+import com.trianguloy.llscript.repository.web.ServiceManager;
 
 /**
  * A {@link PreferenceActivity} that presents a set of application settings. On

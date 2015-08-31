@@ -17,7 +17,7 @@ import java.util.List;
  * Adapter to display a list of apps
  * Supports checkable and non-checkable list items
  */
-class AppAdapter extends BaseArrayAdapter<ResolveInfo> {
+public class AppAdapter extends BaseArrayAdapter<ResolveInfo> {
     public static final int NONE = -1;
 
     private int selected = NONE;

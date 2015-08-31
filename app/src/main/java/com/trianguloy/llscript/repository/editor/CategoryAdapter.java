@@ -1,9 +1,11 @@
-package com.trianguloy.llscript.repository.internal;
+package com.trianguloy.llscript.repository.editor;
 
 import android.content.Context;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
+
+import com.trianguloy.llscript.repository.internal.BaseArrayAdapter;
 
 import java.util.List;
 

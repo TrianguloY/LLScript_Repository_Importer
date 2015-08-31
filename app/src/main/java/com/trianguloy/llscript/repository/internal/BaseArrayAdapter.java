@@ -12,12 +12,12 @@ import java.util.List;
  * Created by Lukas on 15.05.2015.
  * Basic Adapter handling view creation
  */
-abstract class BaseArrayAdapter<T> extends ArrayAdapter<T> {
+public abstract class BaseArrayAdapter<T> extends ArrayAdapter<T> {
 
     final Context context;
     private final int resource;
 
-    BaseArrayAdapter(Context context, int resource, List<T> objects) {
+    public BaseArrayAdapter(Context context, int resource, List<T> objects) {
         super(context, resource, objects);
         this.context = context;
         this.resource = resource;

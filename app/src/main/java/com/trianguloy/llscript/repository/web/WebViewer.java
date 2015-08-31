@@ -22,11 +22,11 @@ import android.widget.Toast;
 
 import com.trianguloy.llscript.repository.BuildConfig;
 import com.trianguloy.llscript.repository.Constants;
-import com.trianguloy.llscript.repository.EditorActivity;
+import com.trianguloy.llscript.repository.editor.EditorActivity;
 import com.trianguloy.llscript.repository.R;
 import com.trianguloy.llscript.repository.RepositoryImporter;
 import com.trianguloy.llscript.repository.ScriptImporter;
-import com.trianguloy.llscript.repository.SettingsActivity;
+import com.trianguloy.llscript.repository.settings.SettingsActivity;
 import com.trianguloy.llscript.repository.internal.AppChooser;
 import com.trianguloy.llscript.repository.internal.Dialogs;
 import com.trianguloy.llscript.repository.internal.PageCacheManager;

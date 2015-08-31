@@ -35,6 +35,7 @@ import com.trianguloy.llscript.repository.internal.Utils;
 import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
@@ -310,7 +311,7 @@ public class WebViewer extends Activity {
                         Toast.makeText(WebViewer.this, (newScriptNames.size() == 1 ? getString(R.string.toast_oneNewScript) : getString(R.string.toast_severalNewScripts)) + names.toString(), Toast.LENGTH_LONG);
                         break;
                     case SHOW_DIALOG:
-                        Dialogs.newScripts(this, names.toString(), newScriptNames.size() == 1);
+                        Dialogs.newScripts(this, webView, Arrays.asList(newScripts.toArray(new String[newScripts.size()])));
                         break;
                 }
                 Toast.makeText(this, names.toString(), Toast.LENGTH_LONG).show();
@@ -542,7 +543,7 @@ public class WebViewer extends Activity {
                                 Toast.makeText(WebViewer.this, pages.toString(), Toast.LENGTH_LONG).show();
                                 break;
                             case SHOW_DIALOG:
-                                Dialogs.changedSubscriptions(WebViewer.this, pages.toString());
+                                Dialogs.changedSubscriptions(WebViewer.this, webView,  updated);
                                 break;
                         }
                         RPCManager.setTimestampToCurrent(sharedPref, null);

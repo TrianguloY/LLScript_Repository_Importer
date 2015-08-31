@@ -8,9 +8,11 @@ import android.app.Service;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.graphics.Color;
 import android.net.Uri;
 import android.os.Build;
+import android.preference.PreferenceManager;
 import android.support.annotation.Nullable;
 import android.view.View;
 import android.view.ViewGroup;
@@ -23,6 +25,10 @@ import com.trianguloy.llscript.repository.Constants;
 import com.trianguloy.llscript.repository.IntentHandle;
 import com.trianguloy.llscript.repository.R;
 import com.trianguloy.llscript.repository.ScriptImporter;
+import com.trianguloy.llscript.repository.web.ManagedWebView;
+
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * Created by Lukas on 28.04.2015.
@@ -156,21 +162,30 @@ public final class Dialogs {
         dialog.show();
     }
 
-    public static void changedSubscriptions(Context context, String changed) {
-        //TODO: make page names clickable
+    public static void changedSubscriptions(Context context, ManagedWebView webView,List<String> ids) {
+        baseScriptList(context,webView,ids,context.getString(R.string.title_updatedSubs));
+    }
+
+    private static void baseScriptList(final Context context, final ManagedWebView webView, final List<String> ids, String title){
+        SharedPreferences sharedPref = PreferenceManager.getDefaultSharedPreferences(context);
+        List<String> names = new ArrayList<>();
+        for (String id: ids){
+            names.add(Utils.getNameForPageFromPref(sharedPref,id));
+        }
         new AlertDialog.Builder(context)
-                .setTitle(R.string.title_updatedSubs)
-                .setMessage(changed)
-                .setNeutralButton(R.string.button_ok, null)
+                .setTitle(title)
+                .setItems(names.toArray(new String[names.size()]), new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        webView.show(context.getString(R.string.link_scriptPagePrefix)+ ids.get(which));
+                    }
+                })
+                .setNeutralButton(context.getString(R.string.button_ok), null)
                 .show();
     }
 
-    public static void newScripts(Context context, String newScripts, boolean single) {
-        new AlertDialog.Builder(context)
-                .setTitle(single ? context.getString(R.string.toast_oneNewScript) : context.getString(R.string.toast_severalNewScripts))
-                .setMessage(newScripts)
-                .setNeutralButton(R.string.button_ok, null)
-                .show();
+    public static void newScripts(Context context, ManagedWebView webView,List<String> ids) {
+        baseScriptList(context, webView, ids, context.getString(R.string.title_newScripts2));
     }
 
     public static void importScript(Activity context, final String code, String scriptName, final OnImportListener onImport, final OnImportListener onShare) {

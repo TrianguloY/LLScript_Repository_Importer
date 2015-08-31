@@ -314,6 +314,7 @@
     <string name="intent_actionBackgroundReceiver">com.twofortyfouram.locale.intent.action.FIRE_SETTING</string>
     <string name="intent_backgroundReceiverClass">net.pierrox.lightning_launcher.util.FireReceiver</string>
     <string name="intent_backgroundReceiverExtraBundle">com.twofortyfouram.locale.intent.extra.BUNDLE</string>
+    <string name="title_newScripts2">New Script(s)</string>
 
 
 </resources>

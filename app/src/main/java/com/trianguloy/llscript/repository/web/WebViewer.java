@@ -22,15 +22,15 @@ import android.widget.Toast;
 
 import com.trianguloy.llscript.repository.BuildConfig;
 import com.trianguloy.llscript.repository.Constants;
-import com.trianguloy.llscript.repository.editor.EditorActivity;
 import com.trianguloy.llscript.repository.R;
 import com.trianguloy.llscript.repository.RepositoryImporter;
 import com.trianguloy.llscript.repository.ScriptImporter;
-import com.trianguloy.llscript.repository.settings.SettingsActivity;
+import com.trianguloy.llscript.repository.editor.EditorActivity;
 import com.trianguloy.llscript.repository.internal.AppChooser;
 import com.trianguloy.llscript.repository.internal.Dialogs;
 import com.trianguloy.llscript.repository.internal.PageCacheManager;
 import com.trianguloy.llscript.repository.internal.Utils;
+import com.trianguloy.llscript.repository.settings.SettingsActivity;
 
 import java.io.File;
 import java.io.IOException;
@@ -117,12 +117,10 @@ public class WebViewer extends Activity {
         // Inflate the menu; this adds items to the action bar if it is present.
         getMenuInflater().inflate(R.menu.menu_webviewer, menu);
 
-
         //Debug crash button
-        if(!BuildConfig.DEBUG){
+        if (!BuildConfig.DEBUG) {
             menu.findItem(R.id.debug).setVisible(false);
         }
-
         return true;
     }
 
@@ -545,7 +543,7 @@ public class WebViewer extends Activity {
                                 Toast.makeText(WebViewer.this, pages.toString(), Toast.LENGTH_LONG).show();
                                 break;
                             case SHOW_DIALOG:
-                                Dialogs.changedSubscriptions(WebViewer.this, webView,  updated);
+                                Dialogs.changedSubscriptions(WebViewer.this, webView, updated);
                                 break;
                         }
                         RPCManager.setTimestampToCurrent(sharedPref, null);

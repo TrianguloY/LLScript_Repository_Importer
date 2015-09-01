@@ -19,11 +19,15 @@ import android.view.MenuItem;
 import android.widget.Toast;
 
 import com.trianguloy.llscript.repository.BootBroadcastReceiver;
+import com.trianguloy.llscript.repository.BuildConfig;
 import com.trianguloy.llscript.repository.R;
 import com.trianguloy.llscript.repository.RepositoryImporter;
 import com.trianguloy.llscript.repository.auth.AuthenticationUtils;
 import com.trianguloy.llscript.repository.internal.Dialogs;
 import com.trianguloy.llscript.repository.web.ServiceManager;
+
+import java.util.Arrays;
+import java.util.List;
 
 /**
  * A {@link PreferenceActivity} that presents a set of application settings. On
@@ -52,6 +56,15 @@ public class SettingsActivity extends PreferenceActivity implements SharedPrefer
 
         ListPreference listPreference = (ListPreference) findPreference(getString(R.string.pref_notificationInterval));
         listPreference.setSummary(listPreference.getEntry());
+        //Remove every minute check when not in debug mode
+        if(!BuildConfig.DEBUG){
+            List<CharSequence> entries = Arrays.asList(listPreference.getEntries());
+            List<CharSequence> entryValues = Arrays.asList(listPreference.getEntryValues());
+            entries.remove(0);
+            entryValues.remove(0);
+            listPreference.setEntries(entries.toArray(new CharSequence[entries.size()]));
+            listPreference.setEntryValues(entryValues.toArray(new CharSequence[entryValues.size()]));
+        }
         CheckBoxPreference checkBoxPreference = (CheckBoxPreference) findPreference(getString(R.string.pref_notifications));
         listPreference.setEnabled(checkBoxPreference.isChecked());
         final Preference resetPwPref = findPreference(getString(R.string.pref_resetPw));

@@ -79,6 +79,9 @@ public class ManagedWebView extends WebView {
             public void onFinish(DownloadTask.Result result) {
                 //default listener: show the page after loading it
                 showPage(result.url, result.html);
+                if (ManagedWebView.this.context.getString(R.string.link_repository).equals(result.url)) {
+                    listener.repoHtmlUpdated(result.html);
+                }
                 final String id = Utils.getNameFromUrl(result.url);
                 final String html = result.html;
                 RPCManager.getPageTimestamp(ManagedWebView.this.context.getString(R.string.prefix_script) + id, new RPCManager.Listener<Integer>() {
@@ -250,5 +253,7 @@ public class ManagedWebView extends WebView {
         void loading(boolean isLoading);
 
         void pageChanged(String url);
+
+        void repoHtmlUpdated(String repoHtml);
     }
 }

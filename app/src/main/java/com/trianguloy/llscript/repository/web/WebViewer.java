@@ -248,6 +248,11 @@ public class WebViewer extends Activity {
             public void pageChanged(String url) {
                 WebViewer.this.pageChanged(url);
             }
+
+            @Override
+            public void repoHtmlUpdated(String repoHtml) {
+                showNewScripts(repoHtml);
+            }
         });
         webView.setShowTools(sharedPref.getBoolean(getString(R.string.pref_showTools), false));
 
@@ -266,9 +271,7 @@ public class WebViewer extends Activity {
         }
     }
 
-    //TODO only check again if timestamp has changed
-    private void showNewScripts() {
-        String repoHtml = webView.getRepoHtml();
+    private void showNewScripts(String repoHtml) {
         //legacy code
         // old method: if the page was changed with the previous method hash of page
         if (sharedPref.contains(getString(R.string.pref_repoHash))) {
@@ -332,7 +335,6 @@ public class WebViewer extends Activity {
                 assert bar != null;
                 bar.setDisplayHomeAsUpEnabled(false);
             }
-            showNewScripts();
         } else {
             button.setVisibility(View.VISIBLE);
             setTitle(Utils.getNameForPageFromPref(sharedPref, Utils.getNameFromUrl(url)));

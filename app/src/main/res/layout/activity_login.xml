@@ -23,18 +23,18 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:text="@string/button_login"
-        android:id="@+id/button2"
-        android:onClick="login"
+        android:id="@+id/button_login"
         android:layout_below="@+id/checkRemember" android:layout_alignParentLeft="true"
-        android:layout_alignParentStart="true"/>
+        android:layout_alignParentStart="true"
+        android:onClick="button"/>
     <Button
         style="?android:attr/buttonStyleSmall"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:text="@string/button_register"
-        android:id="@+id/button3"
-        android:onClick="register"
-        android:layout_below="@+id/button2" android:layout_alignParentLeft="true"
+        android:id="@+id/button_register"
+        android:onClick="button"
+        android:layout_below="@+id/button_login" android:layout_alignParentLeft="true"
         android:layout_alignParentStart="true" android:layout_alignParentRight="true"
         android:layout_alignParentEnd="true"/>
     <TextView

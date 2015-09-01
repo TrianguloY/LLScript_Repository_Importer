@@ -8,7 +8,10 @@ import android.accounts.AuthenticatorException;
 import android.accounts.OperationCanceledException;
 import android.app.Activity;
 import android.content.Context;
+import android.os.Build;
 import android.os.Bundle;
+import android.support.annotation.NonNull;
+import android.support.annotation.Nullable;
 
 import com.trianguloy.llscript.repository.R;
 
@@ -21,9 +24,10 @@ import java.io.IOException;
  * Method collection for the account
  */
 public final class AuthenticationUtils {
-    private AuthenticationUtils(){}
+    private AuthenticationUtils() {
+    }
 
-    public static void findAccount(final Activity context, final Listener listener, boolean passwordInvalid){
+    public static void findAccount(@NonNull final Activity context, @NonNull final Listener listener, boolean passwordInvalid) {
         final AccountManager accountManager = AccountManager.get(context);
         Account[] accounts = accountManager.getAccountsByType(context.getString(R.string.account_type));
         AccountManagerCallback<Bundle> callback = new AccountManagerCallback<Bundle>() {
@@ -31,7 +35,7 @@ public final class AuthenticationUtils {
                 try {
                     future.getResult();
                     Account[] accounts = accountManager.getAccountsByType(context.getString(R.string.account_type));
-                    listener.onComplete(accounts[0].name,  accountManager.getPassword(accounts[0]));
+                    listener.onComplete(accounts[0].name, accountManager.getPassword(accounts[0]));
                 } catch (OperationCanceledException e) {
                     listener.onError();
                 } catch (IOException | AuthenticatorException e) {
@@ -47,20 +51,41 @@ public final class AuthenticationUtils {
         } else listener.onComplete(accounts[0].name, accountManager.getPassword(accounts[0]));
     }
 
-    public static void resetPassword(Context context){
+    public static void resetPassword(@NonNull Context context) {
         final AccountManager accountManager = AccountManager.get(context);
         final Account[] accounts = accountManager.getAccountsByType(context.getString(R.string.account_type));
         accountManager.clearPassword(accounts[0]);
     }
 
-    public static boolean hasPassword(Context context){
+    public static boolean hasPassword(@NonNull Context context) {
         final AccountManager accountManager = AccountManager.get(context);
         final Account[] accounts = accountManager.getAccountsByType(context.getString(R.string.account_type));
         return accounts.length > 0 && accountManager.getPassword(accounts[0]) != null;
     }
 
-    public interface Listener{
+    public static void set(@NonNull Context context, @Nullable Account account, @NonNull String accountType, @NonNull String user, @Nullable String password) {
+        AccountManager accountManager = AccountManager.get(context);
+        if (account != null) {
+            accountManager.setPassword(account, password);
+            if (!account.name.equals(user)) {
+                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP)
+                    accountManager.renameAccount(account, user, null, null);
+                else {
+                    //noinspection deprecation
+                    accountManager.removeAccount(account, null, null);
+                    account = null;
+                }
+            }
+        }
+        if (account == null) {
+            account = new Account(user, accountType);
+            accountManager.addAccountExplicitly(account, password, null);
+        }
+    }
+
+    public interface Listener {
         void onComplete(String user, String password);
+
         void onError();
     }
 }

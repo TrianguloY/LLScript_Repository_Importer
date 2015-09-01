@@ -7,6 +7,7 @@ import android.accounts.AccountManager;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
+import android.support.annotation.NonNull;
 
 /**
  * Created by Lukas on 27.04.2015.
@@ -16,7 +17,7 @@ class AccountAuthenticator extends AbstractAccountAuthenticator{
 
     private final Context context;
 
-    public AccountAuthenticator(Context context) {
+    public AccountAuthenticator(@NonNull Context context) {
         super(context);
         this.context = context;
     }

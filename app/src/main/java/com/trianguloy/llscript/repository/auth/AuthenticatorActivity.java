@@ -5,8 +5,9 @@ import android.accounts.AccountAuthenticatorActivity;
 import android.accounts.AccountManager;
 import android.content.Intent;
 import android.net.Uri;
-import android.os.Build;
 import android.os.Bundle;
+import android.support.annotation.NonNull;
+import android.support.annotation.Nullable;
 import android.view.View;
 import android.widget.CheckBox;
 import android.widget.EditText;
@@ -41,8 +42,18 @@ public class AuthenticatorActivity extends AccountAuthenticatorActivity {
 
     }
 
-    @SuppressWarnings("UnusedParameters")
-    public void login(View ignored) {
+    public void button(View v){
+        switch (v.getId()){
+            case R.id.button_login:
+                login();
+                break;
+            case R.id.button_register:
+                register();
+                break;
+        }
+    }
+
+    public void login() {
         final String user = ((EditText) findViewById(R.id.username)).getText().toString();
         final String password = ((EditText) findViewById(R.id.password)).getText().toString();
         final boolean savePw = ((CheckBox) findViewById(R.id.checkRemember)).isChecked();
@@ -67,24 +78,8 @@ public class AuthenticatorActivity extends AccountAuthenticatorActivity {
         });
     }
 
-    private void setAccount(String user, String password) {
-        AccountManager accountManager = AccountManager.get(AuthenticatorActivity.this);
-        if (account != null) {
-            accountManager.setPassword(account, password);
-            if (!account.name.equals(user)) {
-                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP)
-                    accountManager.renameAccount(account, user, null, null);
-                else {
-                    //noinspection deprecation
-                    accountManager.removeAccount(account, null, null);
-                    account = null;
-                }
-            }
-        }
-        if (account == null) {
-            Account account = new Account(user, accountType);
-            accountManager.addAccountExplicitly(account, password, null);
-        }
+    private void setAccount(@NonNull String user,@Nullable String password) {
+        AuthenticationUtils.set(this, account, accountType, user, password);
         Intent intent = new Intent();
         intent.putExtra(AccountManager.KEY_ACCOUNT_NAME, user);
         intent.putExtra(AccountManager.KEY_ACCOUNT_TYPE, ACCOUNT_TYPE);
@@ -92,9 +87,7 @@ public class AuthenticatorActivity extends AccountAuthenticatorActivity {
         setResult(RESULT_OK, intent);
     }
 
-
-    @SuppressWarnings("UnusedParameters")
-    public void register(View ignored) {
+    public void register() {
         new AppChooser(this, Uri.parse(getString(R.string.link_register)), getString(R.string.title_appChooserRegister), getString(R.string.message_noBrowser), null).show();
     }
 }

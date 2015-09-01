@@ -52,7 +52,6 @@ public final class Utils {
         }
     }
 
-
     //This function returns the string between beginning and ending in source starting from index, and the position o the matches (including the searched strings). If backwards is true it uses lastIndexOf
     public static valueAndIndex findBetween(String source, String beginning, String ending, int index, boolean backwards) {
         int start;
@@ -168,7 +167,6 @@ public final class Utils {
         if(index == -1) return url;
         return url.substring(index + idScript.length());
     }
-
 
     //Checks for the launcher installed and sets it in the Constants variable. Returns false if no launcher was found
     public static boolean checkForLauncher(Context context) {

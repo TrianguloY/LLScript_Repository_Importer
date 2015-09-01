@@ -1,7 +1,5 @@
 package com.trianguloy.llscript.repository.settings;
 
-import android.accounts.Account;
-import android.accounts.AccountManager;
 import android.annotation.TargetApi;
 import android.app.ActionBar;
 import android.app.AlarmManager;
@@ -23,6 +21,7 @@ import android.widget.Toast;
 import com.trianguloy.llscript.repository.BootBroadcastReceiver;
 import com.trianguloy.llscript.repository.R;
 import com.trianguloy.llscript.repository.RepositoryImporter;
+import com.trianguloy.llscript.repository.auth.AuthenticationUtils;
 import com.trianguloy.llscript.repository.internal.Dialogs;
 import com.trianguloy.llscript.repository.web.ServiceManager;
 
@@ -56,13 +55,11 @@ public class SettingsActivity extends PreferenceActivity implements SharedPrefer
         CheckBoxPreference checkBoxPreference = (CheckBoxPreference) findPreference(getString(R.string.pref_notifications));
         listPreference.setEnabled(checkBoxPreference.isChecked());
         final Preference resetPwPref = findPreference(getString(R.string.pref_resetPw));
-        final AccountManager accountManager = AccountManager.get(this);
-        final Account[] accounts = accountManager.getAccountsByType(getString(R.string.account_type));
-        resetPwPref.setEnabled(accounts.length > 0 && accountManager.getPassword(accounts[0]) != null);
+        resetPwPref.setEnabled(AuthenticationUtils.hasPassword(this));
         resetPwPref.setOnPreferenceClickListener(new Preference.OnPreferenceClickListener() {
             @Override
             public boolean onPreferenceClick(Preference preference) {
-                accountManager.clearPassword(accounts[0]);
+                AuthenticationUtils.resetPassword(SettingsActivity.this);
                 resetPwPref.setEnabled(false);
                 Toast.makeText(SettingsActivity.this, getString(R.string.toast_resetPw), Toast.LENGTH_SHORT).show();
                 return true;

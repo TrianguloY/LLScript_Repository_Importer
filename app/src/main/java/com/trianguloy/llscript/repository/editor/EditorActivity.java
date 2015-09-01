@@ -1,11 +1,5 @@
 package com.trianguloy.llscript.repository.editor;
 
-import android.accounts.Account;
-import android.accounts.AccountManager;
-import android.accounts.AccountManagerCallback;
-import android.accounts.AccountManagerFuture;
-import android.accounts.AuthenticatorException;
-import android.accounts.OperationCanceledException;
 import android.app.ActionBar;
 import android.app.Activity;
 import android.content.DialogInterface;
@@ -16,7 +10,6 @@ import android.os.Bundle;
 import android.preference.PreferenceManager;
 import android.support.annotation.NonNull;
 import android.text.Editable;
-import android.text.TextUtils;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -33,6 +26,7 @@ import android.widget.Toast;
 import com.trianguloy.llscript.repository.BuildConfig;
 import com.trianguloy.llscript.repository.R;
 import com.trianguloy.llscript.repository.RepositoryImporter;
+import com.trianguloy.llscript.repository.auth.AuthenticationUtils;
 import com.trianguloy.llscript.repository.internal.Dialogs;
 import com.trianguloy.llscript.repository.internal.Utils;
 import com.trianguloy.llscript.repository.settings.SettingsActivity;
@@ -40,9 +34,6 @@ import com.trianguloy.llscript.repository.web.DownloadTask;
 import com.trianguloy.llscript.repository.web.RPCManager;
 import com.trianguloy.llscript.repository.web.WebClient;
 
-import org.acra.ACRA;
-
-import java.io.IOException;
 import java.util.Comparator;
 import java.util.HashSet;
 import java.util.List;
@@ -234,26 +225,17 @@ public class EditorActivity extends Activity {
     }
 
     private void findAccount(boolean passwordInvalid) {
-        AccountManager accountManager = AccountManager.get(this);
-        Account[] accounts = accountManager.getAccountsByType(getString(R.string.account_type));
-        AccountManagerCallback<Bundle> callback = new AccountManagerCallback<Bundle>() {
-            public void run(AccountManagerFuture<Bundle> future) {
-                try {
-                    future.getResult();
-                    setContentView(R.layout.activity_select_action);
-                } catch (OperationCanceledException e) {
-                    finish();
-                } catch (IOException | AuthenticatorException e) {
-                    ACRA.getErrorReporter().handleException(e);
-                    finish();
-                }
+        AuthenticationUtils.findAccount(this, new AuthenticationUtils.Listener() {
+            @Override
+            public void onComplete(String user, String password) {
+                login(user, password);
             }
-        };
-        if (accounts.length == 0) {
-            accountManager.addAccount(getString(R.string.account_type), "", null, null, this, callback, null);
-        } else if (accountManager.getPassword(accounts[0]) == null || passwordInvalid) {
-            accountManager.updateCredentials(accounts[0], "", null, this, callback, null);
-        } else login(accounts[0].name, accountManager.getPassword(accounts[0]));
+
+            @Override
+            public void onError() {
+                finish();
+            }
+        }, passwordInvalid);
     }
 
     private void login(final String user, final String password) {
@@ -333,28 +315,10 @@ public class EditorActivity extends Activity {
                     Dialogs.connectionFailed(EditorActivity.this);
                     return;
                 }
-                String[] lines = result.getResult().split("\n");
-                final String circumflex = "^";
-                repository = new Repository(lines);
-                repository.categories.add(new Repository.RepositoryCategory(getString(R.string.text_none), -1, -1));
-                for (int i = 0; i < lines.length; i++) {
-                    String line = lines[i];
-                    if (!line.startsWith("|") && !line.startsWith(circumflex)) {
-                        if (repository.tableStartLine != -1) {
-                            repository.tableEndLine = i - 1;
-                            break;
-                        }
-                        continue;
-                    }
-                    if (repository.tableStartLine == -1) repository.tableStartLine = i;
-                    else if (line.startsWith(circumflex))
-                        repository.categories.add(new Repository.RepositoryCategory(Utils.findBetween(line, circumflex, "^^^", 0, false).value, i, 0));
-                    else if (line.startsWith("|//**"))
-                        repository.categories.add(new Repository.RepositoryCategory(Utils.findBetween(line, "|//**", "**//||\\\\ |", 0, false).value, i, 1));
-                }
+                repository = new Repository(result.getResult(), getString(R.string.text_none));
                 setContentView(R.layout.activity_create);
                 Spinner spinner = (Spinner) findViewById(R.id.spinner);
-                spinner.setAdapter(new CategoryAdapter(EditorActivity.this, repository.categories));
+                spinner.setAdapter(new CategoryAdapter(EditorActivity.this, repository.getCategories()));
             }
         });
     }
@@ -408,28 +372,8 @@ public class EditorActivity extends Activity {
                     if (result.getStatus() == RPCManager.RESULT_OK) {
                         textHash = text.hashCode();
                         if (addTo != null) {
-                            int index = repository.categories.indexOf(addTo);
-                            int addAt = repository.tableEndLine;
-                            if (addTo.level == 0) {
-                                for (int i = index + 1; i < repository.categories.size(); i++) {
-                                    if (repository.categories.get(i).level == addTo.level) {
-                                        addAt = repository.categories.get(i).line;
-                                        break;
-                                    }
-                                }
-                            } else {
-                                for (int i = addTo.line + 1; i < repository.lines.size(); i++) {
-                                    if (repository.lines.get(i).startsWith("|[[")) {
-                                        addAt = i;
-                                        break;
-                                    }
-                                }
-                            }
-                            String add = (addTo.level == 0 ? "|" : "|\\\\ |") +
-                                    "[[" + pageId + ((pageName == null) ? "" : " |" + pageName) + "]]" +
-                                    ((addTo.level == 0) ? "||\\\\ |" : "|\\\\ |");
-                            repository.lines.add(addAt, add);
-                            RPCManager.putPage(getString(R.string.id_scriptRepository), TextUtils.join("\n", repository.lines), new RPCManager.Listener<Void>() {
+                            repository.addScript(addTo, pageId, pageName);
+                            RPCManager.putPage(getString(R.string.id_scriptRepository), repository.getText(), new RPCManager.Listener<Void>() {
                                 @Override
                                 public void onResult(RPCManager.Result<Void> result) {
                                     lock.unlock();

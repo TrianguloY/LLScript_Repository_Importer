@@ -15,6 +15,9 @@ import com.trianguloy.llscript.repository.R;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
+import org.jsoup.nodes.Document;
+import org.jsoup.nodes.Element;
+import org.jsoup.select.Elements;
 
 import java.util.HashMap;
 import java.util.HashSet;
@@ -129,23 +132,24 @@ public final class Utils {
         return new HashMap<>();
     }
 
+    @Deprecated
     public static int pageToHash(String html) {
         String newHash = Utils.findBetween(html, "<div class=\"docInfo\">", "</div>", -1, false).value;
         if (newHash == null) return -1;
         else return newHash.hashCode();
     }
 
-    public static Map<String, String> getAllScriptPagesAndNames(String html) {
+    public static Map<String, String> getAllScriptPagesAndNames(Document document) {
         HashMap<String, String> scripts = new HashMap<>();
         //find all scripts in the repository
-        String[] temp = html.split("title=\"script_");
-        for (int i = 1; i < temp.length; i++) {
-            String s = temp[i];
-            if (!s.startsWith("repository\"") && !s.startsWith("template\""))//exclude the repository itself and the script template
-            {
-                String page = s.substring(0, s.indexOf('"'));
-                String name = Utils.findBetween(html, page + "\">", "<", 0, false).value;
-                scripts.put(page, name);
+        String prefix = getString(R.string.prefix_script);
+        Elements temp = document.select("[title^=" + prefix + "]");
+        for (Element e : temp) {
+            String title = e.attr("title").substring(prefix.length());
+            //exclude the repository itself and the script template
+            if (!title.startsWith("repository") && !title.startsWith("template")) {
+                String name = e.ownText();
+                scripts.put(title, name);
             }
         }
         return scripts;
@@ -164,7 +168,7 @@ public final class Utils {
     public static String getNameFromUrl(@NonNull String url) {
         final String idScript = "?id=script_";
         int index = url.indexOf(idScript);
-        if(index == -1) return url;
+        if (index == -1) return url;
         return url.substring(index + idScript.length());
     }
 

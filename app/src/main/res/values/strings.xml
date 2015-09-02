@@ -180,9 +180,6 @@
     <!--preference keys -->
     <string name="pref_aboutScript">aboutScript</string>
     <string name="pref_Scripts">scripts</string>
-    <string name="pref_repoHash">repoHash</string>
-    <string name="pref_subs">subscriptions</string>
-    <!-- ← Deprecated-->
     <string name="pref_subscriptions">subscriptions2</string>
     <string name="pref_pageNames">page_name_map</string>
     <string name="pref_notifications">notify</string>
@@ -199,6 +196,11 @@
     <string name="pref_directEdit">directEdit</string>
     <string name="pref_timestamp">timestamp</string>
     <string name="pref_changedSubs">changedSubs</string>
+
+    <!-- {@deprecated no replacement}-->
+    <string name="pref_repoHash">repoHash</string>
+    <!-- {@deprecated use pref_subscriptions instead -->
+    <string name="pref_subs">subscriptions</string>
 
     <!--preference values -->
     <string-array name="val_intervalTexts">

@@ -513,13 +513,11 @@ public class EditorActivity extends Activity {
         new DownloadTask(new DownloadTask.Listener() {
             @Override
             public void onFinish(DownloadTask.Result res) {
-                String result = res.html;
                 if (!sharedPref.getBoolean(getString(R.string.pref_showTools), false)) {
                     //remove tools
-                    Utils.valueAndIndex val = Utils.findBetween(result, "<div class=\"tools group\">", "<hr class=\"a11y\" />", 0, false);
-                    result = result.substring(0, val.from) + result.substring(val.to, result.length());
+                    res.document.select("div.tools.group").remove();
                 }
-                webView.loadDataWithBaseURL(getString(R.string.link_server), result, "text/html", "UTF-8", null);
+                webView.loadDataWithBaseURL(getString(R.string.link_server), res.document.outerHtml(), "text/html", "UTF-8", null);
                 lock.unlock();
             }
 

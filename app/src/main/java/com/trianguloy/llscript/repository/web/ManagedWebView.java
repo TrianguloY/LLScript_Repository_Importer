@@ -17,6 +17,9 @@ import com.trianguloy.llscript.repository.internal.Dialogs;
 import com.trianguloy.llscript.repository.internal.PageCacheManager;
 import com.trianguloy.llscript.repository.internal.Utils;
 
+import org.jsoup.Jsoup;
+import org.jsoup.nodes.Document;
+
 import java.util.Stack;
 
 /**
@@ -28,7 +31,7 @@ public class ManagedWebView extends WebView {
     private Context context;
     private Stack<HistoryElement> backStack;
     private int posY;
-    private String repoHtml;
+    private Document repoDocument;
 
     private Listener listener;
     private DownloadTask.Listener downloadTaskListener;
@@ -78,12 +81,12 @@ public class ManagedWebView extends WebView {
             @Override
             public void onFinish(DownloadTask.Result result) {
                 //default listener: show the page after loading it
-                showPage(result.url, result.html);
+                showPage(result.url, result.document);
                 if (ManagedWebView.this.context.getString(R.string.link_repository).equals(result.url)) {
-                    listener.repoHtmlUpdated(result.html);
+                    listener.repoDocumentUpdated(result.document);
                 }
                 final String id = Utils.getNameFromUrl(result.url);
-                final String html = result.html;
+                final String html = result.document.outerHtml();
                 RPCManager.getPageTimestamp(ManagedWebView.this.context.getString(R.string.prefix_script) + id, new RPCManager.Listener<Integer>() {
                     @Override
                     public void onResult(RPCManager.Result<Integer> result) {
@@ -130,7 +133,7 @@ public class ManagedWebView extends WebView {
                             if (result.getResult() > page.timestamp) {
                                 downloadPage(url);
                             } else if (backStack.empty() || !url.equals(backStack.peek().url)) {
-                                showPage(url, page.html);
+                                showPage(url, Jsoup.parse(page.html,context.getString(R.string.link_server)));
                             }
                             else {
                                 loading(false);
@@ -144,14 +147,13 @@ public class ManagedWebView extends WebView {
         }
     }
 
-    private void showPage(String url, String html) {
+    private void showPage(String url, Document document) {
         if(Utils.getNameFromUrl(url).equals(loadingId)) {
             if (!showTools) {
                 //remove tools
-                Utils.valueAndIndex val = Utils.findBetween(html, "<div class=\"tools group\">", "<hr class=\"a11y\" />", 0, false);
-                html = html.substring(0, val.from) + html.substring(val.to, html.length());
+                document.select("div.tools.group").remove();
             }
-            if (context.getString(R.string.link_repository).equals(url)) repoHtml = html;
+            if (context.getString(R.string.link_repository).equals(url)) repoDocument = document;
             loading(true);
             HistoryElement current = null;
             if (!backStack.empty()) current = backStack.pop();
@@ -163,7 +165,7 @@ public class ManagedWebView extends WebView {
                 }
                 backStack.push(new HistoryElement(url));
             } else posY = backStack.peek().posY;
-            loadDataWithBaseURL(context.getString(R.string.link_server), html, "text/html", "utf-8", null);
+            loadDataWithBaseURL(context.getString(R.string.link_server), document.outerHtml(), "text/html", "utf-8", null);
             ongoingTask = null;
         }
     }
@@ -206,8 +208,8 @@ public class ManagedWebView extends WebView {
         backStack.push(new HistoryElement(url));
     }
 
-    public String getRepoHtml() {
-        return repoHtml;
+    public Document getRepoDocument() {
+        return repoDocument;
     }
 
     private void loading(boolean isLoading) {
@@ -223,7 +225,7 @@ public class ManagedWebView extends WebView {
     public void saveToInstanceState(Bundle savedInstanceState){
         Gson gson = new Gson();
         savedInstanceState.putString(context.getString(R.string.key_backStack), gson.toJson(backStack));
-        savedInstanceState.putString(context.getString(R.string.key_repoHtml), repoHtml);
+        savedInstanceState.putString(context.getString(R.string.key_repoHtml), repoDocument.outerHtml());
     }
 
     public boolean restoreFromInstanceState(Bundle savedInstanceState){
@@ -232,7 +234,7 @@ public class ManagedWebView extends WebView {
         String repoHtml = savedInstanceState.getString(context.getString(R.string.key_repoHtml));
         if(repoHtml != null && backStack != null && !backStack.empty()){
             this.backStack = backStack;
-            this.repoHtml = repoHtml;
+            this.repoDocument = Jsoup.parse(repoHtml,context.getString(R.string.link_server));
             show(backStack.pop().url);
             return true;
         }
@@ -254,6 +256,6 @@ public class ManagedWebView extends WebView {
 
         void pageChanged(String url);
 
-        void repoHtmlUpdated(String repoHtml);
+        void repoDocumentUpdated(Document repoHtml);
     }
 }

@@ -12,6 +12,7 @@ import android.os.Bundle;
 import android.preference.PreferenceManager;
 import android.support.annotation.NonNull;
 import android.text.Html;
+import android.text.TextUtils;
 import android.view.KeyEvent;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -31,6 +32,14 @@ import com.trianguloy.llscript.repository.internal.Dialogs;
 import com.trianguloy.llscript.repository.internal.PageCacheManager;
 import com.trianguloy.llscript.repository.internal.Utils;
 import com.trianguloy.llscript.repository.settings.SettingsActivity;
+
+import org.jsoup.Jsoup;
+import org.jsoup.nodes.Document;
+import org.jsoup.nodes.Element;
+import org.jsoup.nodes.Node;
+import org.jsoup.nodes.TextNode;
+import org.jsoup.parser.Tag;
+import org.jsoup.select.Elements;
 
 import java.io.File;
 import java.io.IOException;
@@ -248,8 +257,8 @@ public class WebViewer extends Activity {
             }
 
             @Override
-            public void repoHtmlUpdated(String repoHtml) {
-                showNewScripts(repoHtml);
+            public void repoDocumentUpdated(Document repoDoc) {
+                showNewScripts(repoDoc);
             }
         });
         webView.setShowTools(sharedPref.getBoolean(getString(R.string.pref_showTools), false));
@@ -269,10 +278,11 @@ public class WebViewer extends Activity {
         }
     }
 
-    private void showNewScripts(String repoHtml) {
+    private void showNewScripts(Document repoDocument) {
         //legacy code
         // old method: if the page was changed with the previous method hash of page
         if (sharedPref.contains(getString(R.string.pref_repoHash))) {
+            String repoHtml = repoDocument.outerHtml();
             int newHash = Utils.pageToHash(repoHtml);
             if (newHash != -1 && sharedPref.getInt(getString(R.string.pref_repoHash), -1) != newHash && !sharedPref.contains(getString(R.string.pref_Scripts))) {
                 //show the toast only if the page has changed based on the previous method and the new method is not found
@@ -283,7 +293,7 @@ public class WebViewer extends Activity {
         }
 
         //new method: based on the scripts found
-        Map<String, String> map = Utils.getAllScriptPagesAndNames(repoHtml);
+        Map<String, String> map = Utils.getAllScriptPagesAndNames(repoDocument);
         HashMap<String, Object> temp = new HashMap<>();
         for (Map.Entry<String, String> entry : map.entrySet()) {
             temp.put(entry.getKey(), entry.getValue());
@@ -349,53 +359,46 @@ public class WebViewer extends Activity {
     //Script importer
     @SuppressWarnings({"unused", "unusedParameter"})
     public void startImport(View ignored) {
-        String currentHtml = PageCacheManager.getPage(Utils.getNameFromUrl(webView.getUrl())).html;
-        //Download button clicked
+        Document document = Jsoup.parse(PageCacheManager.getPage(Utils.getNameFromUrl(webView.getUrl())).html, getString(R.string.link_server));
 
         //initialize variables
         final ArrayList<String> names = new ArrayList<>();//names of all scripts
         final ArrayList<String> rawCodes = new ArrayList<>();//Found scripts
-        String aboutScript;
+        String aboutScript = "";
 
         //Starts searching all scripts
-        for (String aStart : Constants.beginning) {
-            //starting found
-            Utils.valueAndIndex found = new Utils.valueAndIndex(null, -1, 0);
-            while (true) {
-                //searches for a match
-                found = Utils.findBetween(currentHtml, aStart, Constants.ending, found.to, false);
-                if (found.value != null) {
-                    //if it is found, it adds it to the list
-                    rawCodes.add(found.value.trim());
-                    //Assumes the script name is just before the code, and searches for it
-                    Utils.valueAndIndex name = new Utils.valueAndIndex(null, found.from, -1);
-                    while (true) {
-                        name = Utils.findBetween(currentHtml, ">", "<", name.from, true);
-                        if (name.value == null) {
-                            names.add("Name not found");
-                            break;
-                        }//In theory this will never get executed ... in theory
-                        if (name.value.matches(".*\\w.*")) {
-                            //when it is found (if not it will return another text not related
-                            names.add(name.value);
-                            break;
-                        }
+        Elements elements = document.select(TextUtils.join(",", Constants.scriptSelectors));
+        for (Element e : elements) {
+            rawCodes.add(e.ownText());
+            Element parent = e;
+            int index = e.elementSiblingIndex();
+            loop:
+            while ((parent = parent.parent()) != null) {
+                while (--index >= 0) {
+                    Element sibling = parent.child(index);
+                    if (!sibling.text().equals("")) {
+                        names.add(sibling.text());
+                        break loop;
                     }
-                } else {
-                    //if not found, another starting token
-                    break;
                 }
+                index = parent.elementSiblingIndex();
             }
+            if (names.size() < rawCodes.size()) names.add("Name not found");
         }
 
         //TODO search the flags
 
         //About script: purpose, author, link
-        aboutScript = Utils.findBetween(currentHtml, "id=\"about_the_script\">", "</ul>", -1, false).value;
-        if (aboutScript != null) {
+        Elements aboutElements = document.select("#about_the_script");
+        if (aboutElements.size() > 0) {
 
+            Element about = aboutElements.first();
             //remove html tags
-            aboutScript = aboutScript.replaceAll("<[^>]*>", "");
+            aboutScript = about.text();
+            Element parent = about.parent();
+            int index = about.elementSiblingIndex();
+            Element e = parent.child(index + 1);
+            aboutScript += getTextWithLineBreaks(e);
 
             String[] prov = aboutScript.split("\n+");//separate the text removing duplicated line breaks
 
@@ -421,24 +424,44 @@ public class WebViewer extends Activity {
                     showImportScript(names.get(which), rawCodes.get(which), about);
                 }
             });
-        } else if (rawCodes.size() > 0) {
+        } else if (rawCodes.size() == 1) {
             oneScriptFound(names.get(0), rawCodes.get(0), aboutScript);
         } else {
             Dialogs.noScriptFound(this);
         }
     }
 
+    private String getTextWithLineBreaks(Element e){
+        StringBuilder builder = new StringBuilder();
+        List<Node> children = e.childNodes();
+        if (children.size() > 0) {
+            for (Node child : children) {
+                if(child instanceof Element) {
+                    Element c = (Element) child;
+                    if(Tag.valueOf("li") == c.tag()) builder.append("\n");
+                    builder.append(getTextWithLineBreaks(c));
+                }
+                else if(child instanceof TextNode){
+                    builder.append(((TextNode)child).text());
+                }
+            }
+        }else {
+            builder.append(e.text());
+        }
+        return builder.toString();
+    }
+
     private void oneScriptFound(String name, String rawCode, String about) {
         //only one script, load directly
 
-        String repoHtml = webView.getRepoHtml();
+        Document repoDocument = webView.getRepoDocument();
         //get the name from the repository
         String url = webView.getUrl();
         url = url.substring(url.indexOf('/', "http://www".length()));
-        int index = repoHtml.indexOf(url);
+        Elements elements = repoDocument.select("a[href*=" + url + "]");
         String scriptName;
-        if (index != -1) {
-            scriptName = repoHtml.substring(repoHtml.indexOf('>', index) + 1, repoHtml.indexOf('<', index)).trim();
+        if (elements.size() > 0) {
+            scriptName = elements.first().ownText();
         } else
             //fallback if not found in repo
             scriptName = name;

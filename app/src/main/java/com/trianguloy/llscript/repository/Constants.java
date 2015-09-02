@@ -20,6 +20,7 @@ public final class Constants {
 
     //Where to search in the HTML source
     public static final String[] beginning = {"class=\"brush: javascript\">", "class=\"brush: javascript;\">", "class=\"code\">"};
+    public static final String[] scriptSelectors = {"[class=brush: javascript]", "[class=brush: javascript;]", "[class=code]"};
     public static final String ending = "</pre>";
 
     //package constants

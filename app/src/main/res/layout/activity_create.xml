@@ -91,4 +91,13 @@
             </RadioGroup>
         </RelativeLayout>
     </ScrollView>
+    <ProgressBar
+        style="?android:attr/progressBarStyleLarge"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/progressBar"
+        android:layout_alignParentRight="false"
+        android:layout_alignParentEnd="false"
+        android:visibility="visible"
+        android:layout_centerInParent="true" />
 </RelativeLayout>

@@ -214,7 +214,6 @@ public class WebViewer extends Activity {
                 cache.flush();
             }
         }
-        PageCacheManager.persist();
         super.onStop();
     }
 

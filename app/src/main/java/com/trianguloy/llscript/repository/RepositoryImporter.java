@@ -5,7 +5,6 @@ import android.app.Application;
 import android.content.SharedPreferences;
 import android.preference.PreferenceManager;
 
-import com.trianguloy.llscript.repository.internal.PageCacheManager;
 import com.trianguloy.llscript.repository.internal.Utils;
 
 import org.acra.ACRA;
@@ -37,11 +36,5 @@ public class RepositoryImporter extends Application {
     public static void setTheme(Activity context, SharedPreferences sharedPref) {
         if (sharedPref.getBoolean(context.getString(R.string.key_theme), false))
             context.setTheme(R.style.Theme_Dark);
-    }
-
-    @Override
-    public void onLowMemory() {
-        super.onLowMemory();
-        PageCacheManager.cleanUp();
     }
 }

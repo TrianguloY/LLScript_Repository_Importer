@@ -132,13 +132,6 @@ public final class Utils {
         return new HashMap<>();
     }
 
-    @Deprecated
-    public static int pageToHash(String html) {
-        String newHash = Utils.findBetween(html, "<div class=\"docInfo\">", "</div>", -1, false).value;
-        if (newHash == null) return -1;
-        else return newHash.hashCode();
-    }
-
     public static Map<String, String> getAllScriptPagesAndNames(Document document) {
         HashMap<String, String> scripts = new HashMap<>();
         //find all scripts in the repository

@@ -32,6 +32,7 @@ import com.trianguloy.llscript.repository.internal.Dialogs;
 import com.trianguloy.llscript.repository.internal.PageCacheManager;
 import com.trianguloy.llscript.repository.internal.Utils;
 import com.trianguloy.llscript.repository.settings.SettingsActivity;
+import com.trianguloy.llscript.repository.settings.SubscriptionManager;
 
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
@@ -76,7 +77,7 @@ public class WebViewer extends Activity {
     //Callbacks
     private Boolean close = false; //if pressing back will close or not
 
-    private Menu menu;
+    private SubscriptionManager subscriptionManager;
 
     private Bundle savedInstanceState;
 
@@ -91,6 +92,7 @@ public class WebViewer extends Activity {
 
         //initialize variables
         sharedPref = PreferenceManager.getDefaultSharedPreferences(this);
+        subscriptionManager = new SubscriptionManager(this);
         RepositoryImporter.setTheme(this, sharedPref);
         this.savedInstanceState = savedInstanceState;
         if (upgradeFromOldVersion()) init();
@@ -122,7 +124,7 @@ public class WebViewer extends Activity {
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
-        this.menu = menu;
+        subscriptionManager.setMenu(menu);
         // Inflate the menu; this adds items to the action bar if it is present.
         getMenuInflater().inflate(R.menu.menu_webviewer, menu);
 
@@ -151,10 +153,10 @@ public class WebViewer extends Activity {
                 startActivity(new Intent(this, SettingsActivity.class));
                 break;
             case R.id.action_subscribe:
-                subscribeToCurrent();
+                subscriptionManager.subscribe(webView.getPageId());
                 break;
             case R.id.action_unsubscribe:
-                unsubscribeCurrent();
+                subscriptionManager.unsubscribe(webView.getPageId());
                 break;
             case android.R.id.home:
                 onBackPressed();
@@ -278,19 +280,6 @@ public class WebViewer extends Activity {
     }
 
     private void showNewScripts(Document repoDocument) {
-        //legacy code
-        // old method: if the page was changed with the previous method hash of page
-        if (sharedPref.contains(getString(R.string.pref_repoHash))) {
-            String repoHtml = repoDocument.outerHtml();
-            int newHash = Utils.pageToHash(repoHtml);
-            if (newHash != -1 && sharedPref.getInt(getString(R.string.pref_repoHash), -1) != newHash && !sharedPref.contains(getString(R.string.pref_Scripts))) {
-                //show the toast only if the page has changed based on the previous method and the new method is not found
-                Toast.makeText(getApplicationContext(), R.string.toast_repoChanged, Toast.LENGTH_SHORT).show();
-            }
-            //will remove the old method
-            sharedPref.edit().remove(getString(R.string.pref_repoHash)).apply();
-        }
-
         //new method: based on the scripts found
         Map<String, String> map = Utils.getAllScriptPagesAndNames(repoDocument);
         HashMap<String, Object> temp = new HashMap<>();
@@ -336,7 +325,6 @@ public class WebViewer extends Activity {
         if (url.equals(getString(R.string.link_repository))) {
             button.setVisibility(View.GONE);
             setTitle(R.string.action_mainPage);
-            setSubscriptionState(CANT_SUBSCRIBE);
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.HONEYCOMB) {
                 ActionBar bar = getActionBar();
                 assert bar != null;
@@ -345,20 +333,19 @@ public class WebViewer extends Activity {
         } else {
             button.setVisibility(View.VISIBLE);
             setTitle(Utils.getNameForPageFromPref(sharedPref, Utils.getNameFromUrl(url)));
-            boolean sub = Utils.getSetFromPref(sharedPref, getString(R.string.pref_subscriptions)).contains(url);
-            setSubscriptionState(sub ? SUBSCRIBED : NOT_SUBSCRIBED);
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.HONEYCOMB) {
                 ActionBar bar = getActionBar();
                 assert bar != null;
                 bar.setDisplayHomeAsUpEnabled(true);
             }
         }
+        subscriptionManager.updateState(Utils.getNameFromUrl(url));
     }
 
     //Script importer
     @SuppressWarnings({"unused", "unusedParameter"})
     public void startImport(View ignored) {
-        Document document = Jsoup.parse(PageCacheManager.getPage(Utils.getNameFromUrl(webView.getUrl())).html, getString(R.string.link_server));
+        Document document = Jsoup.parse(PageCacheManager.getPage(webView.getPageId()).html, getString(R.string.link_server));
 
         //initialize variables
         final ArrayList<String> names = new ArrayList<>();//names of all scripts
@@ -485,11 +472,11 @@ public class WebViewer extends Activity {
             @Override
             public void onClick(String code, String name, int flags) {
                 sendScriptToLauncher(code, name, flags);
-                if (!isSubscribed())
+                if (!subscriptionManager.isSubscribed(webView.getPageId()))
                     Dialogs.subscribe(WebViewer.this, new DialogInterface.OnClickListener() {
                         @Override
                         public void onClick(DialogInterface dialogInterface, int i) {
-                            subscribeToCurrent();
+                            subscriptionManager.subscribe(webView.getPageId());
                         }
                     });
             }
@@ -575,57 +562,6 @@ public class WebViewer extends Activity {
         });
     }
 
-    private void subscribeToCurrent() {
-        HashSet<String> subs = (HashSet<String>) Utils.getSetFromPref(sharedPref, getString(R.string.pref_subscriptions));
-        subs.add(Utils.getNameFromUrl(webView.getUrl()));
-        Utils.saveSetToPref(sharedPref, getString(R.string.pref_subscriptions), subs);
-        Toast.makeText(this, getString(R.string.toast_subscribeSuccessful), Toast.LENGTH_SHORT).show();
-        setSubscriptionState(SUBSCRIBED);
-    }
-
-    private void unsubscribeCurrent() {
-        Set<String> subs = Utils.getSetFromPref(sharedPref, getString(R.string.pref_subscriptions));
-        subs.remove(Utils.getNameFromUrl(webView.getUrl()));
-        Utils.saveSetToPref(sharedPref, getString(R.string.pref_subscriptions), subs);
-        Toast.makeText(this, getString(R.string.toast_unsubscribeSuccessful), Toast.LENGTH_SHORT).show();
-        setSubscriptionState(NOT_SUBSCRIBED);
-
-    }
-
-    private boolean isSubscribed() {
-        return Utils.getSetFromPref(sharedPref, getString(R.string.pref_subscriptions))
-                .contains(Utils.getNameFromUrl(webView.getUrl()));
-    }
-
-    private static final int CANT_SUBSCRIBE = -1;
-    private static final int NOT_SUBSCRIBED = 0;
-    private static final int SUBSCRIBED = 1;
-
-    private void setSubscriptionState(int state) {
-        if (menu == null) return;
-        boolean sub;
-        boolean unsub;
-        switch (state) {
-            case CANT_SUBSCRIBE:
-                sub = false;
-                unsub = false;
-                break;
-            case NOT_SUBSCRIBED:
-                sub = true;
-                unsub = false;
-                break;
-            case SUBSCRIBED:
-                sub = false;
-                unsub = true;
-                break;
-            default:
-                throw new IllegalArgumentException("Invalid Argument: " + state);
-        }
-        menu.findItem(R.id.action_subscribe).setVisible(sub);
-        menu.findItem(R.id.action_unsubscribe).setVisible(unsub);
-
-    }
-
     //return false to block loading
     private boolean upgradeFromOldVersion() {
         SharedPreferences sharedPref = PreferenceManager.getDefaultSharedPreferences(this);
@@ -639,7 +575,9 @@ public class WebViewer extends Activity {
             Utils.saveSetToPref(sharedPref, getString(R.string.pref_subscriptions), set);
             sharedPref.edit().remove(getString(R.string.pref_subs)).apply();
         }
-
+        if(sharedPref.contains(getString(R.string.pref_repoHash))){
+            sharedPref.edit().remove(getString(R.string.pref_repoHash)).apply();
+        }
         if (!sharedPref.contains(getString(R.string.pref_timestamp))) {
             RPCManager.setTimestampToCurrent(sharedPref, new RPCManager.Listener<Integer>() {
                 @Override

@@ -200,6 +200,11 @@ public class ManagedWebView extends WebView {
         return backStack.peek().url;
     }
 
+    public String getPageId() {
+        if(backStack.empty()) return null;
+        return Utils.getNameFromUrl(backStack.peek().url);
+    }
+
     public boolean hasPage() {
         return !backStack.empty();
     }

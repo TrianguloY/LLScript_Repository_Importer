@@ -11,8 +11,6 @@ import android.os.Build;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
 import android.support.annotation.NonNull;
-import android.text.Html;
-import android.text.TextUtils;
 import android.view.KeyEvent;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -25,32 +23,20 @@ import com.trianguloy.llscript.repository.BuildConfig;
 import com.trianguloy.llscript.repository.Constants;
 import com.trianguloy.llscript.repository.R;
 import com.trianguloy.llscript.repository.RepositoryImporter;
-import com.trianguloy.llscript.repository.ScriptImporter;
 import com.trianguloy.llscript.repository.editor.EditorActivity;
 import com.trianguloy.llscript.repository.internal.AppChooser;
 import com.trianguloy.llscript.repository.internal.Dialogs;
-import com.trianguloy.llscript.repository.internal.PageCacheManager;
+import com.trianguloy.llscript.repository.internal.ImportUtils;
 import com.trianguloy.llscript.repository.internal.Utils;
 import com.trianguloy.llscript.repository.settings.SettingsActivity;
 import com.trianguloy.llscript.repository.settings.SubscriptionManager;
 
-import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
-import org.jsoup.nodes.Element;
-import org.jsoup.nodes.Node;
-import org.jsoup.nodes.TextNode;
-import org.jsoup.parser.Tag;
-import org.jsoup.select.Elements;
 
 import java.io.File;
 import java.io.IOException;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.HashMap;
 import java.util.HashSet;
-import java.util.List;
 import java.util.Map;
-import java.util.Set;
 import java.util.Timer;
 import java.util.TimerTask;
 
@@ -60,21 +46,15 @@ import java.util.TimerTask;
 
 public class WebViewer extends Activity {
 
-    private static final int SHOW_NONE = 0;
-    private static final int SHOW_TOAST = 1;
-    private static final int SHOW_DIALOG = 2;
-
     //Elements
     private ManagedWebView webView; //webView element
     private Button button; //button element
-    private ProgressBar progressBar; //spinner
 
     private String sentUrl;
 
     //User vars
     private SharedPreferences sharedPref;//user saved data
 
-    //Callbacks
     private Boolean close = false; //if pressing back will close or not
 
     private SubscriptionManager subscriptionManager;
@@ -100,7 +80,7 @@ public class WebViewer extends Activity {
 
     @Override
     protected void onNewIntent(Intent intent) {
-        getChangedSubscriptions();
+        Utils.showChangedSubscriptionsIfAny(this, webView);
 
         if (intent.hasExtra(Constants.extraOpenUrl)
                 &&//if has both extras
@@ -245,7 +225,7 @@ public class WebViewer extends Activity {
         //initialize vars
         button = (Button) findViewById(R.id.button);
         webView = (ManagedWebView) findViewById(R.id.webView);
-        progressBar = (ProgressBar) findViewById(R.id.progressBar);
+        final ProgressBar progressBar = (ProgressBar) findViewById(R.id.progressBar);
         webView.setListener(new ManagedWebView.Listener() {
             @Override
             public void loading(boolean isLoading) {
@@ -259,7 +239,7 @@ public class WebViewer extends Activity {
 
             @Override
             public void repoDocumentUpdated(Document repoDoc) {
-                showNewScripts(repoDoc);
+                Utils.showNewScriptsIfAny(WebViewer.this, repoDoc, webView);
             }
         });
         webView.setShowTools(sharedPref.getBoolean(getString(R.string.pref_showTools), false));
@@ -268,7 +248,7 @@ public class WebViewer extends Activity {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.ICE_CREAM_SANDWICH) {
             try {
                 File httpCacheDir = new File(getCacheDir(), "http");
-                long httpCacheSize = Constants.TEN_MEGABYTE; // 10 MiB
+                long httpCacheSize = Constants.TEN_MEGABYTE;
                 HttpResponseCache.install(httpCacheDir, httpCacheSize);
             } catch (IOException e) {
                 e.printStackTrace();
@@ -276,48 +256,6 @@ public class WebViewer extends Activity {
         }
         if (savedInstanceState == null || !restore(savedInstanceState)) {
             loadSentUrl();
-        }
-    }
-
-    private void showNewScripts(Document repoDocument) {
-        //new method: based on the scripts found
-        Map<String, String> map = Utils.getAllScriptPagesAndNames(repoDocument);
-        HashMap<String, Object> temp = new HashMap<>();
-        for (Map.Entry<String, String> entry : map.entrySet()) {
-            temp.put(entry.getKey(), entry.getValue());
-        }
-        Utils.saveMapToPref(sharedPref, getString(R.string.pref_pageNames), temp);
-        Set<String> currentScripts = map.keySet();
-        if (sharedPref.contains(getString(R.string.pref_Scripts))) {
-            Set<String> oldScripts = Utils.getSetFromPref(sharedPref, getString(R.string.pref_Scripts));
-            HashSet<String> newScripts = new HashSet<>(currentScripts);
-            newScripts.removeAll(oldScripts);
-            if (!newScripts.isEmpty()) {
-                //found new Scripts
-                Utils.saveSetToPref(sharedPref, getString(R.string.pref_Scripts), currentScripts);
-                ArrayList<String> newScriptNames = new ArrayList<>();
-                for (String s : newScripts) newScriptNames.add(map.get(s));
-                StringBuilder names = new StringBuilder();
-                for (int i = 0; i < newScriptNames.size(); i++) {
-                    names.append(newScriptNames.get(i)).append("\n");
-                }
-                names.deleteCharAt(names.length() - 1);
-                int showAs = Integer.valueOf(sharedPref.getString(getString(R.string.pref_newScripts), "2"));
-                switch (showAs) {
-                    case SHOW_NONE:
-                        break;
-                    case SHOW_TOAST:
-                        Toast.makeText(WebViewer.this, (newScriptNames.size() == 1 ? getString(R.string.toast_oneNewScript) : getString(R.string.toast_severalNewScripts)) + names.toString(), Toast.LENGTH_LONG);
-                        break;
-                    case SHOW_DIALOG:
-                        Dialogs.newScripts(this, webView, Arrays.asList(newScripts.toArray(new String[newScripts.size()])));
-                        break;
-                }
-                Toast.makeText(this, names.toString(), Toast.LENGTH_LONG).show();
-            }
-        } else {
-            //No info about previous scripts. Only save the current scripts
-            Utils.saveSetToPref(sharedPref, getString(R.string.pref_Scripts), currentScripts);
         }
     }
 
@@ -345,224 +283,22 @@ public class WebViewer extends Activity {
     //Script importer
     @SuppressWarnings({"unused", "unusedParameter"})
     public void startImport(View ignored) {
-        Document document = Jsoup.parse(PageCacheManager.getPage(webView.getPageId()).html, getString(R.string.link_server));
-
-        //initialize variables
-        final ArrayList<String> names = new ArrayList<>();//names of all scripts
-        final ArrayList<String> rawCodes = new ArrayList<>();//Found scripts
-        String aboutScript = "";
-
-        //Starts searching all scripts
-        Elements elements = document.select(TextUtils.join(",", Constants.scriptSelectors));
-        for (Element e : elements) {
-            rawCodes.add(e.ownText());
-            Element parent = e;
-            int index = e.elementSiblingIndex();
-            loop:
-            while ((parent = parent.parent()) != null) {
-                while (--index >= 0) {
-                    Element sibling = parent.child(index);
-                    if (!sibling.text().equals("")) {
-                        names.add(sibling.text());
-                        break loop;
-                    }
-                }
-                index = parent.elementSiblingIndex();
-            }
-            if (names.size() < rawCodes.size()) names.add("Name not found");
-        }
-
-        //TODO search the flags
-
-        //About script: purpose, author, link
-        Elements aboutElements = document.select("#about_the_script");
-        if (aboutElements.size() > 0) {
-
-            Element about = aboutElements.first();
-            //remove html tags
-            aboutScript = about.text();
-            Element parent = about.parent();
-            int index = about.elementSiblingIndex();
-            Element e = parent.child(index + 1);
-            aboutScript += getTextWithLineBreaks(e);
-
-            String[] prov = aboutScript.split("\n+");//separate the text removing duplicated line breaks
-
-            //join the text adding an asterisk at the beginning of each line and converting the html string into normal code
-            StringBuilder buffer = new StringBuilder();
-            for (int i = 0; i < prov.length; ++i) {
-                buffer.append((i == 0) ? "" : "\n *  ").append(Html.fromHtml(prov[i]).toString());
-            }
-            aboutScript = buffer.toString();
-
-            //adds the beginning and end comment block, and remove extra whitespaces at the beginning and end
-            aboutScript = "/* " + aboutScript.trim() + "\n */\n\n";
-        }
-
-        //switch based on the number of scripts found
-        if (rawCodes.size() > 1) {
-            //more than one script founds
-            final String about = aboutScript;
-            Dialogs.moreThanOneScriptFound(this, names.toArray(new String[names.size()]), new DialogInterface.OnClickListener() {
-                @Override
-                public void onClick(DialogInterface dialog, int which) {
-                    dialog.dismiss();//Necessary, this is launched when clicking an item, not when clicking a button
-                    showImportScript(names.get(which), rawCodes.get(which), about);
-                }
-            });
-        } else if (rawCodes.size() == 1) {
-            oneScriptFound(names.get(0), rawCodes.get(0), aboutScript);
-        } else {
-            Dialogs.noScriptFound(this);
-        }
-    }
-
-    private String getTextWithLineBreaks(Element e){
-        StringBuilder builder = new StringBuilder();
-        List<Node> children = e.childNodes();
-        if (children.size() > 0) {
-            for (Node child : children) {
-                if(child instanceof Element) {
-                    Element c = (Element) child;
-                    if(Tag.valueOf("li") == c.tag()) builder.append("\n");
-                    builder.append(getTextWithLineBreaks(c));
-                }
-                else if(child instanceof TextNode){
-                    builder.append(((TextNode)child).text());
-                }
-            }
-        }else {
-            builder.append(e.text());
-        }
-        return builder.toString();
-    }
-
-    private void oneScriptFound(String name, String rawCode, String about) {
-        //only one script, load directly
-
-        Document repoDocument = webView.getRepoDocument();
-        //get the name from the repository
-        String url = webView.getUrl();
-        url = url.substring(url.indexOf('/', "http://www".length()));
-        Elements elements = repoDocument.select("a[href*=" + url + "]");
-        String scriptName;
-        if (elements.size() > 0) {
-            scriptName = elements.first().ownText();
-        } else
-            //fallback if not found in repo
-            scriptName = name;
-
-        showImportScript(scriptName, rawCode, about);
-
-    }
-
-    private void showImportScript(String scriptName, String rawCode, String aboutString) {
-        //show the alert to import a single script
-        String[] lines = rawCode.split("\n");
-        StringBuilder builder = new StringBuilder();
-        for (String line : lines) {
-            builder.append(Html.fromHtml(line).toString()).append("\n");//Because Html.fromHtml() removes the line breaks
-        }
-
-        String code = new String(builder).trim();
-        if (sharedPref.getBoolean(getString(R.string.pref_aboutScript), true))
-            code = aboutString + code;
-
-        Dialogs.importScript(this, code, scriptName, new Dialogs.OnImportListener() {
+        ImportUtils.startImport(this, webView, new ImportUtils.Listener() {
             @Override
-            public void onClick(String code, String name, int flags) {
-                sendScriptToLauncher(code, name, flags);
-                if (!subscriptionManager.isSubscribed(webView.getPageId()))
+            public void importFinished() {
+                if (!subscriptionManager.isSubscribed(webView.getPageId())) {
                     Dialogs.subscribe(WebViewer.this, new DialogInterface.OnClickListener() {
                         @Override
                         public void onClick(DialogInterface dialogInterface, int i) {
                             subscriptionManager.subscribe(webView.getPageId());
                         }
                     });
-            }
-        }, new Dialogs.OnImportListener() {
-            @Override
-            public void onClick(String code, String name, int flags) {
-                shareAsText(code, name, flags);
-            }
-        });
-    }
-
-    //Send & share functions
-    private void sendScriptToLauncher(String code, String scriptName, int flags) {
-        // let's import the script
-        Intent intent = new Intent(this, ScriptImporter.class);
-        intent.putExtra(Constants.extraCode, code);
-        intent.putExtra(Constants.extraName, scriptName);
-        intent.putExtra(Constants.extraFlags, flags);
-        startService(intent);
-    }
-
-    private void shareAsText(String code, String scriptName, int flags) {
-        //share the code as plain text
-
-        StringBuilder text = new StringBuilder("");
-
-        //flags
-        text.append("//Flags: ");
-        if (flags >= Constants.FLAG_CUSTOM_MENU) {
-            text.append("app ");
-            flags -= Constants.FLAG_CUSTOM_MENU;
-        }
-        if (flags >= Constants.FLAG_ITEM_MENU) {
-            text.append("item ");
-            flags -= Constants.FLAG_ITEM_MENU;
-        }
-        if (flags >= Constants.FLAG_APP_MENU) {
-            text.append("custom ");
-        }
-        text.append("\n");
-
-        //name
-        text.append("//Name: ")
-                .append(scriptName)
-                .append("\n")
-                .append(code);
-
-        text.append("\n");
-
-        Intent share = new Intent(Intent.ACTION_SEND);
-        share.setType("text/plain");
-        share.putExtra(Intent.EXTRA_TEXT, text.toString());
-        startActivity(Intent.createChooser(share, "Send to..."));
-    }
-
-    //Subscriptions functions
-    private void getChangedSubscriptions() {
-        RPCManager.getChangedSubscriptions(sharedPref, new RPCManager.Listener<List<String>>() {
-            @Override
-            public void onResult(RPCManager.Result<List<String>> result) {
-                if (result.getStatus() == RPCManager.RESULT_OK) {
-                    List<String> updated = result.getResult();
-                    if (updated.size() > 0) {
-                        StringBuilder pages = new StringBuilder();
-                        for (String s : updated) {
-                            pages.append(Utils.getNameForPageFromPref(sharedPref, s)).append("\n");
-                        }
-                        int showAs = Integer.valueOf(sharedPref.getString(getString(R.string.pref_changedSubs), "2"));
-                        switch (showAs) {
-                            case SHOW_NONE:
-                                break;
-                            case SHOW_TOAST:
-                                Toast.makeText(WebViewer.this, pages.toString(), Toast.LENGTH_LONG).show();
-                                break;
-                            case SHOW_DIALOG:
-                                Dialogs.changedSubscriptions(WebViewer.this, webView, updated);
-                                break;
-                        }
-                        RPCManager.setTimestampToCurrent(sharedPref, null);
-                    }
                 }
             }
         });
     }
 
-    //return false to block loading
+    //return false to block loading. If blocked has to call init() when finished
     private boolean upgradeFromOldVersion() {
         SharedPreferences sharedPref = PreferenceManager.getDefaultSharedPreferences(this);
 

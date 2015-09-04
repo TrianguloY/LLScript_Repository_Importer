@@ -5,12 +5,16 @@ import android.content.SharedPreferences;
 import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager;
 import android.os.Build;
+import android.preference.PreferenceManager;
 import android.support.annotation.NonNull;
 import android.util.Log;
+import android.widget.Toast;
 
 import com.trianguloy.llscript.repository.BuildConfig;
 import com.trianguloy.llscript.repository.Constants;
 import com.trianguloy.llscript.repository.R;
+import com.trianguloy.llscript.repository.web.ManagedWebView;
+import com.trianguloy.llscript.repository.web.RPCManager;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -19,9 +23,12 @@ import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
 import org.jsoup.select.Elements;
 
+import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Iterator;
+import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
@@ -215,5 +222,83 @@ public final class Utils {
         if (context == null) throw new RuntimeException("Context not initialized");
         return context;
     }
+
+    private static final int SHOW_NONE = 0;
+    private static final int SHOW_TOAST = 1;
+    private static final int SHOW_DIALOG = 2;
+
+    public static void showChangedSubscriptionsIfAny(final Context context, final ManagedWebView webView){
+        final SharedPreferences sharedPref = PreferenceManager.getDefaultSharedPreferences(context);
+        RPCManager.getChangedSubscriptions(sharedPref, new RPCManager.Listener<List<String>>() {
+            @Override
+            public void onResult(RPCManager.Result<List<String>> result) {
+                if (result.getStatus() == RPCManager.RESULT_OK) {
+                    List<String> updated = result.getResult();
+                    if (updated.size() > 0) {
+                        StringBuilder pages = new StringBuilder();
+                        for (String s : updated) {
+                            pages.append(Utils.getNameForPageFromPref(sharedPref, s)).append("\n");
+                        }
+                        int showAs = Integer.valueOf(sharedPref.getString(getString(R.string.pref_changedSubs), "2"));
+                        switch (showAs) {
+                            case SHOW_NONE:
+                                break;
+                            case SHOW_TOAST:
+                                Toast.makeText(context, pages.toString(), Toast.LENGTH_LONG).show();
+                                break;
+                            case SHOW_DIALOG:
+                                Dialogs.changedSubscriptions(context, webView, updated);
+                                break;
+                        }
+                        RPCManager.setTimestampToCurrent(sharedPref, null);
+                    }
+                }
+            }
+        });
+    }
+
+    public static void showNewScriptsIfAny(Context context, Document repoDocument, final ManagedWebView webView) {
+        final SharedPreferences sharedPref = PreferenceManager.getDefaultSharedPreferences(context);
+        //new method: based on the scripts found
+        Map<String, String> map = Utils.getAllScriptPagesAndNames(repoDocument);
+        HashMap<String, Object> temp = new HashMap<>();
+        for (Map.Entry<String, String> entry : map.entrySet()) {
+            temp.put(entry.getKey(), entry.getValue());
+        }
+        Utils.saveMapToPref(sharedPref, getString(R.string.pref_pageNames), temp);
+        Set<String> currentScripts = map.keySet();
+        if (sharedPref.contains(getString(R.string.pref_Scripts))) {
+            Set<String> oldScripts = Utils.getSetFromPref(sharedPref, getString(R.string.pref_Scripts));
+            HashSet<String> newScripts = new HashSet<>(currentScripts);
+            newScripts.removeAll(oldScripts);
+            if (!newScripts.isEmpty()) {
+                //found new Scripts
+                Utils.saveSetToPref(sharedPref, getString(R.string.pref_Scripts), currentScripts);
+                ArrayList<String> newScriptNames = new ArrayList<>();
+                for (String s : newScripts) newScriptNames.add(map.get(s));
+                StringBuilder names = new StringBuilder();
+                for (int i = 0; i < newScriptNames.size(); i++) {
+                    names.append(newScriptNames.get(i)).append("\n");
+                }
+                names.deleteCharAt(names.length() - 1);
+                int showAs = Integer.valueOf(sharedPref.getString(getString(R.string.pref_newScripts), "2"));
+                switch (showAs) {
+                    case SHOW_NONE:
+                        break;
+                    case SHOW_TOAST:
+                        Toast.makeText(context, (newScriptNames.size() == 1 ? getString(R.string.toast_oneNewScript) : getString(R.string.toast_severalNewScripts)) + names.toString(), Toast.LENGTH_LONG);
+                        break;
+                    case SHOW_DIALOG:
+                        Dialogs.newScripts(context, webView, Arrays.asList(newScripts.toArray(new String[newScripts.size()])));
+                        break;
+                }
+                Toast.makeText(context, names.toString(), Toast.LENGTH_LONG).show();
+            }
+        } else {
+            //No info about previous scripts. Only save the current scripts
+            Utils.saveSetToPref(sharedPref, getString(R.string.pref_Scripts), currentScripts);
+        }
+    }
+
 
 }

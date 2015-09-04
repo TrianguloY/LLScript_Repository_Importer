@@ -19,12 +19,9 @@ public final class Constants {
     public static final int managerId = -3;
 
     //Where to search in the HTML source
-    public static final String[] beginning = {"class=\"brush: javascript\">", "class=\"brush: javascript;\">", "class=\"code\">"};
     public static final String[] scriptSelectors = {"[class=brush: javascript]", "[class=brush: javascript;]", "[class=code]"};
-    public static final String ending = "</pre>";
 
     //package constants
-    public static final String activityRunScript = "net.pierrox.lightning_launcher.activities.Dashboard";
     public static final String[] packages = new String[]{"net.pierrox.lightning_launcher_extreme", "net.pierrox.lightning_launcher"};
     public static String installedPackage = "";
     public static final int minimumNecessaryVersion = 225; // valid for both packages. Number module 1000
@@ -40,15 +37,13 @@ public final class Constants {
     public static final String extraReload = "reload";
     public static final String extraForward = "forward";
     public static final String extraBackground = "background";
-
-
     public static final String extraStatus = "status";
 
     public static final int STATUS_LAUNCHER_PROBLEM = 3;
     public static final int STATUS_UPDATE_CONFIRMATION_REQUIRED = 2;
     public static final int STATUS_OK = 1;
 
-    //Run script parameters
+    //Run script parameters, matching lightning launcher constants
     public static final String RunActionExtra = "a";
     public static final String RunDataExtra = "d";
     public static final int RunActionKey = 35;

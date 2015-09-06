@@ -9,7 +9,6 @@ import android.os.Build;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
 import android.support.annotation.NonNull;
-import android.text.Editable;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -53,18 +52,14 @@ public class EditorActivity extends Activity {
     private static final int STATE_EDIT = 2;
     private static final int STATE_PREVIEW = 3;
     private SharedPreferences sharedPref;
-    private String pageId;
-    private EditText editor;
     private Repository repository;
     private Repository.RepositoryCategory addTo;
-    private String pageName;
-    private String pageText;
     private Random random;
     private int state = STATE_NONE;
     private Lock lock;
-    private int textHash = -1;
     private boolean isTemplate = false;
     private Bundle savedInstanceState;
+    private EditManager editManager;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -77,6 +72,7 @@ public class EditorActivity extends Activity {
         lock.lock();
 
         random = new Random();
+        editManager = new EditManager();
         onNewIntent(getIntent());
     }
 
@@ -87,8 +83,8 @@ public class EditorActivity extends Activity {
         String action = intent.getAction();
         if (action != null && !action.equals(getString(R.string.link_repository)) &&
                 action.startsWith(getString(R.string.link_scriptPagePrefix)) && sharedPref.getBoolean(getString(R.string.pref_directEdit), false))
-            pageId = action.substring(action.indexOf(getString(R.string.prefix_script)));
-        else pageId = null;
+            editManager.setPageId(action.substring(action.indexOf(getString(R.string.prefix_script))));
+        else editManager.setPageId(null);
         if (RPCManager.isLoggedIn() >= RPCManager.LOGIN_USER) load();
         else findAccount(false);
     }
@@ -121,8 +117,7 @@ public class EditorActivity extends Activity {
                 assert bar != null;
                 bar.setDisplayHomeAsUpEnabled(false);
             }
-            editor = (EditText) findViewById(R.id.editor);
-            editor.setText(pageText);
+            editManager.assign((EditText) findViewById(R.id.editor));
         } else if (changedCode()) {
             Dialogs.unsavedChanges(this, new DialogInterface.OnClickListener() {
                 @Override
@@ -134,7 +129,7 @@ public class EditorActivity extends Activity {
     }
 
     private boolean changedCode() {
-        return state == STATE_EDIT && editor.getText().toString().hashCode() != textHash;
+        return state == STATE_EDIT && editManager.isChanged();
     }
 
     @Override
@@ -183,14 +178,8 @@ public class EditorActivity extends Activity {
     protected void onSaveInstanceState(@NonNull Bundle outState) {
         super.onSaveInstanceState(outState);
         outState.putInt(getString(R.string.key_state), state);
-        if (state == STATE_EDIT) {
-            pageText = editor.getText().toString();
-        }
         if (state == STATE_EDIT || state == STATE_PREVIEW) {
-            outState.putString(getString(R.string.key_pageText), pageText);
-            outState.putString(getString(R.string.key_pageName), pageName);
-            outState.putString(getString(R.string.key_pageId), pageId);
-            outState.putInt(getString(R.string.key_textHash), textHash);
+            editManager.toBundle(outState);
             outState.putBoolean(getString(R.string.key_isTemplate), isTemplate);
         }
     }
@@ -207,19 +196,16 @@ public class EditorActivity extends Activity {
                     break;
                 case STATE_EDIT:
                 case STATE_PREVIEW:
-                    pageText = restoreState.getString(getString(R.string.key_pageText));
-                    pageName = restoreState.getString(getString(R.string.key_pageName));
-                    pageId = restoreState.getString(getString(R.string.key_pageId));
-                    textHash = restoreState.getInt(getString(R.string.key_textHash));
+                    editManager.fromBundle(restoreState);
                     isTemplate = restoreState.getBoolean(getString(R.string.key_isTemplate));
-                    showPageEditor(pageText);
+                    showPageEditor(null);
                     break;
             }
         }
     }
 
     private void load() {
-        if (pageId != null) loadPageToEdit(pageId);
+        if (editManager.hasPageId()) loadPageToEdit(editManager.getPageId());
         else if (savedInstanceState != null) restore(savedInstanceState);
         else setContentView(R.layout.activity_select_action);
     }
@@ -355,24 +341,25 @@ public class EditorActivity extends Activity {
     }
 
     private void savePage() {
-        final String text = editor.getText().toString();
+        final String text = editManager.getText();
         if (isTemplate) {
             sharedPref.edit().putString(getString(R.string.pref_template), text).apply();
             lock.unlock();
-            textHash = text.hashCode();
+            editManager.saved();
             Dialogs.saved(this, null);
         } else if (text.equals("")) {
             lock.unlock();
             Dialogs.cantSaveEmpty(this);
         } else {
+            final String pageId = editManager.getPageId();
             RPCManager.putPage(pageId, text, new RPCManager.Listener<Void>() {
                 @Override
                 public void onResult(RPCManager.Result<Void> result) {
                     //TODO: handle RESULT_NEED_RW
                     if (result.getStatus() == RPCManager.RESULT_OK) {
-                        textHash = text.hashCode();
+                        editManager.saved();
                         if (addTo != null) {
-                            repository.addScript(addTo, pageId, pageName);
+                            repository.addScript(addTo, pageId, editManager.getPageName());
                             RPCManager.putPage(getString(R.string.id_scriptRepository), repository.getText(), new RPCManager.Listener<Void>() {
                                 @Override
                                 public void onResult(RPCManager.Result<Void> result) {
@@ -397,10 +384,10 @@ public class EditorActivity extends Activity {
     }
 
     private void commitCreate() {
-        pageId = getString(R.string.prefix_script) + ((EditText) findViewById(R.id.editId)).getText();
+        editManager.setPageId(getString(R.string.prefix_script) + ((EditText) findViewById(R.id.editId)).getText());
         Spinner spinner = (Spinner) findViewById(R.id.spinner);
         final Repository.RepositoryCategory selected = ((Repository.RepositoryCategory) spinner.getSelectedItem());
-        RPCManager.getPage(pageId, new RPCManager.Listener<String>() {
+        RPCManager.getPage(editManager.getPageId(), new RPCManager.Listener<String>() {
             @Override
             public void onResult(RPCManager.Result<String> result) {
                 if (result.getStatus() == RESULT_OK) {
@@ -408,7 +395,7 @@ public class EditorActivity extends Activity {
                     if (r == null || r.equals("")) {
                         if (selected.level >= 0) {
                             addTo = selected;
-                            pageName = ((EditText) EditorActivity.this.findViewById(R.id.editName)).getText().toString();
+                            editManager.setPageName(((EditText) findViewById(R.id.editName)).getText().toString());
                         }
                         if (((RadioButton) findViewById(R.id.radioDefault)).isChecked()) {
                             RPCManager.getPage(getString(R.string.id_scriptTemplate), new RPCManager.Listener<String>() {
@@ -443,22 +430,22 @@ public class EditorActivity extends Activity {
         if (!lock.isLocked()) {
             switch (view.getId()) {
                 case R.id.action_bold:
-                    surroundOrAdd("**", "**", getString(R.string.text_bold));
+                    editManager.surroundOrAdd("**", "**", getString(R.string.text_bold));
                     break;
                 case R.id.action_italic:
-                    surroundOrAdd("//", "//", getString(R.string.text_italic));
+                    editManager.surroundOrAdd("//", "//", getString(R.string.text_italic));
                     break;
                 case R.id.action_underline:
-                    surroundOrAdd("__", "__", getString(R.string.text_underline));
+                    editManager.surroundOrAdd("__", "__", getString(R.string.text_underline));
                     break;
                 case R.id.action_code:
-                    surroundOrAdd("<sxh javascript;>", "</sxh>", getString(R.string.text_code));
+                    editManager.surroundOrAdd("<sxh javascript;>", "</sxh>", getString(R.string.text_code));
                     break;
                 case R.id.action_unorderedList:
-                    surroundOrAdd("  * ", "", getString(R.string.text_unorderedList));
+                    editManager.surroundOrAdd("  * ", "", getString(R.string.text_unorderedList));
                     break;
                 case R.id.action_orderedList:
-                    surroundOrAdd("  - ", "", getString(R.string.text_orderedList));
+                    editManager.surroundOrAdd("  - ", "", getString(R.string.text_orderedList));
                     break;
                 default:
                     if (BuildConfig.DEBUG)
@@ -470,8 +457,7 @@ public class EditorActivity extends Activity {
 
     private void preview() {
         final String tempId = getString(R.string.prefix_temp) + random.nextInt();
-        pageText = editor.getText().toString();
-        RPCManager.putPage(getString(R.string.prefix_script) + tempId, pageText, new RPCManager.Listener<Void>() {
+        RPCManager.putPage(getString(R.string.prefix_script) + tempId, editManager.getText(), new RPCManager.Listener<Void>() {
             @Override
             public void onResult(RPCManager.Result<Void> result) {
                 lock.unlock();
@@ -554,8 +540,7 @@ public class EditorActivity extends Activity {
     }
 
     private void loadPageToEdit(String id) {
-        pageId = id;
-        RPCManager.getPage(pageId, new RPCManager.Listener<String>() {
+        RPCManager.getPage(id, new RPCManager.Listener<String>() {
             @Override
             public void onResult(RPCManager.Result<String> result) {
                 lock.unlock();
@@ -570,23 +555,10 @@ public class EditorActivity extends Activity {
 
     private void showPageEditor(String text) {
         setContentView(R.layout.activity_edit);
-        editor = (EditText) findViewById(R.id.editor);
-        editor.setText(text);
-        pageText = text;
-        if (textHash == -1) textHash = text.hashCode();
-    }
-
-    private void surroundOrAdd(String prefix, String suffix, String text) {
-        int start = editor.getSelectionStart();
-        int end = editor.getSelectionEnd();
-        Editable editable = editor.getEditableText();
-        if (start == end) {
-            editable.insert(start == -1 ? 0 : start, prefix + text + suffix);
-            editor.setSelection(start + prefix.length(), start + prefix.length() + text.length());
+        if (text == null) {
+            editManager.assign((EditText) findViewById(R.id.editor));
         } else {
-            editable.insert(end, suffix);
-            editable.insert(start, prefix);
-            editor.setSelection(start + prefix.length(), end + prefix.length());
+            editManager.assign((EditText) findViewById(R.id.editor), text);
         }
     }
 

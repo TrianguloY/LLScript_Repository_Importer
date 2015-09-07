@@ -4,9 +4,11 @@ import android.annotation.SuppressLint;
 import android.os.Build;
 import android.os.Bundle;
 import android.text.Editable;
+import android.util.Log;
 import android.view.View;
 import android.widget.EditText;
 
+import com.trianguloy.llscript.repository.BuildConfig;
 import com.trianguloy.llscript.repository.R;
 import com.trianguloy.llscript.repository.internal.Utils;
 
@@ -115,6 +117,33 @@ public class EditManager {
 
     public boolean hasPageId() {
         return pageId != null;
+    }
+    
+    public void action(int id){
+        switch (id) {
+            case R.id.action_bold:
+                surroundOrAdd("**", "**", Utils.getString(R.string.text_bold));
+                break;
+            case R.id.action_italic:
+                surroundOrAdd("//", "//", Utils.getString(R.string.text_italic));
+                break;
+            case R.id.action_underline:
+                surroundOrAdd("__", "__", Utils.getString(R.string.text_underline));
+                break;
+            case R.id.action_code:
+                surroundOrAdd("<sxh javascript;>", "</sxh>", Utils.getString(R.string.text_code));
+                break;
+            case R.id.action_unorderedList:
+                surroundOrAdd("  * ", "", Utils.getString(R.string.text_unorderedList));
+                break;
+            case R.id.action_orderedList:
+                surroundOrAdd("  - ", "", Utils.getString(R.string.text_orderedList));
+                break;
+            default:
+                if (BuildConfig.DEBUG)
+                    Log.i(EditorActivity.class.getSimpleName(), "Ignored action " + id);
+                break;
+        }
     }
 
 }

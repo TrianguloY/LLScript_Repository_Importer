@@ -9,36 +9,17 @@ import android.os.Build;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
 import android.support.annotation.NonNull;
-import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
-import android.webkit.WebView;
-import android.widget.ArrayAdapter;
 import android.widget.EditText;
-import android.widget.ProgressBar;
-import android.widget.RadioButton;
-import android.widget.Spinner;
-import android.widget.TextView;
-import android.widget.Toast;
 
-import com.trianguloy.llscript.repository.BuildConfig;
 import com.trianguloy.llscript.repository.R;
 import com.trianguloy.llscript.repository.RepositoryImporter;
 import com.trianguloy.llscript.repository.auth.AuthenticationUtils;
 import com.trianguloy.llscript.repository.internal.Dialogs;
-import com.trianguloy.llscript.repository.internal.Utils;
 import com.trianguloy.llscript.repository.settings.SettingsActivity;
-import com.trianguloy.llscript.repository.web.DownloadTask;
 import com.trianguloy.llscript.repository.web.RPCManager;
-import com.trianguloy.llscript.repository.web.WebClient;
-
-import java.util.Comparator;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Random;
-
-import dw.xmlrpc.Page;
 
 /**
  * Created by Lukas on 20.04.2015.
@@ -46,20 +27,10 @@ import dw.xmlrpc.Page;
  */
 public class EditorActivity extends Activity {
 
-    private static final int STATE_NONE = -1;
-    private static final int STATE_CHOOSE_ACTION = 0;
-    private static final int STATE_CREATE = 1;
-    private static final int STATE_EDIT = 2;
-    private static final int STATE_PREVIEW = 3;
     private SharedPreferences sharedPref;
-    private Repository repository;
-    private Repository.RepositoryCategory addTo;
-    private Random random;
-    private int state = STATE_NONE;
-    private Lock lock;
-    private boolean isTemplate = false;
     private Bundle savedInstanceState;
     private EditManager editManager;
+    ViewManager viewManager;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -67,26 +38,36 @@ public class EditorActivity extends Activity {
         this.savedInstanceState = savedInstanceState;
         sharedPref = PreferenceManager.getDefaultSharedPreferences(this);
         RepositoryImporter.setTheme(this, sharedPref);
-        lock = new Lock();
-        setContentView(R.layout.activity_empty);
-        lock.lock();
-
-        random = new Random();
         editManager = new EditManager();
+        viewManager = new ViewManager(this, editManager);
+        viewManager.lock();
+
         onNewIntent(getIntent());
     }
 
     @Override
     protected void onNewIntent(Intent intent) {
         super.onNewIntent(intent);
-        lock.lock();
+        viewManager.lock();
         String action = intent.getAction();
         if (action != null && !action.equals(getString(R.string.link_repository)) &&
                 action.startsWith(getString(R.string.link_scriptPagePrefix)) && sharedPref.getBoolean(getString(R.string.pref_directEdit), false))
             editManager.setPageId(action.substring(action.indexOf(getString(R.string.prefix_script))));
         else editManager.setPageId(null);
         if (RPCManager.isLoggedIn() >= RPCManager.LOGIN_USER) load();
-        else findAccount(false);
+        else {
+            AuthenticationUtils.login(this, new AuthenticationUtils.Listener() {
+                @Override
+                public void onComplete() {
+                    load();
+                }
+
+                @Override
+                public void onError() {
+                    finish();
+                }
+            });
+        }
     }
 
     @Override
@@ -110,15 +91,15 @@ public class EditorActivity extends Activity {
 
     @Override
     public void onBackPressed() {
-        if (state == STATE_PREVIEW) {
-            setContentView(R.layout.activity_edit);
+        if (viewManager.getState() == ViewManager.STATE_PREVIEW) {
+            viewManager.setState(ViewManager.STATE_EDIT);
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.HONEYCOMB) {
                 ActionBar bar = getActionBar();
                 assert bar != null;
                 bar.setDisplayHomeAsUpEnabled(false);
             }
             editManager.assign((EditText) findViewById(R.id.editor));
-        } else if (changedCode()) {
+        } else if (viewManager.changedCode()) {
             Dialogs.unsavedChanges(this, new DialogInterface.OnClickListener() {
                 @Override
                 public void onClick(DialogInterface dialogInterface, int i) {
@@ -126,46 +107,6 @@ public class EditorActivity extends Activity {
                 }
             });
         } else finish();
-    }
-
-    private boolean changedCode() {
-        return state == STATE_EDIT && editManager.isChanged();
-    }
-
-    @Override
-    public void setContentView(int layoutResID) {
-        super.setContentView(layoutResID);
-        lock.unlock();
-        boolean showActionBar = true;
-        switch (layoutResID) {
-            case R.layout.activity_select_action:
-                state = STATE_CHOOSE_ACTION;
-                if (RPCManager.isLoggedIn() > RPCManager.NOT_LOGGED_IN)
-                    ((TextView) findViewById(R.id.textUser)).setText(getString(R.string.text_LoggedInAs) + " " + RPCManager.getUser());
-                break;
-            case R.layout.activity_create:
-                state = STATE_CREATE;
-                break;
-            case R.layout.activity_edit:
-                state = STATE_EDIT;
-                showActionBar = false;
-                break;
-            case R.layout.activity_preview:
-                state = STATE_PREVIEW;
-                break;
-            case R.layout.activity_empty:
-                state = STATE_NONE;
-                break;
-            default:
-                if (BuildConfig.DEBUG)
-                    Log.wtf(EditorActivity.class.getSimpleName(), "Unknown state!");
-        }
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.HONEYCOMB) {
-            ActionBar bar = getActionBar();
-            assert bar != null;
-            if (showActionBar) bar.show();
-            else bar.hide();
-        }
     }
 
     @Override
@@ -177,109 +118,43 @@ public class EditorActivity extends Activity {
     @Override
     protected void onSaveInstanceState(@NonNull Bundle outState) {
         super.onSaveInstanceState(outState);
-        outState.putInt(getString(R.string.key_state), state);
-        if (state == STATE_EDIT || state == STATE_PREVIEW) {
-            editManager.toBundle(outState);
-            outState.putBoolean(getString(R.string.key_isTemplate), isTemplate);
-        }
+        viewManager.toBundle(outState, editManager);
     }
 
     private void restore(@NonNull Bundle restoreState) {
-        if (restoreState.containsKey(getString(R.string.key_state))) {
-            switch (restoreState.getInt(getString(R.string.key_state))) {
-                case STATE_NONE:
-                case STATE_CHOOSE_ACTION:
-                    setContentView(R.layout.activity_select_action);
-                    break;
-                case STATE_CREATE:
-                    createPage();
-                    break;
-                case STATE_EDIT:
-                case STATE_PREVIEW:
-                    editManager.fromBundle(restoreState);
-                    isTemplate = restoreState.getBoolean(getString(R.string.key_isTemplate));
-                    showPageEditor(null);
-                    break;
-            }
-        }
+        viewManager.fromBundle(restoreState);
     }
 
     private void load() {
-        if (editManager.hasPageId()) loadPageToEdit(editManager.getPageId());
+        if (editManager.hasPageId()) viewManager.loadPageToEdit(editManager.getPageId());
         else if (savedInstanceState != null) restore(savedInstanceState);
-        else setContentView(R.layout.activity_select_action);
-    }
-
-    private void findAccount(boolean passwordInvalid) {
-        AuthenticationUtils.findAccount(this, new AuthenticationUtils.Listener() {
-            @Override
-            public void onComplete(String user, String password) {
-                login(user, password);
-            }
-
-            @Override
-            public void onError() {
-                finish();
-            }
-        }, passwordInvalid);
-    }
-
-    private void login(final String user, final String password) {
-        RPCManager.login(user, password, new RPCManager.Listener<Void>() {
-
-            @Override
-            public void onResult(RPCManager.Result<Void> result) {
-                switch (result.getStatus()) {
-                    case RPCManager.RESULT_BAD_LOGIN:
-                        Dialogs.badLogin(EditorActivity.this, new DialogInterface.OnClickListener() {
-                            @Override
-                            public void onClick(DialogInterface dialogInterface, int i) {
-                                findAccount(true);
-                            }
-                        });
-                        break;
-                    case RPCManager.RESULT_NETWORK_ERROR:
-                        Dialogs.connectionFailed(EditorActivity.this, new DialogInterface.OnClickListener() {
-                            @Override
-                            public void onClick(DialogInterface dialogInterface, int i) {
-                                finish();
-                            }
-                        });
-                        break;
-                    case RPCManager.RESULT_OK:
-                        load();
-                        break;
-                    default:
-                        throw new IllegalArgumentException();
-                }
-            }
-        });
+        else viewManager.setState(ViewManager.STATE_CHOOSE_ACTION);
     }
 
     public void button(View view) {
-        if (!lock.isLocked()) {
-            lock.lock();
+        if (!viewManager.isLocked()) {
+            viewManager.lock();
             switch (view.getId()) {
                 case R.id.buttonCreatePage:
-                    createPage();
+                    viewManager.createPage();
                     break;
                 case R.id.buttonEditPage:
-                    editPage();
+                    viewManager.editPage();
                     break;
                 case R.id.buttonCancel:
-                    cancelEdit();
+                    viewManager.cancelEdit();
                     break;
                 case R.id.buttonSave:
-                    savePage();
+                    viewManager.savePage();
                     break;
                 case R.id.buttonCreate:
-                    commitCreate();
+                    viewManager.commitCreate();
                     break;
                 case R.id.buttonPreview:
-                    preview();
+                    viewManager.preview();
                     break;
                 case R.id.buttonTemplate:
-                    editTemplate();
+                    viewManager.editTemplate();
                     break;
                 default:
                     throw new IllegalArgumentException();
@@ -287,305 +162,11 @@ public class EditorActivity extends Activity {
         }
     }
 
-    private void editTemplate() {
-        isTemplate = true;
-        showPageEditor(sharedPref.getString(getString(R.string.pref_template), ""));
-    }
-
-    private void createPage() {
-        RPCManager.getPage(getString(R.string.id_scriptRepository), new RPCManager.Listener<String>() {
-            @Override
-            public void onResult(RPCManager.Result<String> result) {
-                lock.unlock();
-                if (result.getStatus() != RPCManager.RESULT_OK) {
-                    Dialogs.connectionFailed(EditorActivity.this);
-                    return;
-                }
-                repository = new Repository(result.getResult(), getString(R.string.text_none));
-                setContentView(R.layout.activity_create);
-                Spinner spinner = (Spinner) findViewById(R.id.spinner);
-                spinner.setAdapter(new CategoryAdapter(EditorActivity.this, repository.getCategories()));
-            }
-        });
-    }
-
-    private void editPage() {
-        RPCManager.getAllPages(new RPCManager.Listener<List<Page>>() {
-            @Override
-            public void onResult(RPCManager.Result<List<Page>> result) {
-                lock.unlock();
-                if (result.getStatus() != RPCManager.RESULT_OK) {
-                    Dialogs.connectionFailed(EditorActivity.this);
-                    return;
-                }
-                final HashSet<Page> pages = new HashSet<>();
-                for (Page p : result.getResult()) {
-                    if (p.id().startsWith(getString(R.string.prefix_script))) pages.add(p);
-                }
-                Page[] array = pages.toArray(new Page[pages.size()]);
-                showSelectPageToEdit(array);
-            }
-        });
-    }
-
-    private void cancelEdit() {
-        lock.unlock();
-        if (changedCode()) {
-            Dialogs.unsavedChanges(this, new DialogInterface.OnClickListener() {
-                @Override
-                public void onClick(DialogInterface dialogInterface, int i) {
-                    setContentView(R.layout.activity_select_action);
-                }
-            });
-        } else setContentView(R.layout.activity_select_action);
-    }
-
-    private void savePage() {
-        final String text = editManager.getText();
-        if (isTemplate) {
-            sharedPref.edit().putString(getString(R.string.pref_template), text).apply();
-            lock.unlock();
-            editManager.saved();
-            Dialogs.saved(this, null);
-        } else if (text.equals("")) {
-            lock.unlock();
-            Dialogs.cantSaveEmpty(this);
-        } else {
-            final String pageId = editManager.getPageId();
-            RPCManager.putPage(pageId, text, new RPCManager.Listener<Void>() {
-                @Override
-                public void onResult(RPCManager.Result<Void> result) {
-                    //TODO: handle RESULT_NEED_RW
-                    if (result.getStatus() == RPCManager.RESULT_OK) {
-                        editManager.saved();
-                        if (addTo != null) {
-                            repository.addScript(addTo, pageId, editManager.getPageName());
-                            RPCManager.putPage(getString(R.string.id_scriptRepository), repository.getText(), new RPCManager.Listener<Void>() {
-                                @Override
-                                public void onResult(RPCManager.Result<Void> result) {
-                                    lock.unlock();
-                                    //TODO: handle RESULT_NEED_RW
-                                    if (result.getStatus() == RPCManager.RESULT_OK)
-                                        Dialogs.saved(EditorActivity.this, pageId);
-                                    else Dialogs.connectionFailed(EditorActivity.this);
-                                }
-                            });
-                        } else {
-                            lock.unlock();
-                            Dialogs.saved(EditorActivity.this, pageId);
-                        }
-                    } else {
-                        lock.unlock();
-                        Dialogs.connectionFailed(EditorActivity.this);
-                    }
-                }
-            });
-        }
-    }
-
-    private void commitCreate() {
-        editManager.setPageId(getString(R.string.prefix_script) + ((EditText) findViewById(R.id.editId)).getText());
-        Spinner spinner = (Spinner) findViewById(R.id.spinner);
-        final Repository.RepositoryCategory selected = ((Repository.RepositoryCategory) spinner.getSelectedItem());
-        RPCManager.getPage(editManager.getPageId(), new RPCManager.Listener<String>() {
-            @Override
-            public void onResult(RPCManager.Result<String> result) {
-                if (result.getStatus() == RESULT_OK) {
-                    String r = result.getResult();
-                    if (r == null || r.equals("")) {
-                        if (selected.level >= 0) {
-                            addTo = selected;
-                            editManager.setPageName(((EditText) findViewById(R.id.editName)).getText().toString());
-                        }
-                        if (((RadioButton) findViewById(R.id.radioDefault)).isChecked()) {
-                            RPCManager.getPage(getString(R.string.id_scriptTemplate), new RPCManager.Listener<String>() {
-                                @Override
-                                public void onResult(RPCManager.Result<String> result) {
-                                    lock.unlock();
-                                    if (result.getStatus() == RPCManager.RESULT_OK) {
-                                        showPageEditor(result.getResult());
-                                    } else {
-                                        Dialogs.connectionFailed(EditorActivity.this);
-                                    }
-                                }
-                            });
-                        } else if (((RadioButton) findViewById(R.id.radioCustom)).isChecked()) {
-                            showPageEditor(sharedPref.getString(getString(R.string.pref_template), ""));
-                        } else showPageEditor("");
-                    } else {
-                        lock.unlock();
-                        Dialogs.pageAlreadyExists(EditorActivity.this);
-                    }
-                } else {
-                    lock.unlock();
-                    Dialogs.connectionFailed(EditorActivity.this);
-                }
-            }
-        });
-    }
-
     public void action(View view) {
-        if (state != STATE_EDIT)
+        if (viewManager.getState() != ViewManager.STATE_EDIT)
             throw new IllegalStateException("Can't execute actions when not in editor");
-        if (!lock.isLocked()) {
-            switch (view.getId()) {
-                case R.id.action_bold:
-                    editManager.surroundOrAdd("**", "**", getString(R.string.text_bold));
-                    break;
-                case R.id.action_italic:
-                    editManager.surroundOrAdd("//", "//", getString(R.string.text_italic));
-                    break;
-                case R.id.action_underline:
-                    editManager.surroundOrAdd("__", "__", getString(R.string.text_underline));
-                    break;
-                case R.id.action_code:
-                    editManager.surroundOrAdd("<sxh javascript;>", "</sxh>", getString(R.string.text_code));
-                    break;
-                case R.id.action_unorderedList:
-                    editManager.surroundOrAdd("  * ", "", getString(R.string.text_unorderedList));
-                    break;
-                case R.id.action_orderedList:
-                    editManager.surroundOrAdd("  - ", "", getString(R.string.text_orderedList));
-                    break;
-                default:
-                    if (BuildConfig.DEBUG)
-                        Log.i(EditorActivity.class.getSimpleName(), "Ignored action " + view.getId());
-                    break;
-            }
+        if (!viewManager.isLocked()) {
+            editManager.action(view.getId());
         }
-    }
-
-    private void preview() {
-        final String tempId = getString(R.string.prefix_temp) + random.nextInt();
-        RPCManager.putPage(getString(R.string.prefix_script) + tempId, editManager.getText(), new RPCManager.Listener<Void>() {
-            @Override
-            public void onResult(RPCManager.Result<Void> result) {
-                lock.unlock();
-                //TODO: handle RESULT_NEED_RW
-                if (result.getStatus() == RPCManager.RESULT_OK) {
-                    showPreview(tempId);
-                } else {
-                    Dialogs.connectionFailed(EditorActivity.this);
-                }
-            }
-        });
-    }
-
-    private void showPreview(final String tempId) {
-        setContentView(R.layout.activity_preview);
-        lock.lock();
-        final WebView webView = (WebView) findViewById(R.id.webPreview);
-        webView.getSettings().setJavaScriptEnabled(true);
-        //noinspection deprecation
-        webView.setWebViewClient(new WebClient() {
-            @Override
-            public void onPageFinished(WebView view, String url) {
-                super.onPageFinished(view, url);
-                RPCManager.putPage("script_" + tempId, "", null);
-            }
-
-            @Override
-            public boolean shouldOverrideUrlLoading(WebView view, String url) {
-                Toast.makeText(EditorActivity.this, getString(R.string.toast_previewLink), Toast.LENGTH_SHORT).show();
-                return true;
-            }
-        });
-        webView.setOnLongClickListener(new View.OnLongClickListener() {
-            @Override
-            public boolean onLongClick(View ignored) {
-                return true;
-            }
-        });
-        new DownloadTask(new DownloadTask.Listener() {
-            @Override
-            public void onFinish(DownloadTask.Result res) {
-                if (!sharedPref.getBoolean(getString(R.string.pref_showTools), false)) {
-                    //remove tools
-                    res.document.select("div.tools.group").remove();
-                }
-                webView.loadDataWithBaseURL(getString(R.string.link_server), res.document.outerHtml(), "text/html", "UTF-8", null);
-                lock.unlock();
-            }
-
-            @Override
-            public void onError() {
-                if (BuildConfig.DEBUG) Log.i("Preview", "Ignored Error");
-                lock.unlock();
-            }
-        }).execute(getString(R.string.link_scriptPagePrefix) + tempId);
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.HONEYCOMB) {
-            ActionBar bar = getActionBar();
-            assert bar != null;
-            bar.setDisplayHomeAsUpEnabled(true);
-        }
-    }
-
-    private void showSelectPageToEdit(final Page[] pages) {
-        final ArrayAdapter<String> adapter = new ArrayAdapter<>(this, R.layout.sub_list_item);
-        for (Page p : pages) adapter.add(p.id());
-        adapter.sort(new Comparator<String>() {
-            @Override
-            public int compare(String lhs, String rhs) {
-                return Utils.getNameForPageFromPref(sharedPref, lhs).toLowerCase().compareTo(Utils.getNameForPageFromPref(sharedPref, rhs).toLowerCase());
-            }
-        });
-        Dialogs.selectPageToEdit(this, adapter, new DialogInterface.OnClickListener() {
-            @Override
-            public void onClick(DialogInterface dialogInterface, int i) {
-                lock.lock();
-                dialogInterface.dismiss();
-                loadPageToEdit(adapter.getItem(i));
-            }
-        });
-    }
-
-    private void loadPageToEdit(String id) {
-        RPCManager.getPage(id, new RPCManager.Listener<String>() {
-            @Override
-            public void onResult(RPCManager.Result<String> result) {
-                lock.unlock();
-                if (result.getStatus() == RPCManager.RESULT_OK) {
-                    showPageEditor(result.getResult());
-                } else {
-                    Dialogs.connectionFailed(EditorActivity.this);
-                }
-            }
-        });
-    }
-
-    private void showPageEditor(String text) {
-        setContentView(R.layout.activity_edit);
-        if (text == null) {
-            editManager.assign((EditText) findViewById(R.id.editor));
-        } else {
-            editManager.assign((EditText) findViewById(R.id.editor), text);
-        }
-    }
-
-    private class Lock {
-        boolean state;
-
-        public Lock() {
-            state = true;
-        }
-
-        public void lock() {
-            state = true;
-            final ProgressBar bar = (ProgressBar) findViewById(R.id.progressBar);
-            assert bar != null;
-            bar.setVisibility(View.VISIBLE);
-        }
-
-        public void unlock() {
-            state = false;
-            final ProgressBar bar = (ProgressBar) findViewById(R.id.progressBar);
-            assert bar != null;
-            bar.setVisibility(View.GONE);
-        }
-
-        public boolean isLocked() {
-            return state;
-        }
-
     }
 }

@@ -8,12 +8,15 @@ import android.accounts.AuthenticatorException;
 import android.accounts.OperationCanceledException;
 import android.app.Activity;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.os.Build;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 
 import com.trianguloy.llscript.repository.R;
+import com.trianguloy.llscript.repository.internal.Dialogs;
+import com.trianguloy.llscript.repository.web.RPCManager;
 
 import org.acra.ACRA;
 
@@ -27,7 +30,53 @@ public final class AuthenticationUtils {
     private AuthenticationUtils() {
     }
 
-    public static void findAccount(@NonNull final Activity context, @NonNull final Listener listener, boolean passwordInvalid) {
+    public static void login(Activity context, Listener listener){
+        login(context,listener,false);
+    }
+
+    private static void login(final Activity context, final Listener listener, boolean passwordInvalid){
+        findAccount(context, new InternalListener() {
+            @Override
+            public void onComplete(String user, String password) {
+                RPCManager.login(user, password, new RPCManager.Listener<Void>() {
+
+                    @Override
+                    public void onResult(RPCManager.Result<Void> result) {
+                        switch (result.getStatus()) {
+                            case RPCManager.RESULT_BAD_LOGIN:
+                                Dialogs.badLogin(context, new DialogInterface.OnClickListener() {
+                                    @Override
+                                    public void onClick(DialogInterface dialogInterface, int i) {
+                                        login(context,listener,true);
+                                    }
+                                });
+                                break;
+                            case RPCManager.RESULT_NETWORK_ERROR:
+                                Dialogs.connectionFailed(context, new DialogInterface.OnClickListener() {
+                                    @Override
+                                    public void onClick(DialogInterface dialogInterface, int i) {
+                                        listener.onError();
+                                    }
+                                });
+                                break;
+                            case RPCManager.RESULT_OK:
+                                listener.onComplete();
+                                break;
+                            default:
+                                throw new IllegalArgumentException();
+                        }
+                    }
+                });
+            }
+
+            @Override
+            public void onError() {
+
+            }
+        }, passwordInvalid);
+    }
+
+    private static void findAccount(@NonNull final Activity context, @NonNull final InternalListener listener, boolean passwordInvalid) {
         final AccountManager accountManager = AccountManager.get(context);
         Account[] accounts = accountManager.getAccountsByType(context.getString(R.string.account_type));
         AccountManagerCallback<Bundle> callback = new AccountManagerCallback<Bundle>() {
@@ -84,8 +133,13 @@ public final class AuthenticationUtils {
     }
 
     public interface Listener {
-        void onComplete(String user, String password);
+        void onComplete();
 
+        void onError();
+    }
+
+    private interface InternalListener {
+        void onComplete(String user, String password);
         void onError();
     }
 }

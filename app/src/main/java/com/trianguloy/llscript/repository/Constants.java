@@ -16,48 +16,47 @@ public final class Constants {
     public static final int FLAG_CUSTOM_MENU = 8;
 
     //App constants
-    public static final int managerId = -3;
+    public static final int MANAGER_ID = -3;
 
     //Where to search in the HTML source
-    public static final String[] scriptSelectors = {"[class=brush: javascript]", "[class=brush: javascript;]", "[class=code]"};
+    public static final String SCRIPT_SELECTORS = "[class=brush: javascript],[class=brush: javascript;][class=code]";
 
     //package constants
-    public static final String[] packages = new String[]{"net.pierrox.lightning_launcher_extreme", "net.pierrox.lightning_launcher"};
+    public static final String[] PACKAGES = {"net.pierrox.lightning_launcher_extreme", "net.pierrox.lightning_launcher"};
     public static String installedPackage = "";
-    public static final int minimumNecessaryVersion = 225; // valid for both packages. Number module 1000
+    public static final int MINIMUM_NECESSARY_VERSION = 225; // valid for both packages. Number module 1000
 
     //Intent Extras
-    public static final String extraCode = "code";
-    public static final String extraFlags = "flags";
-    public static final String extraReceiver = "receiver";
-    public static final String extraName = "name";
-    public static final String extraForceUpdate = "forceUpdate";
-    public static final String extraOpenUrl = "openUrl";
-    public static final String extraOpenUrlTime = "openUrlTime";
-    public static final String extraReload = "reload";
-    public static final String extraForward = "forward";
-    public static final String extraBackground = "background";
-    public static final String extraStatus = "status";
+    public static final String EXTRA_CODE = "code";
+    public static final String EXTRA_FLAGS = "flags";
+    public static final String EXTRA_RECEIVER = "receiver";
+    public static final String EXTRA_NAME = "name";
+    public static final String EXTRA_FORCE_UPDATE = "forceUpdate";
+    public static final String EXTRA_OPEN_URL = "openUrl";
+    public static final String EXTRA_OPEN_URL_TIME = "openUrlTime";
+    public static final String EXTRA_RELOAD = "reload";
+    public static final String EXTRA_FORWARD = "forward";
+    public static final String EXTRA_BACKGROUND = "background";
+    public static final String EXTRA_STATUS = "status";
 
     public static final int STATUS_LAUNCHER_PROBLEM = 3;
     public static final int STATUS_UPDATE_CONFIRMATION_REQUIRED = 2;
     public static final int STATUS_OK = 1;
 
     //Run script parameters, matching lightning launcher constants
-    public static final String RunActionExtra = "a";
-    public static final String RunDataExtra = "d";
-    public static final int RunActionKey = 35;
-    public static final String RunBackgroundExtra = "t";
-    public static final int RunBackgroundKey = 3;
+    public static final String EXTRA_ACTION = "a";
+    public static final String EXTRA_DATA = "d";
+    public static final int ACTION_RUN = 35;
+    public static final String EXTRA_TARGET = "t";
+    public static final int TARGET_BACKGROUND = 3;
 
     //Script JSON names for script drop
-    public static final String ScriptName = "name";
-    public static final String ScriptFlags = "flags";
-    public static final String ScriptForceUpdate = "forceUpdate";
-    public static final String ScriptCode = "code";
-    public static final String ScriptReturnResultTo = "returnTo";
+    public static final String KEY_NAME = "name";
+    public static final String KEY_FLAGS = "flags";
+    public static final String KEY_FORCE_UPDATE = "forceUpdate";
+    public static final String KEY_CODE = "code";
+    public static final String KEY_RETURN_RESULT_TO = "returnTo";
 
-    public static final int BUFFER_SIZE = 1024;
     public static final int TEN_MEGABYTE = 10 * 1024 * 1024;
     public static final int HUNDRED_MILLISECONDS = 100;
     public static final int FIVE_SECONDS = 5000;

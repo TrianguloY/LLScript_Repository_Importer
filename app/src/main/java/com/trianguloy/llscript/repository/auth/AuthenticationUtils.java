@@ -71,7 +71,7 @@ public final class AuthenticationUtils {
 
             @Override
             public void onError() {
-
+                listener.onError();
             }
         }, passwordInvalid);
     }

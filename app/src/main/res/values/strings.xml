@@ -134,9 +134,6 @@
     <string name="message_remove">"Remove subscription to page "</string>
     <string name="toast_oneNewScript">There is a new Script in the Repository:</string>
     <string name="toast_severalNewScripts">There are new Scripts in the Repository:</string>
-    <string name="toast_repoChanged">The repository Page has changed since your last visit\nNew
-        Script?
-    </string>
     <string name="toast_subscribeSuccessful">Successfully subscribed</string>
     <string name="toast_unsubscribeSuccessful">Successfully unsubscribed</string>
     <string name="text_noSubs">No Subscriptions</string>

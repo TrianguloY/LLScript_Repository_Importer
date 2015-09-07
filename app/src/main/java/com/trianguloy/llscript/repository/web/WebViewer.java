@@ -82,13 +82,13 @@ public class WebViewer extends Activity {
     protected void onNewIntent(Intent intent) {
         Utils.showChangedSubscriptionsIfAny(this, webView);
 
-        if (intent.hasExtra(Constants.extraOpenUrl)
+        if (intent.hasExtra(Constants.EXTRA_OPEN_URL)
                 &&//if has both extras
-                intent.hasExtra(Constants.extraOpenUrlTime)
+                intent.hasExtra(Constants.EXTRA_OPEN_URL_TIME)
                 &&//and if the time passed is less than five seconds (to avoid be launched after closed, because the intent is kept)
-                intent.getLongExtra(Constants.extraOpenUrlTime, 0) + Constants.FIVE_SECONDS > System.currentTimeMillis()
+                intent.getLongExtra(Constants.EXTRA_OPEN_URL_TIME, 0) + Constants.FIVE_SECONDS > System.currentTimeMillis()
                 ) {
-            sentUrl = intent.getStringExtra(Constants.extraOpenUrl);
+            sentUrl = intent.getStringExtra(Constants.EXTRA_OPEN_URL);
             if (webView != null) loadSentUrl();
         }
         super.onNewIntent(intent);

@@ -25,7 +25,7 @@ public final class PageCacheManager {
         initialized = true;
         Context context = Utils.getContext();
         directory = new File(context.getCacheDir(),"html");
-        directory.mkdirs();
+        if (!directory.mkdirs()) throw new FatalFileException();
         gson = new Gson();
     }
 
@@ -65,6 +65,7 @@ public final class PageCacheManager {
         public FatalFileException(Exception e) {
             super(e);
         }
+        public FatalFileException(){super();}
     }
 
     public static class Page {

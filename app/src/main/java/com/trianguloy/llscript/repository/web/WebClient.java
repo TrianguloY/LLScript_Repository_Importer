@@ -29,12 +29,12 @@ public class WebClient extends WebViewClient {
         try {
             final HttpURLConnection connection = (HttpURLConnection) new URL(url).openConnection();
             connection.connect();
-            final String content_type = connection.getContentType();
+            final String contentType = connection.getContentType();
             final String separator = "; charset=";
-            final int pos = content_type.indexOf(separator);
-            final String mime_type = pos >= 0 ? content_type.substring(0, pos) : content_type;
-            final String encoding = pos >= 0 ? content_type.substring(pos + separator.length()) : "UTF-8";
-            return new WebResourceResponse(mime_type, encoding, connection.getInputStream());
+            final int pos = contentType.indexOf(separator);
+            final String mimeType = pos >= 0 ? contentType.substring(0, pos) : contentType;
+            final String encoding = pos >= 0 ? contentType.substring(pos + separator.length()) : "UTF-8";
+            return new WebResourceResponse(mimeType, encoding, connection.getInputStream());
         } catch (final MalformedURLException e) {
             e.printStackTrace();
             return null;

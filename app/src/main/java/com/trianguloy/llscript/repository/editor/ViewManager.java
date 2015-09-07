@@ -36,7 +36,7 @@ import dw.xmlrpc.Page;
  * Created by Lukas on 07.09.2015.
  * Manages editorActivities view state
  */
-public class ViewManager extends Lock{
+class ViewManager extends Lock {
     public static final int STATE_NONE = -1;
     public static final int STATE_CHOOSE_ACTION = 0;
     public static final int STATE_CREATE = 1;
@@ -45,9 +45,9 @@ public class ViewManager extends Lock{
 
     private final EditorActivity context;
     private int state;
-    private EditManager editManager;
+    private final EditManager editManager;
     private boolean isTemplate;
-    private Random random;
+    private final Random random;
     private final SharedPreferences sharedPref;
     private Repository repository;
     private Repository.RepositoryCategory addTo;
@@ -56,10 +56,10 @@ public class ViewManager extends Lock{
         super(context);
         this.context = context;
         this.editManager = editManager;
-        setState(STATE_NONE);
-        setIsTemplate(false);
+        isTemplate = false;
         random = new Random();
         sharedPref = PreferenceManager.getDefaultSharedPreferences(context);
+        setState(STATE_NONE);
     }
 
     public void setState(int state) {
@@ -129,15 +129,7 @@ public class ViewManager extends Lock{
         }
     }
 
-    public boolean isTemplate() {
-        return isTemplate;
-    }
-
-    public void setIsTemplate(boolean isTemplate) {
-        this.isTemplate = isTemplate;
-    }
-
-    void showPageEditor(String text) {
+    private void showPageEditor(String text) {
         setState(STATE_EDIT);
         if (text == null) {
             editManager.assign((EditText) context.findViewById(R.id.editor));
@@ -161,9 +153,11 @@ public class ViewManager extends Lock{
         });
     }
 
-    void showSelectPageToEdit(final Page[] pages) {
+    private void showSelectPageToEdit(final Page[] pages) {
         final ArrayAdapter<String> adapter = new ArrayAdapter<>(context, R.layout.sub_list_item);
-        for (Page p : pages) adapter.add(p.id());
+        for (Page p : pages) {
+            adapter.add(p.id());
+        }
         adapter.sort(new Comparator<String>() {
             @Override
             public int compare(String lhs, String rhs) {
@@ -288,7 +282,7 @@ public class ViewManager extends Lock{
 
     void savePage() {
         final String text = editManager.getText();
-        if (isTemplate()) {
+        if (isTemplate) {
             sharedPref.edit().putString(context.getString(R.string.pref_template), text).apply();
             unlock();
             editManager.saved();
@@ -378,7 +372,7 @@ public class ViewManager extends Lock{
     }
 
     void editTemplate() {
-        setIsTemplate(true);
+        isTemplate = true;
         showPageEditor(sharedPref.getString(context.getString(R.string.pref_template), ""));
     }
 

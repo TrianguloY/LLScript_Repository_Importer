@@ -23,7 +23,7 @@ public class IntentHandle extends Activity {
             String getUrl = intent.getDataString();
             Uri uri = intent.getData();
             if (uri != null && getUrl.startsWith(getString(R.string.link_scriptPagePrefix))) {
-                openWebViewer(getUrl, intent.getBooleanExtra(Constants.extraReload, false));
+                openWebViewer(getUrl, intent.getBooleanExtra(Constants.EXTRA_RELOAD, false));
             } else if (uri != null) {
                 //pass the bad intent to another app
                 new AppChooser(this, uri, getString(R.string.title_appChooserBad), getString(R.string.toast_badString), new AppChooser.OnCloseListener() {
@@ -32,15 +32,15 @@ public class IntentHandle extends Activity {
                         finish();
                     }
                 }).show();
-            } else if (intent.hasExtra(Constants.extraStatus)) {
-                int status = (int) intent.getDoubleExtra(Constants.extraStatus, 0);
+            } else if (intent.hasExtra(Constants.EXTRA_STATUS)) {
+                int status = (int) intent.getDoubleExtra(Constants.EXTRA_STATUS, 0);
                 switch (status) {
                     case Constants.STATUS_OK:
                         //loaded a script, return to page
                         openWebViewer();
                         break;
                     case Constants.STATUS_UPDATE_CONFIRMATION_REQUIRED:
-                        Dialogs.confirmUpdate(this, intent.getStringExtra(Constants.ScriptName), intent.getStringExtra(Constants.ScriptCode), (int) intent.getDoubleExtra(Constants.ScriptFlags, 0));
+                        Dialogs.confirmUpdate(this, intent.getStringExtra(Constants.EXTRA_NAME), intent.getStringExtra(Constants.EXTRA_CODE), (int) intent.getDoubleExtra(Constants.EXTRA_FLAGS, 0));
                         break;
                     default:
                         throw new IllegalArgumentException("Invalid status code returned from script: " + status);
@@ -61,9 +61,9 @@ public class IntentHandle extends Activity {
 
     private void openWebViewer(String url, boolean reload) {
         Intent intent = new Intent(this, WebViewer.class);
-        if (url != null) intent.putExtra(Constants.extraOpenUrl, url);
-        intent.putExtra(Constants.extraOpenUrlTime, System.currentTimeMillis());
-        intent.putExtra(Constants.extraReload, reload);
+        if (url != null) intent.putExtra(Constants.EXTRA_OPEN_URL, url);
+        intent.putExtra(Constants.EXTRA_OPEN_URL_TIME, System.currentTimeMillis());
+        intent.putExtra(Constants.EXTRA_RELOAD, reload);
         intent.addFlags(Intent.FLAG_ACTIVITY_REORDER_TO_FRONT);
         startActivity(intent);
         finish();

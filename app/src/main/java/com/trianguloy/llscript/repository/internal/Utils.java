@@ -180,7 +180,7 @@ public final class Utils {
         PackageInfo pi = null;
         Constants.installedPackage = "";
 
-        for (String p : Constants.packages) {
+        for (String p : Constants.PACKAGES) {
             try {
                 pi = pm.getPackageInfo(p, PackageManager.GET_ACTIVITIES);
                 Constants.installedPackage = p;
@@ -199,7 +199,7 @@ public final class Utils {
 
         //Checks the version of the launcher
 
-        if ((pi.versionCode % Constants.VERSIONCODE_MODULO) < Constants.minimumNecessaryVersion) {
+        if ((pi.versionCode % Constants.VERSIONCODE_MODULO) < Constants.MINIMUM_NECESSARY_VERSION) {
             Dialogs.launcherOutdated(context);
             return false;
         }
@@ -214,12 +214,12 @@ public final class Utils {
     }
 
     public static String getString(int resId) {
-        if (context == null) throw new RuntimeException("Context not initialized");
+        if (context == null) throw new NoContextException();
         return context.getString(resId);
     }
 
     public static Context getContext() {
-        if (context == null) throw new RuntimeException("Context not initialized");
+        if (context == null) throw new NoContextException();
         return context;
     }
 
@@ -227,7 +227,7 @@ public final class Utils {
     private static final int SHOW_TOAST = 1;
     private static final int SHOW_DIALOG = 2;
 
-    public static void showChangedSubscriptionsIfAny(final Context context, final ManagedWebView webView){
+    public static void showChangedSubscriptionsIfAny(final Context context, final ManagedWebView webView) {
         final SharedPreferences sharedPref = PreferenceManager.getDefaultSharedPreferences(context);
         RPCManager.getChangedSubscriptions(sharedPref, new RPCManager.Listener<List<String>>() {
             @Override
@@ -275,7 +275,9 @@ public final class Utils {
                 //found new Scripts
                 Utils.saveSetToPref(sharedPref, getString(R.string.pref_Scripts), currentScripts);
                 ArrayList<String> newScriptNames = new ArrayList<>();
-                for (String s : newScripts) newScriptNames.add(map.get(s));
+                for (String s : newScripts) {
+                    newScriptNames.add(map.get(s));
+                }
                 StringBuilder names = new StringBuilder();
                 for (int i = 0; i < newScriptNames.size(); i++) {
                     names.append(newScriptNames.get(i)).append("\n");
@@ -297,6 +299,12 @@ public final class Utils {
         } else {
             //No info about previous scripts. Only save the current scripts
             Utils.saveSetToPref(sharedPref, getString(R.string.pref_Scripts), currentScripts);
+        }
+    }
+
+    public static class NoContextException extends RuntimeException {
+        public NoContextException() {
+            super("Context not initialized");
         }
     }
 

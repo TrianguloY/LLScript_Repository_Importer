@@ -16,7 +16,7 @@ import com.trianguloy.llscript.repository.internal.Utils;
  * Created by Lukas on 06.09.2015.
  * manages the content of the editText
  */
-public class EditManager {
+class EditManager {
 
     private EditText editText;
     private int textHash = -1;
@@ -59,7 +59,7 @@ public class EditManager {
         return txt;
     }
 
-    public void surroundOrAdd(String prefix, String suffix, String text) {
+    private void surroundOrAdd(String prefix, String suffix, String text) {
         if (editText != null) {
             int start = editText.getSelectionStart();
             int end = editText.getSelectionEnd();

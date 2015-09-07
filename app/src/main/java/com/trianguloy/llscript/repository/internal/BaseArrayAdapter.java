@@ -17,7 +17,7 @@ public abstract class BaseArrayAdapter<T> extends ArrayAdapter<T> {
     final Context context;
     private final int resource;
 
-    public BaseArrayAdapter(Context context, int resource, List<T> objects) {
+    protected BaseArrayAdapter(Context context, int resource, List<T> objects) {
         super(context, resource, objects);
         this.context = context;
         this.resource = resource;

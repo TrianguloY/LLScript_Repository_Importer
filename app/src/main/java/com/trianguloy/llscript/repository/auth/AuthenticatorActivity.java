@@ -53,7 +53,7 @@ public class AuthenticatorActivity extends AccountAuthenticatorActivity {
         }
     }
 
-    public void login() {
+    private void login() {
         final String user = ((EditText) findViewById(R.id.username)).getText().toString();
         final String password = ((EditText) findViewById(R.id.password)).getText().toString();
         final boolean savePw = ((CheckBox) findViewById(R.id.checkRemember)).isChecked();
@@ -87,7 +87,7 @@ public class AuthenticatorActivity extends AccountAuthenticatorActivity {
         setResult(RESULT_OK, intent);
     }
 
-    public void register() {
+    private void register() {
         new AppChooser(this, Uri.parse(getString(R.string.link_register)), getString(R.string.title_appChooserRegister), getString(R.string.message_noBrowser), null).show();
     }
 }

@@ -6,7 +6,6 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.preference.PreferenceManager;
 import android.text.Html;
-import android.text.TextUtils;
 
 import com.trianguloy.llscript.repository.Constants;
 import com.trianguloy.llscript.repository.R;
@@ -41,7 +40,7 @@ public final class ImportUtils {
         String aboutScript = "";
 
         //Starts searching all scripts
-        Elements elements = document.select(TextUtils.join(",", Constants.scriptSelectors));
+        Elements elements = document.select(Constants.SCRIPT_SELECTORS);
         for (Element e : elements) {
             rawCodes.add(e.ownText());
             Element parent = e;
@@ -174,9 +173,9 @@ public final class ImportUtils {
     private static void sendScriptToLauncher(Context context, String code, String scriptName, int flags) {
         // let's import the script
         Intent intent = new Intent(context, ScriptImporter.class);
-        intent.putExtra(Constants.extraCode, code);
-        intent.putExtra(Constants.extraName, scriptName);
-        intent.putExtra(Constants.extraFlags, flags);
+        intent.putExtra(Constants.EXTRA_CODE, code);
+        intent.putExtra(Constants.EXTRA_NAME, scriptName);
+        intent.putExtra(Constants.EXTRA_FLAGS, flags);
         context.startService(intent);
     }
 

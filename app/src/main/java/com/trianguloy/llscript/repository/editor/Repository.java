@@ -15,7 +15,7 @@ import java.util.List;
  * Created by Lukas on 15.05.2015.
  * Helper class to structure content
  */
-public class Repository {
+class Repository {
     private int tableStartLine;
     private int tableEndLine;
     private final List<RepositoryCategory> categories;

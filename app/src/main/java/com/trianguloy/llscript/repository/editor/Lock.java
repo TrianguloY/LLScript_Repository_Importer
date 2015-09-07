@@ -7,24 +7,25 @@ import com.trianguloy.llscript.repository.R;
 
 /**
  * Created by Lukas on 07.09.2015.
+ * Represents editorActivities accessibility state
  */
 class Lock {
-    private EditorActivity activity;
-    boolean state;
+    private final EditorActivity activity;
+    private boolean state;
 
-    public Lock(EditorActivity activity) {
+    Lock(EditorActivity activity) {
         this.activity = activity;
         state = true;
     }
 
-    public void lock() {
+    void lock() {
         state = true;
         final ProgressBar bar = (ProgressBar) activity.findViewById(R.id.progressBar);
         assert bar != null;
         bar.setVisibility(View.VISIBLE);
     }
 
-    public void unlock() {
+    void unlock() {
         state = false;
         final ProgressBar bar = (ProgressBar) activity.findViewById(R.id.progressBar);
         assert bar != null;

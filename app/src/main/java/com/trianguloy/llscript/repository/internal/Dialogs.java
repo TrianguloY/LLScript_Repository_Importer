@@ -87,7 +87,7 @@ public final class Dialogs {
                 Intent intent = new Intent(Intent.ACTION_VIEW);
                 intent.setData(Uri.parse(url));
                 intent.setClass(context, IntentHandle.class);
-                intent.putExtra(Constants.extraReload, true);
+                intent.putExtra(Constants.EXTRA_RELOAD, true);
                 context.startActivity(intent);
                 context.finish();
             }
@@ -136,7 +136,7 @@ public final class Dialogs {
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
                         Intent i = new Intent(Intent.ACTION_VIEW);
-                        i.setData(Uri.parse(context.getString(R.string.link_playStorePrefix) + Constants.packages[1]));
+                        i.setData(Uri.parse(context.getString(R.string.link_playStorePrefix) + Constants.PACKAGES[1]));
                         if (context instanceof Service) i.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
                         context.startActivity(i);
                         if (context instanceof Activity) ((Activity) context).finish();
@@ -310,10 +310,10 @@ public final class Dialogs {
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
                         Intent intent = new Intent(context, ScriptImporter.class);
-                        intent.putExtra(Constants.extraCode, code);
-                        intent.putExtra(Constants.extraName, scriptName);
-                        intent.putExtra(Constants.extraFlags, flags);
-                        intent.putExtra(Constants.extraForceUpdate, true);
+                        intent.putExtra(Constants.EXTRA_CODE, code);
+                        intent.putExtra(Constants.EXTRA_NAME, scriptName);
+                        intent.putExtra(Constants.EXTRA_FLAGS, flags);
+                        intent.putExtra(Constants.EXTRA_FORCE_UPDATE, true);
                         context.startService(intent);
                     }
                 })

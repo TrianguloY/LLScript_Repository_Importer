@@ -19,6 +19,7 @@ import android.widget.Toast;
 
 import com.trianguloy.llscript.repository.BuildConfig;
 import com.trianguloy.llscript.repository.R;
+import com.trianguloy.llscript.repository.auth.AuthenticationUtils;
 import com.trianguloy.llscript.repository.internal.Dialogs;
 import com.trianguloy.llscript.repository.internal.Utils;
 import com.trianguloy.llscript.repository.web.DownloadTask;
@@ -180,11 +181,25 @@ class ViewManager extends Lock {
             @Override
             public void onResult(RPCManager.Result<Void> result) {
                 unlock();
-                //TODO: handle RESULT_NEED_RW
-                if (result.getStatus() == RPCManager.RESULT_OK) {
-                    showPreview(tempId);
-                } else {
-                    Dialogs.connectionFailed(context);
+                switch (result.getStatus()) {
+                    case RPCManager.RESULT_OK:
+                        showPreview(tempId);
+                        break;
+                    case RPCManager.RESULT_NEED_RW:
+                        AuthenticationUtils.login(context, new AuthenticationUtils.Listener() {
+                            @Override
+                            public void onComplete() {
+                                preview();
+                            }
+
+                            @Override
+                            public void onError() {
+                            }
+                        });
+                        break;
+                    case RPCManager.RESULT_NETWORK_ERROR:
+                        Dialogs.connectionFailed(context);
+                        break;
                 }
             }
         });
@@ -293,33 +308,56 @@ class ViewManager extends Lock {
         } else {
             final String pageId = editManager.getPageId();
             RPCManager.putPage(pageId, text, new RPCManager.Listener<Void>() {
-                @Override
-                public void onResult(RPCManager.Result<Void> result) {
-                    //TODO: handle RESULT_NEED_RW
-                    if (result.getStatus() == RPCManager.RESULT_OK) {
-                        editManager.saved();
-                        if (addTo != null) {
-                            repository.addScript(addTo, pageId, editManager.getPageName());
-                            RPCManager.putPage(context.getString(R.string.id_scriptRepository), repository.getText(), new RPCManager.Listener<Void>() {
-                                @Override
-                                public void onResult(RPCManager.Result<Void> result) {
-                                    unlock();
-                                    //TODO: handle RESULT_NEED_RW
-                                    if (result.getStatus() == RPCManager.RESULT_OK)
+                        @Override
+                        public void onResult(RPCManager.Result<Void> result) {
+                            switch (result.getStatus()) {
+                                case RPCManager.RESULT_OK:
+                                    editManager.saved();
+                                    if (addTo != null) {
+                                        repository.addScript(addTo, pageId, editManager.getPageName());
+                                        RPCManager.putPage(context.getString(R.string.id_scriptRepository), repository.getText(), new RPCManager.Listener<Void>() {
+                                                    @Override
+                                                    public void onResult(RPCManager.Result<Void> result) {
+                                                        unlock();
+                                                        switch (result.getStatus()) {
+                                                            case RPCManager.RESULT_OK:
+                                                                Dialogs.saved(context, pageId);
+                                                                break;
+                                                            case RPCManager.RESULT_NEED_RW:
+                                                                throw new IllegalStateException();
+                                                            case RPCManager.RESULT_NETWORK_ERROR:
+                                                                Dialogs.connectionFailed(context);
+                                                                break;
+                                                        }
+                                                    }
+                                                }
+
+                                        );
+                                    } else {
+                                        unlock();
                                         Dialogs.saved(context, pageId);
-                                    else Dialogs.connectionFailed(context);
-                                }
-                            });
-                        } else {
-                            unlock();
-                            Dialogs.saved(context, pageId);
+                                    }
+                                    break;
+                                case RPCManager.RESULT_NEED_RW:
+                                    AuthenticationUtils.login(context, new AuthenticationUtils.Listener() {
+                                        @Override
+                                        public void onComplete() {
+                                            savePage();
+                                        }
+
+                                        @Override
+                                        public void onError() {
+                                        }
+                                    });
+                                case RPCManager.RESULT_NETWORK_ERROR:
+                                    unlock();
+                                    Dialogs.connectionFailed(context);
+                                    break;
+                            }
                         }
-                    } else {
-                        unlock();
-                        Dialogs.connectionFailed(context);
                     }
-                }
-            });
+
+            );
         }
     }
 

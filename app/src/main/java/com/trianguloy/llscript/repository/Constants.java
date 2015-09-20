@@ -19,7 +19,7 @@ public final class Constants {
     public static final int MANAGER_ID = -3;
 
     //Where to search in the HTML source
-    public static final String SCRIPT_SELECTORS = "[class=brush: javascript],[class=brush: javascript;][class=code]";
+    public static final String SCRIPT_SELECTORS = "[class=brush: javascript],[class=brush: javascript;],[class=code]";
 
     //package constants
     public static final String[] PACKAGES = {"net.pierrox.lightning_launcher_extreme", "net.pierrox.lightning_launcher"};

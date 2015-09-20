@@ -40,7 +40,6 @@ public class EditorActivity extends Activity {
         RepositoryImporter.setTheme(this, sharedPref);
         editManager = new EditManager();
         viewManager = new ViewManager(this, editManager);
-        viewManager.lock();
 
         onNewIntent(getIntent());
     }
@@ -128,7 +127,9 @@ public class EditorActivity extends Activity {
     private void load() {
         if (editManager.hasPageId()) viewManager.loadPageToEdit(editManager.getPageId());
         else if (savedInstanceState != null) restore(savedInstanceState);
-        else viewManager.setState(ViewManager.STATE_CHOOSE_ACTION);
+        else {
+            viewManager.setState(ViewManager.STATE_CHOOSE_ACTION);
+        }
     }
 
     public void button(View view) {

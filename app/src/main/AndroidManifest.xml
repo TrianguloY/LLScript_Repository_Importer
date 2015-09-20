@@ -97,8 +97,8 @@
                 <category android:name="android.intent.category.BROWSABLE" />
 
                 <data
-                    android:host="www.pierrox.net"
-                    android:pathPattern="/android/applications/lightning_launcher/wiki/doku\\.php"
+                    android:host="www.lightninglauncher.com"
+                    android:pathPattern="/wiki/doku\\.php"
                     android:scheme="http" />
                 <!-- \\?id\\=script\\_.* -->
             </intent-filter>

@@ -165,29 +165,30 @@ public final class RPCManager {
     public static void getChangedSubscriptions(final SharedPreferences sharedPref, Listener<List<String>> listener) {
         final int timestamp = sharedPref.getInt(Utils.getString(R.string.pref_timestamp), 0);
         final Set<String> subscriptions = Utils.getSetFromPref(sharedPref, Utils.getString(R.string.pref_subscriptions));
-        if (subscriptions.size() > 0) {
-            new ListenedTask<List<String>>(listener) {
-                @Override
-                protected Result<List<String>> doInBackground(Void... voids) {
-                    try {
-                        if (init()) {
-                            List<PageChange> changes = client.getRecentChanges(timestamp);
-                            List<String> changedSubs = new ArrayList<>();
-                            for (PageChange change : changes) {
-                                String page = change.pageId().substring(Utils.getString(R.string.prefix_script).length());
-                                if (subscriptions.contains(page)) {
-                                    changedSubs.add(page);
-                                }
+        if (subscriptions.size() > 0) new ListenedTask<List<String>>(listener) {
+            @Override
+            protected Result<List<String>> doInBackground(Void... voids) {
+                try {
+                    if (init()) {
+                        List<PageChange> changes = client.getRecentChanges(timestamp);
+                        List<String> changedSubs = new ArrayList<>();
+                        for (PageChange change : changes) {
+                            String page = change.pageId();
+                            if (page.startsWith(Utils.getString(R.string.prefix_script))) {
+                                page = page.substring(Utils.getString(R.string.prefix_script).length());
                             }
-                            return new Result<>(RESULT_OK, changedSubs);
+                            if (subscriptions.contains(page)) {
+                                changedSubs.add(page);
+                            }
                         }
-                    } catch (DokuException e) {
-                        e.printStackTrace();
+                        return new Result<>(RESULT_OK, changedSubs);
                     }
-                    return new Result<>(RESULT_NETWORK_ERROR);
+                } catch (DokuException e) {
+                    e.printStackTrace();
                 }
-            }.execute();
-        }
+                return new Result<>(RESULT_NETWORK_ERROR);
+            }
+        }.execute();
     }
 
     public static void setTimestampToCurrent(final SharedPreferences sharedPref, Listener<Integer> listener) {

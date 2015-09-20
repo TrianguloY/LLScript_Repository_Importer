@@ -25,7 +25,7 @@ public final class PageCacheManager {
         initialized = true;
         Context context = Utils.getContext();
         directory = new File(context.getCacheDir(),"html");
-        if (!directory.mkdirs()) throw new FatalFileException();
+        directory.mkdirs();
         gson = new Gson();
     }
 

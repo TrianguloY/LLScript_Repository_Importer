@@ -1,7 +1,6 @@
 package com.trianguloy.llscript.repository.editor;
 
 import android.app.ActionBar;
-import android.app.Activity;
 import android.content.DialogInterface;
 import android.content.SharedPreferences;
 import android.os.Build;
@@ -69,8 +68,9 @@ class ViewManager extends Lock {
         switch (state) {
             case STATE_CHOOSE_ACTION:
                 context.setContentView(R.layout.activity_select_action);
-                if (RPCManager.isLoggedIn() > RPCManager.NOT_LOGGED_IN)
+                if (RPCManager.isLoggedIn() > RPCManager.NOT_LOGGED_IN) {
                     ((TextView) context.findViewById(R.id.textUser)).setText(context.getString(R.string.text_LoggedInAs) + " " + RPCManager.getUser());
+                }
                 break;
             case STATE_CREATE:
                 context.setContentView(R.layout.activity_create);
@@ -95,6 +95,7 @@ class ViewManager extends Lock {
             if (showActionBar) bar.show();
             else bar.hide();
         }
+        unlock();
     }
 
     public int getState() {
@@ -261,7 +262,7 @@ class ViewManager extends Lock {
         RPCManager.getPage(editManager.getPageId(), new RPCManager.Listener<String>() {
             @Override
             public void onResult(RPCManager.Result<String> result) {
-                if (result.getStatus() == Activity.RESULT_OK) {
+                if (result.getStatus() == RPCManager.RESULT_OK) {
                     String r = result.getResult();
                     if (r == null || r.equals("")) {
                         if (selected.level >= 0) {
@@ -370,7 +371,9 @@ class ViewManager extends Lock {
                     setState(STATE_CHOOSE_ACTION);
                 }
             });
-        } else setState(STATE_CHOOSE_ACTION);
+        } else {
+            setState(STATE_CHOOSE_ACTION);
+        }
     }
 
     void editPage() {

@@ -148,18 +148,18 @@
 
     <!-- http links -->
     <string name="link_repository">
-        http://www.pierrox.net/android/applications/lightning_launcher/wiki/doku.php?id=script_repository
+        http://www.lightninglauncher.com/wiki/doku.php?id=script_repository
     </string>
-    <string name="link_server">http://www.pierrox.net</string>
+    <string name="link_server">http://www.lightninglauncher.com</string>
     <string name="link_scriptPagePrefix">
-        http://www.pierrox.net/android/applications/lightning_launcher/wiki/doku.php?id=script_
+        http://www.lightninglauncher.com/wiki/doku.php?id=script_
     </string>
     <string name="link_playStorePrefix">https://play.google.com/store/apps/details?id=</string>
     <string name="link_register">
-        http://www.pierrox.net/android/applications/lightning_launcher/wiki/doku.php?do=register
+        http://www.lightninglauncher.com/wiki/doku.php?do=register
     </string>
     <string name="link_xmlrpc">
-        http://www.pierrox.net/android/applications/lightning_launcher/wiki/lib/exe/xmlrpc.php
+        http://www.lightninglauncher.com/wiki/lib/exe/xmlrpc.php
     </string>
 
     <!-- Toasts (others) -->

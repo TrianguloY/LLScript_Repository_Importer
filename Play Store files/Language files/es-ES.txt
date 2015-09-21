@@ -1,4 +1,3 @@
-_Title_
 Repository Importer - LLScript
 
 
@@ -30,6 +29,13 @@ https://github.com/TrianguloY/LLScript_Repository_Importer
 
 
 _Changes_
+V 1.9
+Actualizado a la nueva dirección del servidor, cambiado tambien el protocolo de conexión
+Añadidos más ajustes
+Importar scripts en segundo plano
+Pequeños arreglos
+Muchos cambios internos (irrelevantes para el usuario)
+
 V 1.8
 Arreglado: Problemas de páginas sin cargar
 Mejorado: Abrir en aplicacion externa

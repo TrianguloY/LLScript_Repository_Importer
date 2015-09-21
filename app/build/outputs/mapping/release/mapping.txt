@@ -1535,106 +1535,36 @@ com.trianguloy.llscript.repository.BootBroadcastReceiver -> com.trianguloy.llscr
     void <init>() -> <init>
     void onReceive(android.content.Context,android.content.Intent) -> onReceive
 com.trianguloy.llscript.repository.Constants -> com.trianguloy.llscript.repository.a:
-    java.lang.String[] beginning -> a
-    java.lang.String[] scriptSelectors -> b
-    java.lang.String[] packages -> c
-    java.lang.String installedPackage -> d
+    java.lang.String[] PACKAGES -> a
+    java.lang.String installedPackage -> b
     void <clinit>() -> <clinit>
-com.trianguloy.llscript.repository.IntentHandle -> com.trianguloy.llscript.repository.IntentHandle:
-    void <init>() -> <init>
-    void onCreate(android.os.Bundle) -> onCreate
-    void openWebViewer() -> a
-    void openWebViewer(java.lang.String,boolean) -> a
-com.trianguloy.llscript.repository.IntentHandle$1 -> com.trianguloy.llscript.repository.b:
-    com.trianguloy.llscript.repository.IntentHandle this$0 -> a
-    void <init>(com.trianguloy.llscript.repository.IntentHandle) -> <init>
-    void onClose() -> a
-com.trianguloy.llscript.repository.RepositoryImporter -> com.trianguloy.llscript.repository.RepositoryImporter:
-    void <init>() -> <init>
-    void onCreate() -> onCreate
-    void setTheme(android.app.Activity,android.content.SharedPreferences) -> a
-com.trianguloy.llscript.repository.ScriptImporter -> com.trianguloy.llscript.repository.ScriptImporter:
-    void <init>() -> <init>
-    int onStartCommand(android.content.Intent,int,int) -> onStartCommand
-    android.os.IBinder onBind(android.content.Intent) -> onBind
-    void installScript(java.lang.String,java.lang.String,int,android.content.ComponentName,boolean) -> a
-    void runScriptInBackground(int,java.lang.String) -> a
-    void runScriptInBackground(java.lang.String) -> a
-com.trianguloy.llscript.repository.auth.AccountAuthenticator -> com.trianguloy.llscript.repository.auth.a:
-    android.content.Context context -> a
-    void <init>(android.content.Context) -> <init>
-    android.os.Bundle editProperties(android.accounts.AccountAuthenticatorResponse,java.lang.String) -> editProperties
-    android.os.Bundle addAccount(android.accounts.AccountAuthenticatorResponse,java.lang.String,java.lang.String,java.lang.String[],android.os.Bundle) -> addAccount
-    android.os.Bundle confirmCredentials(android.accounts.AccountAuthenticatorResponse,android.accounts.Account,android.os.Bundle) -> confirmCredentials
-    android.os.Bundle getAuthToken(android.accounts.AccountAuthenticatorResponse,android.accounts.Account,java.lang.String,android.os.Bundle) -> getAuthToken
-    java.lang.String getAuthTokenLabel(java.lang.String) -> getAuthTokenLabel
-    android.os.Bundle updateCredentials(android.accounts.AccountAuthenticatorResponse,android.accounts.Account,java.lang.String,android.os.Bundle) -> updateCredentials
-    android.os.Bundle hasFeatures(android.accounts.AccountAuthenticatorResponse,android.accounts.Account,java.lang.String[]) -> hasFeatures
-    android.os.Bundle bundleIntent(android.content.Intent) -> a
-com.trianguloy.llscript.repository.auth.AuthenticationService -> com.trianguloy.llscript.repository.auth.AuthenticationService:
-    void <init>() -> <init>
-    android.os.IBinder onBind(android.content.Intent) -> onBind
-com.trianguloy.llscript.repository.auth.AuthenticationUtils -> com.trianguloy.llscript.repository.auth.b:
-    void findAccount(android.app.Activity,com.trianguloy.llscript.repository.auth.AuthenticationUtils$Listener,boolean) -> a
-    void resetPassword(android.content.Context) -> a
-    boolean hasPassword(android.content.Context) -> b
-    void set(android.content.Context,android.accounts.Account,java.lang.String,java.lang.String,java.lang.String) -> a
-com.trianguloy.llscript.repository.auth.AuthenticationUtils$1 -> com.trianguloy.llscript.repository.auth.c:
-    android.accounts.AccountManager val$accountManager -> a
-    android.app.Activity val$context -> b
-    com.trianguloy.llscript.repository.auth.AuthenticationUtils$Listener val$listener -> c
-    void <init>(android.accounts.AccountManager,android.app.Activity,com.trianguloy.llscript.repository.auth.AuthenticationUtils$Listener) -> <init>
-    void run(android.accounts.AccountManagerFuture) -> run
-com.trianguloy.llscript.repository.auth.AuthenticationUtils$Listener -> com.trianguloy.llscript.repository.auth.b$a:
-    void onComplete(java.lang.String,java.lang.String) -> a
-    void onError() -> a
-com.trianguloy.llscript.repository.auth.AuthenticatorActivity -> com.trianguloy.llscript.repository.auth.AuthenticatorActivity:
-    java.lang.String accountType -> a
-    android.accounts.Account account -> b
-    void <init>() -> <init>
-    void onCreate(android.os.Bundle) -> onCreate
-    void button(android.view.View) -> button
-    void login() -> a
-    void setAccount(java.lang.String,java.lang.String) -> a
-    void register() -> b
-    void access$000(com.trianguloy.llscript.repository.auth.AuthenticatorActivity,java.lang.String,java.lang.String) -> a
-com.trianguloy.llscript.repository.auth.AuthenticatorActivity$1 -> com.trianguloy.llscript.repository.auth.d:
-    java.lang.String val$user -> a
-    boolean val$savePw -> b
-    java.lang.String val$password -> c
-    com.trianguloy.llscript.repository.auth.AuthenticatorActivity this$0 -> d
-    void <init>(com.trianguloy.llscript.repository.auth.AuthenticatorActivity,java.lang.String,boolean,java.lang.String) -> <init>
-    void onResult(com.trianguloy.llscript.repository.web.RPCManager$Result) -> a
-com.trianguloy.llscript.repository.editor.CategoryAdapter -> com.trianguloy.llscript.repository.editor.a:
-    void <init>(android.content.Context,java.util.List) -> <init>
-    void bindView(int,android.view.View) -> a
-    android.view.View getDropDownView(int,android.view.View,android.view.ViewGroup) -> getDropDownView
-com.trianguloy.llscript.repository.editor.EditorActivity -> com.trianguloy.llscript.repository.editor.EditorActivity:
-    android.content.SharedPreferences sharedPref -> b
-    java.lang.String pageId -> c
-    android.widget.EditText editor -> d
-    com.trianguloy.llscript.repository.editor.Repository repository -> e
-    com.trianguloy.llscript.repository.editor.Repository$RepositoryCategory addTo -> f
+com.trianguloy.llscript.repository.EditorActivity -> com.trianguloy.llscript.repository.EditorActivity:
+    android.content.SharedPreferences sharedPref -> a
+    java.lang.String pageId -> b
+    android.widget.EditText editor -> c
+    com.trianguloy.llscript.repository.RPCService rpcService -> d
+    com.trianguloy.llscript.repository.internal.Repository repository -> e
+    com.trianguloy.llscript.repository.internal.Repository$RepositoryCategory addTo -> f
     java.lang.String pageName -> g
     java.lang.String pageText -> h
     java.util.Random random -> i
     int state -> j
-    com.trianguloy.llscript.repository.editor.EditorActivity$Lock lock -> k
-    int textHash -> l
-    boolean isTemplate -> m
-    android.os.Bundle savedInstanceState -> n
-    boolean $assertionsDisabled -> a
+    android.content.ServiceConnection connection -> k
+    com.trianguloy.llscript.repository.EditorActivity$Lock lock -> l
+    int textHash -> m
+    boolean isTemplate -> n
+    android.os.Bundle savedInstanceState -> o
     void <init>() -> <init>
     void onCreate(android.os.Bundle) -> onCreate
-    void onNewIntent(android.content.Intent) -> onNewIntent
     boolean onOptionsItemSelected(android.view.MenuItem) -> onOptionsItemSelected
     void onBackPressed() -> onBackPressed
     boolean changedCode() -> a
     void setContentView(int) -> setContentView
+    void onDestroy() -> onDestroy
     boolean onCreateOptionsMenu(android.view.Menu) -> onCreateOptionsMenu
     void onSaveInstanceState(android.os.Bundle) -> onSaveInstanceState
     void restore(android.os.Bundle) -> a
-    void load() -> b
+    void connect() -> b
     void findAccount(boolean) -> a
     void login(java.lang.String,java.lang.String) -> a
     void button(android.view.View) -> button
@@ -1651,120 +1581,430 @@ com.trianguloy.llscript.repository.editor.EditorActivity -> com.trianguloy.llscr
     void loadPageToEdit(java.lang.String) -> b
     void showPageEditor(java.lang.String) -> c
     void surroundOrAdd(java.lang.String,java.lang.String,java.lang.String) -> a
-    void access$000(com.trianguloy.llscript.repository.editor.EditorActivity,java.lang.String,java.lang.String) -> a
-    void access$100(com.trianguloy.llscript.repository.editor.EditorActivity,boolean) -> a
-    void access$200(com.trianguloy.llscript.repository.editor.EditorActivity) -> a
-    com.trianguloy.llscript.repository.editor.EditorActivity$Lock access$300(com.trianguloy.llscript.repository.editor.EditorActivity) -> b
-    com.trianguloy.llscript.repository.editor.Repository access$402(com.trianguloy.llscript.repository.editor.EditorActivity,com.trianguloy.llscript.repository.editor.Repository) -> a
-    com.trianguloy.llscript.repository.editor.Repository access$400(com.trianguloy.llscript.repository.editor.EditorActivity) -> c
-    void access$500(com.trianguloy.llscript.repository.editor.EditorActivity,dw.xmlrpc.Page[]) -> a
-    int access$602(com.trianguloy.llscript.repository.editor.EditorActivity,int) -> a
-    com.trianguloy.llscript.repository.editor.Repository$RepositoryCategory access$700(com.trianguloy.llscript.repository.editor.EditorActivity) -> d
-    java.lang.String access$800(com.trianguloy.llscript.repository.editor.EditorActivity) -> e
-    java.lang.String access$900(com.trianguloy.llscript.repository.editor.EditorActivity) -> f
-    com.trianguloy.llscript.repository.editor.Repository$RepositoryCategory access$702(com.trianguloy.llscript.repository.editor.EditorActivity,com.trianguloy.llscript.repository.editor.Repository$RepositoryCategory) -> a
-    java.lang.String access$902(com.trianguloy.llscript.repository.editor.EditorActivity,java.lang.String) -> a
-    void access$1000(com.trianguloy.llscript.repository.editor.EditorActivity,java.lang.String) -> b
-    android.content.SharedPreferences access$1100(com.trianguloy.llscript.repository.editor.EditorActivity) -> g
-    void access$1200(com.trianguloy.llscript.repository.editor.EditorActivity,java.lang.String) -> c
-    void access$1300(com.trianguloy.llscript.repository.editor.EditorActivity,java.lang.String) -> d
-    void <clinit>() -> <clinit>
-com.trianguloy.llscript.repository.editor.EditorActivity$1 -> com.trianguloy.llscript.repository.editor.b:
-    com.trianguloy.llscript.repository.editor.EditorActivity this$0 -> a
-    void <init>(com.trianguloy.llscript.repository.editor.EditorActivity) -> <init>
+    com.trianguloy.llscript.repository.RPCService access$002(com.trianguloy.llscript.repository.EditorActivity,com.trianguloy.llscript.repository.RPCService) -> a
+    com.trianguloy.llscript.repository.RPCService access$000(com.trianguloy.llscript.repository.EditorActivity) -> a
+    android.os.Bundle access$100(com.trianguloy.llscript.repository.EditorActivity) -> b
+    void access$200(com.trianguloy.llscript.repository.EditorActivity,android.os.Bundle) -> a
+    void access$300(com.trianguloy.llscript.repository.EditorActivity,boolean) -> a
+    com.trianguloy.llscript.repository.EditorActivity$Lock access$400(com.trianguloy.llscript.repository.EditorActivity) -> c
+    com.trianguloy.llscript.repository.internal.Repository access$502(com.trianguloy.llscript.repository.EditorActivity,com.trianguloy.llscript.repository.internal.Repository) -> a
+    com.trianguloy.llscript.repository.internal.Repository access$500(com.trianguloy.llscript.repository.EditorActivity) -> d
+    void access$600(com.trianguloy.llscript.repository.EditorActivity,dw.xmlrpc.Page[]) -> a
+    int access$702(com.trianguloy.llscript.repository.EditorActivity,int) -> a
+    com.trianguloy.llscript.repository.internal.Repository$RepositoryCategory access$800(com.trianguloy.llscript.repository.EditorActivity) -> e
+    java.lang.String access$900(com.trianguloy.llscript.repository.EditorActivity) -> f
+    java.lang.String access$1000(com.trianguloy.llscript.repository.EditorActivity) -> g
+    com.trianguloy.llscript.repository.internal.Repository$RepositoryCategory access$802(com.trianguloy.llscript.repository.EditorActivity,com.trianguloy.llscript.repository.internal.Repository$RepositoryCategory) -> a
+    java.lang.String access$1002(com.trianguloy.llscript.repository.EditorActivity,java.lang.String) -> a
+    void access$1100(com.trianguloy.llscript.repository.EditorActivity,java.lang.String) -> b
+    android.content.SharedPreferences access$1200(com.trianguloy.llscript.repository.EditorActivity) -> h
+    void access$1300(com.trianguloy.llscript.repository.EditorActivity,java.lang.String) -> c
+    void access$1400(com.trianguloy.llscript.repository.EditorActivity,java.lang.String) -> d
+com.trianguloy.llscript.repository.EditorActivity$1 -> com.trianguloy.llscript.repository.b:
+    com.trianguloy.llscript.repository.EditorActivity this$0 -> a
+    void <init>(com.trianguloy.llscript.repository.EditorActivity) -> <init>
     void onClick(android.content.DialogInterface,int) -> onClick
-com.trianguloy.llscript.repository.editor.EditorActivity$10 -> com.trianguloy.llscript.repository.editor.c:
+com.trianguloy.llscript.repository.EditorActivity$10 -> com.trianguloy.llscript.repository.c:
     java.lang.String val$tempId -> a
-    com.trianguloy.llscript.repository.editor.EditorActivity this$0 -> b
-    void <init>(com.trianguloy.llscript.repository.editor.EditorActivity,java.lang.String) -> <init>
+    com.trianguloy.llscript.repository.EditorActivity this$0 -> b
+    void <init>(com.trianguloy.llscript.repository.EditorActivity,java.lang.String) -> <init>
+    void onResult(java.lang.Boolean) -> a
+    void onResult(java.lang.Object) -> a
+com.trianguloy.llscript.repository.EditorActivity$11 -> com.trianguloy.llscript.repository.d:
+    java.lang.String val$tempId -> a
+    com.trianguloy.llscript.repository.EditorActivity this$0 -> b
+    void <init>(com.trianguloy.llscript.repository.EditorActivity,java.lang.String) -> <init>
     void onPageFinished(android.webkit.WebView,java.lang.String) -> onPageFinished
     boolean shouldOverrideUrlLoading(android.webkit.WebView,java.lang.String) -> shouldOverrideUrlLoading
-com.trianguloy.llscript.repository.editor.EditorActivity$11 -> com.trianguloy.llscript.repository.editor.d:
-    com.trianguloy.llscript.repository.editor.EditorActivity this$0 -> a
-    void <init>(com.trianguloy.llscript.repository.editor.EditorActivity) -> <init>
+com.trianguloy.llscript.repository.EditorActivity$12 -> com.trianguloy.llscript.repository.e:
+    com.trianguloy.llscript.repository.EditorActivity this$0 -> a
+    void <init>(com.trianguloy.llscript.repository.EditorActivity) -> <init>
     boolean onLongClick(android.view.View) -> onLongClick
-com.trianguloy.llscript.repository.editor.EditorActivity$12 -> com.trianguloy.llscript.repository.editor.e:
+com.trianguloy.llscript.repository.EditorActivity$13 -> com.trianguloy.llscript.repository.f:
     android.webkit.WebView val$webView -> a
-    com.trianguloy.llscript.repository.editor.EditorActivity this$0 -> b
-    void <init>(com.trianguloy.llscript.repository.editor.EditorActivity,android.webkit.WebView) -> <init>
-    void onFinish(com.trianguloy.llscript.repository.web.DownloadTask$Result) -> a
+    com.trianguloy.llscript.repository.EditorActivity this$0 -> b
+    void <init>(com.trianguloy.llscript.repository.EditorActivity,android.webkit.WebView) -> <init>
+    void onFinish(java.lang.String) -> a
     void onError() -> a
-com.trianguloy.llscript.repository.editor.EditorActivity$13 -> com.trianguloy.llscript.repository.editor.f:
-    com.trianguloy.llscript.repository.editor.EditorActivity this$0 -> a
-    void <init>(com.trianguloy.llscript.repository.editor.EditorActivity) -> <init>
+com.trianguloy.llscript.repository.EditorActivity$14 -> com.trianguloy.llscript.repository.g:
+    com.trianguloy.llscript.repository.EditorActivity this$0 -> a
+    void <init>(com.trianguloy.llscript.repository.EditorActivity) -> <init>
     int compare(java.lang.String,java.lang.String) -> a
     int compare(java.lang.Object,java.lang.Object) -> compare
-com.trianguloy.llscript.repository.editor.EditorActivity$14 -> com.trianguloy.llscript.repository.editor.g:
+com.trianguloy.llscript.repository.EditorActivity$15 -> com.trianguloy.llscript.repository.h:
     android.widget.ArrayAdapter val$adapter -> a
-    com.trianguloy.llscript.repository.editor.EditorActivity this$0 -> b
-    void <init>(com.trianguloy.llscript.repository.editor.EditorActivity,android.widget.ArrayAdapter) -> <init>
+    com.trianguloy.llscript.repository.EditorActivity this$0 -> b
+    void <init>(com.trianguloy.llscript.repository.EditorActivity,android.widget.ArrayAdapter) -> <init>
     void onClick(android.content.DialogInterface,int) -> onClick
-com.trianguloy.llscript.repository.editor.EditorActivity$15 -> com.trianguloy.llscript.repository.editor.h:
-    com.trianguloy.llscript.repository.editor.EditorActivity this$0 -> a
-    void <init>(com.trianguloy.llscript.repository.editor.EditorActivity) -> <init>
-    void onResult(com.trianguloy.llscript.repository.web.RPCManager$Result) -> a
-com.trianguloy.llscript.repository.editor.EditorActivity$2 -> com.trianguloy.llscript.repository.editor.i:
-    com.trianguloy.llscript.repository.editor.EditorActivity this$0 -> a
-    void <init>(com.trianguloy.llscript.repository.editor.EditorActivity) -> <init>
+com.trianguloy.llscript.repository.EditorActivity$16 -> com.trianguloy.llscript.repository.i:
+    com.trianguloy.llscript.repository.EditorActivity this$0 -> a
+    void <init>(com.trianguloy.llscript.repository.EditorActivity) -> <init>
+    void onResult(java.lang.String) -> a
+    void onResult(java.lang.Object) -> a
+com.trianguloy.llscript.repository.EditorActivity$2 -> com.trianguloy.llscript.repository.j:
+    com.trianguloy.llscript.repository.EditorActivity this$0 -> a
+    void <init>(com.trianguloy.llscript.repository.EditorActivity) -> <init>
+    void onServiceConnected(android.content.ComponentName,android.os.IBinder) -> onServiceConnected
+    void onServiceDisconnected(android.content.ComponentName) -> onServiceDisconnected
+com.trianguloy.llscript.repository.EditorActivity$3 -> com.trianguloy.llscript.repository.k:
+    com.trianguloy.llscript.repository.EditorActivity this$0 -> a
+    void <init>(com.trianguloy.llscript.repository.EditorActivity) -> <init>
+    void run(android.accounts.AccountManagerFuture) -> run
+com.trianguloy.llscript.repository.EditorActivity$4 -> com.trianguloy.llscript.repository.l:
+    com.trianguloy.llscript.repository.EditorActivity this$0 -> a
+    void <init>(com.trianguloy.llscript.repository.EditorActivity) -> <init>
+    void onResult(java.lang.Integer) -> a
+    void onResult(java.lang.Object) -> a
+com.trianguloy.llscript.repository.EditorActivity$4$1 -> com.trianguloy.llscript.repository.m:
+    com.trianguloy.llscript.repository.EditorActivity$4 this$1 -> a
+    void <init>(com.trianguloy.llscript.repository.EditorActivity$4) -> <init>
+    void onClick(android.content.DialogInterface,int) -> onClick
+com.trianguloy.llscript.repository.EditorActivity$4$2 -> com.trianguloy.llscript.repository.n:
+    com.trianguloy.llscript.repository.EditorActivity$4 this$1 -> a
+    void <init>(com.trianguloy.llscript.repository.EditorActivity$4) -> <init>
+    void onClick(android.content.DialogInterface,int) -> onClick
+com.trianguloy.llscript.repository.EditorActivity$5 -> com.trianguloy.llscript.repository.o:
+    com.trianguloy.llscript.repository.EditorActivity this$0 -> a
+    void <init>(com.trianguloy.llscript.repository.EditorActivity) -> <init>
+    void onResult(java.lang.String) -> a
+    void onResult(java.lang.Object) -> a
+com.trianguloy.llscript.repository.EditorActivity$6 -> com.trianguloy.llscript.repository.p:
+    com.trianguloy.llscript.repository.EditorActivity this$0 -> a
+    void <init>(com.trianguloy.llscript.repository.EditorActivity) -> <init>
+    void onResult(java.util.List) -> a
+    void onResult(java.lang.Object) -> a
+com.trianguloy.llscript.repository.EditorActivity$7 -> com.trianguloy.llscript.repository.q:
+    com.trianguloy.llscript.repository.EditorActivity this$0 -> a
+    void <init>(com.trianguloy.llscript.repository.EditorActivity) -> <init>
+    void onClick(android.content.DialogInterface,int) -> onClick
+com.trianguloy.llscript.repository.EditorActivity$8 -> com.trianguloy.llscript.repository.r:
+    java.lang.String val$text -> a
+    com.trianguloy.llscript.repository.EditorActivity this$0 -> b
+    void <init>(com.trianguloy.llscript.repository.EditorActivity,java.lang.String) -> <init>
+    void onResult(java.lang.Boolean) -> a
+    void onResult(java.lang.Object) -> a
+com.trianguloy.llscript.repository.EditorActivity$8$1 -> com.trianguloy.llscript.repository.s:
+    com.trianguloy.llscript.repository.EditorActivity$8 this$1 -> a
+    void <init>(com.trianguloy.llscript.repository.EditorActivity$8) -> <init>
+    void onResult(java.lang.Boolean) -> a
+    void onResult(java.lang.Object) -> a
+com.trianguloy.llscript.repository.EditorActivity$9 -> com.trianguloy.llscript.repository.t:
+    com.trianguloy.llscript.repository.internal.Repository$RepositoryCategory val$selected -> a
+    com.trianguloy.llscript.repository.EditorActivity this$0 -> b
+    void <init>(com.trianguloy.llscript.repository.EditorActivity,com.trianguloy.llscript.repository.internal.Repository$RepositoryCategory) -> <init>
+    void onResult(java.lang.String) -> a
+    void onResult(java.lang.Object) -> a
+com.trianguloy.llscript.repository.EditorActivity$9$1 -> com.trianguloy.llscript.repository.u:
+    com.trianguloy.llscript.repository.EditorActivity$9 this$1 -> a
+    void <init>(com.trianguloy.llscript.repository.EditorActivity$9) -> <init>
+    void onResult(java.lang.String) -> a
+    void onResult(java.lang.Object) -> a
+com.trianguloy.llscript.repository.EditorActivity$Lock -> com.trianguloy.llscript.repository.EditorActivity$a:
+    boolean state -> a
+    com.trianguloy.llscript.repository.EditorActivity this$0 -> b
+    void <init>(com.trianguloy.llscript.repository.EditorActivity) -> <init>
+    void lock() -> a
+    void unlock() -> b
+    boolean isLocked() -> c
+com.trianguloy.llscript.repository.IntentHandle -> com.trianguloy.llscript.repository.IntentHandle:
+    void <init>() -> <init>
+    void onCreate(android.os.Bundle) -> onCreate
+    void openWebViewer() -> a
+    void openWebViewer(java.lang.String,boolean) -> a
+com.trianguloy.llscript.repository.IntentHandle$1 -> com.trianguloy.llscript.repository.v:
+    com.trianguloy.llscript.repository.IntentHandle this$0 -> a
+    void <init>(com.trianguloy.llscript.repository.IntentHandle) -> <init>
+    void onClose() -> a
+com.trianguloy.llscript.repository.RPCService -> com.trianguloy.llscript.repository.RPCService:
+    boolean login -> a
+    dw.xmlrpc.DokuJClient client -> b
+    java.lang.String username -> c
+    void <init>() -> <init>
+    void onCreate() -> onCreate
+    int onStartCommand(android.content.Intent,int,int) -> onStartCommand
+    android.os.IBinder onBind(android.content.Intent) -> onBind
+    boolean isLoggedIn() -> a
+    void login(java.lang.String,java.lang.String,com.trianguloy.llscript.repository.RPCService$Listener) -> a
+    java.lang.String getUser() -> b
+    void getPage(java.lang.String,com.trianguloy.llscript.repository.RPCService$Listener) -> a
+    void getAllPages(com.trianguloy.llscript.repository.RPCService$Listener) -> a
+    void putPage(java.lang.String,java.lang.String,com.trianguloy.llscript.repository.RPCService$Listener) -> b
+    dw.xmlrpc.DokuJClient access$002(com.trianguloy.llscript.repository.RPCService,dw.xmlrpc.DokuJClient) -> a
+    boolean access$102(com.trianguloy.llscript.repository.RPCService,boolean) -> a
+    dw.xmlrpc.DokuJClient access$000(com.trianguloy.llscript.repository.RPCService) -> a
+    boolean access$100(com.trianguloy.llscript.repository.RPCService) -> b
+com.trianguloy.llscript.repository.RPCService$1 -> com.trianguloy.llscript.repository.w:
+    java.lang.String val$user -> a
+    java.lang.String val$password -> b
+    com.trianguloy.llscript.repository.RPCService$Listener val$listener -> c
+    com.trianguloy.llscript.repository.RPCService this$0 -> d
+    void <init>(com.trianguloy.llscript.repository.RPCService,java.lang.String,java.lang.String,com.trianguloy.llscript.repository.RPCService$Listener) -> <init>
+    java.lang.Integer doInBackground(java.lang.Void[]) -> a
+    void onPostExecute(java.lang.Integer) -> a
+    void onPostExecute(java.lang.Object) -> onPostExecute
+    java.lang.Object doInBackground(java.lang.Object[]) -> doInBackground
+com.trianguloy.llscript.repository.RPCService$2 -> com.trianguloy.llscript.repository.x:
+    java.lang.String val$id -> a
+    com.trianguloy.llscript.repository.RPCService$Listener val$listener -> b
+    com.trianguloy.llscript.repository.RPCService this$0 -> c
+    void <init>(com.trianguloy.llscript.repository.RPCService,java.lang.String,com.trianguloy.llscript.repository.RPCService$Listener) -> <init>
+    java.lang.String doInBackground(java.lang.Void[]) -> a
+    void onPostExecute(java.lang.String) -> a
+    void onPostExecute(java.lang.Object) -> onPostExecute
+    java.lang.Object doInBackground(java.lang.Object[]) -> doInBackground
+com.trianguloy.llscript.repository.RPCService$3 -> com.trianguloy.llscript.repository.y:
+    com.trianguloy.llscript.repository.RPCService$Listener val$listener -> a
+    com.trianguloy.llscript.repository.RPCService this$0 -> b
+    void <init>(com.trianguloy.llscript.repository.RPCService,com.trianguloy.llscript.repository.RPCService$Listener) -> <init>
+    java.util.List doInBackground(java.lang.Void[]) -> a
+    void onPostExecute(java.util.List) -> a
+    void onPostExecute(java.lang.Object) -> onPostExecute
+    java.lang.Object doInBackground(java.lang.Object[]) -> doInBackground
+com.trianguloy.llscript.repository.RPCService$4 -> com.trianguloy.llscript.repository.z:
+    java.lang.String val$id -> a
+    java.lang.String val$text -> b
+    com.trianguloy.llscript.repository.RPCService$Listener val$listener -> c
+    com.trianguloy.llscript.repository.RPCService this$0 -> d
+    void <init>(com.trianguloy.llscript.repository.RPCService,java.lang.String,java.lang.String,com.trianguloy.llscript.repository.RPCService$Listener) -> <init>
+    java.lang.Boolean doInBackground(java.lang.Void[]) -> a
+    void onPostExecute(java.lang.Boolean) -> a
+    void onPostExecute(java.lang.Object) -> onPostExecute
+    java.lang.Object doInBackground(java.lang.Object[]) -> doInBackground
+com.trianguloy.llscript.repository.RPCService$Listener -> com.trianguloy.llscript.repository.RPCService$a:
+    void onResult(java.lang.Object) -> a
+com.trianguloy.llscript.repository.RPCService$LocalBinder -> com.trianguloy.llscript.repository.RPCService$b:
+    com.trianguloy.llscript.repository.RPCService this$0 -> a
+    void <init>(com.trianguloy.llscript.repository.RPCService) -> <init>
+    com.trianguloy.llscript.repository.RPCService getService() -> a
+com.trianguloy.llscript.repository.RPCService$UnauthorizedException -> com.trianguloy.llscript.repository.RPCService$c:
+    void <init>() -> <init>
+    void <init>(com.trianguloy.llscript.repository.RPCService$1) -> <init>
+com.trianguloy.llscript.repository.RepositoryImporter -> com.trianguloy.llscript.repository.RepositoryImporter:
+    void <init>() -> <init>
+    void onCreate() -> onCreate
+    void setTheme(android.app.Activity,android.content.SharedPreferences) -> a
+com.trianguloy.llscript.repository.ScriptImporter -> com.trianguloy.llscript.repository.ScriptImporter:
+    void <init>() -> <init>
+    int onStartCommand(android.content.Intent,int,int) -> onStartCommand
+    android.os.IBinder onBind(android.content.Intent) -> onBind
+    void installScript(java.lang.String,java.lang.String,int,android.content.ComponentName,boolean) -> a
+    void runExecutorInBackground(java.lang.String) -> a
+    void runScriptInBackground(java.lang.String) -> b
+com.trianguloy.llscript.repository.SettingsActivity -> com.trianguloy.llscript.repository.SettingsActivity:
+    void <init>() -> <init>
+    void onCreate(android.os.Bundle) -> onCreate
+    void onResume() -> onResume
+    void onPause() -> onPause
+    void setupActionBar() -> a
+    boolean onOptionsItemSelected(android.view.MenuItem) -> onOptionsItemSelected
+    boolean onIsMultiPane() -> onIsMultiPane
+    boolean isXLargeTablet(android.content.Context) -> a
+    boolean isSimplePreferences(android.content.Context) -> b
+    void onSharedPreferenceChanged(android.content.SharedPreferences,java.lang.String) -> onSharedPreferenceChanged
+    void stopService() -> b
+    void startService(android.content.SharedPreferences) -> a
+com.trianguloy.llscript.repository.SettingsActivity$1 -> com.trianguloy.llscript.repository.aa:
+    android.accounts.AccountManager val$accountManager -> a
+    android.accounts.Account[] val$accounts -> b
+    android.preference.Preference val$resetPwPref -> c
+    com.trianguloy.llscript.repository.SettingsActivity this$0 -> d
+    void <init>(com.trianguloy.llscript.repository.SettingsActivity,android.accounts.AccountManager,android.accounts.Account[],android.preference.Preference) -> <init>
+    boolean onPreferenceClick(android.preference.Preference) -> onPreferenceClick
+com.trianguloy.llscript.repository.SettingsActivity$2 -> com.trianguloy.llscript.repository.ab:
+    com.trianguloy.llscript.repository.SettingsActivity this$0 -> a
+    void <init>(com.trianguloy.llscript.repository.SettingsActivity) -> <init>
+    boolean onPreferenceChange(android.preference.Preference,java.lang.Object) -> onPreferenceChange
+com.trianguloy.llscript.repository.SubscriptionsActivity -> com.trianguloy.llscript.repository.SubscriptionsActivity:
+    android.content.SharedPreferences sharedPref -> a
+    java.util.Map subsMap -> b
+    android.widget.ArrayAdapter adapter -> c
+    void <init>() -> <init>
+    void onCreate(android.os.Bundle) -> onCreate
+    void onItemClick(android.widget.AdapterView,android.view.View,int,long) -> onItemClick
+    android.widget.ArrayAdapter access$000(com.trianguloy.llscript.repository.SubscriptionsActivity) -> a
+    java.util.Map access$100(com.trianguloy.llscript.repository.SubscriptionsActivity) -> b
+    android.content.SharedPreferences access$200(com.trianguloy.llscript.repository.SubscriptionsActivity) -> c
+com.trianguloy.llscript.repository.SubscriptionsActivity$1 -> com.trianguloy.llscript.repository.ac:
+    int val$position -> a
+    com.trianguloy.llscript.repository.SubscriptionsActivity this$0 -> b
+    void <init>(com.trianguloy.llscript.repository.SubscriptionsActivity,int) -> <init>
+    void onClick(android.content.DialogInterface,int) -> onClick
+com.trianguloy.llscript.repository.WebService -> com.trianguloy.llscript.repository.WebService:
+    android.content.SharedPreferences sharedPref -> a
+    int counter -> b
+    void <init>() -> <init>
+    void onCreate() -> onCreate
+    int onStartCommand(android.content.Intent,int,int) -> onStartCommand
+    android.os.IBinder onBind(android.content.Intent) -> onBind
+    void getChangedSubscriptions(com.trianguloy.llscript.repository.WebService$Listener) -> a
+    void check() -> a
+    void pushNotification(java.util.List) -> a
+    int access$010(com.trianguloy.llscript.repository.WebService) -> a
+    int access$000(com.trianguloy.llscript.repository.WebService) -> b
+    android.content.SharedPreferences access$100(com.trianguloy.llscript.repository.WebService) -> c
+    void access$200(com.trianguloy.llscript.repository.WebService,java.util.List) -> a
+com.trianguloy.llscript.repository.WebService$1 -> com.trianguloy.llscript.repository.ad:
+    java.lang.String p -> f
+    java.lang.String val$page -> a
+    java.util.Map val$pages -> b
+    java.util.ArrayList val$updated -> c
+    com.trianguloy.llscript.repository.WebService$Listener val$listener -> d
+    com.trianguloy.llscript.repository.WebService this$0 -> e
+    void <init>(com.trianguloy.llscript.repository.WebService,java.lang.String,java.util.Map,java.util.ArrayList,com.trianguloy.llscript.repository.WebService$Listener) -> <init>
+    void onFinish(java.lang.String) -> a
+    void onError() -> a
+com.trianguloy.llscript.repository.WebService$2 -> com.trianguloy.llscript.repository.ae:
+    com.trianguloy.llscript.repository.WebService this$0 -> a
+    void <init>(com.trianguloy.llscript.repository.WebService) -> <init>
+    void onFinish(java.util.List) -> a
+    void onError() -> a
+com.trianguloy.llscript.repository.WebService$Listener -> com.trianguloy.llscript.repository.WebService$a:
+    void onFinish(java.util.List) -> a
+    void onError() -> a
+com.trianguloy.llscript.repository.WebService$LocalBinder -> com.trianguloy.llscript.repository.WebService$b:
+    com.trianguloy.llscript.repository.WebService this$0 -> a
+    void <init>(com.trianguloy.llscript.repository.WebService) -> <init>
+    com.trianguloy.llscript.repository.WebService getService() -> a
+com.trianguloy.llscript.repository.auth.AccountAuthenticator -> com.trianguloy.llscript.repository.auth.a:
+    android.content.Context context -> a
+    void <init>(android.content.Context) -> <init>
+    android.os.Bundle editProperties(android.accounts.AccountAuthenticatorResponse,java.lang.String) -> editProperties
+    android.os.Bundle addAccount(android.accounts.AccountAuthenticatorResponse,java.lang.String,java.lang.String,java.lang.String[],android.os.Bundle) -> addAccount
+    android.os.Bundle confirmCredentials(android.accounts.AccountAuthenticatorResponse,android.accounts.Account,android.os.Bundle) -> confirmCredentials
+    android.os.Bundle getAuthToken(android.accounts.AccountAuthenticatorResponse,android.accounts.Account,java.lang.String,android.os.Bundle) -> getAuthToken
+    java.lang.String getAuthTokenLabel(java.lang.String) -> getAuthTokenLabel
+    android.os.Bundle updateCredentials(android.accounts.AccountAuthenticatorResponse,android.accounts.Account,java.lang.String,android.os.Bundle) -> updateCredentials
+    android.os.Bundle hasFeatures(android.accounts.AccountAuthenticatorResponse,android.accounts.Account,java.lang.String[]) -> hasFeatures
+    android.os.Bundle bundleIntent(android.content.Intent) -> a
+com.trianguloy.llscript.repository.auth.AuthenticationService -> com.trianguloy.llscript.repository.auth.AuthenticationService:
+    void <init>() -> <init>
+    android.os.IBinder onBind(android.content.Intent) -> onBind
+com.trianguloy.llscript.repository.auth.AuthenticationUtils -> com.trianguloy.llscript.repository.auth.b:
+    void login(android.app.Activity,com.trianguloy.llscript.repository.auth.AuthenticationUtils$Listener) -> a
+    void login(android.app.Activity,com.trianguloy.llscript.repository.auth.AuthenticationUtils$Listener,boolean) -> b
+    void findAccount(android.app.Activity,com.trianguloy.llscript.repository.auth.AuthenticationUtils$InternalListener,boolean) -> a
+    void resetPassword(android.content.Context) -> a
+    boolean hasPassword(android.content.Context) -> b
+    void set(android.content.Context,android.accounts.Account,java.lang.String,java.lang.String,java.lang.String) -> a
+    void access$000(android.app.Activity,com.trianguloy.llscript.repository.auth.AuthenticationUtils$Listener,boolean) -> a
+com.trianguloy.llscript.repository.auth.AuthenticationUtils$1 -> com.trianguloy.llscript.repository.auth.c:
+    android.app.Activity val$context -> a
+    com.trianguloy.llscript.repository.auth.AuthenticationUtils$Listener val$listener -> b
+    void <init>(android.app.Activity,com.trianguloy.llscript.repository.auth.AuthenticationUtils$Listener) -> <init>
     void onComplete(java.lang.String,java.lang.String) -> a
     void onError() -> a
-com.trianguloy.llscript.repository.editor.EditorActivity$3 -> com.trianguloy.llscript.repository.editor.j:
-    com.trianguloy.llscript.repository.editor.EditorActivity this$0 -> a
-    void <init>(com.trianguloy.llscript.repository.editor.EditorActivity) -> <init>
+com.trianguloy.llscript.repository.auth.AuthenticationUtils$1$1 -> com.trianguloy.llscript.repository.auth.d:
+    com.trianguloy.llscript.repository.auth.AuthenticationUtils$1 this$0 -> a
+    void <init>(com.trianguloy.llscript.repository.auth.AuthenticationUtils$1) -> <init>
     void onResult(com.trianguloy.llscript.repository.web.RPCManager$Result) -> a
-com.trianguloy.llscript.repository.editor.EditorActivity$3$1 -> com.trianguloy.llscript.repository.editor.k:
-    com.trianguloy.llscript.repository.editor.EditorActivity$3 this$1 -> a
-    void <init>(com.trianguloy.llscript.repository.editor.EditorActivity$3) -> <init>
+com.trianguloy.llscript.repository.auth.AuthenticationUtils$1$1$1 -> com.trianguloy.llscript.repository.auth.e:
+    com.trianguloy.llscript.repository.auth.AuthenticationUtils$1$1 this$1 -> a
+    void <init>(com.trianguloy.llscript.repository.auth.AuthenticationUtils$1$1) -> <init>
     void onClick(android.content.DialogInterface,int) -> onClick
-com.trianguloy.llscript.repository.editor.EditorActivity$3$2 -> com.trianguloy.llscript.repository.editor.l:
-    com.trianguloy.llscript.repository.editor.EditorActivity$3 this$1 -> a
-    void <init>(com.trianguloy.llscript.repository.editor.EditorActivity$3) -> <init>
+com.trianguloy.llscript.repository.auth.AuthenticationUtils$1$1$2 -> com.trianguloy.llscript.repository.auth.f:
+    com.trianguloy.llscript.repository.auth.AuthenticationUtils$1$1 this$1 -> a
+    void <init>(com.trianguloy.llscript.repository.auth.AuthenticationUtils$1$1) -> <init>
     void onClick(android.content.DialogInterface,int) -> onClick
-com.trianguloy.llscript.repository.editor.EditorActivity$4 -> com.trianguloy.llscript.repository.editor.m:
-    com.trianguloy.llscript.repository.editor.EditorActivity this$0 -> a
-    void <init>(com.trianguloy.llscript.repository.editor.EditorActivity) -> <init>
+com.trianguloy.llscript.repository.auth.AuthenticationUtils$2 -> com.trianguloy.llscript.repository.auth.g:
+    android.accounts.AccountManager val$accountManager -> a
+    android.app.Activity val$context -> b
+    com.trianguloy.llscript.repository.auth.AuthenticationUtils$InternalListener val$listener -> c
+    void <init>(android.accounts.AccountManager,android.app.Activity,com.trianguloy.llscript.repository.auth.AuthenticationUtils$InternalListener) -> <init>
+    void run(android.accounts.AccountManagerFuture) -> run
+com.trianguloy.llscript.repository.auth.AuthenticationUtils$InternalListener -> com.trianguloy.llscript.repository.auth.b$a:
+    void onComplete(java.lang.String,java.lang.String) -> a
+    void onError() -> a
+com.trianguloy.llscript.repository.auth.AuthenticationUtils$Listener -> com.trianguloy.llscript.repository.auth.b$b:
+    void onComplete() -> a
+    void onError() -> b
+com.trianguloy.llscript.repository.auth.AuthenticatorActivity -> com.trianguloy.llscript.repository.auth.AuthenticatorActivity:
+    java.lang.String accountType -> a
+    android.accounts.Account account -> b
+    void <init>() -> <init>
+    void onCreate(android.os.Bundle) -> onCreate
+    void button(android.view.View) -> button
+    void login() -> a
+    void setAccount(java.lang.String,java.lang.String) -> a
+    void register() -> b
+    void access$000(com.trianguloy.llscript.repository.auth.AuthenticatorActivity,java.lang.String,java.lang.String) -> a
+com.trianguloy.llscript.repository.auth.AuthenticatorActivity$1 -> com.trianguloy.llscript.repository.auth.h:
+    java.lang.String val$user -> a
+    boolean val$savePw -> b
+    java.lang.String val$password -> c
+    com.trianguloy.llscript.repository.auth.AuthenticatorActivity this$0 -> d
+    void <init>(com.trianguloy.llscript.repository.auth.AuthenticatorActivity,java.lang.String,boolean,java.lang.String) -> <init>
     void onResult(com.trianguloy.llscript.repository.web.RPCManager$Result) -> a
-com.trianguloy.llscript.repository.editor.EditorActivity$5 -> com.trianguloy.llscript.repository.editor.n:
-    com.trianguloy.llscript.repository.editor.EditorActivity this$0 -> a
-    void <init>(com.trianguloy.llscript.repository.editor.EditorActivity) -> <init>
-    void onResult(com.trianguloy.llscript.repository.web.RPCManager$Result) -> a
-com.trianguloy.llscript.repository.editor.EditorActivity$6 -> com.trianguloy.llscript.repository.editor.o:
-    com.trianguloy.llscript.repository.editor.EditorActivity this$0 -> a
-    void <init>(com.trianguloy.llscript.repository.editor.EditorActivity) -> <init>
-    void onClick(android.content.DialogInterface,int) -> onClick
-com.trianguloy.llscript.repository.editor.EditorActivity$7 -> com.trianguloy.llscript.repository.editor.p:
-    java.lang.String val$text -> a
-    com.trianguloy.llscript.repository.editor.EditorActivity this$0 -> b
-    void <init>(com.trianguloy.llscript.repository.editor.EditorActivity,java.lang.String) -> <init>
-    void onResult(com.trianguloy.llscript.repository.web.RPCManager$Result) -> a
-com.trianguloy.llscript.repository.editor.EditorActivity$7$1 -> com.trianguloy.llscript.repository.editor.q:
-    com.trianguloy.llscript.repository.editor.EditorActivity$7 this$1 -> a
-    void <init>(com.trianguloy.llscript.repository.editor.EditorActivity$7) -> <init>
-    void onResult(com.trianguloy.llscript.repository.web.RPCManager$Result) -> a
-com.trianguloy.llscript.repository.editor.EditorActivity$8 -> com.trianguloy.llscript.repository.editor.r:
-    com.trianguloy.llscript.repository.editor.Repository$RepositoryCategory val$selected -> a
-    com.trianguloy.llscript.repository.editor.EditorActivity this$0 -> b
-    void <init>(com.trianguloy.llscript.repository.editor.EditorActivity,com.trianguloy.llscript.repository.editor.Repository$RepositoryCategory) -> <init>
-    void onResult(com.trianguloy.llscript.repository.web.RPCManager$Result) -> a
-com.trianguloy.llscript.repository.editor.EditorActivity$8$1 -> com.trianguloy.llscript.repository.editor.s:
-    com.trianguloy.llscript.repository.editor.EditorActivity$8 this$1 -> a
-    void <init>(com.trianguloy.llscript.repository.editor.EditorActivity$8) -> <init>
-    void onResult(com.trianguloy.llscript.repository.web.RPCManager$Result) -> a
-com.trianguloy.llscript.repository.editor.EditorActivity$9 -> com.trianguloy.llscript.repository.editor.t:
-    java.lang.String val$tempId -> a
-    com.trianguloy.llscript.repository.editor.EditorActivity this$0 -> b
-    void <init>(com.trianguloy.llscript.repository.editor.EditorActivity,java.lang.String) -> <init>
-    void onResult(com.trianguloy.llscript.repository.web.RPCManager$Result) -> a
-com.trianguloy.llscript.repository.editor.EditorActivity$Lock -> com.trianguloy.llscript.repository.editor.EditorActivity$a:
-    boolean state -> a
+com.trianguloy.llscript.repository.editor.CategoryAdapter -> com.trianguloy.llscript.repository.editor.a:
+    void <init>(android.content.Context,java.util.List) -> <init>
+    void bindView(int,android.view.View) -> a
+    android.view.View getDropDownView(int,android.view.View,android.view.ViewGroup) -> getDropDownView
+com.trianguloy.llscript.repository.editor.EditManager -> com.trianguloy.llscript.repository.editor.b:
+    android.widget.EditText editText -> a
+    int textHash -> b
+    java.lang.String text -> c
+    java.lang.String pageName -> d
+    java.lang.String pageId -> e
+    void <init>() -> <init>
+    void assign(android.widget.EditText) -> a
+    void assign(android.widget.EditText,java.lang.String) -> a
+    java.lang.String getText() -> a
+    void surroundOrAdd(java.lang.String,java.lang.String,java.lang.String) -> a
+    boolean isChanged() -> b
+    void saved() -> c
+    void toBundle(android.os.Bundle) -> a
+    void fromBundle(android.os.Bundle) -> b
+    java.lang.String getPageName() -> d
+    void setPageName(java.lang.String) -> a
+    java.lang.String getPageId() -> e
+    void setPageId(java.lang.String) -> b
+    boolean hasPageId() -> f
+    void action(int) -> action
+    java.lang.String access$002(com.trianguloy.llscript.repository.editor.EditManager,java.lang.String) -> a
+    android.widget.EditText access$100(com.trianguloy.llscript.repository.editor.EditManager) -> a
+    android.widget.EditText access$102(com.trianguloy.llscript.repository.editor.EditManager,android.widget.EditText) -> a
+com.trianguloy.llscript.repository.editor.EditManager$1 -> com.trianguloy.llscript.repository.editor.c:
+    com.trianguloy.llscript.repository.editor.EditManager this$0 -> a
+    void <init>(com.trianguloy.llscript.repository.editor.EditManager) -> <init>
+    void onViewAttachedToWindow(android.view.View) -> onViewAttachedToWindow
+    void onViewDetachedFromWindow(android.view.View) -> onViewDetachedFromWindow
+com.trianguloy.llscript.repository.editor.EditorActivity -> com.trianguloy.llscript.repository.editor.EditorActivity:
+    android.content.SharedPreferences sharedPref -> c
+    android.os.Bundle savedInstanceState -> d
+    com.trianguloy.llscript.repository.editor.EditManager editManager -> e
+    com.trianguloy.llscript.repository.editor.ViewManager viewManager -> a
     boolean $assertionsDisabled -> b
-    com.trianguloy.llscript.repository.editor.EditorActivity this$0 -> c
+    void <init>() -> <init>
+    void onCreate(android.os.Bundle) -> onCreate
+    void onNewIntent(android.content.Intent) -> onNewIntent
+    boolean onOptionsItemSelected(android.view.MenuItem) -> onOptionsItemSelected
+    void onBackPressed() -> onBackPressed
+    boolean onCreateOptionsMenu(android.view.Menu) -> onCreateOptionsMenu
+    void onSaveInstanceState(android.os.Bundle) -> onSaveInstanceState
+    void restore(android.os.Bundle) -> a
+    void load() -> a
+    void button(android.view.View) -> button
+    void action(android.view.View) -> action
+    void access$000(com.trianguloy.llscript.repository.editor.EditorActivity) -> a
+    void <clinit>() -> <clinit>
+com.trianguloy.llscript.repository.editor.EditorActivity$1 -> com.trianguloy.llscript.repository.editor.d:
+    com.trianguloy.llscript.repository.editor.EditorActivity this$0 -> a
+    void <init>(com.trianguloy.llscript.repository.editor.EditorActivity) -> <init>
+    void onComplete() -> a
+    void onError() -> b
+com.trianguloy.llscript.repository.editor.EditorActivity$2 -> com.trianguloy.llscript.repository.editor.e:
+    com.trianguloy.llscript.repository.editor.EditorActivity this$0 -> a
+    void <init>(com.trianguloy.llscript.repository.editor.EditorActivity) -> <init>
+    void onClick(android.content.DialogInterface,int) -> onClick
+com.trianguloy.llscript.repository.editor.Lock -> com.trianguloy.llscript.repository.editor.f:
+    com.trianguloy.llscript.repository.editor.EditorActivity activity -> b
+    boolean state -> c
+    boolean $assertionsDisabled -> a
     void <init>(com.trianguloy.llscript.repository.editor.EditorActivity) -> <init>
     void lock() -> a
     void unlock() -> b
     boolean isLocked() -> c
     void <clinit>() -> <clinit>
-com.trianguloy.llscript.repository.editor.Repository -> com.trianguloy.llscript.repository.editor.u:
+com.trianguloy.llscript.repository.editor.Repository -> com.trianguloy.llscript.repository.editor.g:
     int tableStartLine -> a
     int tableEndLine -> b
     java.util.List categories -> c
@@ -1774,13 +2014,127 @@ com.trianguloy.llscript.repository.editor.Repository -> com.trianguloy.llscript.
     java.lang.String getText() -> a
     void addScript(com.trianguloy.llscript.repository.editor.Repository$RepositoryCategory,java.lang.String,java.lang.String) -> a
     java.util.List getCategories() -> b
-com.trianguloy.llscript.repository.editor.Repository$RepositoryCategory -> com.trianguloy.llscript.repository.editor.u$a:
+com.trianguloy.llscript.repository.editor.Repository$RepositoryCategory -> com.trianguloy.llscript.repository.editor.g$a:
     java.lang.String name -> a
     int line -> b
     int level -> c
     void <init>(java.lang.String,int,int) -> <init>
 com.trianguloy.llscript.repository.editor.ThemedImageButton -> com.trianguloy.llscript.repository.editor.ThemedImageButton:
     void <init>(android.content.Context,android.util.AttributeSet) -> <init>
+com.trianguloy.llscript.repository.editor.ViewManager -> com.trianguloy.llscript.repository.editor.h:
+    com.trianguloy.llscript.repository.editor.EditorActivity context -> c
+    int state -> d
+    com.trianguloy.llscript.repository.editor.EditManager editManager -> e
+    boolean isTemplate -> f
+    java.util.Random random -> g
+    android.content.SharedPreferences sharedPref -> h
+    com.trianguloy.llscript.repository.editor.Repository repository -> i
+    com.trianguloy.llscript.repository.editor.Repository$RepositoryCategory addTo -> j
+    boolean $assertionsDisabled -> b
+    void <init>(com.trianguloy.llscript.repository.editor.EditorActivity,com.trianguloy.llscript.repository.editor.EditManager) -> <init>
+    void setState(int) -> a
+    int getState() -> d
+    void toBundle(android.os.Bundle,com.trianguloy.llscript.repository.editor.EditManager) -> a
+    void fromBundle(android.os.Bundle) -> a
+    void showPageEditor(java.lang.String) -> b
+    void loadPageToEdit(java.lang.String) -> a
+    void showSelectPageToEdit(dw.xmlrpc.Page[]) -> a
+    void preview() -> e
+    void showPreview(java.lang.String) -> c
+    void commitCreate() -> f
+    void savePage() -> g
+    void cancelEdit() -> h
+    void editPage() -> i
+    void createPage() -> j
+    void editTemplate() -> k
+    boolean changedCode() -> l
+    void access$000(com.trianguloy.llscript.repository.editor.ViewManager,java.lang.String) -> a
+    com.trianguloy.llscript.repository.editor.EditManager access$100(com.trianguloy.llscript.repository.editor.ViewManager) -> a
+    com.trianguloy.llscript.repository.editor.EditorActivity access$200(com.trianguloy.llscript.repository.editor.ViewManager) -> b
+    android.content.SharedPreferences access$300(com.trianguloy.llscript.repository.editor.ViewManager) -> c
+    void access$400(com.trianguloy.llscript.repository.editor.ViewManager,java.lang.String) -> b
+    com.trianguloy.llscript.repository.editor.Repository$RepositoryCategory access$502(com.trianguloy.llscript.repository.editor.ViewManager,com.trianguloy.llscript.repository.editor.Repository$RepositoryCategory) -> a
+    com.trianguloy.llscript.repository.editor.Repository$RepositoryCategory access$500(com.trianguloy.llscript.repository.editor.ViewManager) -> d
+    com.trianguloy.llscript.repository.editor.Repository access$600(com.trianguloy.llscript.repository.editor.ViewManager) -> e
+    void access$700(com.trianguloy.llscript.repository.editor.ViewManager,dw.xmlrpc.Page[]) -> a
+    com.trianguloy.llscript.repository.editor.Repository access$602(com.trianguloy.llscript.repository.editor.ViewManager,com.trianguloy.llscript.repository.editor.Repository) -> a
+    void <clinit>() -> <clinit>
+com.trianguloy.llscript.repository.editor.ViewManager$1 -> com.trianguloy.llscript.repository.editor.i:
+    java.lang.String val$id -> a
+    com.trianguloy.llscript.repository.editor.ViewManager this$0 -> b
+    void <init>(com.trianguloy.llscript.repository.editor.ViewManager,java.lang.String) -> <init>
+    void onResult(com.trianguloy.llscript.repository.web.RPCManager$Result) -> a
+com.trianguloy.llscript.repository.editor.ViewManager$10 -> com.trianguloy.llscript.repository.editor.j:
+    com.trianguloy.llscript.repository.editor.ViewManager this$0 -> a
+    void <init>(com.trianguloy.llscript.repository.editor.ViewManager) -> <init>
+    void onClick(android.content.DialogInterface,int) -> onClick
+com.trianguloy.llscript.repository.editor.ViewManager$11 -> com.trianguloy.llscript.repository.editor.k:
+    com.trianguloy.llscript.repository.editor.ViewManager this$0 -> a
+    void <init>(com.trianguloy.llscript.repository.editor.ViewManager) -> <init>
+    void onResult(com.trianguloy.llscript.repository.web.RPCManager$Result) -> a
+com.trianguloy.llscript.repository.editor.ViewManager$12 -> com.trianguloy.llscript.repository.editor.l:
+    com.trianguloy.llscript.repository.editor.ViewManager this$0 -> a
+    void <init>(com.trianguloy.llscript.repository.editor.ViewManager) -> <init>
+    void onResult(com.trianguloy.llscript.repository.web.RPCManager$Result) -> a
+com.trianguloy.llscript.repository.editor.ViewManager$2 -> com.trianguloy.llscript.repository.editor.m:
+    com.trianguloy.llscript.repository.editor.ViewManager this$0 -> a
+    void <init>(com.trianguloy.llscript.repository.editor.ViewManager) -> <init>
+    int compare(java.lang.String,java.lang.String) -> a
+    int compare(java.lang.Object,java.lang.Object) -> compare
+com.trianguloy.llscript.repository.editor.ViewManager$3 -> com.trianguloy.llscript.repository.editor.n:
+    android.widget.ArrayAdapter val$adapter -> a
+    com.trianguloy.llscript.repository.editor.ViewManager this$0 -> b
+    void <init>(com.trianguloy.llscript.repository.editor.ViewManager,android.widget.ArrayAdapter) -> <init>
+    void onClick(android.content.DialogInterface,int) -> onClick
+com.trianguloy.llscript.repository.editor.ViewManager$4 -> com.trianguloy.llscript.repository.editor.o:
+    java.lang.String val$tempId -> a
+    com.trianguloy.llscript.repository.editor.ViewManager this$0 -> b
+    void <init>(com.trianguloy.llscript.repository.editor.ViewManager,java.lang.String) -> <init>
+    void onResult(com.trianguloy.llscript.repository.web.RPCManager$Result) -> a
+com.trianguloy.llscript.repository.editor.ViewManager$4$1 -> com.trianguloy.llscript.repository.editor.p:
+    com.trianguloy.llscript.repository.editor.ViewManager$4 this$1 -> a
+    void <init>(com.trianguloy.llscript.repository.editor.ViewManager$4) -> <init>
+    void onComplete() -> a
+    void onError() -> b
+com.trianguloy.llscript.repository.editor.ViewManager$5 -> com.trianguloy.llscript.repository.editor.q:
+    java.lang.String val$tempId -> a
+    com.trianguloy.llscript.repository.editor.ViewManager this$0 -> b
+    void <init>(com.trianguloy.llscript.repository.editor.ViewManager,java.lang.String) -> <init>
+    void onPageFinished(android.webkit.WebView,java.lang.String) -> onPageFinished
+    boolean shouldOverrideUrlLoading(android.webkit.WebView,java.lang.String) -> shouldOverrideUrlLoading
+com.trianguloy.llscript.repository.editor.ViewManager$6 -> com.trianguloy.llscript.repository.editor.r:
+    com.trianguloy.llscript.repository.editor.ViewManager this$0 -> a
+    void <init>(com.trianguloy.llscript.repository.editor.ViewManager) -> <init>
+    boolean onLongClick(android.view.View) -> onLongClick
+com.trianguloy.llscript.repository.editor.ViewManager$7 -> com.trianguloy.llscript.repository.editor.s:
+    android.webkit.WebView val$webView -> a
+    com.trianguloy.llscript.repository.editor.ViewManager this$0 -> b
+    void <init>(com.trianguloy.llscript.repository.editor.ViewManager,android.webkit.WebView) -> <init>
+    void onFinish(com.trianguloy.llscript.repository.web.DownloadTask$Result) -> a
+    void onError() -> a
+com.trianguloy.llscript.repository.editor.ViewManager$8 -> com.trianguloy.llscript.repository.editor.t:
+    com.trianguloy.llscript.repository.editor.Repository$RepositoryCategory val$selected -> a
+    com.trianguloy.llscript.repository.editor.ViewManager this$0 -> b
+    void <init>(com.trianguloy.llscript.repository.editor.ViewManager,com.trianguloy.llscript.repository.editor.Repository$RepositoryCategory) -> <init>
+    void onResult(com.trianguloy.llscript.repository.web.RPCManager$Result) -> a
+com.trianguloy.llscript.repository.editor.ViewManager$8$1 -> com.trianguloy.llscript.repository.editor.u:
+    com.trianguloy.llscript.repository.editor.ViewManager$8 this$1 -> a
+    void <init>(com.trianguloy.llscript.repository.editor.ViewManager$8) -> <init>
+    void onResult(com.trianguloy.llscript.repository.web.RPCManager$Result) -> a
+com.trianguloy.llscript.repository.editor.ViewManager$9 -> com.trianguloy.llscript.repository.editor.v:
+    java.lang.String val$pageId -> a
+    com.trianguloy.llscript.repository.editor.ViewManager this$0 -> b
+    void <init>(com.trianguloy.llscript.repository.editor.ViewManager,java.lang.String) -> <init>
+    void onResult(com.trianguloy.llscript.repository.web.RPCManager$Result) -> a
+com.trianguloy.llscript.repository.editor.ViewManager$9$1 -> com.trianguloy.llscript.repository.editor.w:
+    com.trianguloy.llscript.repository.editor.ViewManager$9 this$1 -> a
+    void <init>(com.trianguloy.llscript.repository.editor.ViewManager$9) -> <init>
+    void onResult(com.trianguloy.llscript.repository.web.RPCManager$Result) -> a
+com.trianguloy.llscript.repository.editor.ViewManager$9$2 -> com.trianguloy.llscript.repository.editor.x:
+    com.trianguloy.llscript.repository.editor.ViewManager$9 this$1 -> a
+    void <init>(com.trianguloy.llscript.repository.editor.ViewManager$9) -> <init>
+    void onComplete() -> a
+    void onError() -> b
 com.trianguloy.llscript.repository.internal.AppAdapter -> com.trianguloy.llscript.repository.internal.a:
     int selected -> b
     void <init>(android.content.Context,java.util.List,int) -> <init>
@@ -1822,7 +2176,11 @@ com.trianguloy.llscript.repository.internal.BaseArrayAdapter -> com.trianguloy.l
     void <init>(android.content.Context,int,java.util.List) -> <init>
     android.view.View getView(int,android.view.View,android.view.ViewGroup) -> getView
     void bindView(int,android.view.View) -> a
-com.trianguloy.llscript.repository.internal.Dialogs -> com.trianguloy.llscript.repository.internal.f:
+com.trianguloy.llscript.repository.internal.CategoryAdapter -> com.trianguloy.llscript.repository.internal.f:
+    void <init>(android.content.Context,java.util.List) -> <init>
+    void bindView(int,android.view.View) -> a
+    android.view.View getDropDownView(int,android.view.View,android.view.ViewGroup) -> getDropDownView
+com.trianguloy.llscript.repository.internal.Dialogs -> com.trianguloy.llscript.repository.internal.g:
     void badLogin(android.content.Context) -> a
     void error(android.content.Context,android.content.DialogInterface$OnClickListener,java.lang.String) -> a
     void badLogin(android.content.Context,android.content.DialogInterface$OnClickListener) -> a
@@ -1850,60 +2208,99 @@ com.trianguloy.llscript.repository.internal.Dialogs -> com.trianguloy.llscript.r
     void subscribe(android.content.Context,android.content.DialogInterface$OnClickListener) -> e
     void confirmUpdate(com.trianguloy.llscript.repository.IntentHandle,java.lang.String,java.lang.String,int) -> a
     int access$000(android.widget.CheckBox[]) -> a
-com.trianguloy.llscript.repository.internal.Dialogs$1 -> com.trianguloy.llscript.repository.internal.g:
+com.trianguloy.llscript.repository.internal.Dialogs$1 -> com.trianguloy.llscript.repository.internal.h:
     java.lang.String val$url -> a
     android.app.Activity val$context -> b
     void <init>(java.lang.String,android.app.Activity) -> <init>
     void onClick(android.content.DialogInterface,int) -> onClick
-com.trianguloy.llscript.repository.internal.Dialogs$10 -> com.trianguloy.llscript.repository.internal.h:
+com.trianguloy.llscript.repository.internal.Dialogs$10 -> com.trianguloy.llscript.repository.internal.i:
     com.trianguloy.llscript.repository.IntentHandle val$context -> a
     void <init>(com.trianguloy.llscript.repository.IntentHandle) -> <init>
     void onClick(android.content.DialogInterface,int) -> onClick
-com.trianguloy.llscript.repository.internal.Dialogs$2 -> com.trianguloy.llscript.repository.internal.i:
+com.trianguloy.llscript.repository.internal.Dialogs$2 -> com.trianguloy.llscript.repository.internal.j:
     android.content.Context val$context -> a
     void <init>(android.content.Context) -> <init>
     void onClick(android.content.DialogInterface,int) -> onClick
-com.trianguloy.llscript.repository.internal.Dialogs$3 -> com.trianguloy.llscript.repository.internal.j:
+com.trianguloy.llscript.repository.internal.Dialogs$3 -> com.trianguloy.llscript.repository.internal.k:
     com.trianguloy.llscript.repository.web.ManagedWebView val$webView -> a
     android.content.Context val$context -> b
     java.util.List val$ids -> c
     void <init>(com.trianguloy.llscript.repository.web.ManagedWebView,android.content.Context,java.util.List) -> <init>
     void onClick(android.content.DialogInterface,int) -> onClick
-com.trianguloy.llscript.repository.internal.Dialogs$4 -> com.trianguloy.llscript.repository.internal.k:
+com.trianguloy.llscript.repository.internal.Dialogs$4 -> com.trianguloy.llscript.repository.internal.l:
     com.trianguloy.llscript.repository.internal.Dialogs$OnImportListener val$onShare -> a
     android.widget.EditText val$contentText -> b
     android.widget.EditText val$nameText -> c
     android.widget.CheckBox[] val$flagsBoxes -> d
     void <init>(com.trianguloy.llscript.repository.internal.Dialogs$OnImportListener,android.widget.EditText,android.widget.EditText,android.widget.CheckBox[]) -> <init>
     void onClick(android.content.DialogInterface,int) -> onClick
-com.trianguloy.llscript.repository.internal.Dialogs$5 -> com.trianguloy.llscript.repository.internal.l:
+com.trianguloy.llscript.repository.internal.Dialogs$5 -> com.trianguloy.llscript.repository.internal.m:
     com.trianguloy.llscript.repository.internal.Dialogs$OnImportListener val$onImport -> a
     android.widget.EditText val$contentText -> b
     android.widget.EditText val$nameText -> c
     android.widget.CheckBox[] val$flagsBoxes -> d
     void <init>(com.trianguloy.llscript.repository.internal.Dialogs$OnImportListener,android.widget.EditText,android.widget.EditText,android.widget.CheckBox[]) -> <init>
     void onClick(android.content.DialogInterface,int) -> onClick
-com.trianguloy.llscript.repository.internal.Dialogs$6 -> com.trianguloy.llscript.repository.internal.m:
+com.trianguloy.llscript.repository.internal.Dialogs$6 -> com.trianguloy.llscript.repository.internal.n:
     android.content.Context val$context -> a
     void <init>(android.content.Context) -> <init>
     void onClick(android.content.DialogInterface,int) -> onClick
-com.trianguloy.llscript.repository.internal.Dialogs$7 -> com.trianguloy.llscript.repository.internal.n:
+com.trianguloy.llscript.repository.internal.Dialogs$7 -> com.trianguloy.llscript.repository.internal.o:
     android.content.Context val$context -> a
     void <init>(android.content.Context) -> <init>
     void onClick(android.content.DialogInterface,int) -> onClick
-com.trianguloy.llscript.repository.internal.Dialogs$8 -> com.trianguloy.llscript.repository.internal.o:
+com.trianguloy.llscript.repository.internal.Dialogs$8 -> com.trianguloy.llscript.repository.internal.p:
     android.content.Context val$context -> a
     void <init>(android.content.Context) -> <init>
     void onClick(android.content.DialogInterface,int) -> onClick
-com.trianguloy.llscript.repository.internal.Dialogs$9 -> com.trianguloy.llscript.repository.internal.p:
+com.trianguloy.llscript.repository.internal.Dialogs$9 -> com.trianguloy.llscript.repository.internal.q:
     com.trianguloy.llscript.repository.IntentHandle val$context -> a
     java.lang.String val$code -> b
     java.lang.String val$scriptName -> c
     int val$flags -> d
     void <init>(com.trianguloy.llscript.repository.IntentHandle,java.lang.String,java.lang.String,int) -> <init>
     void onClick(android.content.DialogInterface,int) -> onClick
-com.trianguloy.llscript.repository.internal.Dialogs$OnImportListener -> com.trianguloy.llscript.repository.internal.f$a:
+com.trianguloy.llscript.repository.internal.Dialogs$OnImportListener -> com.trianguloy.llscript.repository.internal.g$a:
     void onClick(java.lang.String,java.lang.String,int) -> a
+com.trianguloy.llscript.repository.internal.DownloadTask -> com.trianguloy.llscript.repository.internal.r:
+    com.trianguloy.llscript.repository.internal.DownloadTask$Listener listener -> a
+    void <init>(com.trianguloy.llscript.repository.internal.DownloadTask$Listener) -> <init>
+    java.lang.String doInBackground(java.lang.String[]) -> a
+    void onPostExecute(java.lang.String) -> a
+    void onPostExecute(java.lang.Object) -> onPostExecute
+    java.lang.Object doInBackground(java.lang.Object[]) -> doInBackground
+com.trianguloy.llscript.repository.internal.DownloadTask$Listener -> com.trianguloy.llscript.repository.internal.r$a:
+    void onFinish(java.lang.String) -> a
+    void onError() -> a
+com.trianguloy.llscript.repository.internal.ImportUtils -> com.trianguloy.llscript.repository.internal.s:
+    void startImport(android.app.Activity,com.trianguloy.llscript.repository.web.ManagedWebView,com.trianguloy.llscript.repository.internal.ImportUtils$Listener) -> startImport
+    java.lang.String getTextWithLineBreaks(org.jsoup.nodes.Element) -> a
+    void oneScriptFound(android.app.Activity,com.trianguloy.llscript.repository.web.ManagedWebView,com.trianguloy.llscript.repository.internal.ImportUtils$Listener,java.lang.String,java.lang.String,java.lang.String) -> a
+    void showImportScript(android.app.Activity,com.trianguloy.llscript.repository.internal.ImportUtils$Listener,java.lang.String,java.lang.String,java.lang.String) -> b
+    void sendScriptToLauncher(android.content.Context,java.lang.String,java.lang.String,int) -> c
+    void shareAsText(android.content.Context,java.lang.String,java.lang.String,int) -> d
+    void access$000(android.app.Activity,com.trianguloy.llscript.repository.internal.ImportUtils$Listener,java.lang.String,java.lang.String,java.lang.String) -> a
+    void access$100(android.content.Context,java.lang.String,java.lang.String,int) -> a
+    void access$200(android.content.Context,java.lang.String,java.lang.String,int) -> b
+com.trianguloy.llscript.repository.internal.ImportUtils$1 -> com.trianguloy.llscript.repository.internal.t:
+    android.app.Activity val$context -> a
+    com.trianguloy.llscript.repository.internal.ImportUtils$Listener val$listener -> b
+    java.util.ArrayList val$names -> c
+    java.util.ArrayList val$rawCodes -> d
+    java.lang.String val$about -> e
+    void <init>(android.app.Activity,com.trianguloy.llscript.repository.internal.ImportUtils$Listener,java.util.ArrayList,java.util.ArrayList,java.lang.String) -> <init>
+    void onClick(android.content.DialogInterface,int) -> onClick
+com.trianguloy.llscript.repository.internal.ImportUtils$2 -> com.trianguloy.llscript.repository.internal.u:
+    android.app.Activity val$context -> a
+    com.trianguloy.llscript.repository.internal.ImportUtils$Listener val$listener -> b
+    void <init>(android.app.Activity,com.trianguloy.llscript.repository.internal.ImportUtils$Listener) -> <init>
+    void onClick(java.lang.String,java.lang.String,int) -> a
+com.trianguloy.llscript.repository.internal.ImportUtils$3 -> com.trianguloy.llscript.repository.internal.v:
+    android.app.Activity val$context -> a
+    void <init>(android.app.Activity) -> <init>
+    void onClick(java.lang.String,java.lang.String,int) -> a
+com.trianguloy.llscript.repository.internal.ImportUtils$Listener -> com.trianguloy.llscript.repository.internal.s$a:
+    void importFinished() -> a
 com.trianguloy.llscript.repository.internal.PageCacheManager -> com.trianguloy.llscript.repository.internal.PageCacheManager:
     java.io.File directory -> a
     com.google.gson.Gson gson -> b
@@ -1915,10 +2312,29 @@ com.trianguloy.llscript.repository.internal.PageCacheManager -> com.trianguloy.l
     void <clinit>() -> <clinit>
 com.trianguloy.llscript.repository.internal.PageCacheManager$FatalFileException -> com.trianguloy.llscript.repository.internal.PageCacheManager$a:
     void <init>(java.lang.Exception) -> <init>
+    void <init>() -> <init>
 com.trianguloy.llscript.repository.internal.PageCacheManager$Page -> com.trianguloy.llscript.repository.internal.PageCacheManager$Page:
     int timestamp -> timestamp
     java.lang.String html -> html
     void <init>(int,java.lang.String) -> <init>
+com.trianguloy.llscript.repository.internal.Repository -> com.trianguloy.llscript.repository.internal.w:
+    int tableStartLine -> a
+    int tableEndLine -> b
+    java.util.List categories -> c
+    java.util.List lines -> d
+    void <init>(java.lang.String[]) -> <init>
+com.trianguloy.llscript.repository.internal.Repository$RepositoryCategory -> com.trianguloy.llscript.repository.internal.w$a:
+    java.lang.String name -> a
+    int line -> b
+    int level -> c
+    void <init>(java.lang.String,int,int) -> <init>
+com.trianguloy.llscript.repository.internal.ServiceManager -> com.trianguloy.llscript.repository.internal.x:
+    void startService(android.content.Context,int) -> a
+    void stopService(android.content.Context) -> a
+    android.app.PendingIntent getIntent(android.content.Context) -> b
+    android.app.AlarmManager getManager(android.content.Context) -> c
+    void bindService(android.content.Context,android.content.ServiceConnection) -> a
+    void unbindService(android.content.Context,android.content.ServiceConnection) -> b
 com.trianguloy.llscript.repository.internal.SubTextView -> com.trianguloy.llscript.repository.internal.SubTextView:
     java.lang.String key -> a
     java.lang.String text -> b
@@ -1927,27 +2343,42 @@ com.trianguloy.llscript.repository.internal.SubTextView -> com.trianguloy.llscri
     void setText(java.lang.CharSequence,android.widget.TextView$BufferType) -> setText
     java.lang.CharSequence getText() -> getText
     android.text.Editable getEditableText() -> getEditableText
-com.trianguloy.llscript.repository.internal.Utils -> com.trianguloy.llscript.repository.internal.q:
+com.trianguloy.llscript.repository.internal.Utils -> com.trianguloy.llscript.repository.internal.y:
     android.content.Context context -> a
     com.trianguloy.llscript.repository.internal.Utils$valueAndIndex findBetween(java.lang.String,java.lang.String,java.lang.String,int,boolean) -> a
     void saveSetToPref(android.content.SharedPreferences,java.lang.String,java.util.Set) -> a
     java.util.Set getSetFromPref(android.content.SharedPreferences,java.lang.String) -> a
     void saveMapToPref(android.content.SharedPreferences,java.lang.String,java.util.Map) -> a
     java.util.Map getMapFromPref(android.content.SharedPreferences,java.lang.String) -> b
-    int pageToHash(java.lang.String) -> a
     java.util.Map getAllScriptPagesAndNames(org.jsoup.nodes.Document) -> a
     java.lang.String getNameForPageFromPref(android.content.SharedPreferences,java.lang.String) -> c
-    java.lang.String getNameFromUrl(java.lang.String) -> b
+    java.lang.String getNameFromUrl(java.lang.String) -> a
     boolean checkForLauncher(android.content.Context) -> a
     void setContext(android.content.Context) -> b
     java.lang.String getString(int) -> a
     android.content.Context getContext() -> a
-com.trianguloy.llscript.repository.internal.Utils$valueAndIndex -> com.trianguloy.llscript.repository.internal.q$a:
+    void showChangedSubscriptionsIfAny(android.content.Context,com.trianguloy.llscript.repository.web.ManagedWebView) -> a
+    void showNewScriptsIfAny(android.content.Context,org.jsoup.nodes.Document,com.trianguloy.llscript.repository.web.ManagedWebView) -> a
+com.trianguloy.llscript.repository.internal.Utils$1 -> com.trianguloy.llscript.repository.internal.z:
+    android.content.SharedPreferences val$sharedPref -> a
+    android.content.Context val$context -> b
+    com.trianguloy.llscript.repository.web.ManagedWebView val$webView -> c
+    void <init>(android.content.SharedPreferences,android.content.Context,com.trianguloy.llscript.repository.web.ManagedWebView) -> <init>
+    void onResult(com.trianguloy.llscript.repository.web.RPCManager$Result) -> a
+com.trianguloy.llscript.repository.internal.Utils$NoContextException -> com.trianguloy.llscript.repository.internal.y$a:
+    void <init>() -> <init>
+com.trianguloy.llscript.repository.internal.Utils$valueAndIndex -> com.trianguloy.llscript.repository.internal.y$b:
     java.lang.String value -> a
     int from -> b
     int to -> c
     void <init>(java.lang.String,int,int) -> <init>
     void <init>() -> <init>
+com.trianguloy.llscript.repository.internal.WebClient -> com.trianguloy.llscript.repository.internal.aa:
+    void <init>() -> <init>
+    android.webkit.WebResourceResponse shouldInterceptRequest(android.webkit.WebView,java.lang.String) -> shouldInterceptRequest
+com.trianguloy.llscript.repository.loadInLauncher -> com.trianguloy.llscript.repository.loadInLauncher:
+    void <init>() -> <init>
+    void onCreate(android.os.Bundle) -> onCreate
 com.trianguloy.llscript.repository.settings.BrowserPreference -> com.trianguloy.llscript.repository.settings.BrowserPreference:
     android.content.Context context -> a
     android.content.ComponentName value -> b
@@ -1988,6 +2419,17 @@ com.trianguloy.llscript.repository.settings.SettingsActivity$2 -> com.trianguloy
     com.trianguloy.llscript.repository.settings.SettingsActivity this$0 -> a
     void <init>(com.trianguloy.llscript.repository.settings.SettingsActivity) -> <init>
     boolean onPreferenceChange(android.preference.Preference,java.lang.Object) -> onPreferenceChange
+com.trianguloy.llscript.repository.settings.SubscriptionManager -> com.trianguloy.llscript.repository.settings.d:
+    android.content.Context context -> a
+    android.view.Menu menu -> b
+    android.content.SharedPreferences sharedPref -> c
+    void <init>(android.content.Context) -> <init>
+    void subscribe(java.lang.String) -> a
+    void unsubscribe(java.lang.String) -> b
+    boolean isSubscribed(java.lang.String) -> c
+    void setSubscriptionState(int) -> a
+    void setMenu(android.view.Menu) -> a
+    void updateState(java.lang.String) -> d
 com.trianguloy.llscript.repository.settings.SubscriptionsActivity -> com.trianguloy.llscript.repository.settings.SubscriptionsActivity:
     android.content.SharedPreferences sharedPref -> a
     java.util.Set subsSet -> b
@@ -1998,7 +2440,7 @@ com.trianguloy.llscript.repository.settings.SubscriptionsActivity -> com.triangu
     android.widget.ArrayAdapter access$000(com.trianguloy.llscript.repository.settings.SubscriptionsActivity) -> a
     java.util.Set access$100(com.trianguloy.llscript.repository.settings.SubscriptionsActivity) -> b
     android.content.SharedPreferences access$200(com.trianguloy.llscript.repository.settings.SubscriptionsActivity) -> c
-com.trianguloy.llscript.repository.settings.SubscriptionsActivity$1 -> com.trianguloy.llscript.repository.settings.d:
+com.trianguloy.llscript.repository.settings.SubscriptionsActivity$1 -> com.trianguloy.llscript.repository.settings.e:
     int val$position -> a
     com.trianguloy.llscript.repository.settings.SubscriptionsActivity this$0 -> b
     void <init>(com.trianguloy.llscript.repository.settings.SubscriptionsActivity,int) -> <init>
@@ -2040,6 +2482,7 @@ com.trianguloy.llscript.repository.web.ManagedWebView -> com.trianguloy.llscript
     boolean backPossible() -> a
     void performBack() -> b
     java.lang.String getUrl() -> getUrl
+    java.lang.String getPageId() -> getPageId
     boolean hasPage() -> c
     void dropOnStackWithoutShowing(java.lang.String) -> b
     org.jsoup.nodes.Document getRepoDocument() -> getRepoDocument
@@ -2193,12 +2636,11 @@ com.trianguloy.llscript.repository.web.WebService$1 -> com.trianguloy.llscript.r
 com.trianguloy.llscript.repository.web.WebViewer -> com.trianguloy.llscript.repository.web.WebViewer:
     com.trianguloy.llscript.repository.web.ManagedWebView webView -> b
     android.widget.Button button -> c
-    android.widget.ProgressBar progressBar -> d
-    java.lang.String sentUrl -> e
-    android.content.SharedPreferences sharedPref -> f
-    java.lang.Boolean close -> g
-    android.view.Menu menu -> h
-    android.os.Bundle savedInstanceState -> i
+    java.lang.String sentUrl -> d
+    android.content.SharedPreferences sharedPref -> e
+    java.lang.Boolean close -> f
+    com.trianguloy.llscript.repository.settings.SubscriptionManager subscriptionManager -> g
+    android.os.Bundle savedInstanceState -> h
     boolean $assertionsDisabled -> a
     void <init>() -> <init>
     void onCreate(android.os.Bundle) -> onCreate
@@ -2213,10 +2655,73 @@ com.trianguloy.llscript.repository.web.WebViewer -> com.trianguloy.llscript.repo
     boolean restore(android.os.Bundle) -> a
     void init() -> b
     void initializeWeb() -> c
-    void showNewScripts(org.jsoup.nodes.Document) -> a
     void pageChanged(java.lang.String) -> a
     void startImport(android.view.View) -> startImport
-    java.lang.String getTextWithLineBreaks(org.jsoup.nodes.Element) -> a
+    boolean upgradeFromOldVersion() -> d
+    java.lang.Boolean access$002(com.trianguloy.llscript.repository.web.WebViewer,java.lang.Boolean) -> a
+    void access$100(com.trianguloy.llscript.repository.web.WebViewer,java.lang.String) -> a
+    com.trianguloy.llscript.repository.web.ManagedWebView access$200(com.trianguloy.llscript.repository.web.WebViewer) -> a
+    com.trianguloy.llscript.repository.settings.SubscriptionManager access$300(com.trianguloy.llscript.repository.web.WebViewer) -> b
+    void access$400(com.trianguloy.llscript.repository.web.WebViewer) -> c
+    void <clinit>() -> <clinit>
+com.trianguloy.llscript.repository.web.WebViewer$1 -> com.trianguloy.llscript.repository.web.t:
+    com.trianguloy.llscript.repository.web.WebViewer this$0 -> a
+    void <init>(com.trianguloy.llscript.repository.web.WebViewer) -> <init>
+    void run() -> run
+com.trianguloy.llscript.repository.web.WebViewer$2 -> com.trianguloy.llscript.repository.web.u:
+    android.widget.ProgressBar val$progressBar -> a
+    com.trianguloy.llscript.repository.web.WebViewer this$0 -> b
+    void <init>(com.trianguloy.llscript.repository.web.WebViewer,android.widget.ProgressBar) -> <init>
+    void loading(boolean) -> a
+    void pageChanged(java.lang.String) -> a
+    void repoDocumentUpdated(org.jsoup.nodes.Document) -> a
+com.trianguloy.llscript.repository.web.WebViewer$3 -> com.trianguloy.llscript.repository.web.v:
+    com.trianguloy.llscript.repository.web.WebViewer this$0 -> a
+    void <init>(com.trianguloy.llscript.repository.web.WebViewer) -> <init>
+    void importFinished() -> a
+com.trianguloy.llscript.repository.web.WebViewer$3$1 -> com.trianguloy.llscript.repository.web.w:
+    com.trianguloy.llscript.repository.web.WebViewer$3 this$1 -> a
+    void <init>(com.trianguloy.llscript.repository.web.WebViewer$3) -> <init>
+    void onClick(android.content.DialogInterface,int) -> onClick
+com.trianguloy.llscript.repository.web.WebViewer$4 -> com.trianguloy.llscript.repository.web.x:
+    com.trianguloy.llscript.repository.web.WebViewer this$0 -> a
+    void <init>(com.trianguloy.llscript.repository.web.WebViewer) -> <init>
+    void onResult(com.trianguloy.llscript.repository.web.RPCManager$Result) -> a
+com.trianguloy.llscript.repository.web.WebViewer$4$1 -> com.trianguloy.llscript.repository.web.y:
+    com.trianguloy.llscript.repository.web.WebViewer$4 this$1 -> a
+    void <init>(com.trianguloy.llscript.repository.web.WebViewer$4) -> <init>
+    void onClick(android.content.DialogInterface,int) -> onClick
+com.trianguloy.llscript.repository.webViewer -> com.trianguloy.llscript.repository.webViewer:
+    android.webkit.WebView webView -> a
+    android.widget.Button button -> b
+    android.widget.ProgressBar progressBar -> c
+    android.content.SharedPreferences sharedPref -> d
+    java.lang.Boolean close -> e
+    java.lang.String repoHtml -> f
+    java.lang.String currentHtml -> g
+    java.lang.String currentUrl -> h
+    com.trianguloy.llscript.repository.internal.DownloadTask$Listener downloadTaskListener -> i
+    java.util.Stack backStack -> j
+    int webViewPositionY -> k
+    android.view.Menu menu -> l
+    void <init>() -> <init>
+    void onCreate(android.os.Bundle) -> onCreate
+    void onNewIntent(android.content.Intent) -> onNewIntent
+    boolean onCreateOptionsMenu(android.view.Menu) -> onCreateOptionsMenu
+    boolean onOptionsItemSelected(android.view.MenuItem) -> onOptionsItemSelected
+    void onBackPressed() -> onBackPressed
+    boolean onKeyLongPress(int,android.view.KeyEvent) -> onKeyLongPress
+    void onStop() -> onStop
+    void onSaveInstanceState(android.os.Bundle) -> onSaveInstanceState
+    boolean restore(android.os.Bundle) -> a
+    void initializeWeb() -> a
+    void showNewScripts() -> b
+    void changePage(java.lang.String) -> a
+    void changePage(java.lang.String,int) -> a
+    void changePage(java.lang.String,int,boolean) -> a
+    void display() -> c
+    void showExternalPageLinkClicked(java.lang.String) -> b
+    void startImport(android.view.View) -> startImport
     void oneScriptFound(java.lang.String,java.lang.String,java.lang.String) -> a
     void showImportScript(java.lang.String,java.lang.String,java.lang.String) -> b
     void sendScriptToLauncher(java.lang.String,java.lang.String,int) -> a
@@ -2224,63 +2729,78 @@ com.trianguloy.llscript.repository.web.WebViewer -> com.trianguloy.llscript.repo
     void getChangedSubscriptions() -> d
     void subscribeToCurrent() -> e
     void unsubscribeCurrent() -> f
-    boolean isSubscribed() -> g
     void setSubscriptionState(int) -> a
-    boolean upgradeFromOldVersion() -> h
-    java.lang.Boolean access$002(com.trianguloy.llscript.repository.web.WebViewer,java.lang.Boolean) -> a
-    android.widget.ProgressBar access$100(com.trianguloy.llscript.repository.web.WebViewer) -> a
-    void access$200(com.trianguloy.llscript.repository.web.WebViewer,java.lang.String) -> a
-    void access$300(com.trianguloy.llscript.repository.web.WebViewer,org.jsoup.nodes.Document) -> a
-    void access$400(com.trianguloy.llscript.repository.web.WebViewer,java.lang.String,java.lang.String,java.lang.String) -> a
-    void access$500(com.trianguloy.llscript.repository.web.WebViewer,java.lang.String,java.lang.String,int) -> a
-    boolean access$600(com.trianguloy.llscript.repository.web.WebViewer) -> b
-    void access$700(com.trianguloy.llscript.repository.web.WebViewer) -> c
-    void access$800(com.trianguloy.llscript.repository.web.WebViewer,java.lang.String,java.lang.String,int) -> b
-    android.content.SharedPreferences access$900(com.trianguloy.llscript.repository.web.WebViewer) -> d
-    com.trianguloy.llscript.repository.web.ManagedWebView access$1000(com.trianguloy.llscript.repository.web.WebViewer) -> e
-    void access$1100(com.trianguloy.llscript.repository.web.WebViewer) -> f
-    void <clinit>() -> <clinit>
-com.trianguloy.llscript.repository.web.WebViewer$1 -> com.trianguloy.llscript.repository.web.t:
-    com.trianguloy.llscript.repository.web.WebViewer this$0 -> a
-    void <init>(com.trianguloy.llscript.repository.web.WebViewer) -> <init>
+    java.lang.Boolean access$002(com.trianguloy.llscript.repository.webViewer,java.lang.Boolean) -> a
+    android.content.SharedPreferences access$100(com.trianguloy.llscript.repository.webViewer) -> a
+    java.lang.String access$202(com.trianguloy.llscript.repository.webViewer,java.lang.String) -> a
+    java.lang.String access$300(com.trianguloy.llscript.repository.webViewer) -> b
+    java.lang.String access$402(com.trianguloy.llscript.repository.webViewer,java.lang.String) -> b
+    java.lang.String access$200(com.trianguloy.llscript.repository.webViewer) -> c
+    void access$500(com.trianguloy.llscript.repository.webViewer) -> d
+    android.widget.ProgressBar access$600(com.trianguloy.llscript.repository.webViewer) -> e
+    android.view.Menu access$700(com.trianguloy.llscript.repository.webViewer) -> f
+    void access$800(com.trianguloy.llscript.repository.webViewer) -> g
+    com.trianguloy.llscript.repository.internal.DownloadTask$Listener access$900(com.trianguloy.llscript.repository.webViewer) -> h
+    void access$1000(com.trianguloy.llscript.repository.webViewer,java.lang.String) -> c
+    int access$1100(com.trianguloy.llscript.repository.webViewer) -> i
+    android.webkit.WebView access$1200(com.trianguloy.llscript.repository.webViewer) -> j
+    void access$1300(com.trianguloy.llscript.repository.webViewer,java.lang.String,java.lang.String,java.lang.String) -> a
+    void access$1400(com.trianguloy.llscript.repository.webViewer,java.lang.String,java.lang.String,int) -> a
+    void access$1500(com.trianguloy.llscript.repository.webViewer) -> k
+    void access$1600(com.trianguloy.llscript.repository.webViewer,java.lang.String,java.lang.String,int) -> b
+    java.lang.String access$400(com.trianguloy.llscript.repository.webViewer) -> l
+com.trianguloy.llscript.repository.webViewer$1 -> com.trianguloy.llscript.repository.af:
+    com.trianguloy.llscript.repository.webViewer this$0 -> a
+    void <init>(com.trianguloy.llscript.repository.webViewer) -> <init>
     void run() -> run
-com.trianguloy.llscript.repository.web.WebViewer$2 -> com.trianguloy.llscript.repository.web.u:
-    com.trianguloy.llscript.repository.web.WebViewer this$0 -> a
-    void <init>(com.trianguloy.llscript.repository.web.WebViewer) -> <init>
-    void loading(boolean) -> a
-    void pageChanged(java.lang.String) -> a
-    void repoDocumentUpdated(org.jsoup.nodes.Document) -> a
-com.trianguloy.llscript.repository.web.WebViewer$3 -> com.trianguloy.llscript.repository.web.v:
+com.trianguloy.llscript.repository.webViewer$2 -> com.trianguloy.llscript.repository.ag:
+    com.trianguloy.llscript.repository.webViewer this$0 -> a
+    void <init>(com.trianguloy.llscript.repository.webViewer) -> <init>
+    void onFinish(java.lang.String) -> a
+    void onError() -> a
+com.trianguloy.llscript.repository.webViewer$2$1 -> com.trianguloy.llscript.repository.ah:
+    com.trianguloy.llscript.repository.webViewer$2 this$1 -> a
+    void <init>(com.trianguloy.llscript.repository.webViewer$2) -> <init>
+    void onClick(android.content.DialogInterface,int) -> onClick
+com.trianguloy.llscript.repository.webViewer$3 -> com.trianguloy.llscript.repository.ai:
+    com.trianguloy.llscript.repository.webViewer this$0 -> a
+    void <init>(com.trianguloy.llscript.repository.webViewer) -> <init>
+    boolean shouldOverrideUrlLoading(android.webkit.WebView,java.lang.String) -> shouldOverrideUrlLoading
+    void onPageFinished(android.webkit.WebView,java.lang.String) -> onPageFinished
+com.trianguloy.llscript.repository.webViewer$4 -> com.trianguloy.llscript.repository.aj:
     java.util.ArrayList val$names -> a
     java.util.ArrayList val$rawCodes -> b
     java.lang.String val$about -> c
-    com.trianguloy.llscript.repository.web.WebViewer this$0 -> d
-    void <init>(com.trianguloy.llscript.repository.web.WebViewer,java.util.ArrayList,java.util.ArrayList,java.lang.String) -> <init>
+    com.trianguloy.llscript.repository.webViewer this$0 -> d
+    void <init>(com.trianguloy.llscript.repository.webViewer,java.util.ArrayList,java.util.ArrayList,java.lang.String) -> <init>
     void onClick(android.content.DialogInterface,int) -> onClick
-com.trianguloy.llscript.repository.web.WebViewer$4 -> com.trianguloy.llscript.repository.web.w:
-    com.trianguloy.llscript.repository.web.WebViewer this$0 -> a
-    void <init>(com.trianguloy.llscript.repository.web.WebViewer) -> <init>
+com.trianguloy.llscript.repository.webViewer$5 -> com.trianguloy.llscript.repository.ak:
+    com.trianguloy.llscript.repository.webViewer this$0 -> a
+    void <init>(com.trianguloy.llscript.repository.webViewer) -> <init>
     void onClick(java.lang.String,java.lang.String,int) -> a
-com.trianguloy.llscript.repository.web.WebViewer$4$1 -> com.trianguloy.llscript.repository.web.x:
-    com.trianguloy.llscript.repository.web.WebViewer$4 this$1 -> a
-    void <init>(com.trianguloy.llscript.repository.web.WebViewer$4) -> <init>
+com.trianguloy.llscript.repository.webViewer$5$1 -> com.trianguloy.llscript.repository.al:
+    com.trianguloy.llscript.repository.webViewer$5 this$1 -> a
+    void <init>(com.trianguloy.llscript.repository.webViewer$5) -> <init>
     void onClick(android.content.DialogInterface,int) -> onClick
-com.trianguloy.llscript.repository.web.WebViewer$5 -> com.trianguloy.llscript.repository.web.y:
-    com.trianguloy.llscript.repository.web.WebViewer this$0 -> a
-    void <init>(com.trianguloy.llscript.repository.web.WebViewer) -> <init>
+com.trianguloy.llscript.repository.webViewer$6 -> com.trianguloy.llscript.repository.am:
+    com.trianguloy.llscript.repository.webViewer this$0 -> a
+    void <init>(com.trianguloy.llscript.repository.webViewer) -> <init>
     void onClick(java.lang.String,java.lang.String,int) -> a
-com.trianguloy.llscript.repository.web.WebViewer$6 -> com.trianguloy.llscript.repository.web.z:
-    com.trianguloy.llscript.repository.web.WebViewer this$0 -> a
-    void <init>(com.trianguloy.llscript.repository.web.WebViewer) -> <init>
-    void onResult(com.trianguloy.llscript.repository.web.RPCManager$Result) -> a
-com.trianguloy.llscript.repository.web.WebViewer$7 -> com.trianguloy.llscript.repository.web.aa:
-    com.trianguloy.llscript.repository.web.WebViewer this$0 -> a
-    void <init>(com.trianguloy.llscript.repository.web.WebViewer) -> <init>
-    void onResult(com.trianguloy.llscript.repository.web.RPCManager$Result) -> a
-com.trianguloy.llscript.repository.web.WebViewer$7$1 -> com.trianguloy.llscript.repository.web.ab:
-    com.trianguloy.llscript.repository.web.WebViewer$7 this$1 -> a
-    void <init>(com.trianguloy.llscript.repository.web.WebViewer$7) -> <init>
-    void onClick(android.content.DialogInterface,int) -> onClick
+com.trianguloy.llscript.repository.webViewer$7 -> com.trianguloy.llscript.repository.an:
+    android.content.Context val$context -> a
+    com.trianguloy.llscript.repository.webViewer this$0 -> b
+    void <init>(com.trianguloy.llscript.repository.webViewer,android.content.Context) -> <init>
+    void onServiceConnected(android.content.ComponentName,android.os.IBinder) -> onServiceConnected
+    void onServiceDisconnected(android.content.ComponentName) -> onServiceDisconnected
+com.trianguloy.llscript.repository.webViewer$7$1 -> com.trianguloy.llscript.repository.ao:
+    com.trianguloy.llscript.repository.webViewer$7 this$1 -> a
+    void <init>(com.trianguloy.llscript.repository.webViewer$7) -> <init>
+    void onFinish(java.util.List) -> a
+    void onError() -> a
+com.trianguloy.llscript.repository.webViewer$backClass -> com.trianguloy.llscript.repository.webViewer$a:
+    java.lang.String url -> a
+    int posY -> b
+    void <init>(java.lang.String,int) -> <init>
 de.timroes.axmlrpc.AuthenticationManager -> a.a.a.a:
     java.lang.String user -> a
     java.lang.String pass -> b

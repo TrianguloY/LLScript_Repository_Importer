@@ -29,6 +29,16 @@ https://github.com/TrianguloY/LLScript_Repository_Importer
 
 
 _Changes_
+V 1.9
+Verbessert: Neue Einstellungen
+Verbessert: Importiere Scripts im Hintergrund
+Verbessert: Netzwerknutzung verringert
+Neu: Seitennamen in Dialogen können angeklickt werden
+Fix: verwende neuen Server
+Fix: Crash in alten Androidversionen
+Kleine Verbesserungen
+Interne Veränderungen, upgedatete Abhängigkeiten
+
 V 1.8
 Fix: Seitenladefehler
 Verbessert: Öffnen externer Apps

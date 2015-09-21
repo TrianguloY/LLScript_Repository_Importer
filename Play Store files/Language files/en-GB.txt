@@ -30,11 +30,14 @@ https://github.com/TrianguloY/LLScript_Repository_Importer
 
 _Changes_
 V 1.9
-Updated to the new server address, also changed the connection protocol
-Added more settings
-Import scripts in background
+Improved: More settings
+Improved: Import scripts in background
+Improved: Reduced network usage
+New: Pages in Dialogs can be clicked
+Fixed: Updated to the new server address, also changed the connection protocol
+Fixed: Crash on old Android Versions
 Small fixes
-Lots of internal changes (unnoticeable to the user)
+Lots of internal changes (unnoticeable to the user), updated Dependencies
 
 V 1.8
 Fixed: Page not loading issues

@@ -16,7 +16,7 @@
 #   public *;
 #}
 
--keepattributes Signature,RuntimeVisibleAnnotations,AnnotationDefault,*Annotation*,InnerClasses
+-keepattributes Signature,RuntimeVisibleAnnotations,AnnotationDefault,*Annotation*,InnerClasses,SourceFile,LineNumberTable
 
 -keep public class * extends android.content.Context
 -keep class org.acra.** {*;}
@@ -25,5 +25,7 @@
 -keep interface com.google.gson.** {*;}
 -keep class dw.xmlrpc.** {*;}
 -keep interface dw.xmlrpc.** {*;}
+-keep class org.jsoup.** {*;}
+-keep interface org.jsoup.** {*;}
 -keep class com.trianguloy.llscript.repository.internal.PageCacheManager$Page {*;}
 -dontwarn **

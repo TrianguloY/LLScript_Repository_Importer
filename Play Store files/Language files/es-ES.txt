@@ -1,3 +1,4 @@
+﻿_Title_
 Repository Importer - LLScript
 
 
@@ -30,11 +31,14 @@ https://github.com/TrianguloY/LLScript_Repository_Importer
 
 _Changes_
 V 1.9
-Actualizado a la nueva dirección del servidor, cambiado tambien el protocolo de conexión
-Añadidos más ajustes
-Importar scripts en segundo plano
+Mejorado: Más ajustes
+Mejorado: Importar scripts en segundo plano
+Mejorado: Disminuido el uso de red
+Nuevo: Páginas en diálogos pueden ser pulsadas
+Arreglado: Actualizado a la nueva dirección del servidor, cambiado tambien el protocolo de conexión
+Arreglado: Crash en versiones antiguas de Android
 Pequeños arreglos
-Muchos cambios internos (irrelevantes para el usuario)
+Muchos cambios internos (irrelevantes para el usuario), dependencias actualizadas
 
 V 1.8
 Arreglado: Problemas de páginas sin cargar

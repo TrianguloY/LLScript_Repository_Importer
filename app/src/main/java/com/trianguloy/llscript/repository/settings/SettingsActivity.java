@@ -26,6 +26,7 @@ import com.trianguloy.llscript.repository.auth.AuthenticationUtils;
 import com.trianguloy.llscript.repository.internal.Dialogs;
 import com.trianguloy.llscript.repository.web.ServiceManager;
 
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
@@ -58,8 +59,8 @@ public class SettingsActivity extends PreferenceActivity implements SharedPrefer
         listPreference.setSummary(listPreference.getEntry());
         //Remove every minute check when not in debug mode
         if(!BuildConfig.DEBUG){
-            List<CharSequence> entries = Arrays.asList(listPreference.getEntries());
-            List<CharSequence> entryValues = Arrays.asList(listPreference.getEntryValues());
+            List<CharSequence> entries = new ArrayList<>(Arrays.asList(listPreference.getEntries()));
+            List<CharSequence> entryValues = new ArrayList<>(Arrays.asList(listPreference.getEntryValues()));
             entries.remove(0);
             entryValues.remove(0);
             listPreference.setEntries(entries.toArray(new CharSequence[entries.size()]));

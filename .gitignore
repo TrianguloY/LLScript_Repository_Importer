@@ -8,3 +8,4 @@ build/
 *.apk
 gradlew
 gradlew.bat
+app/build/outputs/mapping/release/mapping.txt

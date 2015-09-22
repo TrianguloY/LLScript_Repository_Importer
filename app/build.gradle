@@ -1,25 +1,32 @@
 apply plugin: 'com.android.application'
 
 android {
+    signingConfigs {
+        Debug {
+            keyAlias 'androiddebugkey'
+            keyPassword 'android'
+            storeFile file('debug.keystore')
+            storePassword 'android'
+        }
+    }
     compileSdkVersion 22
     buildToolsVersion "21.1.2"
-
     defaultConfig {
         applicationId "com.trianguloy.llscript.repository"
         minSdkVersion 9
         targetSdkVersion 22
-        versionCode 23
-        versionName "1.9.1"
+        versionCode 24
+        versionName "1.9.2"
     }
     buildTypes {
         release {
-
             minifyEnabled true
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
+            signingConfig signingConfigs.Debug
         }
-        debug{
+        debug {
             debuggable true
-            minifyEnabled true
+            minifyEnabled false
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
         }
     }

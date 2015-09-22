@@ -62,6 +62,7 @@
     <string name="summary_singleClose">If unchecked you\'ll need to double click back to close the
         app
     </string>
+    <string name="title_enableAcra">Enable Acra</string>
 
 
     <!-- alert settings -->
@@ -114,7 +115,8 @@
 
     <!--alert crash-->
     <string name="title_crash">Repository Importer has crashed</string>
-    <string name="text_crash">Please send the log to the developers. Feel free to add a comment.</string>
+    <string name="text_crash">Please send the log to the developers.</string>
+    <string name="text_comment">You can add a comment here, e.g. describe the situation in which the app crashed:</string>
 
     <!-- alert NetworkProblem -->
     <string name="text_cantConnect">Can\'t connect to server</string>
@@ -125,6 +127,7 @@
 
     <!-- alert (other) -->
     <string name="title_share">Share</string>
+    <string name="title_newScripts2">New Script(s)</string>
 
     <!-- Subscriptions -->
     <string name="title_subscribe">Subscribe</string>
@@ -193,6 +196,7 @@
     <string name="pref_directEdit">directEdit</string>
     <string name="pref_timestamp">timestamp</string>
     <string name="pref_changedSubs">changedSubs</string>
+    <string name="pref_enableAcra">acra.enable</string>
 
     <!-- {@deprecated no replacement}-->
     <string name="pref_repoHash">repoHash</string>
@@ -307,13 +311,14 @@
     <string name="key_textHash">textHash</string>
     <string name="key_isTemplate">isTemplate</string>
 
-    <!-- unsorted-->
-    <string name="dummy" tools:ignore="UnusedResources">Dummy string to force new ones to be below
-    </string>
+    <!-- intents -->
     <string name="intent_actionBackgroundReceiver">com.twofortyfouram.locale.intent.action.FIRE_SETTING</string>
     <string name="intent_backgroundReceiverClass">net.pierrox.lightning_launcher.util.FireReceiver</string>
     <string name="intent_backgroundReceiverExtraBundle">com.twofortyfouram.locale.intent.extra.BUNDLE</string>
-    <string name="title_newScripts2">New Script(s)</string>
+
+    <!-- unsorted-->
+    <string name="dummy" tools:ignore="UnusedResources">Dummy string to force new ones to be below
+    </string>
 
 
 </resources>

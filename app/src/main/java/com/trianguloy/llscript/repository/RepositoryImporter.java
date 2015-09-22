@@ -21,13 +21,14 @@ import org.acra.annotation.ReportsCrashes;
         mode = ReportingInteractionMode.DIALOG,
         resDialogTitle = R.string.title_crash,
         resDialogText = R.string.text_crash,
-        customReportContent = {ReportField.ANDROID_VERSION, ReportField.APP_VERSION_NAME, ReportField.PHONE_MODEL, ReportField.BRAND, ReportField.STACK_TRACE}
+        resDialogCommentPrompt = R.string.text_comment,
+        customReportContent = {ReportField.USER_COMMENT,ReportField.ANDROID_VERSION, ReportField.APP_VERSION_NAME, ReportField.PHONE_MODEL, ReportField.BRAND, ReportField.STACK_TRACE}
 )
 public class RepositoryImporter extends Application {
     @Override
     public void onCreate() {
         super.onCreate();
-        if(!BuildConfig.DEBUG)ACRA.init(this);
+        ACRA.init(this);
         if (PreferenceManager.getDefaultSharedPreferences(this).getBoolean(getString(R.string.key_theme), false))
             setTheme(R.style.Theme_Dark);
         Utils.setContext(this);

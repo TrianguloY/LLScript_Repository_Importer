@@ -46,7 +46,6 @@ public class SettingsActivity extends PreferenceActivity implements SharedPrefer
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
-        PreferenceManager.setDefaultValues(this, R.xml.pref_general, false);
         RepositoryImporter.setTheme(this, PreferenceManager.getDefaultSharedPreferences(this));
 
         super.onCreate(savedInstanceState);
@@ -57,14 +56,18 @@ public class SettingsActivity extends PreferenceActivity implements SharedPrefer
 
         ListPreference listPreference = (ListPreference) findPreference(getString(R.string.pref_notificationInterval));
         listPreference.setSummary(listPreference.getEntry());
-        //Remove every minute check when not in debug mode
         if(!BuildConfig.DEBUG){
+            //Remove every minute check
             List<CharSequence> entries = new ArrayList<>(Arrays.asList(listPreference.getEntries()));
             List<CharSequence> entryValues = new ArrayList<>(Arrays.asList(listPreference.getEntryValues()));
             entries.remove(0);
             entryValues.remove(0);
             listPreference.setEntries(entries.toArray(new CharSequence[entries.size()]));
             listPreference.setEntryValues(entryValues.toArray(new CharSequence[entryValues.size()]));
+            //remove enable acra preference
+            CheckBoxPreference acraPref = (CheckBoxPreference)findPreference(getString(R.string.pref_enableAcra));
+            acraPref.setChecked(true);
+            getPreferenceScreen().removePreference(acraPref);
         }
         CheckBoxPreference checkBoxPreference = (CheckBoxPreference) findPreference(getString(R.string.pref_notifications));
         listPreference.setEnabled(checkBoxPreference.isChecked());
@@ -74,7 +77,6 @@ public class SettingsActivity extends PreferenceActivity implements SharedPrefer
             @Override
             public boolean onPreferenceClick(Preference preference) {
                 AuthenticationUtils.resetPassword(SettingsActivity.this);
-                resetPwPref.setEnabled(false);
                 Toast.makeText(SettingsActivity.this, getString(R.string.toast_resetPw), Toast.LENGTH_SHORT).show();
                 return true;
             }

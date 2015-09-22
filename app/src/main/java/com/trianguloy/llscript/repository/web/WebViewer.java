@@ -301,6 +301,8 @@ public class WebViewer extends Activity {
     //return false to block loading. If blocked has to call init() when finished
     private boolean upgradeFromOldVersion() {
         SharedPreferences sharedPref = PreferenceManager.getDefaultSharedPreferences(this);
+        PreferenceManager.setDefaultValues(this, R.xml.pref_general, false);
+        if(!BuildConfig.DEBUG)sharedPref.edit().putBoolean(getString(R.string.pref_enableAcra),true).apply();
 
         if (sharedPref.contains(getString(R.string.pref_subs))) {
             Map<String, Object> map = Utils.getMapFromPref(sharedPref, getString(R.string.pref_subs));

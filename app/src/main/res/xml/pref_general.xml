@@ -13,7 +13,7 @@
             android:summary="@string/summary_subscriptions">
             <intent
                 android:action="android.intent.action.VIEW"
-                android:targetClass="com.trianguloy.llscript.repository.SubscriptionsActivity"
+                android:targetClass="com.trianguloy.llscript.repository.settings.SubscriptionsActivity"
                 android:targetPackage="com.trianguloy.llscript.repository"/>
         </Preference>
         <com.trianguloy.llscript.repository.settings.BrowserPreference

@@ -1780,9 +1780,9 @@ com.trianguloy.llscript.repository.RPCService$UnauthorizedException -> com.trian
     158:158:void <init>() -> <init>
     158:158:void <init>(com.trianguloy.llscript.repository.RPCService$1) -> <init>
 com.trianguloy.llscript.repository.RepositoryImporter -> com.trianguloy.llscript.repository.RepositoryImporter:
-    26:26:void <init>() -> <init>
-    29:34:void onCreate() -> onCreate
-    37:39:void setTheme(android.app.Activity,android.content.SharedPreferences) -> a
+    27:27:void <init>() -> <init>
+    30:35:void onCreate() -> onCreate
+    38:40:void setTheme(android.app.Activity,android.content.SharedPreferences) -> a
 com.trianguloy.llscript.repository.ScriptImporter -> com.trianguloy.llscript.repository.ScriptImporter:
     19:19:void <init>() -> <init>
     25:53:int onStartCommand(android.content.Intent,int,int) -> onStartCommand
@@ -2398,27 +2398,26 @@ com.trianguloy.llscript.repository.settings.BrowserPreference$1 -> com.triangulo
 com.trianguloy.llscript.repository.settings.SettingsActivity -> com.trianguloy.llscript.repository.settings.SettingsActivity:
     boolean $assertionsDisabled -> a
     45:45:void <init>() -> <init>
-    49:94:void onCreate(android.os.Bundle) -> onCreate
-    98:100:void onResume() -> onResume
-    104:106:void onPause() -> onPause
-    113:119:void setupActionBar() -> a
-    123:137:boolean onOptionsItemSelected(android.view.MenuItem) -> onOptionsItemSelected
-    146:146:boolean onIsMultiPane() -> onIsMultiPane
-    154:154:boolean isXLargeTablet(android.content.Context) -> a
-    166:166:boolean isSimplePreferences(android.content.Context) -> b
-    173:190:void onSharedPreferenceChanged(android.content.SharedPreferences,java.lang.String) -> onSharedPreferenceChanged
-    194:198:void stopService() -> b
-    201:207:void startService(android.content.SharedPreferences) -> a
+    49:96:void onCreate(android.os.Bundle) -> onCreate
+    100:102:void onResume() -> onResume
+    106:108:void onPause() -> onPause
+    115:121:void setupActionBar() -> a
+    125:139:boolean onOptionsItemSelected(android.view.MenuItem) -> onOptionsItemSelected
+    148:148:boolean onIsMultiPane() -> onIsMultiPane
+    156:156:boolean isXLargeTablet(android.content.Context) -> a
+    168:168:boolean isSimplePreferences(android.content.Context) -> b
+    175:192:void onSharedPreferenceChanged(android.content.SharedPreferences,java.lang.String) -> onSharedPreferenceChanged
+    196:200:void stopService() -> b
+    203:209:void startService(android.content.SharedPreferences) -> a
     44:44:void <clinit>() -> <clinit>
 com.trianguloy.llscript.repository.settings.SettingsActivity$1 -> com.trianguloy.llscript.repository.settings.b:
-    android.preference.Preference val$resetPwPref -> a
-    com.trianguloy.llscript.repository.settings.SettingsActivity this$0 -> b
-    73:73:void <init>(com.trianguloy.llscript.repository.settings.SettingsActivity,android.preference.Preference) -> <init>
-    76:79:boolean onPreferenceClick(android.preference.Preference) -> onPreferenceClick
+    com.trianguloy.llscript.repository.settings.SettingsActivity this$0 -> a
+    76:76:void <init>(com.trianguloy.llscript.repository.settings.SettingsActivity) -> <init>
+    79:81:boolean onPreferenceClick(android.preference.Preference) -> onPreferenceClick
 com.trianguloy.llscript.repository.settings.SettingsActivity$2 -> com.trianguloy.llscript.repository.settings.c:
     com.trianguloy.llscript.repository.settings.SettingsActivity this$0 -> a
-    87:87:void <init>(com.trianguloy.llscript.repository.settings.SettingsActivity) -> <init>
-    90:91:boolean onPreferenceChange(android.preference.Preference,java.lang.Object) -> onPreferenceChange
+    89:89:void <init>(com.trianguloy.llscript.repository.settings.SettingsActivity) -> <init>
+    92:93:boolean onPreferenceChange(android.preference.Preference,java.lang.Object) -> onPreferenceChange
 com.trianguloy.llscript.repository.settings.SubscriptionManager -> com.trianguloy.llscript.repository.settings.d:
     android.content.Context context -> a
     android.view.Menu menu -> b
@@ -2657,7 +2656,7 @@ com.trianguloy.llscript.repository.web.WebViewer -> com.trianguloy.llscript.repo
     223:260:void initializeWeb() -> c
     263:281:void pageChanged(java.lang.String) -> a
     286:299:void startImport(android.view.View) -> startImport
-    303:335:boolean upgradeFromOldVersion() -> d
+    303:337:boolean upgradeFromOldVersion() -> d
     47:47:java.lang.Boolean access$002(com.trianguloy.llscript.repository.web.WebViewer,java.lang.Boolean) -> a
     47:47:void access$100(com.trianguloy.llscript.repository.web.WebViewer,java.lang.String) -> a
     47:47:com.trianguloy.llscript.repository.web.ManagedWebView access$200(com.trianguloy.llscript.repository.web.WebViewer) -> a
@@ -2685,12 +2684,12 @@ com.trianguloy.llscript.repository.web.WebViewer$3$1 -> com.trianguloy.llscript.
     293:294:void onClick(android.content.DialogInterface,int) -> onClick
 com.trianguloy.llscript.repository.web.WebViewer$4 -> com.trianguloy.llscript.repository.web.x:
     com.trianguloy.llscript.repository.web.WebViewer this$0 -> a
-    318:318:void <init>(com.trianguloy.llscript.repository.web.WebViewer) -> <init>
-    321:331:void onResult(com.trianguloy.llscript.repository.web.RPCManager$Result) -> a
+    320:320:void <init>(com.trianguloy.llscript.repository.web.WebViewer) -> <init>
+    323:333:void onResult(com.trianguloy.llscript.repository.web.RPCManager$Result) -> a
 com.trianguloy.llscript.repository.web.WebViewer$4$1 -> com.trianguloy.llscript.repository.web.y:
     com.trianguloy.llscript.repository.web.WebViewer$4 this$1 -> a
-    324:324:void <init>(com.trianguloy.llscript.repository.web.WebViewer$4) -> <init>
-    327:328:void onClick(android.content.DialogInterface,int) -> onClick
+    326:326:void <init>(com.trianguloy.llscript.repository.web.WebViewer$4) -> <init>
+    329:330:void onClick(android.content.DialogInterface,int) -> onClick
 com.trianguloy.llscript.repository.webViewer -> com.trianguloy.llscript.repository.webViewer:
     android.webkit.WebView webView -> a
     android.widget.Button button -> b
@@ -6495,4 +6494,3 @@ org.jsoup.select.StructuralEvaluator$PreviousSibling -> org.jsoup.select.Structu
 org.jsoup.select.StructuralEvaluator$Root -> org.jsoup.select.StructuralEvaluator$Root:
     11:11:void <init>() -> <init>
     13:13:boolean matches(org.jsoup.nodes.Element,org.jsoup.nodes.Element) -> matches
-

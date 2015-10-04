@@ -14,7 +14,7 @@ import com.trianguloy.llscript.repository.R;
  */
 public class SubTextView extends TextView {
     private String key;
-    private String text;
+    private String text = null;
     private final Context context;
 
     public SubTextView(Context context, AttributeSet attrs) {

@@ -104,6 +104,9 @@ public class WebViewer extends Activity {
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
+        if(subscriptionManager == null) {
+            subscriptionManager = new SubscriptionManager(this);
+        }
         subscriptionManager.setMenu(menu);
         // Inflate the menu; this adds items to the action bar if it is present.
         getMenuInflater().inflate(R.menu.menu_webviewer, menu);

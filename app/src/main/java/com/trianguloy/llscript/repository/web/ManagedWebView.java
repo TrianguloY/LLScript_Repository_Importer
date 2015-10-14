@@ -230,7 +230,7 @@ public class ManagedWebView extends WebView {
     public void saveToInstanceState(Bundle savedInstanceState){
         Gson gson = new Gson();
         savedInstanceState.putString(context.getString(R.string.key_backStack), gson.toJson(backStack));
-        savedInstanceState.putString(context.getString(R.string.key_repoHtml), repoDocument.outerHtml());
+        if(repoDocument!=null)savedInstanceState.putString(context.getString(R.string.key_repoHtml), repoDocument.outerHtml());
     }
 
     public boolean restoreFromInstanceState(Bundle savedInstanceState){

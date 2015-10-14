@@ -178,7 +178,7 @@ public final class Utils {
         //checks the installed package, extreme or not
         PackageManager pm = context.getPackageManager();
         PackageInfo pi = null;
-        Constants.installedPackage = "";
+        Constants.installedPackage = null;
 
         for (String p : Constants.PACKAGES) {
             try {
@@ -190,8 +190,9 @@ public final class Utils {
             }
         }
 
-        if (Constants.installedPackage.equals("") || pi == null) {
+        if (Constants.installedPackage == null || pi == null) {
             //Non of the apps were found
+            Constants.installedPackage = null;
             Dialogs.launcherNotFound(context);
             return false;
         }
@@ -200,6 +201,7 @@ public final class Utils {
         //Checks the version of the launcher
 
         if ((pi.versionCode % Constants.VERSIONCODE_MODULO) < Constants.MINIMUM_NECESSARY_VERSION) {
+            Constants.installedPackage = null;
             Dialogs.launcherOutdated(context);
             return false;
         }

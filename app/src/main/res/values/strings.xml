@@ -100,10 +100,10 @@
 
     <!-- alert launcher checks -->
     <string name="message_outdatedLauncher">The version of the launcher is not supported.\nPlease
-        update the launcher to the latest version
+        update the launcher to the latest version.
     </string>
     <string name="message_launcherNotFound">Lightning Launcher was not found. Please install
-        Lightning Launcher for this to work
+        Lightning Launcher for this to work.
     </string>
 
     <!-- alert open in browser-->

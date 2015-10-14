@@ -66,9 +66,8 @@ public class WebViewer extends Activity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        if (!Utils.checkForLauncher(this)) {
-            return;
-        }
+        //check for launcher to find the installed one, continue even if not found
+        Utils.checkForLauncher(this);
 
         //initialize variables
         sharedPref = PreferenceManager.getDefaultSharedPreferences(this);

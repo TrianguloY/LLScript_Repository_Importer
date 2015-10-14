@@ -128,11 +128,12 @@ public final class Dialogs {
                 .show();
     }
 
-    private static AlertDialog baseLauncherProblem(final Context context) {
-        return new AlertDialog.Builder(context)
+    private static void baseLauncherProblem(final Context context, String message) {
+        AlertDialog ad =  new AlertDialog.Builder(context)
                 .setCancelable(false)
                 .setTitle(R.string.title_warning)
-                .setNeutralButton(R.string.button_ok, new DialogInterface.OnClickListener() {
+                .setMessage(message)
+                .setPositiveButton(R.string.button_ok, new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
                         Intent i = new Intent(Intent.ACTION_VIEW);
@@ -142,28 +143,24 @@ public final class Dialogs {
                         if (context instanceof Activity) ((Activity) context).finish();
                     }
                 })
+                .setNegativeButton(R.string.button_cancel, null)
                 .setIcon(R.drawable.ic_launcher)
                 .create();
+        if (context instanceof Service)
+            ad.getWindow().setType(WindowManager.LayoutParams.TYPE_SYSTEM_ALERT);
+        ad.show();
     }
 
     public static void launcherNotFound(final Context context) {
-        AlertDialog dialog = baseLauncherProblem(context);
-        dialog.setMessage(context.getString(R.string.message_launcherNotFound));
-        if (context instanceof Service)
-            dialog.getWindow().setType(WindowManager.LayoutParams.TYPE_SYSTEM_ALERT);
-        dialog.show();
+        baseLauncherProblem(context, context.getString(R.string.message_launcherNotFound));
     }
 
     public static void launcherOutdated(final Context context) {
-        AlertDialog dialog = baseLauncherProblem(context);
-        dialog.setMessage(context.getString(R.string.message_outdatedLauncher));
-        if (context instanceof Service)
-            dialog.getWindow().setType(WindowManager.LayoutParams.TYPE_SYSTEM_ALERT);
-        dialog.show();
+        baseLauncherProblem(context, context.getString(R.string.message_outdatedLauncher));
     }
 
     public static void changedSubscriptions(Context context, ManagedWebView webView,List<String> ids) {
-        baseScriptList(context,webView,ids,context.getString(R.string.title_updatedSubs));
+        baseScriptList(context, webView, ids, context.getString(R.string.title_updatedSubs));
     }
 
     private static void baseScriptList(final Context context, final ManagedWebView webView, final List<String> ids, String title){
@@ -202,7 +199,7 @@ public final class Dialogs {
                 (CheckBox) layout.findViewById(R.id.checkBox2),
                 (CheckBox) layout.findViewById(R.id.checkBox3)};
 
-        new AlertDialog.Builder(context)
+        AlertDialog ad = new AlertDialog.Builder(context)
                 .setTitle(R.string.title_importer)
                 .setIcon(R.drawable.ic_launcher)
                 .setView(layout)
@@ -218,7 +215,13 @@ public final class Dialogs {
                     }
                 })
                 .setNegativeButton(R.string.button_exit, null)
-                .show();
+                .create();
+
+        ad.show();
+
+        if(Constants.installedPackage==null){
+            ad.getButton(AlertDialog.BUTTON_POSITIVE).setEnabled(false);
+        }
     }
 
     private static int checkBoxToFlag(CheckBox[] flagsBoxes) {

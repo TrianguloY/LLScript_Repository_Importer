@@ -29,6 +29,10 @@ https://github.com/TrianguloY/LLScript_Repository_Importer
 
 
 _Changes_
+V 1.9.4
+Improved: Now you can use the app without Lightning Launcher installed/updated ('send to launcher' features won't be available)
+Fixed: crash on some devices
+
 V 1.9.3
 Fixed: crash in subscriptions activity
 

@@ -29,6 +29,10 @@ https://github.com/TrianguloY/LLScript_Repository_Importer
 
 
 _Changes_
+V 1.9.4
+Verbessert: Die App kann auch ohne Lightning Launcher benutzt werden (nur einige Features sind deaktiviert)
+Fix: Crash auf einigen Geräten
+
 V 1.9.3
 Fix: Crash in der Aboanzeige
 

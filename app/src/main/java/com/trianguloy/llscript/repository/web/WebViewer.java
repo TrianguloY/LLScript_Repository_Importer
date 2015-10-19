@@ -64,16 +64,18 @@ public class WebViewer extends Activity {
     //Application functions
     @Override
     protected void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-
-        //check for launcher to find the installed one, continue even if not found
-        Utils.checkForLauncher(this);
-
         //initialize variables
         sharedPref = PreferenceManager.getDefaultSharedPreferences(this);
         subscriptionManager = new SubscriptionManager(this);
         RepositoryImporter.setTheme(this, sharedPref);
         this.savedInstanceState = savedInstanceState;
+
+
+        super.onCreate(savedInstanceState);
+
+        //check for launcher to find the installed one, continue even if not found
+        Utils.checkForLauncher(this);
+
         if (upgradeFromOldVersion()) init();
     }
 
@@ -103,10 +105,11 @@ public class WebViewer extends Activity {
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
-        if(subscriptionManager == null) {
-            subscriptionManager = new SubscriptionManager(this);
+
+        if(subscriptionManager != null) {
+            subscriptionManager.setMenu(menu);
         }
-        subscriptionManager.setMenu(menu);
+
         // Inflate the menu; this adds items to the action bar if it is present.
         getMenuInflater().inflate(R.menu.menu_webviewer, menu);
 

@@ -45,6 +45,9 @@ public final class Dialogs {
     }
 
     private static void error(Context context, @Nullable DialogInterface.OnClickListener onClose, String message) {
+        if(context==null){
+            return;
+        }
         new AlertDialog.Builder(context)
                 .setTitle(context.getString(R.string.title_error))
                 .setNeutralButton(R.string.button_ok, onClose)

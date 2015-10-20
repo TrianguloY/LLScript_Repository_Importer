@@ -11,6 +11,7 @@ import android.webkit.WebView;
 
 import com.google.common.reflect.TypeToken;
 import com.google.gson.Gson;
+import com.trianguloy.llscript.repository.BuildConfig;
 import com.trianguloy.llscript.repository.R;
 import com.trianguloy.llscript.repository.internal.AppChooser;
 import com.trianguloy.llscript.repository.internal.Dialogs;
@@ -122,9 +123,10 @@ public class ManagedWebView extends WebView {
     public void show(final String url) {
         if (url.startsWith(context.getString(R.string.link_scriptPagePrefix))) {
             final String id = Utils.getNameFromUrl(url);
-            if(!id.equals(loadingId))cancel();
+            if (!id.equals(loadingId)) cancel();
             loadingId = id;
             if (PageCacheManager.hasPage(id)) {
+                //TODO instead of waiting for a result, start to load the cached version, then interrupt if there is a new version
                 ongoingTask = RPCManager.getPageTimestamp(context.getString(R.string.prefix_script) + id, new RPCManager.Listener<Integer>() {
                     @Override
                     public void onResult(RPCManager.Result<Integer> result) {
@@ -133,9 +135,8 @@ public class ManagedWebView extends WebView {
                             if (result.getResult() > page.timestamp) {
                                 downloadPage(url);
                             } else if (backStack.empty() || !url.equals(backStack.peek().url)) {
-                                showPage(url, Jsoup.parse(page.html,context.getString(R.string.link_server)));
-                            }
-                            else {
+                                showPage(url, Jsoup.parse(page.html, context.getString(R.string.link_server)));
+                            } else {
                                 loading(false);
                             }
                         } else Dialogs.connectionFailed(context);
@@ -148,7 +149,7 @@ public class ManagedWebView extends WebView {
     }
 
     private void showPage(String url, Document document) {
-        if(Utils.getNameFromUrl(url).equals(loadingId)) {
+        if (Utils.getNameFromUrl(url).equals(loadingId)) {
             if (!showTools) {
                 //remove tools
                 document.select("div.tools.group").remove();
@@ -175,10 +176,8 @@ public class ManagedWebView extends WebView {
         ongoingTask = new DownloadTask(downloadTaskListener).execute(url);
     }
 
-    private void cancel(){
-        if(ongoingTask != null){
-            Log.d("Cancel", String.valueOf(ongoingTask.cancel(true)));
-        }
+    private void cancel() {
+        if (ongoingTask != null) ongoingTask.cancel(true);
         stopLoading();
     }
 
@@ -201,7 +200,7 @@ public class ManagedWebView extends WebView {
     }
 
     public String getPageId() {
-        if(backStack.empty()) return null;
+        if (backStack.empty()) return null;
         return Utils.getNameFromUrl(backStack.peek().url);
     }
 
@@ -227,23 +226,32 @@ public class ManagedWebView extends WebView {
         this.showTools = showTools;
     }
 
-    public void saveToInstanceState(Bundle savedInstanceState){
+    public void saveToInstanceState(Bundle savedInstanceState) {
         Gson gson = new Gson();
         savedInstanceState.putString(context.getString(R.string.key_backStack), gson.toJson(backStack));
-        if(repoDocument!=null)savedInstanceState.putString(context.getString(R.string.key_repoHtml), repoDocument.outerHtml());
+        if (repoDocument != null)
+            savedInstanceState.putString(context.getString(R.string.key_repoHtml), repoDocument.outerHtml());
     }
 
-    public boolean restoreFromInstanceState(Bundle savedInstanceState){
-        Gson gson = new Gson();
-        Stack<HistoryElement> backStack = gson.fromJson(savedInstanceState.getString(context.getString(R.string.key_backStack)),new TypeToken<Stack<HistoryElement>>(){}.getType());
-        String repoHtml = savedInstanceState.getString(context.getString(R.string.key_repoHtml));
-        if(repoHtml != null && backStack != null && !backStack.empty()){
-            this.backStack = backStack;
-            this.repoDocument = Jsoup.parse(repoHtml,context.getString(R.string.link_server));
-            show(backStack.pop().url);
-            return true;
+    public boolean restoreFromInstanceState(Bundle savedInstanceState) {
+        try {
+            Gson gson = new Gson();
+            Stack<HistoryElement> backStack = gson.fromJson(savedInstanceState.getString(context.getString(R.string.key_backStack)), new TypeToken<Stack<HistoryElement>>() {
+            }.getType());
+            String repoHtml = savedInstanceState.getString(context.getString(R.string.key_repoHtml));
+            if (repoHtml != null && backStack != null && !backStack.empty()) {
+                this.backStack = backStack;
+                this.repoDocument = Jsoup.parse(repoHtml, context.getString(R.string.link_server));
+                show(backStack.pop().url);
+                return true;
+            }
+        } catch (Exception e) {
+            //though exceptions caught here might be worth reporting, we don't want to disturb the user experience and just ignore them
+            if (BuildConfig.DEBUG) {
+                Log.d(ManagedWebView.class.getSimpleName(), "Failed to restore Instance state", e);
+            }
         }
-        else return false;
+        return false;
     }
 
     private static class HistoryElement {

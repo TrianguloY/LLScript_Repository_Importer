@@ -4,9 +4,11 @@ import android.content.Context;
 import android.content.SharedPreferences;
 import android.preference.PreferenceManager;
 import android.support.annotation.NonNull;
+import android.util.Log;
 import android.view.Menu;
 import android.widget.Toast;
 
+import com.trianguloy.llscript.repository.BuildConfig;
 import com.trianguloy.llscript.repository.R;
 import com.trianguloy.llscript.repository.internal.Utils;
 
@@ -19,34 +21,40 @@ import java.util.Set;
  */
 public class SubscriptionManager {
 
-    private final Context context;
+    private Context context;
     private Menu menu;
     private final SharedPreferences sharedPref;
 
-    public SubscriptionManager(@NonNull Context context){
-        this.context = context;
-        sharedPref = PreferenceManager.getDefaultSharedPreferences(context);
+    public SubscriptionManager() {
+        sharedPref = PreferenceManager.getDefaultSharedPreferences(Utils.getContext());
     }
 
     public void subscribe(@NonNull String id) {
-        HashSet<String> subs = (HashSet<String>) Utils.getSetFromPref(sharedPref, context.getString(R.string.pref_subscriptions));
+        HashSet<String> subs = (HashSet<String>) Utils.getSetFromPref(sharedPref, Utils.getString(R.string.pref_subscriptions));
         subs.add(id);
-        Utils.saveSetToPref(sharedPref, context.getString(R.string.pref_subscriptions), subs);
-        Toast.makeText(context, context.getString(R.string.toast_subscribeSuccessful), Toast.LENGTH_SHORT).show();
+        Utils.saveSetToPref(sharedPref, Utils.getString(R.string.pref_subscriptions), subs);
+        toast(Utils.getString(R.string.toast_subscribeSuccessful));
         setSubscriptionState(SUBSCRIBED);
     }
 
     public void unsubscribe(@NonNull String id) {
-        Set<String> subs = Utils.getSetFromPref(sharedPref, context.getString(R.string.pref_subscriptions));
+        Set<String> subs = Utils.getSetFromPref(sharedPref, Utils.getString(R.string.pref_subscriptions));
         subs.remove(id);
-        Utils.saveSetToPref(sharedPref, context.getString(R.string.pref_subscriptions), subs);
-        Toast.makeText(context, context.getString(R.string.toast_unsubscribeSuccessful), Toast.LENGTH_SHORT).show();
+        Utils.saveSetToPref(sharedPref, Utils.getString(R.string.pref_subscriptions), subs);
+        toast(Utils.getString(R.string.toast_unsubscribeSuccessful));
         setSubscriptionState(NOT_SUBSCRIBED);
+    }
 
+    private void toast(String msg) {
+        if (context != null) {
+            Toast.makeText(context, msg, Toast.LENGTH_SHORT).show();
+        } else if (BuildConfig.DEBUG) {
+            Log.d(SubscriptionManager.class.getSimpleName(), "Failed to create toast due to missing context");
+        }
     }
 
     public boolean isSubscribed(@NonNull String id) {
-        return Utils.getSetFromPref(sharedPref, context.getString(R.string.pref_subscriptions))
+        return Utils.getSetFromPref(sharedPref, Utils.getString(R.string.pref_subscriptions))
                 .contains(id);
     }
 
@@ -55,7 +63,7 @@ public class SubscriptionManager {
     private static final int SUBSCRIBED = 1;
 
     private void setSubscriptionState(int state) {
-        if(menu != null) {
+        if (menu != null) {
             boolean sub;
             boolean unsub;
             switch (state) {
@@ -83,11 +91,14 @@ public class SubscriptionManager {
         this.menu = menu;
     }
 
-    public void updateState(@NonNull String id){
-        if(context.getString(R.string.id_scriptRepository).equals(context.getString(R.string.prefix_script)+id)){
+    public void setContext(@NonNull Context context) {
+        this.context = context;
+    }
+
+    public void updateState(@NonNull String id) {
+        if (Utils.getString(R.string.id_scriptRepository).equals(Utils.getString(R.string.prefix_script) + id)) {
             setSubscriptionState(CANT_SUBSCRIBE);
-        }
-        else {
+        } else {
             setSubscriptionState(isSubscribed(id) ? SUBSCRIBED : NOT_SUBSCRIBED);
         }
     }

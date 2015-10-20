@@ -57,17 +57,21 @@ public class WebViewer extends Activity {
 
     private Boolean close = false; //if pressing back will close or not
 
-    private SubscriptionManager subscriptionManager;
+    private final SubscriptionManager subscriptionManager;
 
     private Bundle savedInstanceState;
+
+    public WebViewer() {
+        subscriptionManager = new SubscriptionManager();
+    }
 
     //Application functions
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         //initialize variables
         sharedPref = PreferenceManager.getDefaultSharedPreferences(this);
-        subscriptionManager = new SubscriptionManager(this);
         RepositoryImporter.setTheme(this, sharedPref);
+        subscriptionManager.setContext(this);
         this.savedInstanceState = savedInstanceState;
 
 
@@ -105,10 +109,7 @@ public class WebViewer extends Activity {
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
-
-        if(subscriptionManager != null) {
-            subscriptionManager.setMenu(menu);
-        }
+        subscriptionManager.setMenu(menu);
 
         // Inflate the menu; this adds items to the action bar if it is present.
         getMenuInflater().inflate(R.menu.menu_webviewer, menu);
@@ -307,7 +308,8 @@ public class WebViewer extends Activity {
     private boolean upgradeFromOldVersion() {
         SharedPreferences sharedPref = PreferenceManager.getDefaultSharedPreferences(this);
         PreferenceManager.setDefaultValues(this, R.xml.pref_general, false);
-        if(!BuildConfig.DEBUG)sharedPref.edit().putBoolean(getString(R.string.pref_enableAcra),true).apply();
+        if (!BuildConfig.DEBUG)
+            sharedPref.edit().putBoolean(getString(R.string.pref_enableAcra), true).apply();
 
         if (sharedPref.contains(getString(R.string.pref_subs))) {
             Map<String, Object> map = Utils.getMapFromPref(sharedPref, getString(R.string.pref_subs));
@@ -318,7 +320,7 @@ public class WebViewer extends Activity {
             Utils.saveSetToPref(sharedPref, getString(R.string.pref_subscriptions), set);
             sharedPref.edit().remove(getString(R.string.pref_subs)).apply();
         }
-        if(sharedPref.contains(getString(R.string.pref_repoHash))){
+        if (sharedPref.contains(getString(R.string.pref_repoHash))) {
             sharedPref.edit().remove(getString(R.string.pref_repoHash)).apply();
         }
         if (!sharedPref.contains(getString(R.string.pref_timestamp))) {

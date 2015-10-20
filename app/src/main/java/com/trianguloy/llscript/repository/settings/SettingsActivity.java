@@ -56,7 +56,7 @@ public class SettingsActivity extends PreferenceActivity implements SharedPrefer
 
         ListPreference listPreference = (ListPreference) findPreference(getString(R.string.pref_notificationInterval));
         listPreference.setSummary(listPreference.getEntry());
-        if(!BuildConfig.DEBUG){
+        if (!BuildConfig.DEBUG) {
             //Remove every minute check
             List<CharSequence> entries = new ArrayList<>(Arrays.asList(listPreference.getEntries()));
             List<CharSequence> entryValues = new ArrayList<>(Arrays.asList(listPreference.getEntryValues()));
@@ -65,7 +65,7 @@ public class SettingsActivity extends PreferenceActivity implements SharedPrefer
             listPreference.setEntries(entries.toArray(new CharSequence[entries.size()]));
             listPreference.setEntryValues(entryValues.toArray(new CharSequence[entryValues.size()]));
             //remove enable acra preference
-            CheckBoxPreference acraPref = (CheckBoxPreference)findPreference(getString(R.string.pref_enableAcra));
+            CheckBoxPreference acraPref = (CheckBoxPreference) findPreference(getString(R.string.pref_enableAcra));
             acraPref.setChecked(true);
             getPreferenceScreen().removePreference(acraPref);
         }
@@ -131,7 +131,7 @@ public class SettingsActivity extends PreferenceActivity implements SharedPrefer
             //
             // http://developer.android.com/design/patterns/navigation.html#up-vs-back
             //
-            // TODO: If Settings has multiple levels, Up should navigate up
+            // If Settings has multiple levels, Up should navigate up
             // that hierarchy.
             finish();
             return true;

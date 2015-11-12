@@ -127,16 +127,19 @@ public final class ImportUtils {
     private static void oneScriptFound(Activity context, ManagedWebView webView, Listener listener, String name, String rawCode, String about) {
         //only one script, load directly
 
-        Document repoDocument = webView.getRepoDocument();
         //get the name from the repository
         String url = webView.getUrl();
         url = url.substring(url.indexOf('/', "http://www".length()));
-        Elements elements = repoDocument.select("a[href*=" + url + "]");
-        String scriptName;
-        if (elements.size() > 0) {
-            scriptName = elements.first().ownText();
-        } else {
-            //fallback if not found in repo
+        Document repoDocument = webView.getRepoDocument();
+        String scriptName = null;
+        if (repoDocument != null) {
+            Elements elements = repoDocument.select("a[href*=" + url + "]");
+            if (elements.size() > 0) {
+                scriptName = elements.first().ownText();
+            }
+        }
+        if(scriptName == null){
+            //fallback if not found in repo or repo not found
             scriptName = name;
         }
 

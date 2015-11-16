@@ -4,6 +4,7 @@ import android.app.Notification;
 import android.app.NotificationManager;
 import android.app.PendingIntent;
 import android.app.Service;
+import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.graphics.BitmapFactory;
@@ -15,6 +16,9 @@ import com.trianguloy.llscript.repository.IntentHandle;
 import com.trianguloy.llscript.repository.R;
 import com.trianguloy.llscript.repository.internal.Utils;
 
+import org.acra.ACRA;
+
+import java.lang.reflect.Method;
 import java.util.List;
 
 public class WebService extends Service {
@@ -69,10 +73,14 @@ public class WebService extends Service {
         } else {
             //noinspection deprecation
             Notification not = new Notification(R.drawable.ic_notification, null, System.currentTimeMillis());
-            //noinspection deprecation
-            not.setLatestEventInfo(this, getString(R.string.title_updatedPages),
-                    getStringUpdated(updated),
-                    PendingIntent.getActivity(this, 0, new Intent(this, IntentHandle.class), PendingIntent.FLAG_UPDATE_CURRENT));
+            try {
+                //setLatestEventInfo was removed in API level 23. Since we still need it for backwards compatibility, use reflection to invoke it.
+                //TODO: If support library is used in project, use NotificationCompat instead of this.
+                Method deprecatedMethod = not.getClass().getMethod("setLatestEventInfo", Context.class, CharSequence.class, CharSequence.class, PendingIntent.class);
+                deprecatedMethod.invoke(not, this, getString(R.string.title_updatedPages), getStringUpdated(updated), PendingIntent.getActivity(this, 0, new Intent(this, IntentHandle.class), PendingIntent.FLAG_UPDATE_CURRENT));
+            } catch (Exception e) {
+                ACRA.getErrorReporter().handleException(e);
+            }
             ((NotificationManager) this.getSystemService(NOTIFICATION_SERVICE)).notify(0, not);
         }
     }

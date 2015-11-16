@@ -11,12 +11,12 @@ android {
             storePassword 'android'
         }
     }
-    compileSdkVersion 22
+    compileSdkVersion 23
     buildToolsVersion "21.1.2"
     defaultConfig {
         applicationId "com.trianguloy.llscript.repository"
         minSdkVersion 9
-        targetSdkVersion 22
+        targetSdkVersion 23
         versionCode 27
         versionName "1.9.5"
     }
@@ -36,10 +36,10 @@ android {
 
 dependencies {
     compile fileTree(dir: 'libs', include: ['*.jar'])
-    compile 'com.android.support:support-annotations:22.2.1'
+    compile 'com.android.support:support-annotations:23.1.0'
     compile 'ch.acra:acra:4.6.2'
     compile 'fr.turri:dokujclient:3.3.0'
-    compile 'com.google.code.gson:gson:2.3.1'
+    compile 'com.google.code.gson:gson:2.4'
     compile 'org.jsoup:jsoup:1.8.3'
     compile 'commons-io:commons-io:2.4'
 }

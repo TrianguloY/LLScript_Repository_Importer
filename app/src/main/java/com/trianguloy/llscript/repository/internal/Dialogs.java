@@ -9,11 +9,11 @@ import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
-import android.content.pm.PackageManager;
 import android.graphics.Color;
 import android.net.Uri;
 import android.os.Build;
 import android.preference.PreferenceManager;
+import android.provider.Settings;
 import android.support.annotation.Nullable;
 import android.view.View;
 import android.view.ViewGroup;
@@ -135,7 +135,7 @@ public final class Dialogs {
     }
 
     private static void baseLauncherProblem(final Context context, String message) {
-        if ((context instanceof Service) && Build.VERSION.SDK_INT >= Build.VERSION_CODES.M && context.checkSelfPermission(android.Manifest.permission.SYSTEM_ALERT_WINDOW) != PackageManager.PERMISSION_GRANTED) {
+        if ((context instanceof Service) && Build.VERSION.SDK_INT >= Build.VERSION_CODES.M && !Settings.canDrawOverlays(context)) {
             Toast.makeText(context,message,Toast.LENGTH_LONG).show();
         } else {
             AlertDialog ad = new AlertDialog.Builder(context)

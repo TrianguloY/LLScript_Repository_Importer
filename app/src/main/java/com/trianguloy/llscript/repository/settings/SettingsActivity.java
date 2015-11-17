@@ -24,7 +24,7 @@ import com.trianguloy.llscript.repository.R;
 import com.trianguloy.llscript.repository.RepositoryImporter;
 import com.trianguloy.llscript.repository.auth.AuthenticationUtils;
 import com.trianguloy.llscript.repository.internal.Dialogs;
-import com.trianguloy.llscript.repository.web.ServiceManager;
+import com.trianguloy.llscript.repository.web.WebServiceManager;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -193,14 +193,14 @@ public class SettingsActivity extends PreferenceActivity implements SharedPrefer
 
 
     private void stopService() {
-        ServiceManager.stopService(getApplicationContext());
+        WebServiceManager.stopService(getApplicationContext());
         getPackageManager().setComponentEnabledSetting(new ComponentName(getApplicationContext(), BootBroadcastReceiver.class),
                 PackageManager.COMPONENT_ENABLED_STATE_DISABLED,
                 PackageManager.DONT_KILL_APP);
     }
 
     private void startService(SharedPreferences sharedPreferences) {
-        ServiceManager.startService(getApplicationContext(),
+        WebServiceManager.startService(getApplicationContext(),
                 Integer.parseInt(sharedPreferences.getString(getString(R.string.pref_notificationInterval),
                         String.valueOf(AlarmManager.INTERVAL_HOUR))));
         getPackageManager().setComponentEnabledSetting(new ComponentName(getApplicationContext(), BootBroadcastReceiver.class),

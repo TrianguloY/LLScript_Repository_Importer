@@ -108,6 +108,10 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
+        <activity
+            android:name=".internal.PermissionActivity"
+            android:theme="@style/Theme.Transparent" >
+        </activity>
         <activity android:name=".editor.EditorActivity"
                   android:excludeFromRecents="false"
             android:windowSoftInputMode="adjustResize"/>

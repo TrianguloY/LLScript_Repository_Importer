@@ -11,8 +11,8 @@ import android.os.SystemClock;
  * Created by Lukas on 12.12.2014.
  * A small set of static methods required at several places, targeting the service
  */
-public final class ServiceManager {
-    private ServiceManager() {
+public final class WebServiceManager {
+    private WebServiceManager() {
     }
 
     public static void startService(Context context, int interval) {

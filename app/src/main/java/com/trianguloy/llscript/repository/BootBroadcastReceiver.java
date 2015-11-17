@@ -7,7 +7,7 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.preference.PreferenceManager;
 
-import com.trianguloy.llscript.repository.web.ServiceManager;
+import com.trianguloy.llscript.repository.web.WebServiceManager;
 
 /**
  * Created by Lukas on 06.12.2014.
@@ -19,7 +19,7 @@ public class BootBroadcastReceiver extends BroadcastReceiver {
         if (intent.getAction().equals(Intent.ACTION_BOOT_COMPLETED)) {
             SharedPreferences sharedPreferences = PreferenceManager.getDefaultSharedPreferences(pContext);
             if (sharedPreferences.getBoolean(pContext.getString(R.string.pref_notifications), false)) {
-                ServiceManager.startService(pContext, Integer.parseInt(sharedPreferences.getString(pContext.getString(R.string.pref_notificationInterval), String.valueOf(AlarmManager.INTERVAL_HOUR))));
+                WebServiceManager.startService(pContext, Integer.parseInt(sharedPreferences.getString(pContext.getString(R.string.pref_notificationInterval), String.valueOf(AlarmManager.INTERVAL_HOUR))));
             }
         }
     }

@@ -319,6 +319,13 @@
     <!-- unsorted-->
     <string name="dummy" tools:ignore="UnusedResources">Dummy string to force new ones to be below
     </string>
+    <string name="key_version">version</string>
+    <string name="title_updateConfirm">Confirm update</string>
+    <string name="message_updateConfirm">There is a script with the same name but different code. Do you want to update it?</string>
+    <string name="title_permissionMissing">Permission missing</string>
+    <string name="message_permissionScriptMissing">If you do not grant the IMPORT_SCRIPTS permission, this app can\'t import any scripts into Lightning Launcher.</string>
+    <string name="message_permissionSystemWindowMissing">You will now be asked to grant SYSTEM_ALERT_WINDOW permission to this app.\nIf you choose to do not, you won\'t be able to see alerts which notify about problems while importing scripts.\nYou can change this setting at any time in the System settings.</string>
+    <string name="text_nameNotFound">Name not found</string>
 
 
 </resources>

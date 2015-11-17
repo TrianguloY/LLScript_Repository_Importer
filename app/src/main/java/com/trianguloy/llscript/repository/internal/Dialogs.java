@@ -9,6 +9,7 @@ import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.content.pm.PackageManager;
 import android.graphics.Color;
 import android.net.Uri;
 import android.os.Build;
@@ -20,9 +21,11 @@ import android.view.WindowManager;
 import android.widget.CheckBox;
 import android.widget.EditText;
 import android.widget.ListAdapter;
+import android.widget.Toast;
 
 import com.trianguloy.llscript.repository.Constants;
 import com.trianguloy.llscript.repository.IntentHandle;
+import com.trianguloy.llscript.repository.Manifest;
 import com.trianguloy.llscript.repository.R;
 import com.trianguloy.llscript.repository.ScriptImporter;
 import com.trianguloy.llscript.repository.web.ManagedWebView;
@@ -132,26 +135,31 @@ public final class Dialogs {
     }
 
     private static void baseLauncherProblem(final Context context, String message) {
-        AlertDialog ad =  new AlertDialog.Builder(context)
-                .setCancelable(false)
-                .setTitle(R.string.title_warning)
-                .setMessage(message)
-                .setPositiveButton(R.string.button_ok, new DialogInterface.OnClickListener() {
-                    @Override
-                    public void onClick(DialogInterface dialog, int which) {
-                        Intent i = new Intent(Intent.ACTION_VIEW);
-                        i.setData(Uri.parse(context.getString(R.string.link_playStorePrefix) + Constants.PACKAGES[1]));
-                        if (context instanceof Service) i.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-                        context.startActivity(i);
-                        if (context instanceof Activity) ((Activity) context).finish();
-                    }
-                })
-                .setNegativeButton(R.string.button_cancel, null)
-                .setIcon(R.drawable.ic_launcher)
-                .create();
-        if (context instanceof Service)
-            ad.getWindow().setType(WindowManager.LayoutParams.TYPE_SYSTEM_ALERT);
-        ad.show();
+        if ((context instanceof Service) && Build.VERSION.SDK_INT >= Build.VERSION_CODES.M && context.checkSelfPermission(android.Manifest.permission.SYSTEM_ALERT_WINDOW) != PackageManager.PERMISSION_GRANTED) {
+            Toast.makeText(context,message,Toast.LENGTH_LONG).show();
+        } else {
+            AlertDialog ad = new AlertDialog.Builder(context)
+                    .setCancelable(false)
+                    .setTitle(R.string.title_warning)
+                    .setMessage(message)
+                    .setPositiveButton(R.string.button_ok, new DialogInterface.OnClickListener() {
+                        @Override
+                        public void onClick(DialogInterface dialog, int which) {
+                            Intent i = new Intent(Intent.ACTION_VIEW);
+                            i.setData(Uri.parse(context.getString(R.string.link_playStorePrefix) + Constants.PACKAGES[1]));
+                            if (context instanceof Service)
+                                i.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+                            context.startActivity(i);
+                            if (context instanceof Activity) ((Activity) context).finish();
+                        }
+                    })
+                    .setNegativeButton(R.string.button_cancel, null)
+                    .setIcon(R.drawable.ic_launcher)
+                    .create();
+            if (context instanceof Service)
+                ad.getWindow().setType(WindowManager.LayoutParams.TYPE_SYSTEM_ALERT);
+            ad.show();
+        }
     }
 
     public static void launcherNotFound(final Context context) {
@@ -304,8 +312,8 @@ public final class Dialogs {
 
     public static void confirmUpdate(final IntentHandle context, final String scriptName, final String code, final int flags) {
         new AlertDialog.Builder(context)
-                .setTitle("Confirm update")
-                .setMessage("There is a script with the same name but different code. Do you want to update it?")
+                .setTitle(R.string.title_updateConfirm)
+                .setMessage(R.string.message_updateConfirm)
                 .setNegativeButton(R.string.button_no, new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
@@ -315,14 +323,35 @@ public final class Dialogs {
                 .setPositiveButton(R.string.button_yes, new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
-                        Intent intent = new Intent(context, ScriptImporter.class);
+                        final Intent intent = new Intent(context, ScriptImporter.class);
                         intent.putExtra(Constants.EXTRA_CODE, code);
                         intent.putExtra(Constants.EXTRA_NAME, scriptName);
                         intent.putExtra(Constants.EXTRA_FLAGS, flags);
                         intent.putExtra(Constants.EXTRA_FORCE_UPDATE, true);
-                        context.startService(intent);
+                        PermissionActivity.checkForPermission(context, Manifest.permission.IMPORT_SCRIPTS, new PermissionActivity.PermissionCallback() {
+                            @Override
+                            public void handlePermissionResult(boolean isGranted) {
+                                if (isGranted)context.startService(intent);
+                            }
+                        });
                     }
                 })
+                .show();
+    }
+
+    public static void explainScriptPermission(Context context, DialogInterface.OnClickListener onClickListener) {
+        new AlertDialog.Builder(context)
+                .setTitle(R.string.title_permissionMissing)
+                .setMessage(R.string.message_permissionScriptMissing)
+                .setNeutralButton(R.string.button_ok, onClickListener)
+                .show();
+    }
+
+    public static void explainSystemWindowPermission(Context context, DialogInterface.OnClickListener onClickListener) {
+        new AlertDialog.Builder(context)
+                .setTitle(R.string.title_permissionMissing)
+                .setMessage(R.string.message_permissionSystemWindowMissing)
+                .setNeutralButton(R.string.button_ok,onClickListener)
                 .show();
     }
 

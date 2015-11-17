@@ -8,6 +8,7 @@ import android.preference.PreferenceManager;
 import android.text.Html;
 
 import com.trianguloy.llscript.repository.Constants;
+import com.trianguloy.llscript.repository.Manifest;
 import com.trianguloy.llscript.repository.R;
 import com.trianguloy.llscript.repository.ScriptImporter;
 import com.trianguloy.llscript.repository.web.ManagedWebView;
@@ -57,7 +58,7 @@ public final class ImportUtils {
                 }
                 index = parent.elementSiblingIndex();
             }
-            if (names.size() < rawCodes.size()) names.add("Name not found");
+            if (names.size() < rawCodes.size()) names.add(context.getString(R.string.text_nameNotFound));
         }
 
         //TODO search the flags
@@ -174,13 +175,18 @@ public final class ImportUtils {
     }
 
     //Send & share functions
-    private static void sendScriptToLauncher(Context context, String code, String scriptName, int flags) {
+    private static void sendScriptToLauncher(final Context context, String code, String scriptName, int flags) {
         // let's import the script
-        Intent intent = new Intent(context, ScriptImporter.class);
+        final Intent intent = new Intent(context, ScriptImporter.class);
         intent.putExtra(Constants.EXTRA_CODE, code);
         intent.putExtra(Constants.EXTRA_NAME, scriptName);
         intent.putExtra(Constants.EXTRA_FLAGS, flags);
-        context.startService(intent);
+        PermissionActivity.checkForPermission(context, Manifest.permission.IMPORT_SCRIPTS, new PermissionActivity.PermissionCallback() {
+            @Override
+            public void handlePermissionResult(boolean isGranted) {
+                if (isGranted) context.startService(intent);
+            }
+        });
     }
 
     private static void shareAsText(Context context, String code, String scriptName, int flags) {

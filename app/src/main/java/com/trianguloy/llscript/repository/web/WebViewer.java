@@ -1,15 +1,19 @@
 package com.trianguloy.llscript.repository.web;
 
+import android.Manifest;
+import android.annotation.TargetApi;
 import android.app.ActionBar;
 import android.app.Activity;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.content.pm.PackageManager;
 import android.net.Uri;
 import android.net.http.HttpResponseCache;
 import android.os.Build;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
+import android.provider.Settings;
 import android.support.annotation.NonNull;
 import android.view.KeyEvent;
 import android.view.Menu;
@@ -80,7 +84,7 @@ public class WebViewer extends Activity {
         //check for launcher to find the installed one, continue even if not found
         Utils.checkForLauncher(this);
 
-        if (upgradeFromOldVersion()) init();
+        if ((sharedPref.contains(getString(R.string.key_version)) && sharedPref.getInt(getString(R.string.key_version),-1) == BuildConfig.VERSION_CODE) || upgradeFromOldVersion()) init();
     }
 
     @Override
@@ -306,8 +310,8 @@ public class WebViewer extends Activity {
 
     //return false to block loading. If blocked has to call init() when finished
     private boolean upgradeFromOldVersion() {
-        SharedPreferences sharedPref = PreferenceManager.getDefaultSharedPreferences(this);
         PreferenceManager.setDefaultValues(this, R.xml.pref_general, false);
+        sharedPref.edit().putInt(getString(R.string.key_version), BuildConfig.VERSION_CODE).apply();
         if (!BuildConfig.DEBUG)
             sharedPref.edit().putBoolean(getString(R.string.pref_enableAcra), true).apply();
 
@@ -337,6 +341,17 @@ public class WebViewer extends Activity {
                             }
                         });
                     }
+                }
+            });
+            return false;
+        }
+        if(Build.VERSION.SDK_INT >= Build.VERSION_CODES.M && checkSelfPermission(Manifest.permission.SYSTEM_ALERT_WINDOW) != PackageManager.PERMISSION_GRANTED){
+            Dialogs.explainSystemWindowPermission(this, new DialogInterface.OnClickListener() {
+                @TargetApi(Build.VERSION_CODES.M)
+                @Override
+                public void onClick(DialogInterface dialog, int which) {
+                    startActivity(new Intent(Settings.ACTION_MANAGE_OVERLAY_PERMISSION));
+                    init();
                 }
             });
             return false;

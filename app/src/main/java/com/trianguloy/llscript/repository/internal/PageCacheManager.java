@@ -65,7 +65,6 @@ public final class PageCacheManager {
         public FatalFileException(Exception e) {
             super(e);
         }
-        public FatalFileException(){super();}
     }
 
     public static class Page {

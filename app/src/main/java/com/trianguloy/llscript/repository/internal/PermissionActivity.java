@@ -23,7 +23,7 @@ public class PermissionActivity extends Activity {
     private static final String ID = "id";
     private static final String PERMISSION = "permission";
 
-    private static HashMap<Integer, PermissionCallback> callbacks = new HashMap<>();
+    private static final HashMap<Integer, PermissionCallback> callbacks = new HashMap<>();
     private static int nextId = 0;
 
     public static void checkForPermission(Context context, String permission, PermissionCallback callback){

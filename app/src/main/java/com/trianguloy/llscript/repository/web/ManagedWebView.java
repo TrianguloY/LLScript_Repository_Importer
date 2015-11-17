@@ -132,6 +132,7 @@ public class ManagedWebView extends WebView {
                     public void onResult(RPCManager.Result<Integer> result) {
                         if (result.getStatus() == RPCManager.RESULT_OK) {
                             PageCacheManager.Page page = PageCacheManager.getPage(id);
+                            assert page != null;
                             if (result.getResult() > page.timestamp) {
                                 downloadPage(url);
                             } else if (backStack.empty() || !url.equals(backStack.peek().url)) {

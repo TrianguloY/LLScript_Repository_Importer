@@ -233,8 +233,7 @@
     <string name="val_changedSubDefault">2</string>
 
     <!-- Manifest -->
-    <string name="permission_description">Allows to import scripts into LL without User
-        confirmation
+    <string name="permission_description">Import scripts into LL
     </string>
     <string name="permission_label">LL Import Scripts</string>
     <string name="label_subscriptionsDialog">Subscribed Pages</string>

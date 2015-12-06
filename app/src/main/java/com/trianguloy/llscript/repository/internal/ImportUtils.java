@@ -148,15 +148,19 @@ public final class ImportUtils {
 
     }
 
-    private static void showImportScript(final Activity context, final Listener listener, String scriptName, String rawCode, String aboutString) {
-        //show the alert to import a single script
-        final String[] lines = rawCode.split("\n");
-        StringBuilder builder = new StringBuilder();
-        for (String line : lines) {
-            builder.append(Html.fromHtml(line).toString()).append("\n");//Because Html.fromHtml() removes the line breaks
-        }
+    /**
+     * call to {@link Dialogs#importScript(Activity, String, String, Dialogs.OnImportListener, Dialogs.OnImportListener)}
+     * to import a single script
+     * @param context the context used
+     * @param listener what to do when finishing importing
+     * @param scriptName the name of the script
+     * @param scriptCode the code of the script
+     * @param aboutString the header of the imported script
+     */
+    private static void showImportScript(final Activity context, final Listener listener, String scriptName, String scriptCode, String aboutString) {
 
-        String code = new String(builder).trim();
+        String code = scriptCode.trim();
+
         if (PreferenceManager.getDefaultSharedPreferences(context).getBoolean(context.getString(R.string.pref_aboutScript), true))
             code = aboutString + code;
 
@@ -172,6 +176,7 @@ public final class ImportUtils {
                 shareAsText(context, code, name, flags);
             }
         });
+        
     }
 
     //Send & share functions

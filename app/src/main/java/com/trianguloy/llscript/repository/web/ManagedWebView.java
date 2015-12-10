@@ -33,6 +33,7 @@ public class ManagedWebView extends WebView {
     private Stack<HistoryElement> backStack;
     private int posY;
     private Document repoDocument;
+    private Document currentDocument;
 
     private Listener listener;
     private DownloadTask.Listener downloadTaskListener;
@@ -156,6 +157,7 @@ public class ManagedWebView extends WebView {
                 document.select("div.tools.group").remove();
             }
             if (context.getString(R.string.link_repository).equals(url)) repoDocument = document;
+            currentDocument = document;
             loading(true);
             HistoryElement current = null;
             if (!backStack.empty()) current = backStack.pop();
@@ -215,6 +217,10 @@ public class ManagedWebView extends WebView {
 
     public Document getRepoDocument() {
         return repoDocument;
+    }
+
+    public Document getCurrentDocument() {
+        return currentDocument;
     }
 
     private void loading(boolean isLoading) {

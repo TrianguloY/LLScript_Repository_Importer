@@ -33,8 +33,7 @@ public final class ImportUtils {
     }
 
     public static void startImport(final Activity context, final ManagedWebView webView, final Listener listener) {
-        //TODO pass the document through the chain rather than loading it from file
-        Document document = Jsoup.parse(PageCacheManager.getPage(webView.getPageId()).html, context.getString(R.string.link_server));
+        Document document = Jsoup.parse(webView.getCurrentDocument().outerHtml(), context.getString(R.string.link_server));
 
         //initialize variables
         final ArrayList<String> names = new ArrayList<>();//names of all scripts

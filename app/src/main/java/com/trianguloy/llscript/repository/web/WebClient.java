@@ -3,6 +3,7 @@ package com.trianguloy.llscript.repository.web;
 import android.annotation.TargetApi;
 import android.net.http.HttpResponseCache;
 import android.os.Build;
+import android.webkit.WebResourceRequest;
 import android.webkit.WebResourceResponse;
 import android.webkit.WebView;
 import android.webkit.WebViewClient;
@@ -42,5 +43,11 @@ public class WebClient extends WebViewClient {
             e.printStackTrace();
             return null;
         }
+    }
+
+    @TargetApi(Build.VERSION_CODES.LOLLIPOP)
+    @Override
+    public WebResourceResponse shouldInterceptRequest(WebView view, WebResourceRequest request) {
+        return shouldInterceptRequest(view,request.getUrl().toString());
     }
 }

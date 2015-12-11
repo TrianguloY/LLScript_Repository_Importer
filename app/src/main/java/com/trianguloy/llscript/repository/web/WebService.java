@@ -21,6 +21,9 @@ import org.acra.ACRA;
 import java.lang.reflect.Method;
 import java.util.List;
 
+/**
+ * checks periodically for changed subscriptions and notifies if any
+ */
 public class WebService extends Service {
 
     private SharedPreferences sharedPref;

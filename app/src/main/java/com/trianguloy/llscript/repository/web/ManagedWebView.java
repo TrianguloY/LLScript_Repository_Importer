@@ -57,6 +57,11 @@ public class ManagedWebView extends WebView {
         init(context);
     }
 
+    /**
+     * initialize Structure and prepare for downloading
+     *
+     * @param context View context
+     */
     private void init(Context context) {
         this.context = context;
         backStack = new Stack<>();
@@ -123,6 +128,7 @@ public class ManagedWebView extends WebView {
 
     /**
      * Manages the showing of a new page (loading it from cache, getting a new version, etc)
+     *
      * @param url the url to load and show
      */
     public void show(final String url) {
@@ -151,6 +157,12 @@ public class ManagedWebView extends WebView {
         }
     }
 
+    /**
+     * load a page into WebView
+     *
+     * @param url      url of the page
+     * @param document Jsoup document of the page
+     */
     private void showPage(String url, Document document) {
         if (Utils.getNameFromUrl(url).equals(loadingId)) {
             if (!showTools) {
@@ -175,20 +187,34 @@ public class ManagedWebView extends WebView {
         }
     }
 
+    /**
+     * download a page from the server (it gets displayed afterwards)
+     *
+     * @param url the page to load
+     */
     private void downloadPage(final String url) {
         loading(true);
         ongoingTask = new DownloadTask(downloadTaskListener).execute(url);
     }
 
+    /**
+     * stop everything ongoing
+     */
     private void cancel() {
         if (ongoingTask != null) ongoingTask.cancel(true);
         stopLoading();
     }
 
+    /**
+     * @return if there is a page on the backStack
+     */
     public boolean backPossible() {
         return backStack.size() > 1;
     }
 
+    /**
+     * navigate one page back in the backStack
+     */
     public void performBack() {
         if (!backPossible()) throw new IllegalStateException("Navigating back on empty Stack");
         HistoryElement current = backStack.pop();
@@ -212,6 +238,10 @@ public class ManagedWebView extends WebView {
         return !backStack.empty();
     }
 
+    /**
+     * put this page onto the backStack, so it can be reached by navigating back, but don't show it
+     * @param url the page
+     */
     public void dropOnStackWithoutShowing(String url) {
         backStack.push(new HistoryElement(url));
     }
@@ -224,16 +254,28 @@ public class ManagedWebView extends WebView {
         return currentDocument;
     }
 
+    /**
+     * set the loading status
+     * @param isLoading
+     */
     private void loading(boolean isLoading) {
         if (listener != null) {
             listener.loading(isLoading);
         }
     }
 
+    /**
+     * set if tools should be shown
+     * @param showTools value
+     */
     public void setShowTools(boolean showTools) {
         this.showTools = showTools;
     }
 
+    /**
+     * save the state to a bundle
+     * @param savedInstanceState the bundle
+     */
     public void saveToInstanceState(Bundle savedInstanceState) {
         Gson gson = new Gson();
         savedInstanceState.putString(context.getString(R.string.key_backStack), gson.toJson(backStack));
@@ -241,6 +283,11 @@ public class ManagedWebView extends WebView {
             savedInstanceState.putString(context.getString(R.string.key_repoHtml), repoDocument.outerHtml());
     }
 
+    /**
+     * load an old state from a bundle
+     * @param savedInstanceState the bundle
+     * @return if something was restored
+     */
     public boolean restoreFromInstanceState(Bundle savedInstanceState) {
         try {
             Gson gson = new Gson();

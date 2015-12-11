@@ -121,6 +121,10 @@ public class ManagedWebView extends WebView {
         return listener;
     }
 
+    /**
+     * Manages the showing of a new page (loading it from cache, getting a new version, etc)
+     * @param url the url to load ans show
+     */
     public void show(final String url) {
         if (url.startsWith(context.getString(R.string.link_scriptPagePrefix))) {
             final String id = Utils.getNameFromUrl(url);
@@ -128,6 +132,8 @@ public class ManagedWebView extends WebView {
             loadingId = id;
             if (PageCacheManager.hasPage(id)) {
                 //TODO instead of waiting for a result, start to load the cached version, then interrupt if there is a new version
+                showPage(url, Jsoup.parse(PageCacheManager.getPage(id).html, context.getString(R.string.link_server)));
+                //Log.d("MESSAGE","loaded cached version");
                 ongoingTask = RPCManager.getPageTimestamp(context.getString(R.string.prefix_script) + id, new RPCManager.Listener<Integer>() {
                     @Override
                     public void onResult(RPCManager.Result<Integer> result) {
@@ -136,10 +142,7 @@ public class ManagedWebView extends WebView {
                             assert page != null;
                             if (result.getResult() > page.timestamp) {
                                 downloadPage(url);
-                            } else if (backStack.empty() || !url.equals(backStack.peek().url)) {
-                                showPage(url, Jsoup.parse(page.html, context.getString(R.string.link_server)));
-                            } else {
-                                loading(false);
+                                //Log.d("MESSAGE", "request new page");
                             }
                         } else Dialogs.connectionFailed(context);
                     }

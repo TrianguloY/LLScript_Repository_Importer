@@ -134,6 +134,14 @@ public final class Dialogs {
                 .show();
     }
 
+    /**
+     * shows a message related to problems with the launcher.
+     * Two buttons:
+     * - Ok -> opens play store
+     * - Continue -> closes the message
+     * @param context the context to use
+     * @param message the message to atach in the alert
+     */
     private static void baseLauncherProblem(final Context context, String message) {
         if ((context instanceof Service) && Build.VERSION.SDK_INT >= Build.VERSION_CODES.M && !Settings.canDrawOverlays(context)) {
             Toast.makeText(context,message,Toast.LENGTH_LONG).show();
@@ -141,7 +149,7 @@ public final class Dialogs {
             AlertDialog ad = new AlertDialog.Builder(context)
                     .setCancelable(false)
                     .setTitle(R.string.title_warning)
-                    .setMessage(message)
+                    .setMessage(message+"\n\n"+context.getString(R.string.messagePrefix_launcherProblem))
                     .setPositiveButton(R.string.button_ok, new DialogInterface.OnClickListener() {
                         @Override
                         public void onClick(DialogInterface dialog, int which) {
@@ -153,7 +161,7 @@ public final class Dialogs {
                             if (context instanceof Activity) ((Activity) context).finish();
                         }
                     })
-                    .setNegativeButton(R.string.button_cancel, null)
+                    .setNegativeButton(R.string.button_continue, null)
                     .setIcon(R.drawable.ic_launcher)
                     .create();
             if (context instanceof Service)

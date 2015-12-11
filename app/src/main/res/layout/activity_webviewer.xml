@@ -37,8 +37,8 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_alignParentEnd="false"
-        android:layout_alignParentRight="false"
-        android:layout_centerInParent="true"
-        android:visibility="visible"/>
+        android:layout_alignParentRight="true"
+        android:visibility="visible"
+        android:layout_alignParentBottom="true" />
 
 </RelativeLayout>

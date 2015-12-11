@@ -8,21 +8,19 @@ import android.preference.PreferenceManager;
 import com.trianguloy.llscript.repository.internal.Utils;
 
 import org.acra.ACRA;
-import org.acra.ReportField;
-import org.acra.ReportingInteractionMode;
 import org.acra.annotation.ReportsCrashes;
+import org.acra.sender.HttpSender;
 
 /**
  * Created by Lukas on 16.04.2015.
  * Represents the application
  */
 @ReportsCrashes(
-        mailTo = "repository.importer@gmail.com",
-        mode = ReportingInteractionMode.DIALOG,
-        resDialogTitle = R.string.title_crash,
-        resDialogText = R.string.text_crash,
-        resDialogCommentPrompt = R.string.text_comment,
-        customReportContent = {ReportField.USER_COMMENT,ReportField.ANDROID_VERSION, ReportField.APP_VERSION_NAME, ReportField.PHONE_MODEL, ReportField.BRAND, ReportField.STACK_TRACE}
+        httpMethod = HttpSender.Method.PUT,
+        reportType = HttpSender.Type.JSON,
+        formUri = "http://acra-c56dce.smileupps.com/acra-repository-importer/_design/acra-storage/_update/report",
+        formUriBasicAuthLogin = "importer",
+        formUriBasicAuthPassword = "riR3p0rt"
 )
 public class RepositoryImporter extends Application {
     @Override

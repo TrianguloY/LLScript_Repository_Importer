@@ -15,7 +15,7 @@ android {
     buildToolsVersion '23.0.2'
     defaultConfig {
         applicationId "com.trianguloy.llscript.repository"
-        minSdkVersion 9
+        minSdkVersion 8
         targetSdkVersion 23
         versionCode 27
         versionName "1.9.5"

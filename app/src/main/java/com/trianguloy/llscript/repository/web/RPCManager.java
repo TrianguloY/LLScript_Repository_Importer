@@ -53,7 +53,8 @@ public final class RPCManager {
         }
         if (login < LOGIN_RO) {
             try {
-                login = client.login("remote_ro", "remote_ro") ? LOGIN_RO : NOT_LOGGED_IN;
+                Object[] parameters = new Object[]{"remote_ro", "remote_ro"};
+                login = ((boolean) client.genericQuery("dokuwiki.login", parameters)) ? LOGIN_RO : NOT_LOGGED_IN;
             } catch (DokuException e) {
                 return false;
             }

@@ -233,6 +233,19 @@
     <string name="val_newItemDefault">1</string>
     <string name="val_changedSubDefault">2</string>
 
+    <!-- matches values in acra.Dialog-->
+    <string-array name="val_reportModeTexts">
+        <item>Ask</item>
+        <item>Never send</item>
+        <item>Send always</item>
+    </string-array>
+    <string-array name="val_reportModeValues">
+        <item>0</item>
+        <item>1</item>
+        <item>2</item>
+    </string-array>
+    <string name="val_reportModeDefault">0</string>
+
     <!-- Manifest -->
     <string name="permission_description">Import scripts into LL
     </string>
@@ -326,6 +339,13 @@
     <string name="message_permissionScriptMissing">If you do not grant the IMPORT_SCRIPTS permission, this app can\'t import any scripts into Lightning Launcher.</string>
     <string name="message_permissionSystemWindowMissing">You will now be asked to grant SYSTEM_ALERT_WINDOW permission to this app.\nIf you choose to do not, you won\'t be able to see alerts which notify about problems while importing scripts.\nYou can change this setting at any time in the System settings.</string>
     <string name="text_nameNotFound">Name not found</string>
+    <string name="pref_reportMode">reportMode</string>
+    <string name="checkbox_rememberChoice">Remember this choice</string>
+    <string name="title_reportMode">Bug Report Mode</string>
+    <string name="title_directEdit">Directly edit pages</string>
+    <string name="summary_directEdit">Open the editor for the current page</string>
+    <string name="button_send">Send</string>
+    <string name="button_dont_send">Don\'t Send</string>
 
 
 </resources>

@@ -5,9 +5,11 @@ import android.app.Application;
 import android.content.SharedPreferences;
 import android.preference.PreferenceManager;
 
+import com.trianguloy.llscript.repository.acra.Dialog;
 import com.trianguloy.llscript.repository.internal.Utils;
 
 import org.acra.ACRA;
+import org.acra.ReportingInteractionMode;
 import org.acra.annotation.ReportsCrashes;
 import org.acra.sender.HttpSender;
 
@@ -20,7 +22,14 @@ import org.acra.sender.HttpSender;
         reportType = HttpSender.Type.JSON,
         formUri = "http://acra-c56dce.smileupps.com/acra-repository-importer/_design/acra-storage/_update/report",
         formUriBasicAuthLogin = "importer",
-        formUriBasicAuthPassword = "riR3p0rt"
+        formUriBasicAuthPassword = "riR3p0rt",
+        mode = ReportingInteractionMode.DIALOG,
+        reportDialogClass = Dialog.class,
+        resDialogText = R.string.text_crash,
+        resDialogTitle = R.string.title_crash,
+        resDialogPositiveButtonText = R.string.button_send,
+        resDialogNegativeButtonText = R.string.button_dont_send
+
 )
 public class RepositoryImporter extends Application {
     @Override

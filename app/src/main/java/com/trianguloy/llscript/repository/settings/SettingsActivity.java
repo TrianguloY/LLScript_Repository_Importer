@@ -93,6 +93,8 @@ public class SettingsActivity extends PreferenceActivity implements SharedPrefer
                 return true;
             }
         });
+        ListPreference reportMode = (ListPreference) findPreference(getString(R.string.pref_reportMode));
+        reportMode.setSummary(reportMode.getEntry());
     }
 
     @Override

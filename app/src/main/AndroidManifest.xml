@@ -80,7 +80,7 @@
         </receiver>
 
         <activity
-            android:name="org.acra.CrashReportDialog"
+            android:name=".acra.Dialog"
             android:excludeFromRecents="true"
             android:finishOnTaskLaunch="true"
             android:launchMode="singleInstance"

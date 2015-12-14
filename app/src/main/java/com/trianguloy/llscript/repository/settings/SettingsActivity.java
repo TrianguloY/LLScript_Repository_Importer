@@ -42,36 +42,38 @@ import java.util.List;
  * API Guide</a> for more information on developing a Settings UI.
  */
 @SuppressWarnings("deprecation")
-public class SettingsActivity extends PreferenceActivity implements SharedPreferences.OnSharedPreferenceChangeListener {
+public class SettingsActivity extends PreferenceActivity {
+
+    PreferenceListener listener;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         RepositoryImporter.setTheme(this, PreferenceManager.getDefaultSharedPreferences(this));
-
         super.onCreate(savedInstanceState);
 
         setupActionBar();
         addPreferencesFromResource(R.xml.pref_general);
+        listener = new PreferenceListener(getPreferenceScreen());
 
-
-        ListPreference listPreference = (ListPreference) findPreference(getString(R.string.pref_notificationInterval));
-        listPreference.setSummary(listPreference.getEntry());
-        if (!BuildConfig.DEBUG) {
-            //Remove every minute check
-            List<CharSequence> entries = new ArrayList<>(Arrays.asList(listPreference.getEntries()));
-            List<CharSequence> entryValues = new ArrayList<>(Arrays.asList(listPreference.getEntryValues()));
-            entries.remove(0);
-            entryValues.remove(0);
-            listPreference.setEntries(entries.toArray(new CharSequence[entries.size()]));
-            listPreference.setEntryValues(entryValues.toArray(new CharSequence[entryValues.size()]));
-            //remove enable acra preference
-            CheckBoxPreference acraPref = (CheckBoxPreference) findPreference(getString(R.string.pref_enableAcra));
-            acraPref.setChecked(true);
-            getPreferenceScreen().removePreference(acraPref);
-        }
-        CheckBoxPreference checkBoxPreference = (CheckBoxPreference) findPreference(getString(R.string.pref_notifications));
-        listPreference.setEnabled(checkBoxPreference.isChecked());
-        final Preference resetPwPref = findPreference(getString(R.string.pref_resetPw));
+        final ListPreference intervalPreference = (ListPreference) findPreference(getString(R.string.pref_notificationInterval));
+        listener.addPreference(intervalPreference, true, new Runnable() {
+            @Override
+            public void run() {
+                startService(getPreferenceScreen().getSharedPreferences());
+            }
+        });
+        final CheckBoxPreference checkBoxPreference = (CheckBoxPreference) findPreference(getString(R.string.pref_notifications));
+        intervalPreference.setEnabled(checkBoxPreference.isChecked());
+        listener.addPreference(checkBoxPreference, new Runnable() {
+            @Override
+            public void run() {
+                if (checkBoxPreference.isChecked())
+                    startService(getPreferenceScreen().getSharedPreferences());
+                else stopService();
+                intervalPreference.setEnabled(checkBoxPreference.isChecked());
+            }
+        });
+        Preference resetPwPref = findPreference(getString(R.string.pref_resetPw));
         resetPwPref.setEnabled(AuthenticationUtils.hasPassword(this));
         resetPwPref.setOnPreferenceClickListener(new Preference.OnPreferenceClickListener() {
             @Override
@@ -81,32 +83,30 @@ public class SettingsActivity extends PreferenceActivity implements SharedPrefer
                 return true;
             }
         });
-        ListPreference newScript = (ListPreference) findPreference(getString(R.string.pref_newScripts));
-        newScript.setSummary(newScript.getEntry());
-        ListPreference changedSubs = (ListPreference) findPreference(getString(R.string.pref_changedSubs));
-        changedSubs.setSummary(changedSubs.getEntry());
-        CheckBoxPreference theme = (CheckBoxPreference) findPreference(getString(R.string.key_theme));
-        theme.setOnPreferenceChangeListener(new Preference.OnPreferenceChangeListener() {
+        listener.addPreference(getString(R.string.key_theme), new Runnable() {
             @Override
-            public boolean onPreferenceChange(Preference preference, Object newValue) {
+            public void run() {
                 Dialogs.themeChanged(SettingsActivity.this);
-                return true;
             }
         });
-        ListPreference reportMode = (ListPreference) findPreference(getString(R.string.pref_reportMode));
-        reportMode.setSummary(reportMode.getEntry());
+        listener.addPreferenceForSummary(getString(R.string.pref_newScripts));
+        listener.addPreferenceForSummary(getString(R.string.pref_changedSubs));
+        listener.addPreferenceForSummary(getString(R.string.pref_reportMode));
+        if (!BuildConfig.DEBUG) {
+            removeDebugOptions();
+        }
     }
 
     @Override
     protected void onResume() {
         super.onResume();
-        getPreferenceScreen().getSharedPreferences().registerOnSharedPreferenceChangeListener(this);
+        getPreferenceScreen().getSharedPreferences().registerOnSharedPreferenceChangeListener(listener);
     }
 
     @Override
     protected void onPause() {
         super.onPause();
-        getPreferenceScreen().getSharedPreferences().unregisterOnSharedPreferenceChangeListener(this);
+        getPreferenceScreen().getSharedPreferences().unregisterOnSharedPreferenceChangeListener(listener);
     }
 
     /**
@@ -172,28 +172,6 @@ public class SettingsActivity extends PreferenceActivity implements SharedPrefer
     }
 
 
-    @Override
-    public void onSharedPreferenceChanged(SharedPreferences sharedPreferences, String key) {
-        if (key.equals(getString(R.string.pref_notificationInterval))) {
-            ListPreference listPreference = (ListPreference) findPreference(key);
-            listPreference.setSummary(listPreference.getEntry());
-            startService(sharedPreferences);
-        } else if (key.equals(getString(R.string.pref_notifications))) {
-            CheckBoxPreference checkBoxPreference = (CheckBoxPreference) findPreference(key);
-            if (checkBoxPreference.isChecked()) startService(sharedPreferences);
-            else stopService();
-            ListPreference listPreference = (ListPreference) findPreference(getString(R.string.pref_notificationInterval));
-            listPreference.setEnabled(checkBoxPreference.isChecked());
-        } else if (key.equals(getString(R.string.pref_newScripts))) {
-            ListPreference listPreference = (ListPreference) findPreference(key);
-            listPreference.setSummary(listPreference.getEntry());
-        } else if (key.equals(getString(R.string.pref_changedSubs))) {
-            ListPreference listPreference = (ListPreference) findPreference(key);
-            listPreference.setSummary(listPreference.getEntry());
-        }
-    }
-
-
     private void stopService() {
         WebServiceManager.stopService(getApplicationContext());
         getPackageManager().setComponentEnabledSetting(new ComponentName(getApplicationContext(), BootBroadcastReceiver.class),
@@ -208,5 +186,23 @@ public class SettingsActivity extends PreferenceActivity implements SharedPrefer
         getPackageManager().setComponentEnabledSetting(new ComponentName(getApplicationContext(), BootBroadcastReceiver.class),
                 PackageManager.COMPONENT_ENABLED_STATE_ENABLED,
                 PackageManager.DONT_KILL_APP);
+    }
+
+    /**
+     * removes options which should not be visible to normal users
+     */
+    private void removeDebugOptions(){
+        ListPreference intervalPreference = (ListPreference) findPreference(getString(R.string.pref_notificationInterval));
+        //Remove every minute check
+        List<CharSequence> entries = new ArrayList<>(Arrays.asList(intervalPreference.getEntries()));
+        List<CharSequence> entryValues = new ArrayList<>(Arrays.asList(intervalPreference.getEntryValues()));
+        entries.remove(0);
+        entryValues.remove(0);
+        intervalPreference.setEntries(entries.toArray(new CharSequence[entries.size()]));
+        intervalPreference.setEntryValues(entryValues.toArray(new CharSequence[entryValues.size()]));
+        //remove enable acra preference
+        CheckBoxPreference acraPref = (CheckBoxPreference) findPreference(getString(R.string.pref_enableAcra));
+        acraPref.setChecked(true);
+        getPreferenceScreen().removePreference(acraPref);
     }
 }

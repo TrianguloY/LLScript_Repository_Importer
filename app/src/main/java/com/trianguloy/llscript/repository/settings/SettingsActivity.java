@@ -42,7 +42,7 @@ import java.util.List;
 @SuppressWarnings("deprecation")
 public class SettingsActivity extends PreferenceActivity {
 
-    PreferenceListener listener;
+    private PreferenceListener listener;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -55,7 +55,7 @@ public class SettingsActivity extends PreferenceActivity {
         listener = new PreferenceListener(getPreferenceScreen());
 
         final ListPreference intervalPreference = (ListPreference) findPreference(getString(R.string.pref_notificationInterval));
-        listener.addPreference(intervalPreference, true, new Runnable() {
+        listener.addPreferenceForSummary(intervalPreference, new Runnable() {
             @Override
             public void run() {
                 startService(pref);

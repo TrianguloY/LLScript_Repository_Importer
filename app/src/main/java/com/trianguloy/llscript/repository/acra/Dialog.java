@@ -19,12 +19,12 @@ import org.acra.CrashReportDialog;
  */
 public class Dialog extends CrashReportDialog {
 
-    public static final int MODE_ASK = 0;
-    public static final int MODE_NO_REPORT = 1;
-    public static final int MODE_REPORT_SILENT = 2;
+    private static final int MODE_ASK = 0;
+    private static final int MODE_NO_REPORT = 1;
+    private static final int MODE_REPORT_SILENT = 2;
 
-    Preferences sharedPref;
-    CheckBox checkBox;
+    private Preferences sharedPref;
+    private CheckBox checkBox;
 
 
     @Override

@@ -12,10 +12,10 @@ import java.util.Map;
  * Created by Lukas on 14.12.2015.
  * Manages Preference change events
  */
-public class PreferenceListener implements SharedPreferences.OnSharedPreferenceChangeListener {
+class PreferenceListener implements SharedPreferences.OnSharedPreferenceChangeListener {
 
-    private Map<String, Wrapper> map;
-    private PreferenceScreen screen;
+    private final Map<String, Wrapper> map;
+    private final PreferenceScreen screen;
 
     public PreferenceListener(PreferenceScreen screen) {
         this.screen = screen;
@@ -43,7 +43,7 @@ public class PreferenceListener implements SharedPreferences.OnSharedPreferenceC
     }
 
     /**
-     * add a preference to keep it's summary set to it's value
+     * add a preference to keep its summary set to its value
      *
      * @param preference the preference
      */
@@ -81,14 +81,21 @@ public class PreferenceListener implements SharedPreferences.OnSharedPreferenceC
     }
 
     /**
-     * add an action to execute when the preference changes and optionally keep its summary set to its value
-     *
-     * @param preference        the preference
-     * @param setSummaryToValue if the summary should be kept set to the value
+     * add an action to execute when the preference changes and keep its summary set to its value
+     *  @param preference        the preference
      * @param action            the action
      */
-    public void addPreference(Preference preference, boolean setSummaryToValue, Runnable action) {
-        addPreference(preference.getKey(), setSummaryToValue, action);
+    public void addPreferenceForSummary(Preference preference, Runnable action) {
+        addPreference(preference.getKey(), true, action);
+    }
+
+    /**
+     * add an action to execute when the preference changes and keep its summary set to its value
+     * @param key    the preference identifier
+     * @param action            the action
+     */
+    public void addPreferenceForSummary(String key, Runnable action) {
+        addPreference(key, true, action);
     }
 
     /**
@@ -98,7 +105,7 @@ public class PreferenceListener implements SharedPreferences.OnSharedPreferenceC
      * @param setSummaryToValue if the summary should be kept set to the value
      * @param action            the action
      */
-    public void addPreference(String key, boolean setSummaryToValue, Runnable action) {
+    private void addPreference(String key, boolean setSummaryToValue, Runnable action) {
         map.put(key, new Wrapper(action, setSummaryToValue));
         if (setSummaryToValue) {
             setSummary(key);
@@ -106,8 +113,8 @@ public class PreferenceListener implements SharedPreferences.OnSharedPreferenceC
     }
 
     private static class Wrapper {
-        boolean setSummaryToValue;
-        Runnable action;
+        final boolean setSummaryToValue;
+        final Runnable action;
 
         public Wrapper(Runnable action, boolean setSummaryToValue) {
             this.action = action;

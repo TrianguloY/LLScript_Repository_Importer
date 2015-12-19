@@ -15,6 +15,7 @@ import java.util.Set;
 
 /**
  * Created by Lukas on 19.12.2015.
+ * Wraps normal SharedPreferences to allow higher API methods on lower Versions (by executing an alternative)
  */
 public class Preferences implements SharedPreferences {
 

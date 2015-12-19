@@ -256,7 +256,7 @@ public class ManagedWebView extends WebView {
 
     /**
      * set the loading status
-     * @param isLoading
+     * @param isLoading the new status
      */
     private void loading(boolean isLoading) {
         if (listener != null) {

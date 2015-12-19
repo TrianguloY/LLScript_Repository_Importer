@@ -29,7 +29,7 @@ public class SubscriptionManager {
     }
 
     public void subscribe(@NonNull String id) {
-        Set<String> subs = (Set<String>) sharedPref.getStringSet(Utils.getString(R.string.pref_subscriptions),new HashSet<String>());
+        Set<String> subs = sharedPref.getStringSet(Utils.getString(R.string.pref_subscriptions),new HashSet<String>());
         subs.add(id);
         sharedPref.edit().putStringSet(Utils.getString(R.string.pref_subscriptions), subs).apply();
         toast(Utils.getString(R.string.toast_subscribeSuccessful));

@@ -13,9 +13,9 @@
 
     <permission
         android:name="net.pierrox.lightning_launcher.IMPORT_SCRIPTS"
-        android:description="@string/permission_description"
+        android:description="@string/description_permission"
         android:icon="@drawable/ic_launcher"
-        android:label="@string/permission_label"
+        android:label="@string/label_permission"
         android:protectionLevel="dangerous" />
 
     <application
@@ -125,7 +125,7 @@
 
         <activity android:name=".auth.AuthenticatorActivity"
                   android:excludeFromRecents="true"
-            android:label="@string/button_login"/>
+            android:label="@string/label_login"/>
     </application>
 
 </manifest>

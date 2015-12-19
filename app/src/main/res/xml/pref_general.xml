@@ -33,9 +33,9 @@
             android:key="@string/pref_notifications"
             android:title="@string/title_pushNotifications"/>
         <ListPreference
-            android:defaultValue="@string/val_intervalDefault"
-            android:entries="@array/val_intervalTexts"
-            android:entryValues="@array/val_intervalValues"
+            android:defaultValue="@string/default_interval"
+            android:entries="@array/entries_interval"
+            android:entryValues="@array/values_interval"
             android:key="@string/pref_notificationInterval"
             android:title="@string/title_interval"/>
     </PreferenceCategory>
@@ -47,7 +47,7 @@
     <PreferenceCategory android:title="@string/title_lookAndFeel">
         <CheckBoxPreference
             android:defaultValue="false"
-            android:key="@string/key_theme"
+            android:key="@string/pref_theme"
             android:title="@string/title_theme"/>
         <CheckBoxPreference
             android:defaultValue="false"
@@ -55,15 +55,15 @@
             android:summary="@string/summary_showTools"
             android:title="@string/title_showTools"/>
         <ListPreference
-            android:defaultValue="@string/val_newItemDefault"
-            android:entries="@array/val_notify"
-            android:entryValues="@array/val_notifyId"
+            android:defaultValue="@string/default_newItem"
+            android:entries="@array/entries_notify"
+            android:entryValues="@array/values_notify"
             android:key="@string/pref_newScripts"
             android:title="@string/title_newScripts"/>
         <ListPreference
-            android:defaultValue="@string/val_changedSubDefault"
-            android:entries="@array/val_notify"
-            android:entryValues="@array/val_notifyId"
+            android:defaultValue="@string/default_changedSub"
+            android:entries="@array/entries_notify"
+            android:entryValues="@array/values_notify"
             android:key="@string/pref_changedSubs"
             android:title="@string/title_changedSubs"/>
     </PreferenceCategory>
@@ -91,9 +91,9 @@
     </PreferenceCategory>
     <PreferenceCategory android:title="Crash Reports">
         <ListPreference
-            android:defaultValue="@string/val_reportModeDefault"
-            android:entries="@array/val_reportModeTexts"
-            android:entryValues="@array/val_reportModeValues"
+            android:defaultValue="@string/default_reportMode"
+            android:entries="@array/entries_reportMode"
+            android:entryValues="@array/values_reportMode"
             android:key="@string/pref_reportMode"
             android:title="@string/title_reportMode"/>
         <EditTextPreference
@@ -102,13 +102,13 @@
             android:title="@string/title_acraEmail"/>
     </PreferenceCategory>
     <PreferenceCategory android:title="@string/title_links">
-        <Preference android:title="@string/text_playStore">
+        <Preference android:title="@string/title_playStore">
             <intent
                 android:action="android.intent.action.VIEW"
                 android:data="@string/link_playStoreImporter"/>
         </Preference>
 
-        <Preference android:title="@string/text_googlePlus">
+        <Preference android:title="@string/title_googlePlus">
             <intent
                 android:action="android.intent.action.VIEW"
                 android:data="@string/link_googlePlus"/>

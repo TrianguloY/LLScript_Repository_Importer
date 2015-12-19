@@ -82,7 +82,7 @@ public class SettingsActivity extends PreferenceActivity {
                 return true;
             }
         });
-        listener.addPreference(getString(R.string.key_theme), new Runnable() {
+        listener.addPreference(getString(R.string.pref_theme), new Runnable() {
             @Override
             public void run() {
                 Dialogs.themeChanged(SettingsActivity.this);

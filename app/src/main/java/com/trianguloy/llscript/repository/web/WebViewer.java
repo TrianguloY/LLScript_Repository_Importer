@@ -82,7 +82,7 @@ public class WebViewer extends Activity {
         //check for launcher to find the installed one, continue even if not found
         Utils.checkForLauncher(this);
 
-        if ((sharedPref.contains(getString(R.string.key_version)) && sharedPref.getInt(getString(R.string.key_version), -1) == BuildConfig.VERSION_CODE) || upgradeFromOldVersion())
+        if ((sharedPref.contains(getString(R.string.pref_version)) && sharedPref.getInt(getString(R.string.pref_version), -1) == BuildConfig.VERSION_CODE) || upgradeFromOldVersion())
             init();
     }
 
@@ -271,7 +271,7 @@ public class WebViewer extends Activity {
     private void pageChanged(String url) {
         if (url.equals(getString(R.string.link_repository))) {
             button.setVisibility(View.GONE);
-            setTitle(R.string.action_mainPage);
+            setTitle(R.string.menu_mainPage);
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.HONEYCOMB) {
                 ActionBar bar = getActionBar();
                 assert bar != null;
@@ -310,7 +310,7 @@ public class WebViewer extends Activity {
     //return false to block loading. If blocked has to call init() when finished
     private boolean upgradeFromOldVersion() {
         PreferenceManager.setDefaultValues(this, R.xml.pref_general, false);
-        sharedPref.edit().putInt(getString(R.string.key_version), BuildConfig.VERSION_CODE).apply();
+        sharedPref.edit().putInt(getString(R.string.pref_version), BuildConfig.VERSION_CODE).apply();
         if (!BuildConfig.DEBUG)
             sharedPref.edit().putBoolean(getString(R.string.pref_enableAcra), true).apply();
 

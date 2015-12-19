@@ -59,7 +59,7 @@ public final class Dialogs {
     }
 
     public static void badLogin(Context context, @Nullable DialogInterface.OnClickListener onClose) {
-        error(context, onClose, context.getString(R.string.text_badLogin));
+        error(context, onClose, context.getString(R.string.message_badLogin));
     }
 
     public static void connectionFailed(Context context) {
@@ -67,17 +67,17 @@ public final class Dialogs {
     }
 
     public static void connectionFailed(Context context, @Nullable DialogInterface.OnClickListener onClose) {
-        error(context, onClose, context.getString(R.string.text_cantConnect));
+        error(context, onClose, context.getString(R.string.message_cantConnect));
     }
 
     public static void pageAlreadyExists(Context context) {
-        error(context, null, context.getString(R.string.text_alreadyExists));
+        error(context, null, context.getString(R.string.message_alreadyExists));
     }
 
     public static void saved(final Activity context, @Nullable String savedPageId) {
         AlertDialog.Builder builder = new AlertDialog.Builder(context)
                 .setTitle(context.getString(R.string.title_saved))
-                .setMessage(context.getString(R.string.text_doNext));
+                .setMessage(context.getString(R.string.message_doNext));
         if (savedPageId != null)
             builder.setPositiveButton(context.getString(R.string.button_viewPage), showPage(context, context.getString(R.string.link_scriptPagePrefix) + savedPageId.substring(context.getString(R.string.prefix_script).length())));
         builder.setNeutralButton(context.getString(R.string.button_goHome), showPage(context, context.getString(R.string.link_repository)))
@@ -102,7 +102,7 @@ public final class Dialogs {
     public static void cantSaveEmpty(Context context) {
         new AlertDialog.Builder(context)
                 .setTitle(context.getString(R.string.title_error))
-                .setMessage(context.getString(R.string.text_cantSaveEmpty))
+                .setMessage(context.getString(R.string.message_cantSaveEmpty))
                 .setNeutralButton(context.getString(R.string.button_ok), null)
                 .show();
     }
@@ -110,7 +110,7 @@ public final class Dialogs {
     public static void unsavedChanges(Context context, @Nullable DialogInterface.OnClickListener onConfirm) {
         new AlertDialog.Builder(context)
                 .setTitle(context.getString(R.string.title_warning))
-                .setMessage(context.getString(R.string.text_unsavedChanges))
+                .setMessage(context.getString(R.string.message_unsavedChanges))
                 .setPositiveButton(context.getString(R.string.button_yes), onConfirm)
                 .setNegativeButton(context.getString(R.string.button_no), null)
                 .show();
@@ -148,7 +148,7 @@ public final class Dialogs {
             AlertDialog ad = new AlertDialog.Builder(context)
                     .setCancelable(false)
                     .setTitle(R.string.title_warning)
-                    .setMessage(message+"\n\n"+context.getString(R.string.messagePrefix_launcherProblem))
+                    .setMessage(message+"\n\n"+context.getString(R.string.messageSuffix_launcherProblem))
                     .setPositiveButton(R.string.button_ok, new DialogInterface.OnClickListener() {
                         @Override
                         public void onClick(DialogInterface dialog, int which) {
@@ -296,7 +296,7 @@ public final class Dialogs {
         new AlertDialog.Builder(context)
                 .setTitle(R.string.title_importer)
                 .setNegativeButton(R.string.button_exit, null)
-                .setPositiveButton(R.string.text_googlePlus, new DialogInterface.OnClickListener() {
+                .setPositiveButton(R.string.title_googlePlus, new DialogInterface.OnClickListener() {
                     public void onClick(DialogInterface dialog, int which) {
                         Intent j = new Intent(Intent.ACTION_VIEW);
                         j.setData(Uri.parse(context.getString(R.string.link_playStoreImporter)));

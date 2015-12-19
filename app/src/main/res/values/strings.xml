@@ -4,34 +4,21 @@
     <!-- package name -->
     <string name="app_name">Repository importer</string>
 
-    <!-- menu webViewer -->
-    <string name="action_mainPage">Repository Index</string>
-    <string name="action_openInBrowser">Open in browser</string>
-    <string name="action_settings">Settings…</string>
-    <string name="action_subscribe">Subscribe</string>
-    <string name="action_unsubscribe">Unsubscribe</string>
-    <string name="action_editor">Editor</string>
-    <string name="action_share">Share</string>
-    <string name="menu_crash">Click to crash</string>
-
-    <!-- webviewer -->
-    <string name="button_importToLauncher">Search and import…</string>
-
     <!-- settings -->
     <string name="title_attachAboutScript">Attach \'About Script\'</string>
     <string name="title_subscriptions">Subscriptions…</string>
     <string name="summary_subscriptions">Manage your subscriptions</string>
     <string name="title_links">Links</string>
-    <string name="text_playStore">Play store page</string>
+    <string name="title_playStore">Play store page</string>
     <string name="link_playStoreImporter">
         https://play.google.com/store/apps/details?id=com.trianguloy.llscript.repository
     </string>
-    <string name="text_googlePlus">Google+ Community</string>
+    <string name="title_googlePlus">Google+ Community</string>
     <string name="link_googlePlus">https://plus.google.com/communities/109017480579703391739
     </string>
     <string name="title_about">About</string>
-    <string name="title_author">Authors</string>
     <string name="summary_about">TrianguloY and Lukas Morawietz</string>
+    <string name="title_author">Authors</string>
     <string name="title_browser">Default external Browser</string>
     <string name="summary_browser">Used for all external pages</string>
     <string name="title_showTools">Show Tools in header</string>
@@ -47,7 +34,6 @@
     <string name="title_notifications">Notifications</string>
     <string name="title_pushNotifications">Push Notifications</string>
     <string name="title_interval">Update Interval</string>
-    <string name="key_theme">theme</string>
     <string name="title_theme">Use dark theme</string>
     <string name="title_preferDedicated">Prefer dedicated Apps</string>
     <string name="summary_preferDedicated">Use e.g. Google Plus App instead of the browser</string>
@@ -63,7 +49,11 @@
         app
     </string>
     <string name="title_enableAcra">Enable Acra</string>
-
+    <string name="title_reportMode">Report Mode</string>
+    <string name="title_directEdit">Directly edit pages</string>
+    <string name="summary_directEdit">Open the editor for the current page</string>
+    <string name="summary_acraEmail">The email address which is sent with reports for developers to respond</string>
+    <string name="title_acraEmail">Email</string>
 
     <!-- alert settings -->
     <string name="title_themeChanged">Theme Changed</string>
@@ -71,6 +61,101 @@
         want to restart now?
     </string>
 
+    <!--preference keys -->
+    <string name="pref_aboutScript">aboutScript</string>
+    <string name="pref_Scripts">scripts</string>
+    <string name="pref_subscriptions">subscriptions2</string>
+    <string name="pref_pageNames">page_name_map</string>
+    <string name="pref_notifications">notify</string>
+    <string name="pref_notificationInterval">interval</string>
+    <string name="pref_browser">browser</string>
+    <string name="pref_showTools">showTools</string>
+    <string name="pref_resetPw">reset_pw</string>
+    <string name="pref_template">template</string>
+    <string name="pref_newScripts">newScripts</string>
+    <string name="pref_preferDedicated">preferDedicated</string>
+    <string name="pref_directReturn">directReturn</string>
+    <string name="pref_longPressClose">longPressClose</string>
+    <string name="pref_singleClose">singleClose</string>
+    <string name="pref_directEdit">directEdit</string>
+    <string name="pref_timestamp">timestamp</string>
+    <string name="pref_changedSubs">changedSubs</string>
+    <string name="pref_enableAcra">acra.enable</string>
+    <string name="pref_acraEmail">acra.user.email</string>
+    <string name="pref_theme">theme</string>
+    <string name="pref_version">version</string>
+    <string name="pref_reportMode">reportMode</string>
+
+    <!-- {@deprecated no replacement}-->
+    <string name="pref_repoHash">repoHash</string>
+    <!-- {@deprecated use pref_subscriptions instead -->
+    <string name="pref_subs">subscriptions</string>
+
+    <!--preference values -->
+    <string-array name="entries_interval">
+        <item>Every Minute</item>
+        <item>Hourly</item>
+        <item>Every 12 hours</item>
+        <item>Daily</item>
+        <item>Weekly</item>
+    </string-array>
+    <string-array name="values_interval">
+        <item>60000</item>
+        <item>3600000</item>
+        <item>43200000</item>
+        <item>86400000</item>
+        <item>604800000</item>
+    </string-array>
+    <string name="default_interval">86400000</string>
+    <string-array name="entries_notify">
+        <item>None</item>
+        <item>Toast</item>
+        <item>Dialog</item>
+    </string-array>
+    <string-array name="values_notify">
+        <item>0</item>
+        <item>1</item>
+        <item>2</item>
+    </string-array>
+    <string name="default_newItem">1</string>
+    <string name="default_changedSub">2</string>
+
+    <!-- matches values in acra.Dialog-->
+    <string-array name="entries_reportMode">
+        <item>Ask</item>
+        <item>Never send</item>
+        <item>Send always</item>
+    </string-array>
+    <string-array name="values_reportMode">
+        <item>0</item>
+        <item>1</item>
+        <item>2</item>
+    </string-array>
+    <string name="default_reportMode">0</string>
+
+    <!--ACRA-->
+    <string name="title_crash">Repository Importer has crashed</string>
+    <string name="text_crash">Please send the log to the developers.</string>
+    <string name="text_commentPrompt">Please describe the Situation in which this crash occurred:</string>
+    <string name="text_emailPrompt">Enter your email address here if you want to help solving this bug:</string>
+    <string name="checkbox_rememberChoice">Remember this choice</string>
+    <string name="button_send">Send</string>
+    <string name="button_dont_send">Don\'t Send</string>
+    <string name="toast_crashNoReport">Repository Importer crashed\n(No report sent)</string>
+    <string name="toast_crashReported">Repository Importer crashed\n(Report sent)</string>
+
+    <!-- menu webViewer -->
+    <string name="menu_mainPage">Repository Index</string>
+    <string name="menu_openInBrowser">Open in browser</string>
+    <string name="menu_settings">Settings…</string>
+    <string name="menu_subscribe">Subscribe</string>
+    <string name="menu_unsubscribe">Unsubscribe</string>
+    <string name="menu_editor">Editor</string>
+    <string name="menu_share">Share</string>
+    <string name="menu_crash">Click to crash</string>
+
+    <!-- webViewer -->
+    <string name="button_importToLauncher">Search and import…</string>
 
     <!-- alert confirm and import -->
     <string name="title_importer">Script Importer</string>
@@ -79,7 +164,7 @@
     <string name="text_itemFlag">Item menu</string>
     <string name="text_customFlag">Custom menu</string>
     <string name="text_scriptCode">Source Code:</string>
-    <string name="message_codeHint">Code should be here. Please contact the developer</string>
+    <string name="text_codeHint">Code should be here. Please contact the developer</string>
     <string name="button_import">Import</string>
     <string name="button_share">share</string>
 
@@ -104,161 +189,42 @@
     </string>
     <string name="message_launcherNotFound">Lightning Launcher was not found.
     </string>
-    <string name="messagePrefix_launcherProblem">Do you want to go to Play Store?\n(You can continue using the app, but some features won\'t be available)</string>
-
-    <!-- alert open in browser-->
-    <string name="title_appChooserBad">Can\'t open page. Open instead with:</string>
-    <string name="title_appChooserNormal">Open with:</string>
-    <string name="title_appChooserExternalClicked">External Page. Open with:</string>
-    <string name="title_appChooserRegister">Go to Register website</string>
-    <string name="message_noBrowser">No browser found</string>
-
-    <!--alert crash-->
-    <string name="title_crash">Repository Importer has crashed</string>
-    <string name="text_crash">Please send the log to the developers.</string>
-    <string name="text_commentPrompt">Please describe the Situation in which this crash occurred:</string>
-    <string name="text_emailPrompt">Enter your email address here if you want to help solving this bug:</string>
+    <string name="messageSuffix_launcherProblem">Do you want to go to Play Store?\n(You can continue using the app, but some features won\'t be available)</string>
 
     <!-- alert NetworkProblem -->
-    <string name="text_cantConnect">Can\'t connect to server</string>
+    <string name="message_cantConnect">Can\'t connect to server</string>
 
-    <!-- alert page exists -->
-    <string name="title_error">Error</string>
-    <string name="text_alreadyExists">Page already exists. Please choose another ID</string>
+    <!-- Importer -->
+    <string name="text_nameNotFound">Name not found</string>
 
-    <!-- alert (other) -->
-    <string name="title_share">Share</string>
-    <string name="title_newScripts2">New Script(s)</string>
+    <!-- Page IDs -->
+    <string name="id_scriptRepository">script_repository</string>
+    <string name="id_scriptTemplate">script_template</string>
+
+    <!-- State keys -->
+    <string name="key_backStack">backStack</string>
+    <string name="key_repoHtml">repoHtml</string>
+    <string name="key_state">state</string>
+    <string name="key_pageText">pageText</string>
+    <string name="key_pageName">pageName</string>
+    <string name="key_pageId">pageId</string>
+    <string name="key_textHash">textHash</string>
+    <string name="key_isTemplate">isTemplate</string>
 
     <!-- Subscriptions -->
     <string name="title_subscribe">Subscribe</string>
     <string name="message_subscribeAsk">Do you want to subscribe to this page?</string>
     <string name="title_updatedSubs">Updated subscribed page(s)</string>
     <string name="title_remove">Remove</string>
-    <string name="message_remove">"Remove subscription to page "</string>
+    <string name="message_remove">Remove subscription to page </string>
     <string name="toast_oneNewScript">There is a new Script in the Repository:</string>
     <string name="toast_severalNewScripts">There are new Scripts in the Repository:</string>
     <string name="toast_subscribeSuccessful">Successfully subscribed</string>
     <string name="toast_unsubscribeSuccessful">Successfully unsubscribed</string>
     <string name="text_noSubs">No Subscriptions</string>
 
-
-    <!-- generic buttons -->
-    <string name="button_cancel">Cancel</string>
-    <string name="button_exit">Exit</string>
-    <string name="button_no">No</string>
-    <string name="button_ok">OK</string>
-    <string name="button_yes">Yes</string>
-    <string name="button_continue">Continue</string>
-
-    <!-- http links -->
-    <string name="link_repository">
-        http://www.lightninglauncher.com/wiki/doku.php?id=script_repository
-    </string>
-    <string name="link_server">http://www.lightninglauncher.com</string>
-    <string name="link_scriptPagePrefix">
-        http://www.lightninglauncher.com/wiki/doku.php?id=script_
-    </string>
-    <string name="link_playStorePrefix">https://play.google.com/store/apps/details?id=</string>
-    <string name="link_register">
-        http://www.lightninglauncher.com/wiki/doku.php?do=register
-    </string>
-    <string name="link_xmlrpc">
-        http://www.lightninglauncher.com/wiki/lib/exe/xmlrpc.php
-    </string>
-
-    <!-- Toasts (others) -->
-    <string name="toast_backToClose">Press back again to close\n(optionally long-press back to close
-        anytime)
-    </string>
-    <string name="toast_badString">The provided URL is not from a script of the Repository</string>
-    <string name="toast_managerError">There was an error trying to pass the data to the manager
-    </string>
-    <string name="toast_previewLink">This is a preview. You can\'t actually do anything here
-    </string>
-    <string name="toast_externalLink">"External link. Opening in "</string>
-    <string name="toast_tripleDot">…</string>
-
-    <!--preference keys -->
-    <string name="pref_aboutScript">aboutScript</string>
-    <string name="pref_Scripts">scripts</string>
-    <string name="pref_subscriptions">subscriptions2</string>
-    <string name="pref_pageNames">page_name_map</string>
-    <string name="pref_notifications">notify</string>
-    <string name="pref_notificationInterval">interval</string>
-    <string name="pref_browser">browser</string>
-    <string name="pref_showTools">showTools</string>
-    <string name="pref_resetPw">reset_pw</string>
-    <string name="pref_template">template</string>
-    <string name="pref_newScripts">newScripts</string>
-    <string name="pref_preferDedicated">preferDedicated</string>
-    <string name="pref_directReturn">directReturn</string>
-    <string name="pref_longPressClose">longPressClose</string>
-    <string name="pref_singleClose">singleClose</string>
-    <string name="pref_directEdit">directEdit</string>
-    <string name="pref_timestamp">timestamp</string>
-    <string name="pref_changedSubs">changedSubs</string>
-    <string name="pref_enableAcra">acra.enable</string>
-    <string name="pref_acraEmail">acra.user.email</string>
-
-    <!-- {@deprecated no replacement}-->
-    <string name="pref_repoHash">repoHash</string>
-    <!-- {@deprecated use pref_subscriptions instead -->
-    <string name="pref_subs">subscriptions</string>
-
-    <!--preference values -->
-    <string-array name="val_intervalTexts">
-        <item>Every Minute</item>
-        <item>Hourly</item>
-        <item>Every 12 hours</item>
-        <item>Daily</item>
-        <item>Weekly</item>
-    </string-array>
-    <string-array name="val_intervalValues">
-        <item>60000</item>
-        <item>3600000</item>
-        <item>43200000</item>
-        <item>86400000</item>
-        <item>604800000</item>
-    </string-array>
-    <string name="val_intervalDefault">86400000</string>
-    <string-array name="val_notify">
-        <item>None</item>
-        <item>Toast</item>
-        <item>Dialog</item>
-    </string-array>
-    <string-array name="val_notifyId">
-        <item>0</item>
-        <item>1</item>
-        <item>2</item>
-    </string-array>
-    <string name="val_newItemDefault">1</string>
-    <string name="val_changedSubDefault">2</string>
-
-    <!-- matches values in acra.Dialog-->
-    <string-array name="val_reportModeTexts">
-        <item>Ask</item>
-        <item>Never send</item>
-        <item>Send always</item>
-    </string-array>
-    <string-array name="val_reportModeValues">
-        <item>0</item>
-        <item>1</item>
-        <item>2</item>
-    </string-array>
-    <string name="val_reportModeDefault">0</string>
-
-    <!-- Manifest -->
-    <string name="permission_description">Import scripts into LL
-    </string>
-    <string name="permission_label">LL Import Scripts</string>
-    <string name="label_subscriptionsDialog">Subscribed Pages</string>
-    <string name="label_repoImporter">Repository Importer</string>
-    <string name="label_settings">Settings</string>
-
-    <!-- Notification -->
-    <string name="title_updatedPages">Updated Repository pages</string>
-    <string name="text_updatedPages">updated pages</string>
+    <!-- menu Editor -->
+    <string name="menu_logout">Logout</string>
 
     <!-- Editor -->
     <string name="button_createPage">Create a new Page</string>
@@ -276,21 +242,10 @@
     <string name="text_unorderedList">Unordered List Item</string>
     <string name="text_orderedList">Ordered List Item</string>
     <string name="title_selectPage">Select page to edit</string>
-    <string name="title_saved">Saved</string>
-    <string name="text_doNext">What do you want to do now?</string>
-    <string name="button_viewPage">View Page</string>
-    <string name="button_goHome">Go Home</string>
-    <string name="button_stay">Stay</string>
     <string name="text_addTo">Add to Repository Category:</string>
     <string name="hint_nameOrDescription">Name / Short Description</string>
     <string name="button_preview">Preview</string>
-    <string name="text_cantSaveEmpty">You can\'t save an empty page</string>
-    <string name="text_useAlways">Use always</string>
     <string name="text_LoggedInAs">Logged in as:</string>
-    <string name="title_warning">Warning</string>
-    <string name="text_unsavedChanges">There are unsaved changes. Are you sure you want to quit?
-    </string>
-    <string name="title_logout">Logout</string>
     <string name="text_questionmark">\?</string>
     <string name="title_repository">Repository</string>
     <string name="button_template">Create / Edit Template</string>
@@ -299,8 +254,26 @@
     <string name="radio_custom">Start with custom template</string>
     <string name="title_template">Template</string>
 
+    <!-- alert page exists -->
+    <string name="message_alreadyExists">Page already exists. Please choose another ID</string>
+
+    <!-- alert empty page -->
+    <string name="message_cantSaveEmpty">You can\'t save an empty page</string>
+
+    <!-- alert saved -->
+    <string name="title_saved">Saved</string>
+    <string name="message_doNext">What do you want to do now?</string>
+    <string name="button_viewPage">View Page</string>
+    <string name="button_goHome">Go Home</string>
+    <string name="button_stay">Stay</string>
+
+    <!-- alert unsaved changes -->
+    <string name="title_warning">Warning</string>
+    <string name="message_unsavedChanges">There are unsaved changes. Are you sure you want to quit?
+    </string>
+
     <!-- Authentication -->
-    <string name="text_badLogin">Bad Login values</string>
+    <string name="message_badLogin">Bad Login values</string>
     <string name="account_type">lightning_launcher.wiki</string>
     <string name="text_rememberPw">Remember Password</string>
     <string name="button_login">Login</string>
@@ -308,50 +281,82 @@
     <string name="text_login">Login with your Wiki account:</string>
     <string name="text_defaultUser">Anonymous</string>
 
-
     <!-- app chooser -->
     <string name="text_browser">browser</string>
+    <string name="title_appChooserBad">Can\'t open page. Open instead with:</string>
+    <string name="title_appChooserNormal">Open with:</string>
+    <string name="title_appChooserExternalClicked">External Page. Open with:</string>
+    <string name="title_appChooserRegister">Go to Register website</string>
+    <string name="message_noBrowser">No browser found</string>
+    <string name="text_useAlways">Use always</string>
 
-    <!-- Page IDs -->
-    <string name="id_scriptRepository">script_repository</string>
-    <string name="id_scriptTemplate">script_template</string>
+    <!-- Notification -->
+    <string name="title_updatedPages">Updated Repository pages</string>
+    <string name="text_updatedPages">updated pages</string>
 
-    <!-- State keys -->
-    <string name="key_backStack">backStack</string>
-    <string name="key_repoHtml">repoHtml</string>
-    <string name="key_state">state</string>
-    <string name="key_pageText">pageText</string>
-    <string name="key_pageName">pageName</string>
-    <string name="key_pageId">pageId</string>
-    <string name="key_textHash">textHash</string>
-    <string name="key_isTemplate">isTemplate</string>
+    <!-- Manifest -->
+    <string name="description_permission">Import scripts into LL
+    </string>
+    <string name="label_permission">LL Import Scripts</string>
+    <string name="label_subscriptionsDialog">Subscribed Pages</string>
+    <string name="label_repoImporter">Repository Importer</string>
+    <string name="label_settings">Settings</string>
+    <string name="label_login">Login</string>
+
+    <!-- http links -->
+    <string name="link_repository">
+        http://www.lightninglauncher.com/wiki/doku.php?id=script_repository
+    </string>
+    <string name="link_server">http://www.lightninglauncher.com</string>
+    <string name="link_scriptPagePrefix">
+        http://www.lightninglauncher.com/wiki/doku.php?id=script_
+    </string>
+    <string name="link_playStorePrefix">https://play.google.com/store/apps/details?id=</string>
+    <string name="link_register">
+        http://www.lightninglauncher.com/wiki/doku.php?do=register
+    </string>
+    <string name="link_xmlrpc">
+        http://www.lightninglauncher.com/wiki/lib/exe/xmlrpc.php
+    </string>
 
     <!-- intents -->
     <string name="intent_actionBackgroundReceiver">com.twofortyfouram.locale.intent.action.FIRE_SETTING</string>
     <string name="intent_backgroundReceiverClass">net.pierrox.lightning_launcher.util.FireReceiver</string>
     <string name="intent_backgroundReceiverExtraBundle">com.twofortyfouram.locale.intent.extra.BUNDLE</string>
 
-    <!-- unsorted-->
-    <string name="dummy" tools:ignore="UnusedResources">Dummy string to force new ones to be below
+    <!-- generic buttons -->
+    <string name="button_cancel">Cancel</string>
+    <string name="button_exit">Exit</string>
+    <string name="button_no">No</string>
+    <string name="button_ok">OK</string>
+    <string name="button_yes">Yes</string>
+    <string name="button_continue">Continue</string>
+
+    <!-- Toasts (others) -->
+    <string name="toast_backToClose">Press back again to close\n(optionally long-press back to close
+        anytime)
     </string>
-    <string name="key_version">version</string>
+    <string name="toast_badString">The provided URL is not from a script of the Repository</string>
+    <string name="toast_managerError">There was an error trying to pass the data to the manager
+    </string>
+    <string name="toast_previewLink">This is a preview. You can\'t actually do anything here
+    </string>
+    <string name="toast_externalLink">"External link. Opening in "</string>
+    <string name="toast_tripleDot">…</string>
+
+    <!-- alert (other / generic) -->
+    <string name="title_error">Error</string>
+    <string name="title_share">Share</string>
+    <string name="title_newScripts2">New Script(s)</string>
     <string name="title_updateConfirm">Confirm update</string>
     <string name="message_updateConfirm">There is a script with the same name but different code. Do you want to update it?</string>
     <string name="title_permissionMissing">Permission missing</string>
     <string name="message_permissionScriptMissing">If you do not grant the IMPORT_SCRIPTS permission, this app can\'t import any scripts into Lightning Launcher.</string>
     <string name="message_permissionSystemWindowMissing">You will now be asked to grant SYSTEM_ALERT_WINDOW permission to this app.\nIf you choose to do not, you won\'t be able to see alerts which notify about problems while importing scripts.\nYou can change this setting at any time in the System settings.</string>
-    <string name="text_nameNotFound">Name not found</string>
-    <string name="pref_reportMode">reportMode</string>
-    <string name="checkbox_rememberChoice">Remember this choice</string>
-    <string name="title_reportMode">Report Mode</string>
-    <string name="title_directEdit">Directly edit pages</string>
-    <string name="summary_directEdit">Open the editor for the current page</string>
-    <string name="button_send">Send</string>
-    <string name="button_dont_send">Don\'t Send</string>
-    <string name="toast_crashNoReport">Repository Importer crashed\n(No report sent)</string>
-    <string name="toast_crashReported">Repository Importer crashed\n(Report sent)</string>
-    <string name="summary_acraEmail">The email address which is sent with reports for developers to respond</string>
-    <string name="title_acraEmail">Email</string>
+
+    <!-- unsorted-->
+    <string name="dummy" tools:ignore="UnusedResources">Dummy string to force new ones to be below
+    </string>
 
 
 </resources>

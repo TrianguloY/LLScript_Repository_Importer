@@ -5,7 +5,6 @@ import android.app.ActionBar;
 import android.app.AlarmManager;
 import android.content.ComponentName;
 import android.content.Context;
-import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
 import android.content.res.Configuration;
 import android.os.Build;
@@ -14,7 +13,6 @@ import android.preference.CheckBoxPreference;
 import android.preference.ListPreference;
 import android.preference.Preference;
 import android.preference.PreferenceActivity;
-import android.preference.PreferenceManager;
 import android.view.MenuItem;
 import android.widget.Toast;
 
@@ -48,7 +46,8 @@ public class SettingsActivity extends PreferenceActivity {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
-        RepositoryImporter.setTheme(this, PreferenceManager.getDefaultSharedPreferences(this));
+        final Preferences pref = Preferences.getDefault(this);
+        RepositoryImporter.setTheme(this, pref);
         super.onCreate(savedInstanceState);
 
         setupActionBar();
@@ -59,7 +58,7 @@ public class SettingsActivity extends PreferenceActivity {
         listener.addPreference(intervalPreference, true, new Runnable() {
             @Override
             public void run() {
-                startService(getPreferenceScreen().getSharedPreferences());
+                startService(pref);
             }
         });
         final CheckBoxPreference checkBoxPreference = (CheckBoxPreference) findPreference(getString(R.string.pref_notifications));
@@ -68,7 +67,7 @@ public class SettingsActivity extends PreferenceActivity {
             @Override
             public void run() {
                 if (checkBoxPreference.isChecked())
-                    startService(getPreferenceScreen().getSharedPreferences());
+                    startService(pref);
                 else stopService();
                 intervalPreference.setEnabled(checkBoxPreference.isChecked());
             }
@@ -100,13 +99,13 @@ public class SettingsActivity extends PreferenceActivity {
     @Override
     protected void onResume() {
         super.onResume();
-        getPreferenceScreen().getSharedPreferences().registerOnSharedPreferenceChangeListener(listener);
+        Preferences.getDefault(this).registerOnSharedPreferenceChangeListener(listener);
     }
 
     @Override
     protected void onPause() {
         super.onPause();
-        getPreferenceScreen().getSharedPreferences().unregisterOnSharedPreferenceChangeListener(listener);
+        Preferences.getDefault(this).unregisterOnSharedPreferenceChangeListener(listener);
     }
 
     /**
@@ -155,8 +154,10 @@ public class SettingsActivity extends PreferenceActivity {
      * example, 10" tablets are extra-large.
      */
     private static boolean isXLargeTablet(Context context) {
-        return (context.getResources().getConfiguration().screenLayout
-                & Configuration.SCREENLAYOUT_SIZE_MASK) >= Configuration.SCREENLAYOUT_SIZE_XLARGE;
+        return Build.VERSION.SDK_INT >= Build.VERSION_CODES.GINGERBREAD
+                && (context.getResources().getConfiguration().screenLayout
+                & Configuration.SCREENLAYOUT_SIZE_MASK)
+                >= Configuration.SCREENLAYOUT_SIZE_XLARGE;
     }
 
     /**
@@ -179,9 +180,9 @@ public class SettingsActivity extends PreferenceActivity {
                 PackageManager.DONT_KILL_APP);
     }
 
-    private void startService(SharedPreferences sharedPreferences) {
+    private void startService(Preferences pref) {
         WebServiceManager.startService(getApplicationContext(),
-                Integer.parseInt(sharedPreferences.getString(getString(R.string.pref_notificationInterval),
+                Integer.parseInt(pref.getString(getString(R.string.pref_notificationInterval),
                         String.valueOf(AlarmManager.INTERVAL_HOUR))));
         getPackageManager().setComponentEnabledSetting(new ComponentName(getApplicationContext(), BootBroadcastReceiver.class),
                 PackageManager.COMPONENT_ENABLED_STATE_ENABLED,
@@ -191,7 +192,7 @@ public class SettingsActivity extends PreferenceActivity {
     /**
      * removes options which should not be visible to normal users
      */
-    private void removeDebugOptions(){
+    private void removeDebugOptions() {
         ListPreference intervalPreference = (ListPreference) findPreference(getString(R.string.pref_notificationInterval));
         //Remove every minute check
         List<CharSequence> entries = new ArrayList<>(Arrays.asList(intervalPreference.getEntries()));

@@ -4,10 +4,8 @@ import android.app.ActionBar;
 import android.app.Activity;
 import android.content.DialogInterface;
 import android.content.Intent;
-import android.content.SharedPreferences;
 import android.os.Build;
 import android.os.Bundle;
-import android.preference.PreferenceManager;
 import android.support.annotation.NonNull;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -18,6 +16,7 @@ import com.trianguloy.llscript.repository.R;
 import com.trianguloy.llscript.repository.RepositoryImporter;
 import com.trianguloy.llscript.repository.auth.AuthenticationUtils;
 import com.trianguloy.llscript.repository.internal.Dialogs;
+import com.trianguloy.llscript.repository.settings.Preferences;
 import com.trianguloy.llscript.repository.settings.SettingsActivity;
 import com.trianguloy.llscript.repository.web.RPCManager;
 
@@ -27,7 +26,7 @@ import com.trianguloy.llscript.repository.web.RPCManager;
  */
 public class EditorActivity extends Activity {
 
-    private SharedPreferences sharedPref;
+    private Preferences sharedPref;
     private Bundle savedInstanceState;
     private EditManager editManager;
     ViewManager viewManager;
@@ -36,7 +35,7 @@ public class EditorActivity extends Activity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         this.savedInstanceState = savedInstanceState;
-        sharedPref = PreferenceManager.getDefaultSharedPreferences(this);
+        sharedPref = Preferences.getDefault(this);
         RepositoryImporter.setTheme(this, sharedPref);
         editManager = new EditManager();
         viewManager = new ViewManager(this, editManager);

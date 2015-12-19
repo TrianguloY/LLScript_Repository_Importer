@@ -1,12 +1,12 @@
 package com.trianguloy.llscript.repository.internal;
 
 import android.content.Context;
-import android.preference.PreferenceManager;
 import android.text.Editable;
 import android.util.AttributeSet;
 import android.widget.TextView;
 
 import com.trianguloy.llscript.repository.R;
+import com.trianguloy.llscript.repository.settings.Preferences;
 
 /**
  * Created by Lukas on 28.02.2015.
@@ -33,7 +33,7 @@ public class SubTextView extends TextView {
             key = (String) text;
             String prefix = context.getString(R.string.prefix_script);
             if(key.startsWith(prefix))key = key.substring(prefix.length());
-            super.setText(Utils.getNameForPageFromPref(PreferenceManager.getDefaultSharedPreferences(context), key), type);
+            super.setText(Utils.getNameForPageFromPref(Preferences.getDefault(context), key), type);
         }
     }
 

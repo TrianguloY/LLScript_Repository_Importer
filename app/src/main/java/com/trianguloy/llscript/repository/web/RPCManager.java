@@ -1,14 +1,15 @@
 package com.trianguloy.llscript.repository.web;
 
-import android.content.SharedPreferences;
 import android.os.AsyncTask;
 import android.support.annotation.Nullable;
 
 import com.trianguloy.llscript.repository.R;
 import com.trianguloy.llscript.repository.internal.Utils;
+import com.trianguloy.llscript.repository.settings.Preferences;
 
 import java.net.MalformedURLException;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 import java.util.Set;
 
@@ -162,9 +163,9 @@ public final class RPCManager {
         }.execute();
     }
 
-    public static void getChangedSubscriptions(final SharedPreferences sharedPref, Listener<List<String>> listener) {
+    public static void getChangedSubscriptions(final Preferences sharedPref, Listener<List<String>> listener) {
         final int timestamp = sharedPref.getInt(Utils.getString(R.string.pref_timestamp), 0);
-        final Set<String> subscriptions = Utils.getSetFromPref(sharedPref, Utils.getString(R.string.pref_subscriptions));
+        final Set<String> subscriptions = sharedPref.getStringSet(Utils.getString(R.string.pref_subscriptions), Collections.<String>emptySet());
         if (subscriptions.size() > 0) new ListenedTask<List<String>>(listener) {
             @Override
             protected Result<List<String>> doInBackground(Void... voids) {
@@ -191,7 +192,7 @@ public final class RPCManager {
         }.execute();
     }
 
-    public static void setTimestampToCurrent(final SharedPreferences sharedPref, Listener<Integer> listener) {
+    public static void setTimestampToCurrent(final Preferences sharedPref, Listener<Integer> listener) {
         new ListenedTask<Integer>(listener) {
 
             @Override

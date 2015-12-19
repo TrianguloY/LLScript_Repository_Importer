@@ -5,11 +5,9 @@ import android.content.ComponentName;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
-import android.content.SharedPreferences;
 import android.content.pm.ActivityInfo;
 import android.content.pm.ResolveInfo;
 import android.net.Uri;
-import android.preference.PreferenceManager;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.widget.CheckBox;
@@ -17,6 +15,7 @@ import android.widget.Toast;
 
 import com.trianguloy.llscript.repository.IntentHandle;
 import com.trianguloy.llscript.repository.R;
+import com.trianguloy.llscript.repository.settings.Preferences;
 
 import java.util.List;
 
@@ -29,7 +28,7 @@ public class AppChooser extends AlertDialog.Builder {
     private final OnCloseListener listener;
     private final List<ResolveInfo> activities;
     private CheckBox checkBox;
-    private final SharedPreferences sharedPref;
+    private final Preferences sharedPref;
 
     public AppChooser(final Context context, Uri action, String title, String onFailureMessage, @Nullable OnCloseListener listener) {
         super(context);
@@ -37,7 +36,7 @@ public class AppChooser extends AlertDialog.Builder {
         this.action = action;
         this.onFailureMessage = onFailureMessage;
         this.listener = listener;
-        this.sharedPref = PreferenceManager.getDefaultSharedPreferences(context);
+        this.sharedPref = Preferences.getDefault(context);
         Intent i = new Intent(Intent.ACTION_VIEW);
         i.setData(action);
         activities = getAppList(context, i);
@@ -48,11 +47,11 @@ public class AppChooser extends AlertDialog.Builder {
             public void onClick(DialogInterface dialog, int which) {
                 ResolveInfo activity = adapter.getItem(which);
                 ActivityInfo activityInfo = activity.activityInfo;
-                ComponentName launch  = new ComponentName(activityInfo.applicationInfo.packageName,
+                ComponentName launch = new ComponentName(activityInfo.applicationInfo.packageName,
                         activityInfo.name);
                 launch(launch);
-                if(checkBox.isChecked()){
-                    sharedPref.edit().putString(context.getString(R.string.pref_browser),launch.flattenToString()).apply();
+                if (checkBox.isChecked()) {
+                    sharedPref.edit().putString(context.getString(R.string.pref_browser), launch.flattenToString()).apply();
                 }
             }
         });
@@ -68,16 +67,16 @@ public class AppChooser extends AlertDialog.Builder {
     @Override
     public AlertDialog show() {
         if (activities.size() > 0) {
-            ComponentName browser =null;
+            ComponentName browser = null;
             boolean found = false;
             String name = context.getString(R.string.text_browser);
-            if(sharedPref.getBoolean(context.getString(R.string.pref_preferDedicated),false)) {
+            if (sharedPref.getBoolean(context.getString(R.string.pref_preferDedicated), false)) {
                 Intent testIntent = new Intent(Intent.ACTION_VIEW);
                 testIntent.setData(Uri.parse(context.getString(R.string.link_repository)));
-                List<ResolveInfo> defaultActivites = getAppList(context, testIntent);
-                if (activities.size() > defaultActivites.size()) {
+                List<ResolveInfo> defaultActivities = getAppList(context, testIntent);
+                if (activities.size() > defaultActivities.size()) {
                     for (ResolveInfo info : activities) {
-                        if (!defaultActivites.contains(info)) {
+                        if (!defaultActivities.contains(info)) {
                             browser = new ComponentName(info.activityInfo.applicationInfo.packageName,
                                     info.activityInfo.name);
                             name = (String) info.activityInfo.applicationInfo.loadLabel(context.getPackageManager());
@@ -87,8 +86,8 @@ public class AppChooser extends AlertDialog.Builder {
                     }
                 }
             }
-            if(!found) {
-                String defaultBrowser = PreferenceManager.getDefaultSharedPreferences(context).getString(context.getString(R.string.pref_browser), "");
+            if (!found) {
+                String defaultBrowser = Preferences.getDefault(context).getString(context.getString(R.string.pref_browser), "");
                 browser = ComponentName.unflattenFromString(defaultBrowser);
                 if (browser != null) {
                     for (ResolveInfo info : activities) {
@@ -102,7 +101,7 @@ public class AppChooser extends AlertDialog.Builder {
             }
             if (found) {
                 launch(browser);
-                Toast.makeText(context,context.getString(R.string.toast_externalLink)+name+context.getString(R.string.toast_tripleDot),Toast.LENGTH_SHORT).show();
+                Toast.makeText(context, context.getString(R.string.toast_externalLink) + name + context.getString(R.string.toast_tripleDot), Toast.LENGTH_SHORT).show();
                 return super.create();
             } else {
                 AlertDialog dialog = super.create();

@@ -1,96 +1,105 @@
 <PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android">
 
     <PreferenceCategory android:title="@string/title_general">
-        <CheckBoxPreference android:key="@string/pref_enableAcra"
-                            android:title="@string/title_enableAcra"
-                            android:defaultValue="false"/>
         <CheckBoxPreference
+            android:defaultValue="false"
+            android:key="@string/pref_enableAcra"
+            android:title="@string/title_enableAcra"/>
+        <CheckBoxPreference
+            android:defaultValue="true"
             android:key="@string/pref_aboutScript"
-            android:title="@string/title_attachAboutScript"
-            android:defaultValue="true"/>
+            android:title="@string/title_attachAboutScript"/>
         <Preference
-            android:title="@string/title_subscriptions"
-            android:summary="@string/summary_subscriptions">
+            android:summary="@string/summary_subscriptions"
+            android:title="@string/title_subscriptions">
             <intent
                 android:action="android.intent.action.VIEW"
                 android:targetClass="com.trianguloy.llscript.repository.settings.SubscriptionsActivity"
                 android:targetPackage="com.trianguloy.llscript.repository"/>
         </Preference>
         <com.trianguloy.llscript.repository.settings.BrowserPreference
-            android:title="@string/title_browser"
+            android:key="@string/pref_browser"
             android:summary="@string/summary_browser"
-            android:key="@string/pref_browser"/>
+            android:title="@string/title_browser"/>
         <CheckBoxPreference
-            android:title="@string/title_preferDedicated"
-            android:summary="@string/summary_preferDedicated"
+            android:defaultValue="true"
             android:key="@string/pref_preferDedicated"
-            android:defaultValue="true"/>
+            android:summary="@string/summary_preferDedicated"
+            android:title="@string/title_preferDedicated"/>
     </PreferenceCategory>
     <PreferenceCategory android:title="@string/title_notifications">
         <CheckBoxPreference
-            android:title="@string/title_pushNotifications"
+            android:defaultValue="false"
             android:key="@string/pref_notifications"
-            android:defaultValue="false"/>
+            android:title="@string/title_pushNotifications"/>
         <ListPreference
-            android:title="@string/title_interval"
-            android:key="@string/pref_notificationInterval"
+            android:defaultValue="@string/val_intervalDefault"
             android:entries="@array/val_intervalTexts"
             android:entryValues="@array/val_intervalValues"
-            android:defaultValue="@string/val_intervalDefault"/>
+            android:key="@string/pref_notificationInterval"
+            android:title="@string/title_interval"/>
     </PreferenceCategory>
     <PreferenceCategory android:title="@string/title_editor">
-        <Preference android:title="@string/title_resetPw"
-            android:key="@string/pref_resetPw"/>
+        <Preference
+            android:key="@string/pref_resetPw"
+            android:title="@string/title_resetPw"/>
     </PreferenceCategory>
     <PreferenceCategory android:title="@string/title_lookAndFeel">
-        <CheckBoxPreference android:key="@string/key_theme"
-                            android:title="@string/title_theme"
-                            android:defaultValue="false"/>
         <CheckBoxPreference
+            android:defaultValue="false"
+            android:key="@string/key_theme"
+            android:title="@string/title_theme"/>
+        <CheckBoxPreference
+            android:defaultValue="false"
             android:key="@string/pref_showTools"
-            android:title="@string/title_showTools"
             android:summary="@string/summary_showTools"
-            android:defaultValue="false"/>
+            android:title="@string/title_showTools"/>
         <ListPreference
+            android:defaultValue="@string/val_newItemDefault"
+            android:entries="@array/val_notify"
+            android:entryValues="@array/val_notifyId"
             android:key="@string/pref_newScripts"
-            android:title="@string/title_newScripts"
-            android:entries="@array/val_notify"
-            android:entryValues="@array/val_notifyId"
-            android:defaultValue="@string/val_newItemDefault"/>
+            android:title="@string/title_newScripts"/>
         <ListPreference
-            android:key="@string/pref_changedSubs"
-            android:title="@string/title_changedSubs"
+            android:defaultValue="@string/val_changedSubDefault"
             android:entries="@array/val_notify"
             android:entryValues="@array/val_notifyId"
-            android:defaultValue="@string/val_changedSubDefault"/>
+            android:key="@string/pref_changedSubs"
+            android:title="@string/title_changedSubs"/>
     </PreferenceCategory>
     <PreferenceCategory android:title="@string/title_behaviour">
         <CheckBoxPreference
+            android:defaultValue="false"
             android:key="@string/pref_directReturn"
-            android:title="@string/title_directReturn"
             android:summary="@string/summary_directReturn"
-            android:defaultValue="false"/>
+            android:title="@string/title_directReturn"/>
         <CheckBoxPreference
+            android:defaultValue="true"
             android:key="@string/pref_longPressClose"
-            android:title="@string/title_longPressClose"
             android:summary="@string/summary_longPressClose"
-            android:defaultValue="true"/>
+            android:title="@string/title_longPressClose"/>
         <CheckBoxPreference
+            android:defaultValue="false"
             android:key="@string/pref_singleClose"
-            android:title="@string/title_singleClose"
             android:summary="@string/summary_singleClose"
-            android:defaultValue="false"/>
+            android:title="@string/title_singleClose"/>
         <CheckBoxPreference
+            android:defaultValue="true"
             android:key="@string/pref_directEdit"
-            android:title="@string/title_directEdit"
             android:summary="@string/summary_directEdit"
-            android:defaultValue="true"/>
+            android:title="@string/title_directEdit"/>
+    </PreferenceCategory>
+    <PreferenceCategory android:title="Crash Reports">
         <ListPreference
-            android:key="@string/pref_reportMode"
-            android:title="@string/title_reportMode"
+            android:defaultValue="@string/val_reportModeDefault"
             android:entries="@array/val_reportModeTexts"
             android:entryValues="@array/val_reportModeValues"
-            android:defaultValue="@string/val_reportModeDefault"/>
+            android:key="@string/pref_reportMode"
+            android:title="@string/title_reportMode"/>
+        <EditTextPreference
+            android:key="@string/pref_acraEmail"
+            android:summary="@string/summary_acraEmail"
+            android:title="@string/title_acraEmail"/>
     </PreferenceCategory>
     <PreferenceCategory android:title="@string/title_links">
         <Preference android:title="@string/text_playStore">
@@ -107,8 +116,8 @@
     </PreferenceCategory>
     <PreferenceCategory android:title="@string/title_about">
         <Preference
-            android:title="@string/title_author"
+            android:enabled="false"
             android:summary="@string/summary_about"
-            android:enabled="false"/>
+            android:title="@string/title_author"/>
     </PreferenceCategory>
 </PreferenceScreen>

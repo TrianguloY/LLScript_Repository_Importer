@@ -8,11 +8,9 @@ import android.app.Service;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
-import android.content.SharedPreferences;
 import android.graphics.Color;
 import android.net.Uri;
 import android.os.Build;
-import android.preference.PreferenceManager;
 import android.provider.Settings;
 import android.support.annotation.Nullable;
 import android.view.View;
@@ -28,6 +26,7 @@ import com.trianguloy.llscript.repository.IntentHandle;
 import com.trianguloy.llscript.repository.Manifest;
 import com.trianguloy.llscript.repository.R;
 import com.trianguloy.llscript.repository.ScriptImporter;
+import com.trianguloy.llscript.repository.settings.Preferences;
 import com.trianguloy.llscript.repository.web.ManagedWebView;
 
 import java.util.ArrayList;
@@ -183,7 +182,7 @@ public final class Dialogs {
     }
 
     private static void baseScriptList(final Context context, final ManagedWebView webView, final List<String> ids, String title){
-        SharedPreferences sharedPref = PreferenceManager.getDefaultSharedPreferences(context);
+        Preferences sharedPref = Preferences.getDefault(context);
         List<String> names = new ArrayList<>();
         for (String id: ids){
             names.add(Utils.getNameForPageFromPref(sharedPref,id));

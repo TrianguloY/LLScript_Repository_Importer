@@ -6,15 +6,14 @@ import android.app.PendingIntent;
 import android.app.Service;
 import android.content.Context;
 import android.content.Intent;
-import android.content.SharedPreferences;
 import android.graphics.BitmapFactory;
 import android.os.Build;
 import android.os.IBinder;
-import android.preference.PreferenceManager;
 
 import com.trianguloy.llscript.repository.IntentHandle;
 import com.trianguloy.llscript.repository.R;
 import com.trianguloy.llscript.repository.internal.Utils;
+import com.trianguloy.llscript.repository.settings.Preferences;
 
 import org.acra.ACRA;
 
@@ -26,12 +25,12 @@ import java.util.List;
  */
 public class WebService extends Service {
 
-    private SharedPreferences sharedPref;
+    private Preferences sharedPref;
 
     @Override
     public void onCreate() {
         super.onCreate();
-        sharedPref = PreferenceManager.getDefaultSharedPreferences(this);
+        sharedPref = Preferences.getDefault(this);
     }
 
     @Override

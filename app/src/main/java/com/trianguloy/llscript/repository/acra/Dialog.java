@@ -1,15 +1,15 @@
 package com.trianguloy.llscript.repository.acra;
 
 import android.content.DialogInterface;
-import android.content.SharedPreferences;
 import android.os.Bundle;
-import android.preference.PreferenceManager;
 import android.view.View;
 import android.widget.CheckBox;
 import android.widget.LinearLayout;
 import android.widget.ScrollView;
+import android.widget.Toast;
 
 import com.trianguloy.llscript.repository.R;
+import com.trianguloy.llscript.repository.settings.Preferences;
 
 import org.acra.CrashReportDialog;
 
@@ -23,25 +23,30 @@ public class Dialog extends CrashReportDialog {
     public static final int MODE_NO_REPORT = 1;
     public static final int MODE_REPORT_SILENT = 2;
 
-    SharedPreferences sharedPref;
+    Preferences sharedPref;
     CheckBox checkBox;
 
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
-        sharedPref = PreferenceManager.getDefaultSharedPreferences(this);
+        super.onCreate(savedInstanceState);
+        sharedPref = Preferences.getDefault(this);
         int reportMode = Integer.valueOf(sharedPref.getString(getString(R.string.pref_reportMode), String.valueOf(MODE_ASK)));
         switch (reportMode) {
             case MODE_ASK:
-                super.onCreate(savedInstanceState);
                 break;
             case MODE_NO_REPORT:
                 cancelReports();
+                Toast.makeText(this, R.string.toast_crashNoReport,Toast.LENGTH_SHORT).show();
+                finish();
                 break;
             case MODE_REPORT_SILENT:
-                sendCrash("", "");
+                sendCrash("", sharedPref.getString(getString(R.string.pref_acraEmail),""));
+                Toast.makeText(this, R.string.toast_crashReported,Toast.LENGTH_SHORT).show();
+                finish();
                 break;
         }
+        // ACRA might leak a window, but we can't prevent that currently, because we need the method that creates the dialog.
     }
 
 

@@ -4,13 +4,13 @@ import android.app.Activity;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
-import android.preference.PreferenceManager;
 import android.text.Html;
 
 import com.trianguloy.llscript.repository.Constants;
 import com.trianguloy.llscript.repository.Manifest;
 import com.trianguloy.llscript.repository.R;
 import com.trianguloy.llscript.repository.ScriptImporter;
+import com.trianguloy.llscript.repository.settings.Preferences;
 import com.trianguloy.llscript.repository.web.ManagedWebView;
 
 import org.jsoup.Jsoup;
@@ -160,7 +160,7 @@ public final class ImportUtils {
 
         String code = scriptCode.trim();
 
-        if (PreferenceManager.getDefaultSharedPreferences(context).getBoolean(context.getString(R.string.pref_aboutScript), true))
+        if (Preferences.getDefault(context).getBoolean(context.getString(R.string.pref_aboutScript), true))
             code = aboutString + code;
 
         Dialogs.importScript(context, code, scriptName, new Dialogs.OnImportListener() {

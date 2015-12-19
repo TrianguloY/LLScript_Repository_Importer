@@ -2,7 +2,7 @@
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
               xmlns:tools="http://schemas.android.com/tools" android:orientation="vertical"
               android:layout_width="match_parent"
-              android:layout_height="match_parent" tools:context=".EditorActivity"
+              android:layout_height="match_parent" tools:context=".editor.EditorActivity"
                 android:paddingLeft="@dimen/editor_margin"
                 android:paddingRight="@dimen/editor_margin"
                 android:paddingTop="@dimen/editor_margin"

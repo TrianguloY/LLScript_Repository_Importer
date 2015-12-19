@@ -116,7 +116,8 @@
     <!--alert crash-->
     <string name="title_crash">Repository Importer has crashed</string>
     <string name="text_crash">Please send the log to the developers.</string>
-    <string name="text_comment">You can add a comment here, e.g. describe the situation in which the app crashed:</string>
+    <string name="text_commentPrompt">Please describe the Situation in which this crash occurred:</string>
+    <string name="text_emailPrompt">Enter your email address here if you want to help solving this bug:</string>
 
     <!-- alert NetworkProblem -->
     <string name="text_cantConnect">Can\'t connect to server</string>
@@ -198,6 +199,7 @@
     <string name="pref_timestamp">timestamp</string>
     <string name="pref_changedSubs">changedSubs</string>
     <string name="pref_enableAcra">acra.enable</string>
+    <string name="pref_acraEmail">acra.user.email</string>
 
     <!-- {@deprecated no replacement}-->
     <string name="pref_repoHash">repoHash</string>
@@ -341,11 +343,15 @@
     <string name="text_nameNotFound">Name not found</string>
     <string name="pref_reportMode">reportMode</string>
     <string name="checkbox_rememberChoice">Remember this choice</string>
-    <string name="title_reportMode">Bug Report Mode</string>
+    <string name="title_reportMode">Report Mode</string>
     <string name="title_directEdit">Directly edit pages</string>
     <string name="summary_directEdit">Open the editor for the current page</string>
     <string name="button_send">Send</string>
     <string name="button_dont_send">Don\'t Send</string>
+    <string name="toast_crashNoReport">Repository Importer crashed\n(No report sent)</string>
+    <string name="toast_crashReported">Repository Importer crashed\n(Report sent)</string>
+    <string name="summary_acraEmail">The email address which is sent with reports for developers to respond</string>
+    <string name="title_acraEmail">Email</string>
 
 
 </resources>

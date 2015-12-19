@@ -1,8 +1,6 @@
 package com.trianguloy.llscript.repository.settings;
 
 import android.content.Context;
-import android.content.SharedPreferences;
-import android.preference.PreferenceManager;
 import android.support.annotation.NonNull;
 import android.util.Log;
 import android.view.Menu;
@@ -12,6 +10,7 @@ import com.trianguloy.llscript.repository.BuildConfig;
 import com.trianguloy.llscript.repository.R;
 import com.trianguloy.llscript.repository.internal.Utils;
 
+import java.util.Collections;
 import java.util.HashSet;
 import java.util.Set;
 
@@ -23,24 +22,24 @@ public class SubscriptionManager {
 
     private Context context;
     private Menu menu;
-    private final SharedPreferences sharedPref;
+    private final Preferences sharedPref;
 
     public SubscriptionManager() {
-        sharedPref = PreferenceManager.getDefaultSharedPreferences(Utils.getContext());
+        sharedPref = Preferences.getDefault(context);
     }
 
     public void subscribe(@NonNull String id) {
-        HashSet<String> subs = (HashSet<String>) Utils.getSetFromPref(sharedPref, Utils.getString(R.string.pref_subscriptions));
+        Set<String> subs = (Set<String>) sharedPref.getStringSet(Utils.getString(R.string.pref_subscriptions),new HashSet<String>());
         subs.add(id);
-        Utils.saveSetToPref(sharedPref, Utils.getString(R.string.pref_subscriptions), subs);
+        sharedPref.edit().putStringSet(Utils.getString(R.string.pref_subscriptions), subs).apply();
         toast(Utils.getString(R.string.toast_subscribeSuccessful));
         setSubscriptionState(SUBSCRIBED);
     }
 
     public void unsubscribe(@NonNull String id) {
-        Set<String> subs = Utils.getSetFromPref(sharedPref, Utils.getString(R.string.pref_subscriptions));
+        Set<String> subs = sharedPref.getStringSet(Utils.getString(R.string.pref_subscriptions),new HashSet<String>());
         subs.remove(id);
-        Utils.saveSetToPref(sharedPref, Utils.getString(R.string.pref_subscriptions), subs);
+        sharedPref.edit().putStringSet(Utils.getString(R.string.pref_subscriptions), subs).apply();
         toast(Utils.getString(R.string.toast_unsubscribeSuccessful));
         setSubscriptionState(NOT_SUBSCRIBED);
     }
@@ -54,7 +53,7 @@ public class SubscriptionManager {
     }
 
     public boolean isSubscribed(@NonNull String id) {
-        return Utils.getSetFromPref(sharedPref, Utils.getString(R.string.pref_subscriptions))
+        return sharedPref.getStringSet(Utils.getString(R.string.pref_subscriptions), Collections.<String>emptySet())
                 .contains(id);
     }
 

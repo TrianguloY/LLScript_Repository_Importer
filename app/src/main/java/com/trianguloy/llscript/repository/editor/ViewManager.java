@@ -2,10 +2,8 @@ package com.trianguloy.llscript.repository.editor;
 
 import android.app.ActionBar;
 import android.content.DialogInterface;
-import android.content.SharedPreferences;
 import android.os.Build;
 import android.os.Bundle;
-import android.preference.PreferenceManager;
 import android.util.Log;
 import android.view.View;
 import android.webkit.WebView;
@@ -21,6 +19,7 @@ import com.trianguloy.llscript.repository.R;
 import com.trianguloy.llscript.repository.auth.AuthenticationUtils;
 import com.trianguloy.llscript.repository.internal.Dialogs;
 import com.trianguloy.llscript.repository.internal.Utils;
+import com.trianguloy.llscript.repository.settings.Preferences;
 import com.trianguloy.llscript.repository.web.DownloadTask;
 import com.trianguloy.llscript.repository.web.RPCManager;
 import com.trianguloy.llscript.repository.web.WebClient;
@@ -48,7 +47,7 @@ class ViewManager extends Lock {
     private final EditManager editManager;
     private boolean isTemplate;
     private final Random random;
-    private final SharedPreferences sharedPref;
+    private final Preferences sharedPref;
     private Repository repository;
     private Repository.RepositoryCategory addTo;
 
@@ -58,7 +57,7 @@ class ViewManager extends Lock {
         this.editManager = editManager;
         isTemplate = false;
         random = new Random();
-        sharedPref = PreferenceManager.getDefaultSharedPreferences(context);
+        sharedPref = Preferences.getDefault(context);
         setState(STATE_NONE);
     }
 

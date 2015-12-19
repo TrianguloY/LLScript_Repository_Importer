@@ -5,7 +5,6 @@ import android.app.ActionBar;
 import android.app.Activity;
 import android.content.DialogInterface;
 import android.content.Intent;
-import android.content.SharedPreferences;
 import android.net.Uri;
 import android.net.http.HttpResponseCache;
 import android.os.Build;
@@ -30,6 +29,7 @@ import com.trianguloy.llscript.repository.internal.AppChooser;
 import com.trianguloy.llscript.repository.internal.Dialogs;
 import com.trianguloy.llscript.repository.internal.ImportUtils;
 import com.trianguloy.llscript.repository.internal.Utils;
+import com.trianguloy.llscript.repository.settings.Preferences;
 import com.trianguloy.llscript.repository.settings.SettingsActivity;
 import com.trianguloy.llscript.repository.settings.SubscriptionManager;
 
@@ -55,7 +55,7 @@ public class WebViewer extends Activity {
     private String sentUrl;
 
     //User vars
-    private SharedPreferences sharedPref;//user saved data
+    private Preferences sharedPref;//user saved data
 
     private Boolean close = false; //if pressing back will close or not
 
@@ -71,7 +71,7 @@ public class WebViewer extends Activity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         //initialize variables
-        sharedPref = PreferenceManager.getDefaultSharedPreferences(this);
+        sharedPref = Preferences.getDefault(this);
         RepositoryImporter.setTheme(this, sharedPref);
         subscriptionManager.setContext(this);
         this.savedInstanceState = savedInstanceState;
@@ -320,8 +320,9 @@ public class WebViewer extends Activity {
             for (String page : map.keySet()) {
                 set.add(Utils.getNameFromUrl(page));
             }
-            Utils.saveSetToPref(sharedPref, getString(R.string.pref_subscriptions), set);
-            sharedPref.edit().remove(getString(R.string.pref_subs)).apply();
+            sharedPref.edit().putStringSet(getString(R.string.pref_subscriptions), set)
+                    .remove(getString(R.string.pref_subs))
+                    .apply();
         }
         if (sharedPref.contains(getString(R.string.pref_repoHash))) {
             sharedPref.edit().remove(getString(R.string.pref_repoHash)).apply();

@@ -1,11 +1,8 @@
 package com.trianguloy.llscript.repository.internal;
 
 import android.content.Context;
-import android.content.SharedPreferences;
 import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager;
-import android.os.Build;
-import android.preference.PreferenceManager;
 import android.support.annotation.NonNull;
 import android.util.Log;
 import android.widget.Toast;
@@ -13,10 +10,10 @@ import android.widget.Toast;
 import com.trianguloy.llscript.repository.BuildConfig;
 import com.trianguloy.llscript.repository.Constants;
 import com.trianguloy.llscript.repository.R;
+import com.trianguloy.llscript.repository.settings.Preferences;
 import com.trianguloy.llscript.repository.web.ManagedWebView;
 import com.trianguloy.llscript.repository.web.RPCManager;
 
-import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 import org.jsoup.nodes.Document;
@@ -25,6 +22,7 @@ import org.jsoup.select.Elements;
 
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Iterator;
@@ -92,36 +90,11 @@ public final class Utils {
         return new valueAndIndex(source.substring(start, end), start - beginning.length(), end + ending.length());
     }
 
-    public static void saveSetToPref(SharedPreferences pref, String key, Set<String> set) {
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.HONEYCOMB)
-            pref.edit().putStringSet(key, set).apply();
-        else pref.edit().putString(key, new JSONArray(set).toString()).apply();
-    }
-
-    public static Set<String> getSetFromPref(SharedPreferences pref, String key) {
-        if (pref.contains(key)) {
-            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.HONEYCOMB)
-                return pref.getStringSet(key, new HashSet<String>());
-            HashSet<String> set = new HashSet<>();
-            JSONArray array;
-            try {
-                array = new JSONArray(pref.getString(key, ""));
-                for (int i = 0; i < array.length(); i++) {
-                    set.add(array.getString(i));
-                }
-                return set;
-            } catch (JSONException e) {
-                e.printStackTrace();
-            }
-        }
-        return new HashSet<>();
-    }
-
-    public static void saveMapToPref(SharedPreferences pref, String key, Map<String, Object> map) {
+    public static void saveMapToPref(Preferences pref, String key, Map<String, Object> map) {
         pref.edit().putString(key, new JSONObject(map).toString()).apply();
     }
 
-    public static Map<String, Object> getMapFromPref(SharedPreferences pref, String key) {
+    public static Map<String, Object> getMapFromPref(Preferences pref, String key) {
         if (pref.contains(key)) {
             try {
                 HashMap<String, Object> map = new HashMap<>();
@@ -155,7 +128,7 @@ public final class Utils {
         return scripts;
     }
 
-    public static String getNameForPageFromPref(SharedPreferences pref, String page) {
+    public static String getNameForPageFromPref(Preferences pref, String page) {
         if (page.startsWith(getString(R.string.prefix_script)))
             page = page.substring(getString(R.string.prefix_script).length());
         String result = (String) getMapFromPref(pref, getString(R.string.pref_pageNames)).get(page);
@@ -230,7 +203,7 @@ public final class Utils {
     private static final int SHOW_DIALOG = 2;
 
     public static void showChangedSubscriptionsIfAny(final Context context, final ManagedWebView webView) {
-        final SharedPreferences sharedPref = PreferenceManager.getDefaultSharedPreferences(context);
+        final Preferences sharedPref = Preferences.getDefault(context);
         RPCManager.getChangedSubscriptions(sharedPref, new RPCManager.Listener<List<String>>() {
             @Override
             public void onResult(RPCManager.Result<List<String>> result) {
@@ -260,7 +233,7 @@ public final class Utils {
     }
 
     public static void showNewScriptsIfAny(Context context, Document repoDocument, final ManagedWebView webView) {
-        final SharedPreferences sharedPref = PreferenceManager.getDefaultSharedPreferences(context);
+        final Preferences sharedPref = Preferences.getDefault(context);
         //new method: based on the scripts found
         Map<String, String> map = Utils.getAllScriptPagesAndNames(repoDocument);
         HashMap<String, Object> temp = new HashMap<>();
@@ -270,12 +243,12 @@ public final class Utils {
         Utils.saveMapToPref(sharedPref, getString(R.string.pref_pageNames), temp);
         Set<String> currentScripts = map.keySet();
         if (sharedPref.contains(getString(R.string.pref_Scripts))) {
-            Set<String> oldScripts = Utils.getSetFromPref(sharedPref, getString(R.string.pref_Scripts));
+            Set<String> oldScripts = sharedPref.getStringSet(getString(R.string.pref_Scripts), Collections.<String>emptySet());
             HashSet<String> newScripts = new HashSet<>(currentScripts);
             newScripts.removeAll(oldScripts);
             if (!newScripts.isEmpty()) {
                 //found new Scripts
-                Utils.saveSetToPref(sharedPref, getString(R.string.pref_Scripts), currentScripts);
+                sharedPref.edit().putStringSet(getString(R.string.pref_Scripts), currentScripts).apply();
                 ArrayList<String> newScriptNames = new ArrayList<>();
                 for (String s : newScripts) {
                     newScriptNames.add(map.get(s));
@@ -300,7 +273,7 @@ public final class Utils {
             }
         } else {
             //No info about previous scripts. Only save the current scripts
-            Utils.saveSetToPref(sharedPref, getString(R.string.pref_Scripts), currentScripts);
+            sharedPref.edit().putStringSet(getString(R.string.pref_Scripts), currentScripts).apply();
         }
     }
 

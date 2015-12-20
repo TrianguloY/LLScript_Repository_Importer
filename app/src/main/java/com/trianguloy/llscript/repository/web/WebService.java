@@ -9,6 +9,7 @@ import android.content.Intent;
 import android.graphics.BitmapFactory;
 import android.os.Build;
 import android.os.IBinder;
+import android.support.annotation.NonNull;
 
 import com.trianguloy.llscript.repository.IntentHandle;
 import com.trianguloy.llscript.repository.R;
@@ -47,9 +48,10 @@ public class WebService extends Service {
     private void check() {
         RPCManager.getChangedSubscriptions(sharedPref, new RPCManager.Listener<List<String>>() {
             @Override
-            public void onResult(RPCManager.Result<List<String>> result) {
+            public void onResult(@NonNull RPCManager.Result<List<String>> result) {
                 if (result.getStatus() == RPCManager.RESULT_OK) {
                     List<String> updated = result.getResult();
+                    assert updated != null;
                     if (updated.size() > 0)
                         pushNotification(updated);
                 }
@@ -57,7 +59,7 @@ public class WebService extends Service {
         });
     }
 
-    private void pushNotification(List<String> updated) {
+    private void pushNotification(@NonNull List<String> updated) {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN) {
             Notification.Builder builder = new Notification.Builder(this);
             builder.setContentTitle(getString(R.string.title_updatedPages));
@@ -87,7 +89,8 @@ public class WebService extends Service {
         }
     }
 
-    private String getStringUpdated(List<String> updated) {
+    @NonNull
+    private String getStringUpdated(@NonNull List<String> updated) {
         return updated.size() == 1 ? Utils.getNameForPageFromPref(sharedPref, updated.get(0)) : updated.size() + " " + getString(R.string.text_updatedPages);
     }
 }

@@ -4,6 +4,7 @@ import android.app.Activity;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.support.annotation.NonNull;
 import android.text.Html;
 
 import com.trianguloy.llscript.repository.Constants;
@@ -32,7 +33,7 @@ public final class ImportUtils {
     private ImportUtils() {
     }
 
-    public static void startImport(final Activity context, final ManagedWebView webView, final Listener listener) {
+    public static void startImport(@NonNull final Activity context, @NonNull final ManagedWebView webView, @NonNull final Listener listener) {
         Document document = Jsoup.parse(webView.getCurrentDocument().outerHtml(), context.getString(R.string.link_server));
 
         //initialize variables
@@ -57,7 +58,8 @@ public final class ImportUtils {
                 }
                 index = parent.elementSiblingIndex();
             }
-            if (names.size() < rawCodes.size()) names.add(context.getString(R.string.text_nameNotFound));
+            if (names.size() < rawCodes.size())
+                names.add(context.getString(R.string.text_nameNotFound));
         }
 
         //TODO search the flags
@@ -93,7 +95,7 @@ public final class ImportUtils {
             final String about = aboutScript;
             Dialogs.moreThanOneScriptFound(context, names.toArray(new String[names.size()]), new DialogInterface.OnClickListener() {
                 @Override
-                public void onClick(DialogInterface dialog, int which) {
+                public void onClick(@NonNull DialogInterface dialog, int which) {
                     dialog.dismiss();//Necessary, this is launched when clicking an item, not when clicking a button
                     showImportScript(context, listener, names.get(which), rawCodes.get(which), about);
                 }
@@ -105,7 +107,7 @@ public final class ImportUtils {
         }
     }
 
-    private static String getTextWithLineBreaks(Element e) {
+    private static String getTextWithLineBreaks(@NonNull Element e) {
         StringBuilder builder = new StringBuilder();
         List<Node> children = e.childNodes();
         if (children.size() > 0) {
@@ -124,11 +126,12 @@ public final class ImportUtils {
         return builder.toString();
     }
 
-    private static void oneScriptFound(Activity context, ManagedWebView webView, Listener listener, String name, String rawCode, String about) {
+    private static void oneScriptFound(@NonNull Activity context, @NonNull ManagedWebView webView, @NonNull Listener listener, String name, @NonNull String rawCode, String about) {
         //only one script, load directly
 
         //get the name from the repository
         String url = webView.getUrl();
+        assert url != null;
         url = url.substring(url.indexOf('/', "http://www".length()));
         Document repoDocument = webView.getRepoDocument();
         String scriptName = null;
@@ -138,7 +141,7 @@ public final class ImportUtils {
                 scriptName = elements.first().ownText();
             }
         }
-        if(scriptName == null){
+        if (scriptName == null) {
             //fallback if not found in repo or repo not found
             scriptName = name;
         }
@@ -150,13 +153,14 @@ public final class ImportUtils {
     /**
      * call to {@link Dialogs#importScript(Activity, String, String, Dialogs.OnImportListener, Dialogs.OnImportListener)}
      * to import a single script
-     * @param context the context used
-     * @param listener what to do when finishing importing
-     * @param scriptName the name of the script
-     * @param scriptCode the code of the script
+     *
+     * @param context     the context used
+     * @param listener    what to do when finishing importing
+     * @param scriptName  the name of the script
+     * @param scriptCode  the code of the script
      * @param aboutString the header of the imported script
      */
-    private static void showImportScript(final Activity context, final Listener listener, String scriptName, String scriptCode, String aboutString) {
+    private static void showImportScript(@NonNull final Activity context, @NonNull final Listener listener, String scriptName, @NonNull String scriptCode, String aboutString) {
 
         String code = scriptCode.trim();
 
@@ -175,11 +179,11 @@ public final class ImportUtils {
                 shareAsText(context, code, name, flags);
             }
         });
-        
+
     }
 
     //Send & share functions
-    private static void sendScriptToLauncher(final Context context, String code, String scriptName, int flags) {
+    private static void sendScriptToLauncher(@NonNull final Context context, String code, String scriptName, int flags) {
         // let's import the script
         final Intent intent = new Intent(context, ScriptImporter.class);
         intent.putExtra(Constants.EXTRA_CODE, code);
@@ -193,7 +197,7 @@ public final class ImportUtils {
         });
     }
 
-    private static void shareAsText(Context context, String code, String scriptName, int flags) {
+    private static void shareAsText(@NonNull Context context, String code, String scriptName, int flags) {
         //share the code as plain text
 
         StringBuilder text = new StringBuilder("");

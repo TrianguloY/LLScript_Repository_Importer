@@ -1,6 +1,7 @@
 package com.trianguloy.llscript.repository.internal;
 
 import android.content.Context;
+import android.support.annotation.NonNull;
 
 import com.google.gson.Gson;
 
@@ -29,7 +30,7 @@ public final class PageCacheManager {
         gson = new Gson();
     }
 
-    public static void savePage(String id, Page page) {
+    public static void savePage(@NonNull String id, Page page) {
         if (!initialized) init();
         File file = new File(directory, id);
         try {
@@ -41,7 +42,7 @@ public final class PageCacheManager {
         }
     }
 
-    public static Page getPage(String id) {
+    public static Page getPage(@NonNull String id) {
         if (!initialized) init();
         File file = new File(directory, id);
         if(file.exists()){
@@ -55,7 +56,7 @@ public final class PageCacheManager {
         return null;
     }
 
-    public static boolean hasPage(String id) {
+    public static boolean hasPage(@NonNull String id) {
         if (!initialized) init();
         File file = new File(directory, id);
         return file.exists();

@@ -2,6 +2,7 @@ package com.trianguloy.llscript.repository;
 
 import android.app.Activity;
 import android.app.Application;
+import android.support.annotation.NonNull;
 
 import com.trianguloy.llscript.repository.acra.Dialog;
 import com.trianguloy.llscript.repository.internal.Utils;
@@ -41,7 +42,7 @@ public class RepositoryImporter extends Application {
         Utils.setContext(this);
     }
 
-    public static void setTheme(Activity context, Preferences sharedPref) {
+    public static void setTheme(@NonNull Activity context, @NonNull Preferences sharedPref) {
         if (sharedPref.getBoolean(context.getString(R.string.pref_theme), false))
             context.setTheme(R.style.Theme_Dark);
     }

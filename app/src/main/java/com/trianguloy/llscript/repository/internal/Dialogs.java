@@ -12,6 +12,7 @@ import android.graphics.Color;
 import android.net.Uri;
 import android.os.Build;
 import android.provider.Settings;
+import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.view.View;
 import android.view.ViewGroup;
@@ -42,11 +43,11 @@ public final class Dialogs {
     private Dialogs() {
     }
 
-    public static void badLogin(Context context) {
+    public static void badLogin(@NonNull Context context) {
         badLogin(context, null);
     }
 
-    private static void error(Context context, @Nullable DialogInterface.OnClickListener onClose, String message) {
+    private static void error(@Nullable Context context, @Nullable DialogInterface.OnClickListener onClose, String message) {
         if(context==null){
             return;
         }
@@ -58,23 +59,23 @@ public final class Dialogs {
 
     }
 
-    public static void badLogin(Context context, @Nullable DialogInterface.OnClickListener onClose) {
+    public static void badLogin(@NonNull Context context, @Nullable DialogInterface.OnClickListener onClose) {
         error(context, onClose, context.getString(R.string.message_badLogin));
     }
 
-    public static void connectionFailed(Context context) {
+    public static void connectionFailed(@NonNull Context context) {
         connectionFailed(context, null);
     }
 
-    public static void connectionFailed(Context context, @Nullable DialogInterface.OnClickListener onClose) {
+    public static void connectionFailed(@NonNull Context context, @Nullable DialogInterface.OnClickListener onClose) {
         error(context, onClose, context.getString(R.string.message_cantConnect));
     }
 
-    public static void pageAlreadyExists(Context context) {
+    public static void pageAlreadyExists(@NonNull Context context) {
         error(context, null, context.getString(R.string.message_alreadyExists));
     }
 
-    public static void saved(final Activity context, @Nullable String savedPageId) {
+    public static void saved(@NonNull final Activity context, @Nullable String savedPageId) {
         AlertDialog.Builder builder = new AlertDialog.Builder(context)
                 .setTitle(context.getString(R.string.title_saved))
                 .setMessage(context.getString(R.string.message_doNext));
@@ -85,7 +86,8 @@ public final class Dialogs {
                 .show();
     }
 
-    private static DialogInterface.OnClickListener showPage(final Activity context, final String url) {
+    @NonNull
+    private static DialogInterface.OnClickListener showPage(@NonNull final Activity context, final String url) {
         return new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialog, int which) {
@@ -99,7 +101,7 @@ public final class Dialogs {
         };
     }
 
-    public static void cantSaveEmpty(Context context) {
+    public static void cantSaveEmpty(@NonNull Context context) {
         new AlertDialog.Builder(context)
                 .setTitle(context.getString(R.string.title_error))
                 .setMessage(context.getString(R.string.message_cantSaveEmpty))
@@ -107,7 +109,7 @@ public final class Dialogs {
                 .show();
     }
 
-    public static void unsavedChanges(Context context, @Nullable DialogInterface.OnClickListener onConfirm) {
+    public static void unsavedChanges(@NonNull Context context, @Nullable DialogInterface.OnClickListener onConfirm) {
         new AlertDialog.Builder(context)
                 .setTitle(context.getString(R.string.title_warning))
                 .setMessage(context.getString(R.string.message_unsavedChanges))
@@ -124,7 +126,7 @@ public final class Dialogs {
                 .show();
     }
 
-    public static void removeSubscription(Context context, String which, DialogInterface.OnClickListener onConfirm) {
+    public static void removeSubscription(@NonNull Context context, String which, DialogInterface.OnClickListener onConfirm) {
         new AlertDialog.Builder(context)
                 .setTitle(R.string.title_remove)
                 .setMessage(context.getString(R.string.message_remove) + which + context.getString(R.string.text_questionmark))
@@ -139,7 +141,7 @@ public final class Dialogs {
      * - Ok -> opens play store
      * - Continue -> closes the message
      * @param context the context to use
-     * @param message the message to atach in the alert
+     * @param message the message to attach in the alert
      */
     private static void baseLauncherProblem(final Context context, String message) {
         if ((context instanceof Service) && Build.VERSION.SDK_INT >= Build.VERSION_CODES.M && !Settings.canDrawOverlays(context)) {
@@ -169,19 +171,19 @@ public final class Dialogs {
         }
     }
 
-    public static void launcherNotFound(final Context context) {
+    public static void launcherNotFound(@NonNull final Context context) {
         baseLauncherProblem(context, context.getString(R.string.message_launcherNotFound));
     }
 
-    public static void launcherOutdated(final Context context) {
+    public static void launcherOutdated(@NonNull final Context context) {
         baseLauncherProblem(context, context.getString(R.string.message_outdatedLauncher));
     }
 
-    public static void changedSubscriptions(Context context, ManagedWebView webView,List<String> ids) {
+    public static void changedSubscriptions(@NonNull Context context, @NonNull ManagedWebView webView, @NonNull List<String> ids) {
         baseScriptList(context, webView, ids, context.getString(R.string.title_updatedSubs));
     }
 
-    private static void baseScriptList(final Context context, final ManagedWebView webView, final List<String> ids, String title){
+    private static void baseScriptList(@NonNull final Context context, @NonNull final ManagedWebView webView, @NonNull final List<String> ids, String title){
         Preferences sharedPref = Preferences.getDefault(context);
         List<String> names = new ArrayList<>();
         for (String id: ids){
@@ -199,15 +201,16 @@ public final class Dialogs {
                 .show();
     }
 
-    public static void newScripts(Context context, ManagedWebView webView,List<String> ids) {
+    public static void newScripts(@NonNull Context context, @NonNull ManagedWebView webView, @NonNull List<String> ids) {
         baseScriptList(context, webView, ids, context.getString(R.string.title_newScripts2));
     }
 
-    public static void importScript(Activity context, final String code, String scriptName, final OnImportListener onImport, final OnImportListener onShare) {
+    public static void importScript(@NonNull Activity context, final String code, String scriptName, @NonNull final OnImportListener onImport, @NonNull final OnImportListener onShare) {
 
         View layout = context.getLayoutInflater().inflate(R.layout.confirm_alert, (ViewGroup) context.findViewById(R.id.webView).getRootView(), false);
-        if (Build.VERSION.SDK_INT < Build.VERSION_CODES.HONEYCOMB)
+        if (Build.VERSION.SDK_INT < Build.VERSION_CODES.HONEYCOMB) {
             layout.setBackgroundColor(Color.WHITE);
+        }
         final EditText contentText = ((EditText) layout.findViewById(R.id.editText2));
         contentText.setText(code);
         final EditText nameText = ((EditText) layout.findViewById(R.id.editText));
@@ -248,7 +251,7 @@ public final class Dialogs {
                 (flagsBoxes[2].isChecked() ? Constants.FLAG_CUSTOM_MENU : 0);
     }
 
-    public static void themeChanged(final Context context) {
+    public static void themeChanged(@NonNull final Context context) {
         new AlertDialog.Builder(context)
                 .setTitle(context.getString(R.string.title_themeChanged))
                 .setMessage(context.getString(R.string.message_themeChanged))
@@ -292,7 +295,7 @@ public final class Dialogs {
                 .show();
     }
 
-    public static void noScriptFound(final Context context) {
+    public static void noScriptFound(@NonNull final Context context) {
         new AlertDialog.Builder(context)
                 .setTitle(R.string.title_importer)
                 .setNegativeButton(R.string.button_exit, null)
@@ -317,7 +320,7 @@ public final class Dialogs {
                 .show();
     }
 
-    public static void confirmUpdate(final IntentHandle context, final String scriptName, final String code, final int flags) {
+    public static void confirmUpdate(@NonNull final IntentHandle context, final String scriptName, final String code, final int flags) {
         new AlertDialog.Builder(context)
                 .setTitle(R.string.title_updateConfirm)
                 .setMessage(R.string.message_updateConfirm)

@@ -3,6 +3,7 @@ package com.trianguloy.llscript.repository.settings;
 import android.app.Activity;
 import android.content.DialogInterface;
 import android.os.Bundle;
+import android.support.annotation.Nullable;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
@@ -19,6 +20,7 @@ import java.util.Set;
 public class SubscriptionsActivity extends Activity implements ListView.OnItemClickListener {
 
     private Preferences sharedPref;
+    @Nullable
     private Set<String> subsSet;
     private ArrayAdapter<String> adapter;
 
@@ -42,11 +44,12 @@ public class SubscriptionsActivity extends Activity implements ListView.OnItemCl
 
     @Override
     public void onItemClick(AdapterView<?> parent, View view, final int position, long id) {
-        Dialogs.removeSubscription(this, Utils.getNameForPageFromPref(sharedPref, adapter.getItem(position)),new DialogInterface.OnClickListener() {
+        Dialogs.removeSubscription(this, Utils.getNameForPageFromPref(sharedPref, adapter.getItem(position)), new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialog, int which) {
                 String p = adapter.getItem(position);
                 adapter.remove(p);
+                assert subsSet != null;
                 for (String s : subsSet) {
                     if (s.equals(p)) {
                         subsSet.remove(s);

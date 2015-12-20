@@ -1,6 +1,7 @@
 package com.trianguloy.llscript.repository.web;
 
 import android.os.AsyncTask;
+import android.support.annotation.Nullable;
 
 import com.google.common.base.Charsets;
 import com.trianguloy.llscript.repository.R;
@@ -27,6 +28,7 @@ public class DownloadTask extends AsyncTask<String, Void, DownloadTask.Result> {
     }
 
 
+    @Nullable
     @Override
     protected Result doInBackground(String... urls) {
         HttpURLConnection connection;
@@ -50,7 +52,7 @@ public class DownloadTask extends AsyncTask<String, Void, DownloadTask.Result> {
     }
 
     @Override
-    protected void onPostExecute(Result result) {
+    protected void onPostExecute(@Nullable Result result) {
         if (result == null) {
             listener.onError();
         } else {

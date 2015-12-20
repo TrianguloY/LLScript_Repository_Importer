@@ -30,18 +30,18 @@ public final class AuthenticationUtils {
     private AuthenticationUtils() {
     }
 
-    public static void login(Activity context, Listener listener){
+    public static void login(@NonNull Activity context, @NonNull Listener listener){
         login(context,listener,false);
     }
 
-    private static void login(final Activity context, final Listener listener, boolean passwordInvalid){
+    private static void login(@NonNull final Activity context, @NonNull final Listener listener, boolean passwordInvalid){
         findAccount(context, new InternalListener() {
             @Override
             public void onComplete(String user, String password) {
                 RPCManager.login(user, password, new RPCManager.Listener<Void>() {
 
                     @Override
-                    public void onResult(RPCManager.Result<Void> result) {
+                    public void onResult(@NonNull RPCManager.Result<Void> result) {
                         switch (result.getStatus()) {
                             case RPCManager.RESULT_BAD_LOGIN:
                                 Dialogs.badLogin(context, new DialogInterface.OnClickListener() {
@@ -80,14 +80,14 @@ public final class AuthenticationUtils {
         final AccountManager accountManager = AccountManager.get(context);
         Account[] accounts = accountManager.getAccountsByType(context.getString(R.string.account_type));
         AccountManagerCallback<Bundle> callback = new AccountManagerCallback<Bundle>() {
-            public void run(AccountManagerFuture<Bundle> future) {
+            public void run(@NonNull AccountManagerFuture<Bundle> future) {
                 try {
                     future.getResult();
                     Account[] accounts = accountManager.getAccountsByType(context.getString(R.string.account_type));
                     listener.onComplete(accounts[0].name, accountManager.getPassword(accounts[0]));
                 } catch (OperationCanceledException e) {
                     listener.onError();
-                } catch (IOException | AuthenticatorException e) {
+                } catch (@NonNull IOException | AuthenticatorException e) {
                     ACRA.getErrorReporter().handleException(e);
                     listener.onError();
                 }

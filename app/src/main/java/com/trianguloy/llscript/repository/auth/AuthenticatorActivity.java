@@ -42,7 +42,7 @@ public class AuthenticatorActivity extends AccountAuthenticatorActivity {
 
     }
 
-    public void button(View v){
+    public void button(@NonNull View v){
         switch (v.getId()){
             case R.id.button_login:
                 login();
@@ -59,7 +59,7 @@ public class AuthenticatorActivity extends AccountAuthenticatorActivity {
         final boolean savePw = ((CheckBox) findViewById(R.id.checkRemember)).isChecked();
         RPCManager.login(user, password, new RPCManager.Listener<Void>() {
             @Override
-            public void onResult(RPCManager.Result<Void> result) {
+            public void onResult(@NonNull RPCManager.Result<Void> result) {
                 switch (result.getStatus()) {
                     case RPCManager.RESULT_BAD_LOGIN:
                         Dialogs.badLogin(AuthenticatorActivity.this);

@@ -13,6 +13,7 @@ import android.preference.CheckBoxPreference;
 import android.preference.ListPreference;
 import android.preference.Preference;
 import android.preference.PreferenceActivity;
+import android.support.annotation.NonNull;
 import android.view.MenuItem;
 import android.widget.Toast;
 
@@ -122,7 +123,7 @@ public class SettingsActivity extends PreferenceActivity {
     }
 
     @Override
-    public boolean onOptionsItemSelected(MenuItem item) {
+    public boolean onOptionsItemSelected(@NonNull MenuItem item) {
         int id = item.getItemId();
         if (id == android.R.id.home) {
             // This ID represents the Home or Up button. In the case of this
@@ -153,7 +154,7 @@ public class SettingsActivity extends PreferenceActivity {
      * Helper method to determine if the device has an extra-large screen. For
      * example, 10" tablets are extra-large.
      */
-    private static boolean isXLargeTablet(Context context) {
+    private static boolean isXLargeTablet(@NonNull Context context) {
         return Build.VERSION.SDK_INT >= Build.VERSION_CODES.GINGERBREAD
                 && (context.getResources().getConfiguration().screenLayout
                 & Configuration.SCREENLAYOUT_SIZE_MASK)
@@ -167,7 +168,7 @@ public class SettingsActivity extends PreferenceActivity {
      * doesn't have an extra-large screen. In these cases, a single-pane
      * "simplified" settings UI should be shown.
      */
-    private static boolean isSimplePreferences(Context context) {
+    private static boolean isSimplePreferences(@NonNull Context context) {
         return Build.VERSION.SDK_INT < Build.VERSION_CODES.HONEYCOMB
                 || !isXLargeTablet(context);
     }
@@ -180,7 +181,7 @@ public class SettingsActivity extends PreferenceActivity {
                 PackageManager.DONT_KILL_APP);
     }
 
-    private void startService(Preferences pref) {
+    private void startService(@NonNull Preferences pref) {
         WebServiceManager.startService(getApplicationContext(),
                 Integer.parseInt(pref.getString(getString(R.string.pref_notificationInterval),
                         String.valueOf(AlarmManager.INTERVAL_HOUR))));

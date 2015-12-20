@@ -26,7 +26,7 @@ public class PermissionActivity extends Activity {
     private static final HashMap<Integer, PermissionCallback> callbacks = new HashMap<>();
     private static int nextId = 0;
 
-    public static void checkForPermission(Context context, String permission, PermissionCallback callback){
+    public static void checkForPermission(@NonNull Context context, String permission, PermissionCallback callback){
         int id = nextId++;
         callbacks.put(id, callback);
         Intent intent = new Intent(context, PermissionActivity.class);

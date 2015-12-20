@@ -18,7 +18,9 @@ import java.util.List;
 class Repository {
     private int tableStartLine;
     private int tableEndLine;
+    @NonNull
     private final List<RepositoryCategory> categories;
+    @NonNull
     private final List<String> lines;
 
     public Repository(@NonNull String html, @NonNull String defaultCategory) {

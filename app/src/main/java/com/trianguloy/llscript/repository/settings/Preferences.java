@@ -5,11 +5,13 @@ import android.content.Context;
 import android.content.SharedPreferences;
 import android.os.Build;
 import android.preference.PreferenceManager;
+import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 
 import org.json.JSONArray;
 import org.json.JSONException;
 
+import java.util.HashSet;
 import java.util.Map;
 import java.util.Set;
 
@@ -21,7 +23,8 @@ public class Preferences implements SharedPreferences {
 
     private final SharedPreferences base;
 
-    public static Preferences getDefault(Context context){
+    @NonNull
+    public static Preferences getDefault(Context context) {
         return new Preferences(PreferenceManager.getDefaultSharedPreferences(context));
     }
 
@@ -42,7 +45,8 @@ public class Preferences implements SharedPreferences {
 
     @Nullable
     @Override
-    public Set<String> getStringSet(String key, Set<String> defValues) {
+    public Set<String> getStringSet(String key, @Nullable Set<String> defValues) {
+        if (defValues == null) defValues = new HashSet<>();
         if (base.contains(key)) {
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.HONEYCOMB)
                 return base.getStringSet(key, defValues);
@@ -86,6 +90,7 @@ public class Preferences implements SharedPreferences {
         return base.contains(key);
     }
 
+    @NonNull
     @SuppressLint("CommitPrefEdits")
     @Override
     public Editor edit() {
@@ -110,53 +115,60 @@ public class Preferences implements SharedPreferences {
             this.base = base;
         }
 
+        @NonNull
         @Override
         public Editor putString(String key, String value) {
             base.putString(key, value);
             return this;
         }
 
+        @NonNull
         @Override
         public Editor putStringSet(String key, Set<String> values) {
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.HONEYCOMB) {
                 base.putStringSet(key, values);
-            }
-            else {
+            } else {
                 base.putString(key, new JSONArray(values).toString());
             }
             return this;
         }
 
+        @NonNull
         @Override
         public Editor putInt(String key, int value) {
             base.putInt(key, value);
             return this;
         }
 
+        @NonNull
         @Override
         public Editor putLong(String key, long value) {
             base.putLong(key, value);
             return this;
         }
 
+        @NonNull
         @Override
         public Editor putFloat(String key, float value) {
             base.putFloat(key, value);
             return this;
         }
 
+        @NonNull
         @Override
         public Editor putBoolean(String key, boolean value) {
             base.putBoolean(key, value);
             return this;
         }
 
+        @NonNull
         @Override
         public Editor remove(String key) {
             base.remove(key);
             return this;
         }
 
+        @NonNull
         @Override
         public Editor clear() {
             base.clear();

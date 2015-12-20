@@ -4,6 +4,7 @@ import android.content.Context;
 import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager;
 import android.support.annotation.NonNull;
+import android.support.annotation.Nullable;
 import android.util.Log;
 import android.widget.Toast;
 
@@ -43,11 +44,12 @@ public final class Utils {
 
     //class used in findBetween
     public static class valueAndIndex {
+        @Nullable
         public final String value;
         public final int from;
         public final int to;
 
-        public valueAndIndex(String v, int f, int t) {
+        public valueAndIndex(@Nullable String v, int f, int t) {
             value = v;
             from = f;
             to = t;
@@ -61,7 +63,8 @@ public final class Utils {
     }
 
     //This function returns the string between beginning and ending in source starting from index, and the position o the matches (including the searched strings). If backwards is true it uses lastIndexOf
-    public static valueAndIndex findBetween(String source, String beginning, String ending, int index, boolean backwards) {
+    @NonNull
+    public static valueAndIndex findBetween(@NonNull String source, @NonNull String beginning, @NonNull String ending, int index, boolean backwards) {
         int start;
         int end;
         valueAndIndex notFound = new valueAndIndex();
@@ -90,11 +93,12 @@ public final class Utils {
         return new valueAndIndex(source.substring(start, end), start - beginning.length(), end + ending.length());
     }
 
-    public static void saveMapToPref(Preferences pref, String key, Map<String, Object> map) {
+    public static void saveMapToPref(@NonNull Preferences pref, String key, Map<String, Object> map) {
         pref.edit().putString(key, new JSONObject(map).toString()).apply();
     }
 
-    public static Map<String, Object> getMapFromPref(Preferences pref, String key) {
+    @NonNull
+    public static Map<String, Object> getMapFromPref(@NonNull Preferences pref, String key) {
         if (pref.contains(key)) {
             try {
                 HashMap<String, Object> map = new HashMap<>();
@@ -112,7 +116,8 @@ public final class Utils {
         return new HashMap<>();
     }
 
-    public static Map<String, String> getAllScriptPagesAndNames(Document document) {
+    @NonNull
+    public static Map<String, String> getAllScriptPagesAndNames(@NonNull Document document) {
         HashMap<String, String> scripts = new HashMap<>();
         //find all scripts in the repository
         String prefix = getString(R.string.prefix_script);
@@ -128,7 +133,8 @@ public final class Utils {
         return scripts;
     }
 
-    public static String getNameForPageFromPref(Preferences pref, String page) {
+    @NonNull
+    public static String getNameForPageFromPref(@NonNull Preferences pref, @NonNull String page) {
         if (page.startsWith(getString(R.string.prefix_script)))
             page = page.substring(getString(R.string.prefix_script).length());
         String result = (String) getMapFromPref(pref, getString(R.string.pref_pageNames)).get(page);
@@ -138,6 +144,7 @@ public final class Utils {
         return page;
     }
 
+    @NonNull
     public static String getNameFromUrl(@NonNull String url) {
         final String idScript = "?id=script_";
         int index = url.indexOf(idScript);
@@ -146,7 +153,7 @@ public final class Utils {
     }
 
     //Checks for the launcher installed and sets it in the Constants variable. Returns false if no launcher was found
-    public static boolean checkForLauncher(Context context) {
+    public static boolean checkForLauncher(@NonNull Context context) {
 
         //checks the installed package, extreme or not
         PackageManager pm = context.getPackageManager();
@@ -202,13 +209,14 @@ public final class Utils {
     private static final int SHOW_TOAST = 1;
     private static final int SHOW_DIALOG = 2;
 
-    public static void showChangedSubscriptionsIfAny(final Context context, final ManagedWebView webView) {
+    public static void showChangedSubscriptionsIfAny(@NonNull final Context context, @NonNull final ManagedWebView webView) {
         final Preferences sharedPref = Preferences.getDefault(context);
         RPCManager.getChangedSubscriptions(sharedPref, new RPCManager.Listener<List<String>>() {
             @Override
-            public void onResult(RPCManager.Result<List<String>> result) {
+            public void onResult(@NonNull RPCManager.Result<List<String>> result) {
                 if (result.getStatus() == RPCManager.RESULT_OK) {
                     List<String> updated = result.getResult();
+                    assert updated != null;
                     if (updated.size() > 0) {
                         StringBuilder pages = new StringBuilder();
                         for (String s : updated) {
@@ -232,7 +240,7 @@ public final class Utils {
         });
     }
 
-    public static void showNewScriptsIfAny(Context context, Document repoDocument, final ManagedWebView webView) {
+    public static void showNewScriptsIfAny(@NonNull Context context, @NonNull Document repoDocument, @NonNull final ManagedWebView webView) {
         final Preferences sharedPref = Preferences.getDefault(context);
         //new method: based on the scripts found
         Map<String, String> map = Utils.getAllScriptPagesAndNames(repoDocument);

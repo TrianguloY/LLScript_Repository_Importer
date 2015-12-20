@@ -3,6 +3,8 @@ package com.trianguloy.llscript.repository.web;
 import android.annotation.TargetApi;
 import android.net.http.HttpResponseCache;
 import android.os.Build;
+import android.support.annotation.NonNull;
+import android.support.annotation.Nullable;
 import android.webkit.WebResourceRequest;
 import android.webkit.WebResourceResponse;
 import android.webkit.WebView;
@@ -20,10 +22,11 @@ import java.net.URL;
  */
 public class WebClient extends WebViewClient {
 
+    @Nullable
     @SuppressWarnings("deprecation")
     @TargetApi(Build.VERSION_CODES.ICE_CREAM_SANDWICH)
     @Override
-    public WebResourceResponse shouldInterceptRequest(final WebView view, final String url) {
+    public WebResourceResponse shouldInterceptRequest(final WebView view, @NonNull final String url) {
         //from http://stackoverflow.com/questions/12063937/can-i-use-the-android-4-httpresponsecache-with-a-webview-based-application/13596877#13596877
         if (Build.VERSION.SDK_INT < Build.VERSION_CODES.ICE_CREAM_SANDWICH || !(url.startsWith("http://") || url.startsWith("https://")) || HttpResponseCache.getInstalled() == null)
             return null;
@@ -36,18 +39,19 @@ public class WebClient extends WebViewClient {
             final String mimeType = pos >= 0 ? contentType.substring(0, pos) : contentType;
             final String encoding = pos >= 0 ? contentType.substring(pos + separator.length()) : "UTF-8";
             return new WebResourceResponse(mimeType, encoding, connection.getInputStream());
-        } catch (final MalformedURLException e) {
+        } catch (@NonNull final MalformedURLException e) {
             e.printStackTrace();
             return null;
-        } catch (final IOException e) {
+        } catch (@NonNull final IOException e) {
             e.printStackTrace();
             return null;
         }
     }
 
+    @Nullable
     @TargetApi(Build.VERSION_CODES.LOLLIPOP)
     @Override
-    public WebResourceResponse shouldInterceptRequest(WebView view, WebResourceRequest request) {
+    public WebResourceResponse shouldInterceptRequest(WebView view, @NonNull WebResourceRequest request) {
         return shouldInterceptRequest(view,request.getUrl().toString());
     }
 }

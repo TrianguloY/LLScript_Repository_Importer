@@ -1,6 +1,8 @@
 package com.trianguloy.llscript.repository.internal;
 
 import android.content.Context;
+import android.support.annotation.NonNull;
+import android.support.annotation.Nullable;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -17,16 +19,17 @@ public abstract class BaseArrayAdapter<T> extends ArrayAdapter<T> {
     final Context context;
     private final int resource;
 
-    protected BaseArrayAdapter(Context context, int resource, List<T> objects) {
+    protected BaseArrayAdapter(Context context, int resource, @NonNull List<T> objects) {
         super(context, resource, objects);
         this.context = context;
         this.resource = resource;
     }
 
 
+    @Nullable
     @Override
-    public final View getView(int position, View convertView,
-                        ViewGroup parent) {
+    public final View getView(int position, @Nullable View convertView,
+                              ViewGroup parent) {
         if (convertView == null) {
             LayoutInflater inflater = (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
             convertView = inflater.inflate(resource, parent, false);

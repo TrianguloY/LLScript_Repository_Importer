@@ -8,6 +8,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
+import android.support.annotation.Nullable;
 
 /**
  * Created by Lukas on 27.04.2015.
@@ -15,6 +16,7 @@ import android.support.annotation.NonNull;
  */
 class AccountAuthenticator extends AbstractAccountAuthenticator{
 
+    @NonNull
     private final Context context;
 
     public AccountAuthenticator(@NonNull Context context) {
@@ -22,11 +24,13 @@ class AccountAuthenticator extends AbstractAccountAuthenticator{
         this.context = context;
     }
 
+    @Nullable
     @Override
     public Bundle editProperties(AccountAuthenticatorResponse response, String accountType) {
         return null;
     }
 
+    @NonNull
     @Override
     public Bundle addAccount(AccountAuthenticatorResponse response, String accountType, String authTokenType, String[] requiredFeatures, Bundle options) {
         final Intent intent = new Intent(context, AuthenticatorActivity.class);
@@ -35,23 +39,27 @@ class AccountAuthenticator extends AbstractAccountAuthenticator{
         return bundleIntent(intent);
     }
 
+    @Nullable
     @Override
     public Bundle confirmCredentials(AccountAuthenticatorResponse response, Account account, Bundle options) {
         return null;
     }
 
+    @Nullable
     @Override
     public Bundle getAuthToken(AccountAuthenticatorResponse response, Account account, String authTokenType, Bundle options) {
         return null;
     }
 
+    @Nullable
     @Override
     public String getAuthTokenLabel(String authTokenType) {
         return null;
     }
 
+    @NonNull
     @Override
-    public Bundle updateCredentials(AccountAuthenticatorResponse response, Account account, String authTokenType, Bundle options) {
+    public Bundle updateCredentials(AccountAuthenticatorResponse response, @NonNull Account account, String authTokenType, Bundle options) {
         final Intent intent = new Intent(context, AuthenticatorActivity.class);
         intent.putExtra(AuthenticatorActivity.ACCOUNT_TYPE, account.type);
         intent.putExtra(AuthenticatorActivity.ACCOUNT,account);
@@ -59,11 +67,13 @@ class AccountAuthenticator extends AbstractAccountAuthenticator{
         return bundleIntent(intent);
     }
 
+    @Nullable
     @Override
     public Bundle hasFeatures(AccountAuthenticatorResponse response, Account account, String[] features) {
         return null;
     }
 
+    @NonNull
     private static Bundle bundleIntent(Intent intent){
         final Bundle bundle = new Bundle();
         bundle.putParcelable(AccountManager.KEY_INTENT, intent);

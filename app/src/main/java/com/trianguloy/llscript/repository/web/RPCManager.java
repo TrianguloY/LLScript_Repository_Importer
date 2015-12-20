@@ -1,6 +1,7 @@
 package com.trianguloy.llscript.repository.web;
 
 import android.os.AsyncTask;
+import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 
 import com.trianguloy.llscript.repository.R;
@@ -69,6 +70,7 @@ public final class RPCManager {
 
     public static void login(final String user, final String password, @Nullable Listener<Void> listener) {
         new ListenedTask<Void>(listener) {
+            @NonNull
             @Override
             protected Result<Void> doInBackground(Void... params) {
                 int result = RESULT_NETWORK_ERROR;
@@ -92,6 +94,7 @@ public final class RPCManager {
     public static void logout() {
         new AsyncTask<Void, Void, Void>() {
 
+            @Nullable
             @Override
             protected Void doInBackground(Void... params) {
                 if (login > NOT_LOGGED_IN) {
@@ -109,6 +112,7 @@ public final class RPCManager {
 
     public static void getPage(final String id, Listener<String> listener) {
         new ListenedTask<String>(listener) {
+            @NonNull
             @Override
             protected Result<String> doInBackground(Void... voids) {
                 try {
@@ -125,6 +129,7 @@ public final class RPCManager {
 
     public static void getAllPages(Listener<List<Page>> listener) {
         new ListenedTask<List<Page>>(listener) {
+            @NonNull
             @Override
             protected Result<List<Page>> doInBackground(Void... voids) {
                 try {
@@ -139,12 +144,14 @@ public final class RPCManager {
         }.execute();
     }
 
+    @NonNull
     public static String getUser() {
         return login == LOGIN_USER ? username : Utils.getString(R.string.text_defaultUser);
     }
 
     public static void putPage(final String id, final String text, Listener<Void> listener) {
         new ListenedTask<Void>(listener) {
+            @NonNull
             @Override
             protected Result<Void> doInBackground(Void... voids) {
                 int result = RESULT_NETWORK_ERROR;
@@ -163,10 +170,11 @@ public final class RPCManager {
         }.execute();
     }
 
-    public static void getChangedSubscriptions(final Preferences sharedPref, Listener<List<String>> listener) {
+    public static void getChangedSubscriptions(@NonNull final Preferences sharedPref, Listener<List<String>> listener) {
         final int timestamp = sharedPref.getInt(Utils.getString(R.string.pref_timestamp), 0);
         final Set<String> subscriptions = sharedPref.getStringSet(Utils.getString(R.string.pref_subscriptions), Collections.<String>emptySet());
         if (subscriptions.size() > 0) new ListenedTask<List<String>>(listener) {
+            @NonNull
             @Override
             protected Result<List<String>> doInBackground(Void... voids) {
                 try {
@@ -192,9 +200,10 @@ public final class RPCManager {
         }.execute();
     }
 
-    public static void setTimestampToCurrent(final Preferences sharedPref, Listener<Integer> listener) {
+    public static void setTimestampToCurrent(@NonNull final Preferences sharedPref, Listener<Integer> listener) {
         new ListenedTask<Integer>(listener) {
 
+            @NonNull
             @Override
             protected Result<Integer> doInBackground(Void... params) {
                 try {
@@ -214,6 +223,7 @@ public final class RPCManager {
     public static AsyncTask getPageTimestamp(final String id, Listener<Integer> listener) {
         return new ListenedTask<Integer>(listener) {
 
+            @NonNull
             @Override
             protected Result<Integer> doInBackground(Void... params) {
                 try {
@@ -235,6 +245,7 @@ public final class RPCManager {
 
     public static class Result<T> {
         private final int status;
+        @Nullable
         private final T result;
 
         public Result(int status) {
@@ -250,12 +261,14 @@ public final class RPCManager {
             return status;
         }
 
+        @Nullable
         public T getResult() {
             return result;
         }
     }
 
     private abstract static class ListenedTask<T> extends AsyncTask<Void, Void, Result<T>> {
+        @Nullable
         private final Listener<T> listener;
 
         public ListenedTask(@Nullable Listener<T> listener) {

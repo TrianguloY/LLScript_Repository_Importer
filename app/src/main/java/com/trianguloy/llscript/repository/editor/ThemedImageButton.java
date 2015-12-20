@@ -3,6 +3,7 @@ package com.trianguloy.llscript.repository.editor;
 import android.content.Context;
 import android.graphics.ColorFilter;
 import android.graphics.ColorMatrixColorFilter;
+import android.support.annotation.NonNull;
 import android.util.AttributeSet;
 import android.util.Log;
 import android.view.ContextThemeWrapper;
@@ -30,7 +31,7 @@ public class ThemedImageButton extends ImageButton {
             Method method = clazz.getMethod("getThemeResId");
             method.setAccessible(true);
             themeResId = (Integer) method.invoke(context);
-        } catch (NoSuchMethodException | IllegalAccessException | InvocationTargetException | IllegalArgumentException e) {
+        } catch (@NonNull NoSuchMethodException | IllegalAccessException | InvocationTargetException | IllegalArgumentException e) {
             if(BuildConfig.DEBUG)Log.e("ThemedImageButton", "Failed to get theme resource ID", e);
         }
         if(themeResId == R.style.Theme_Dark){

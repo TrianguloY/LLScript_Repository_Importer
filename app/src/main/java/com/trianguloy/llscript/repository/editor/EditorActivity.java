@@ -44,7 +44,7 @@ public class EditorActivity extends Activity {
     }
 
     @Override
-    protected void onNewIntent(Intent intent) {
+    protected void onNewIntent(@NonNull Intent intent) {
         super.onNewIntent(intent);
         viewManager.lock();
         String action = intent.getAction();
@@ -69,7 +69,7 @@ public class EditorActivity extends Activity {
     }
 
     @Override
-    public boolean onOptionsItemSelected(MenuItem item) {
+    public boolean onOptionsItemSelected(@NonNull MenuItem item) {
         switch (item.getItemId()) {
             case android.R.id.home:
                 onBackPressed();
@@ -131,7 +131,7 @@ public class EditorActivity extends Activity {
         }
     }
 
-    public void button(View view) {
+    public void button(@NonNull View view) {
         if (!viewManager.isLocked()) {
             viewManager.lock();
             switch (view.getId()) {
@@ -162,7 +162,7 @@ public class EditorActivity extends Activity {
         }
     }
 
-    public void action(View view) {
+    public void action(@NonNull View view) {
         if (viewManager.getState() != ViewManager.STATE_EDIT)
             throw new IllegalStateException("Can't execute actions when not in editor");
         if (!viewManager.isLocked()) {

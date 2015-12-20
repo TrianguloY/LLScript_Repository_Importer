@@ -4,6 +4,7 @@ import android.content.SharedPreferences;
 import android.preference.ListPreference;
 import android.preference.Preference;
 import android.preference.PreferenceScreen;
+import android.support.annotation.NonNull;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -14,6 +15,7 @@ import java.util.Map;
  */
 class PreferenceListener implements SharedPreferences.OnSharedPreferenceChangeListener {
 
+    @NonNull
     private final Map<String, Wrapper> map;
     private final PreferenceScreen screen;
 
@@ -47,7 +49,7 @@ class PreferenceListener implements SharedPreferences.OnSharedPreferenceChangeLi
      *
      * @param preference the preference
      */
-    public void addPreferenceForSummary(Preference preference) {
+    public void addPreferenceForSummary(@NonNull Preference preference) {
         addPreferenceForSummary(preference.getKey());
     }
 
@@ -66,7 +68,7 @@ class PreferenceListener implements SharedPreferences.OnSharedPreferenceChangeLi
      * @param preference the preference
      * @param action     the action
      */
-    public void addPreference(Preference preference, Runnable action) {
+    public void addPreference(@NonNull Preference preference, Runnable action) {
         addPreference(preference.getKey(), action);
     }
 
@@ -85,7 +87,7 @@ class PreferenceListener implements SharedPreferences.OnSharedPreferenceChangeLi
      *  @param preference        the preference
      * @param action            the action
      */
-    public void addPreferenceForSummary(Preference preference, Runnable action) {
+    public void addPreferenceForSummary(@NonNull Preference preference, Runnable action) {
         addPreference(preference.getKey(), true, action);
     }
 

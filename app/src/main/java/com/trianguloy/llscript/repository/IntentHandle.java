@@ -4,6 +4,7 @@ import android.app.Activity;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
+import android.support.annotation.Nullable;
 import android.widget.Toast;
 
 import com.trianguloy.llscript.repository.internal.AppChooser;
@@ -59,7 +60,7 @@ public class IntentHandle extends Activity {
         openWebViewer(null, false);
     }
 
-    private void openWebViewer(String url, boolean reload) {
+    private void openWebViewer(@Nullable String url, boolean reload) {
         Intent intent = new Intent(this, WebViewer.class);
         if (url != null) intent.putExtra(Constants.EXTRA_OPEN_URL, url);
         intent.putExtra(Constants.EXTRA_OPEN_URL_TIME, System.currentTimeMillis());

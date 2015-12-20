@@ -22,6 +22,7 @@ public class SubscriptionManager {
 
     private Context context;
     private Menu menu;
+    @NonNull
     private final Preferences sharedPref;
 
     public SubscriptionManager() {

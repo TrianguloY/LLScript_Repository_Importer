@@ -2,6 +2,7 @@ package com.trianguloy.llscript.repository.acra;
 
 import android.content.DialogInterface;
 import android.os.Bundle;
+import android.support.annotation.NonNull;
 import android.view.View;
 import android.widget.CheckBox;
 import android.widget.LinearLayout;
@@ -50,6 +51,7 @@ public class Dialog extends CrashReportDialog {
     }
 
 
+    @NonNull
     @Override
     protected View buildCustomView(Bundle savedInstanceState) {
         //this uses knowledge about acra's internal dialog structure and might not be compatible with future versions.

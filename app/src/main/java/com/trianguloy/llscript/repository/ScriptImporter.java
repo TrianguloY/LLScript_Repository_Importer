@@ -5,6 +5,7 @@ import android.content.ComponentName;
 import android.content.Intent;
 import android.os.Bundle;
 import android.os.IBinder;
+import android.support.annotation.NonNull;
 import android.widget.Toast;
 
 import com.trianguloy.llscript.repository.internal.Utils;
@@ -20,7 +21,7 @@ public class ScriptImporter extends Service {
 
 
     @Override
-    public int onStartCommand(Intent intent, int flags, int startId) {
+    public int onStartCommand(@NonNull Intent intent, int flags, int startId) {
 
         if (intent.hasExtra(Constants.EXTRA_CODE) && intent.hasExtra(Constants.EXTRA_NAME)) {
             ComponentName componentName = intent.hasExtra(Constants.EXTRA_RECEIVER) ? ComponentName.unflattenFromString(intent.getStringExtra(Constants.EXTRA_RECEIVER)) : null;
@@ -59,7 +60,7 @@ public class ScriptImporter extends Service {
     }
 
 
-    private void installScript(String code, String name, int flags, ComponentName answerTo, boolean forceUpdate) {
+    private void installScript(String code, String name, int flags, @NonNull ComponentName answerTo, boolean forceUpdate) {
         JSONObject data = new JSONObject();
         try {
             data.put(Constants.KEY_CODE, code);

@@ -1,6 +1,8 @@
 package com.trianguloy.llscript.repository;
 
 
+import android.support.annotation.Nullable;
+
 /**
  * Static constants used in the project (like R.strings, but also other types)
  */
@@ -23,7 +25,8 @@ public final class Constants {
 
     //package constants
     public static final String[] PACKAGES = {"net.pierrox.lightning_launcher_extreme", "net.pierrox.lightning_launcher"};
-    public static String installedPackage = "";
+    @Nullable
+    public static String installedPackage = null;
     public static final int MINIMUM_NECESSARY_VERSION = 225; // valid for both packages. Number module 1000
 
     //Intent Extras

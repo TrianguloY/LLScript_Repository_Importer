@@ -22,15 +22,18 @@ import java.util.List;
 
 public class AppChooser extends AlertDialog.Builder {
 
+    @NonNull
     private final Context context;
     private final Uri action;
     private final String onFailureMessage;
+    @Nullable
     private final OnCloseListener listener;
     private final List<ResolveInfo> activities;
     private CheckBox checkBox;
+    @NonNull
     private final Preferences sharedPref;
 
-    public AppChooser(final Context context, Uri action, String title, String onFailureMessage, @Nullable OnCloseListener listener) {
+    public AppChooser(@NonNull final Context context, Uri action, String title, String onFailureMessage, @Nullable OnCloseListener listener) {
         super(context);
         this.context = context;
         this.action = action;
@@ -130,7 +133,7 @@ public class AppChooser extends AlertDialog.Builder {
         if (listener != null) listener.onClose();
     }
 
-    public static List<ResolveInfo> getAppList(Context context, Intent i) {
+    public static List<ResolveInfo> getAppList(@NonNull Context context, Intent i) {
         List<ResolveInfo> activities = context.getPackageManager().queryIntentActivities(i, 0);
         for (ResolveInfo info : activities) {
             if (info.activityInfo.applicationInfo.packageName.equals(IntentHandle.class.getPackage().getName())) {

@@ -9,6 +9,8 @@ import android.graphics.Color;
 import android.net.Uri;
 import android.os.Build;
 import android.preference.DialogPreference;
+import android.support.annotation.NonNull;
+import android.support.annotation.Nullable;
 import android.util.AttributeSet;
 import android.view.View;
 import android.widget.AdapterView;
@@ -27,6 +29,7 @@ import java.util.List;
 @SuppressWarnings("WeakerAccess")
 public class BrowserPreference extends DialogPreference {
     private Context context;
+    @Nullable
     private ComponentName value;
     private List<ResolveInfo> activities;
     private AppAdapter adapter;
@@ -49,6 +52,7 @@ public class BrowserPreference extends DialogPreference {
         setPersistent(true);
     }
 
+    @NonNull
     @Override
     protected View onCreateDialogView() {
         final ListView view = new ListView(context);

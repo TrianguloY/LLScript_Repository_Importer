@@ -57,8 +57,10 @@ public class WebViewer extends Activity {
     //User vars
     private Preferences sharedPref;//user saved data
 
+    @NonNull
     private Boolean close = false; //if pressing back will close or not
 
+    @NonNull
     private final SubscriptionManager subscriptionManager;
 
     private Bundle savedInstanceState;
@@ -87,7 +89,7 @@ public class WebViewer extends Activity {
     }
 
     @Override
-    protected void onNewIntent(Intent intent) {
+    protected void onNewIntent(@NonNull Intent intent) {
         Utils.showChangedSubscriptionsIfAny(this, webView);
 
         if (intent.hasExtra(Constants.EXTRA_OPEN_URL)
@@ -111,7 +113,7 @@ public class WebViewer extends Activity {
     }
 
     @Override
-    public boolean onCreateOptionsMenu(Menu menu) {
+    public boolean onCreateOptionsMenu(@NonNull Menu menu) {
         subscriptionManager.setMenu(menu);
 
         // Inflate the menu; this adds items to the action bar if it is present.
@@ -125,7 +127,7 @@ public class WebViewer extends Activity {
     }
 
     @Override
-    public boolean onOptionsItemSelected(MenuItem item) {
+    public boolean onOptionsItemSelected(@NonNull MenuItem item) {
         // Handle action bar item clicks here. The action bar will
         // automatically handle clicks on the Home/Up button, so long
         // as you specify a parent activity in AndroidManifest.xml.
@@ -141,30 +143,48 @@ public class WebViewer extends Activity {
             case R.id.action_settings:
                 startActivity(new Intent(this, SettingsActivity.class));
                 break;
-            case R.id.action_subscribe:
-                subscriptionManager.subscribe(webView.getPageId());
+            case R.id.action_subscribe: {
+                String page = webView.getPageId();
+                if (page != null) subscriptionManager.subscribe(page);
                 break;
-            case R.id.action_unsubscribe:
-                subscriptionManager.unsubscribe(webView.getPageId());
+            }
+            case R.id.action_unsubscribe: {
+                String page = webView.getPageId();
+                if (page != null)
+                    subscriptionManager.unsubscribe(page);
                 break;
+            }
+
             case android.R.id.home:
+
                 onBackPressed();
+
                 break;
             case R.id.editor:
                 Intent i = new Intent(this, EditorActivity.class);
                 i.setAction(webView.getUrl());
+
                 startActivity(i);
+
                 break;
             case R.id.action_share:
                 Intent share = new Intent(Intent.ACTION_SEND);
                 share.setType("text/plain");
                 share.putExtra(Intent.EXTRA_TEXT, webView.getUrl());
-                startActivity(Intent.createChooser(share, getString(R.string.title_share)));
+
+                startActivity(Intent.createChooser(share, getString(R.string.title_share)
+
+                ));
                 break;
             case R.id.debug:
-                throw new RuntimeException("This crash was intended");
+                throw new
+
+                        RuntimeException("This crash was intended");
+
             default:
-                return super.onOptionsItemSelected(item);
+                return super.
+
+                        onOptionsItemSelected(item);
         }
 
         return true;
@@ -242,12 +262,12 @@ public class WebViewer extends Activity {
             }
 
             @Override
-            public void pageChanged(String url) {
+            public void pageChanged(@NonNull String url) {
                 WebViewer.this.pageChanged(url);
             }
 
             @Override
-            public void repoDocumentUpdated(Document repoDoc) {
+            public void repoDocumentUpdated(@NonNull Document repoDoc) {
                 Utils.showNewScriptsIfAny(WebViewer.this, repoDoc, webView);
             }
         });
@@ -268,7 +288,7 @@ public class WebViewer extends Activity {
         }
     }
 
-    private void pageChanged(String url) {
+    private void pageChanged(@NonNull String url) {
         if (url.equals(getString(R.string.link_repository))) {
             button.setVisibility(View.GONE);
             setTitle(R.string.menu_mainPage);
@@ -295,7 +315,8 @@ public class WebViewer extends Activity {
         ImportUtils.startImport(this, webView, new ImportUtils.Listener() {
             @Override
             public void importFinished() {
-                if (!subscriptionManager.isSubscribed(webView.getPageId())) {
+                String page = webView.getPageId();
+                if (page != null && !subscriptionManager.isSubscribed(page)) {
                     Dialogs.subscribe(WebViewer.this, new DialogInterface.OnClickListener() {
                         @Override
                         public void onClick(DialogInterface dialogInterface, int i) {
@@ -330,7 +351,7 @@ public class WebViewer extends Activity {
         if (!sharedPref.contains(getString(R.string.pref_timestamp))) {
             RPCManager.setTimestampToCurrent(sharedPref, new RPCManager.Listener<Integer>() {
                 @Override
-                public void onResult(RPCManager.Result<Integer> result) {
+                public void onResult(@NonNull RPCManager.Result<Integer> result) {
                     if (result.getStatus() == RPCManager.RESULT_OK) {
                         init();
                     } else {

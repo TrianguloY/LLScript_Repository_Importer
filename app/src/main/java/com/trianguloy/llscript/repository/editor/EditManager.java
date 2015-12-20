@@ -1,8 +1,10 @@
 package com.trianguloy.llscript.repository.editor;
 
-import android.annotation.SuppressLint;
+import android.annotation.TargetApi;
 import android.os.Build;
 import android.os.Bundle;
+import android.support.annotation.NonNull;
+import android.support.annotation.Nullable;
 import android.text.Editable;
 import android.util.Log;
 import android.view.View;
@@ -18,14 +20,18 @@ import com.trianguloy.llscript.repository.internal.Utils;
  */
 class EditManager {
 
+    @Nullable
     private EditText editText;
     private int textHash = -1;
+    @Nullable
     private String text;
 
+    @Nullable
     private String pageName;
+    @Nullable
     private String pageId;
 
-    public void assign(EditText editText) {
+    public void assign(@NonNull EditText editText) {
         this.editText = editText;
         if (text != null) editText.setText(text);
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.HONEYCOMB_MR1) {
@@ -35,10 +41,11 @@ class EditManager {
                     //no-op
                 }
 
-                @SuppressLint("NewApi")
+                @TargetApi(Build.VERSION_CODES.HONEYCOMB_MR1)
                 @Override
                 public void onViewDetachedFromWindow(View v) {
                     text = getText();
+                    assert EditManager.this.editText != null;
                     EditManager.this.editText.removeOnAttachStateChangeListener(this);
                     EditManager.this.editText = null;
                 }
@@ -46,12 +53,13 @@ class EditManager {
         }
     }
 
-    public void assign(EditText editText, String text) {
+    public void assign(@NonNull EditText editText, @NonNull String text) {
         this.text = text;
         assign(editText);
         if (textHash == -1) textHash = text.hashCode();
     }
 
+    @Nullable
     public String getText() {
         if (editText == null) return text;
         String txt = editText.getText().toString();
@@ -59,7 +67,7 @@ class EditManager {
         return txt;
     }
 
-    private void surroundOrAdd(String prefix, String suffix, String text) {
+    private void surroundOrAdd(@NonNull String prefix, String suffix, @NonNull String text) {
         if (editText != null) {
             int start = editText.getSelectionStart();
             int end = editText.getSelectionEnd();
@@ -76,14 +84,14 @@ class EditManager {
     }
 
     public boolean isChanged() {
-        return editText.getText().toString().hashCode() == hashCode();
+        return (editText != null ? editText.getText().toString().hashCode() : 0) == hashCode();
     }
 
     public void saved() {
-        textHash = editText.getText().toString().hashCode();
+        textHash = editText != null ? editText.getText().toString().hashCode() : 0;
     }
 
-    public void toBundle(Bundle bundle) {
+    public void toBundle(@NonNull Bundle bundle) {
         bundle.putString(Utils.getString(R.string.key_pageText), getText());
         bundle.putString(Utils.getString(R.string.key_pageName), pageName);
         bundle.putString(Utils.getString(R.string.key_pageId), pageId);
@@ -91,7 +99,7 @@ class EditManager {
 
     }
 
-    public void fromBundle(Bundle bundle) {
+    public void fromBundle(@NonNull Bundle bundle) {
         text = bundle.getString(Utils.getString(R.string.key_pageText));
         pageName = bundle.getString(Utils.getString(R.string.key_pageName));
         pageId = bundle.getString(Utils.getString(R.string.key_pageId));
@@ -99,19 +107,21 @@ class EditManager {
     }
 
 
+    @Nullable
     public String getPageName() {
         return pageName;
     }
 
-    public void setPageName(String pageName) {
+    public void setPageName(@Nullable String pageName) {
         this.pageName = pageName;
     }
 
+    @Nullable
     public String getPageId() {
         return pageId;
     }
 
-    public void setPageId(String pageId) {
+    public void setPageId(@Nullable String pageId) {
         this.pageId = pageId;
     }
 

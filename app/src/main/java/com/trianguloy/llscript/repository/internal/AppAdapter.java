@@ -3,6 +3,7 @@ package com.trianguloy.llscript.repository.internal;
 import android.content.Context;
 import android.content.pm.PackageManager;
 import android.content.pm.ResolveInfo;
+import android.support.annotation.NonNull;
 import android.view.View;
 import android.widget.CheckBox;
 import android.widget.ImageView;
@@ -22,12 +23,12 @@ public class AppAdapter extends BaseArrayAdapter<ResolveInfo> {
 
     private int selected = NONE;
 
-    public AppAdapter(Context context, List<ResolveInfo> apps, int resource) {
+    public AppAdapter(Context context, @NonNull List<ResolveInfo> apps, int resource) {
         super(context, resource, apps);
     }
 
     @Override
-    protected void bindView(int position, View row) {
+    protected void bindView(int position, @NonNull View row) {
         PackageManager pm = context.getPackageManager();
         TextView label = (TextView) row.findViewById(R.id.label);
 

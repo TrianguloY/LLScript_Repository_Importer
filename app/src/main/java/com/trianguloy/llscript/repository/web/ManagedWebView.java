@@ -5,6 +5,8 @@ import android.content.DialogInterface;
 import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Bundle;
+import android.support.annotation.NonNull;
+import android.support.annotation.Nullable;
 import android.util.AttributeSet;
 import android.util.Log;
 import android.webkit.WebView;
@@ -40,6 +42,7 @@ public class ManagedWebView extends WebView {
     private boolean showTools;
 
     private String loadingId;
+    @Nullable
     private AsyncTask ongoingTask;
 
     public ManagedWebView(Context context) {
@@ -68,7 +71,7 @@ public class ManagedWebView extends WebView {
         showTools = false;
         setWebViewClient(new WebClient() {
             @Override
-            public boolean shouldOverrideUrlLoading(WebView view, String url) {
+            public boolean shouldOverrideUrlLoading(WebView view, @NonNull String url) {
                 //prevent login and register, broken because cookies are missing
                 if (url.contains("&do=login") || url.contains("&do=register")) return true;
                 if (!backStack.peek().url.equals(url)) show(url);
@@ -86,7 +89,7 @@ public class ManagedWebView extends WebView {
         downloadTaskListener = new DownloadTask.Listener() {
 
             @Override
-            public void onFinish(DownloadTask.Result result) {
+            public void onFinish(@NonNull DownloadTask.Result result) {
                 //default listener: show the page after loading it
                 showPage(result.url, result.document);
                 if (ManagedWebView.this.context.getString(R.string.link_repository).equals(result.url)) {
@@ -96,9 +99,11 @@ public class ManagedWebView extends WebView {
                 final String html = result.document.outerHtml();
                 RPCManager.getPageTimestamp(ManagedWebView.this.context.getString(R.string.prefix_script) + id, new RPCManager.Listener<Integer>() {
                     @Override
-                    public void onResult(RPCManager.Result<Integer> result) {
+                    public void onResult(@NonNull RPCManager.Result<Integer> result) {
                         if (result.getStatus() == RPCManager.RESULT_OK) {
-                            PageCacheManager.savePage(id, new PageCacheManager.Page(result.getResult(), html));
+                            Integer timestamp = result.getResult();
+                            assert timestamp != null;
+                            PageCacheManager.savePage(id, new PageCacheManager.Page(timestamp, html));
                         }
                     }
                 });
@@ -131,7 +136,7 @@ public class ManagedWebView extends WebView {
      *
      * @param url the url to load and show
      */
-    public void show(final String url) {
+    public void show(@NonNull final String url) {
         if (url.startsWith(context.getString(R.string.link_scriptPagePrefix))) {
             final String id = Utils.getNameFromUrl(url);
             if (!id.equals(loadingId)) cancel();
@@ -142,9 +147,11 @@ public class ManagedWebView extends WebView {
                 showPage(url, Jsoup.parse(page.html, context.getString(R.string.link_server)));
                 ongoingTask = RPCManager.getPageTimestamp(context.getString(R.string.prefix_script) + id, new RPCManager.Listener<Integer>() {
                     @Override
-                    public void onResult(RPCManager.Result<Integer> result) {
+                    public void onResult(@NonNull RPCManager.Result<Integer> result) {
                         if (result.getStatus() == RPCManager.RESULT_OK) {
-                            if (result.getResult() > page.timestamp) {
+                            Integer timestamp = result.getResult();
+                            assert timestamp != null;
+                            if (timestamp > page.timestamp) {
                                 cancel();
                                 downloadPage(url);
                             }
@@ -163,7 +170,7 @@ public class ManagedWebView extends WebView {
      * @param url      url of the page
      * @param document Jsoup document of the page
      */
-    private void showPage(String url, Document document) {
+    private void showPage(@NonNull String url, @NonNull Document document) {
         if (Utils.getNameFromUrl(url).equals(loadingId)) {
             if (!showTools) {
                 //remove tools
@@ -223,12 +230,14 @@ public class ManagedWebView extends WebView {
         show(load);
     }
 
+    @Nullable
     @Override
     public String getUrl() {
         if (backStack.empty()) return null;
         return backStack.peek().url;
     }
 
+    @Nullable
     public String getPageId() {
         if (backStack.empty()) return null;
         return Utils.getNameFromUrl(backStack.peek().url);
@@ -240,6 +249,7 @@ public class ManagedWebView extends WebView {
 
     /**
      * put this page onto the backStack, so it can be reached by navigating back, but don't show it
+     *
      * @param url the page
      */
     public void dropOnStackWithoutShowing(String url) {
@@ -256,6 +266,7 @@ public class ManagedWebView extends WebView {
 
     /**
      * set the loading status
+     *
      * @param isLoading the new status
      */
     private void loading(boolean isLoading) {
@@ -266,6 +277,7 @@ public class ManagedWebView extends WebView {
 
     /**
      * set if tools should be shown
+     *
      * @param showTools value
      */
     public void setShowTools(boolean showTools) {
@@ -274,9 +286,10 @@ public class ManagedWebView extends WebView {
 
     /**
      * save the state to a bundle
+     *
      * @param savedInstanceState the bundle
      */
-    public void saveToInstanceState(Bundle savedInstanceState) {
+    public void saveToInstanceState(@NonNull Bundle savedInstanceState) {
         Gson gson = new Gson();
         savedInstanceState.putString(context.getString(R.string.key_backStack), gson.toJson(backStack));
         if (repoDocument != null)
@@ -285,10 +298,11 @@ public class ManagedWebView extends WebView {
 
     /**
      * load an old state from a bundle
+     *
      * @param savedInstanceState the bundle
      * @return if something was restored
      */
-    public boolean restoreFromInstanceState(Bundle savedInstanceState) {
+    public boolean restoreFromInstanceState(@NonNull Bundle savedInstanceState) {
         try {
             Gson gson = new Gson();
             Stack<HistoryElement> backStack = gson.fromJson(savedInstanceState.getString(context.getString(R.string.key_backStack)), new TypeToken<Stack<HistoryElement>>() {

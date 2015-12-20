@@ -1,6 +1,7 @@
 package com.trianguloy.llscript.repository.internal;
 
 import android.content.Context;
+import android.support.annotation.Nullable;
 import android.text.Editable;
 import android.util.AttributeSet;
 import android.widget.TextView;
@@ -14,6 +15,7 @@ import com.trianguloy.llscript.repository.settings.Preferences;
  */
 public class SubTextView extends TextView {
     private String key;
+    @Nullable
     private String text = null;
     private final Context context;
 
@@ -42,6 +44,7 @@ public class SubTextView extends TextView {
         return key;
     }
 
+    @Nullable
     @Override
     public Editable getEditableText() {
         return null;

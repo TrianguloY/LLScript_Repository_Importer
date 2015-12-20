@@ -4,6 +4,7 @@ import android.app.AlarmManager;
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
+import android.support.annotation.NonNull;
 
 import com.trianguloy.llscript.repository.settings.Preferences;
 import com.trianguloy.llscript.repository.web.WebServiceManager;
@@ -14,7 +15,7 @@ import com.trianguloy.llscript.repository.web.WebServiceManager;
  */
 public class BootBroadcastReceiver extends BroadcastReceiver {
     @Override
-    public void onReceive(Context pContext, Intent intent) {
+    public void onReceive(@NonNull Context pContext, @NonNull Intent intent) {
         if (intent.getAction().equals(Intent.ACTION_BOOT_COMPLETED)) {
             Preferences sharedPref = Preferences.getDefault(pContext);
             if (sharedPref.getBoolean(pContext.getString(R.string.pref_notifications), false)) {

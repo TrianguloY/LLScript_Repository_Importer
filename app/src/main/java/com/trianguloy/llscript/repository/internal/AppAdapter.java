@@ -20,11 +20,13 @@ import java.util.List;
  */
 public class AppAdapter extends BaseArrayAdapter<ResolveInfo> {
     public static final int NONE = -1;
+    private final Context context;
 
     private int selected = NONE;
 
     public AppAdapter(Context context, @NonNull List<ResolveInfo> apps, int resource) {
         super(context, resource, apps);
+        this.context = context;
     }
 
     @Override

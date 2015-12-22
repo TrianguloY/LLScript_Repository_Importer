@@ -35,16 +35,37 @@ public final class ImportUtils {
 
     public static void startImport(@NonNull final Activity context, @NonNull final ManagedWebView webView, @NonNull final Listener listener) {
         Document document = Jsoup.parse(webView.getCurrentDocument().outerHtml(), context.getString(R.string.link_server));
+        final List<Script> scripts = findScripts(document);
+        //TODO search the flags
+        String aboutScript = generateAboutComment(document);
+        //switch based on the number of scripts found
+        if (scripts.size() > 1) {
+            //more than one script founds
+            final String about = aboutScript;
+            final String[] names = new String[scripts.size()];
+            for (int i = 0; i < scripts.size(); i++) {
+                names[i] = scripts.get(i).getName();
+            }
+            Dialogs.moreThanOneScriptFound(context, names, new DialogInterface.OnClickListener() {
+                @Override
+                public void onClick(@NonNull DialogInterface dialog, int which) {
+                    dialog.dismiss();//Necessary, this is launched when clicking an item, not when clicking a button
+                    showImportScript(context, listener, scripts.get(which), about);
+                }
+            });
+        } else if (scripts.size() == 1) {
+            oneScriptFound(context, webView, listener, scripts.get(0), aboutScript);
+        } else {
+            Dialogs.noScriptFound(context);
+        }
+    }
 
-        //initialize variables
-        final ArrayList<String> names = new ArrayList<>();//names of all scripts
-        final ArrayList<String> rawCodes = new ArrayList<>();//Found scripts
-        String aboutScript = "";
-
-        //Starts searching all scripts
+    private static List<Script> findScripts(Document document) {//Starts searching all scripts
         Elements elements = document.select(Constants.SCRIPT_SELECTORS);
+        ArrayList<Script> list = new ArrayList<>();
         for (Element e : elements) {
-            rawCodes.add(e.ownText());
+            String code = e.ownText();
+            String name = null;
             Element parent = e;
             int index = e.elementSiblingIndex();
             loop:
@@ -52,19 +73,23 @@ public final class ImportUtils {
                 while (--index >= 0) {
                     Element sibling = parent.child(index);
                     if (!sibling.text().equals("")) {
-                        names.add(sibling.text());
+                        name = sibling.text();
                         break loop;
                     }
                 }
                 index = parent.elementSiblingIndex();
             }
-            if (names.size() < rawCodes.size())
-                names.add(context.getString(R.string.text_nameNotFound));
+            if (name == null) {
+                name = Utils.getString(R.string.text_nameNotFound);
+            }
+            list.add(new Script(code, name));
         }
+        return list;
+    }
 
-        //TODO search the flags
-
+    private static String generateAboutComment(Document document){
         //About script: purpose, author, link
+        String aboutScript = "";
         Elements aboutElements = document.select("#about_the_script");
         if (aboutElements.size() > 0) {
 
@@ -88,23 +113,7 @@ public final class ImportUtils {
             //adds the beginning and end comment block, and remove extra whitespaces at the beginning and end
             aboutScript = "/* " + aboutScript.trim() + "\n */\n\n";
         }
-
-        //switch based on the number of scripts found
-        if (rawCodes.size() > 1) {
-            //more than one script founds
-            final String about = aboutScript;
-            Dialogs.moreThanOneScriptFound(context, names.toArray(new String[names.size()]), new DialogInterface.OnClickListener() {
-                @Override
-                public void onClick(@NonNull DialogInterface dialog, int which) {
-                    dialog.dismiss();//Necessary, this is launched when clicking an item, not when clicking a button
-                    showImportScript(context, listener, names.get(which), rawCodes.get(which), about);
-                }
-            });
-        } else if (rawCodes.size() == 1) {
-            oneScriptFound(context, webView, listener, names.get(0), rawCodes.get(0), aboutScript);
-        } else {
-            Dialogs.noScriptFound(context);
-        }
+        return aboutScript;
     }
 
     private static String getTextWithLineBreaks(@NonNull Element e) {
@@ -126,7 +135,7 @@ public final class ImportUtils {
         return builder.toString();
     }
 
-    private static void oneScriptFound(@NonNull Activity context, @NonNull ManagedWebView webView, @NonNull Listener listener, String name, @NonNull String rawCode, String about) {
+    private static void oneScriptFound(@NonNull Activity context, @NonNull ManagedWebView webView, @NonNull Listener listener, @NonNull Script script, String about) {
         //only one script, load directly
 
         //get the name from the repository
@@ -141,12 +150,11 @@ public final class ImportUtils {
                 scriptName = elements.first().ownText();
             }
         }
-        if (scriptName == null) {
-            //fallback if not found in repo or repo not found
-            scriptName = name;
+        if (scriptName != null) {
+            script.setName(scriptName);
         }
 
-        showImportScript(context, listener, scriptName, rawCode, about);
+        showImportScript(context, listener, script, about);
 
     }
 
@@ -156,18 +164,17 @@ public final class ImportUtils {
      *
      * @param context     the context used
      * @param listener    what to do when finishing importing
-     * @param scriptName  the name of the script
-     * @param scriptCode  the code of the script
+     * @param script      the script
      * @param aboutString the header of the imported script
      */
-    private static void showImportScript(@NonNull final Activity context, @NonNull final Listener listener, String scriptName, @NonNull String scriptCode, String aboutString) {
+    private static void showImportScript(@NonNull final Activity context, @NonNull final Listener listener, @NonNull Script script, String aboutString) {
 
-        String code = scriptCode.trim();
+        String code = script.getCode().trim();
 
         if (Preferences.getDefault(context).getBoolean(context.getString(R.string.pref_aboutScript), true))
             code = aboutString + code;
 
-        Dialogs.importScript(context, code, scriptName, new Dialogs.OnImportListener() {
+        Dialogs.importScript(context, code, script.getName(), new Dialogs.OnImportListener() {
             @Override
             public void onClick(String code, String name, int flags) {
                 sendScriptToLauncher(context, code, name, flags);
@@ -233,5 +240,27 @@ public final class ImportUtils {
 
     public interface Listener {
         void importFinished();
+    }
+
+    private static class Script {
+        private String name;
+        private String code;
+
+        public Script(String code, String name) {
+            this.code = code;
+            this.name = name;
+        }
+
+        public String getName() {
+            return name;
+        }
+
+        public void setName(String name) {
+            this.name = name;
+        }
+
+        public String getCode() {
+            return code;
+        }
     }
 }

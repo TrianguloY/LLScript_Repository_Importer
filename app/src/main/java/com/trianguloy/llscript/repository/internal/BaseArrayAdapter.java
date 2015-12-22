@@ -16,7 +16,7 @@ import java.util.List;
  */
 public abstract class BaseArrayAdapter<T> extends ArrayAdapter<T> {
 
-    final Context context;
+    private final Context context;
     private final int resource;
 
     protected BaseArrayAdapter(Context context, int resource, @NonNull List<T> objects) {

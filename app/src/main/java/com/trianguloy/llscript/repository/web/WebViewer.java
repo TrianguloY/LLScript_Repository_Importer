@@ -154,37 +154,24 @@ public class WebViewer extends Activity {
                     subscriptionManager.unsubscribe(page);
                 break;
             }
-
             case android.R.id.home:
-
                 onBackPressed();
-
                 break;
             case R.id.editor:
                 Intent i = new Intent(this, EditorActivity.class);
                 i.setAction(webView.getUrl());
-
                 startActivity(i);
-
                 break;
             case R.id.action_share:
                 Intent share = new Intent(Intent.ACTION_SEND);
                 share.setType("text/plain");
                 share.putExtra(Intent.EXTRA_TEXT, webView.getUrl());
-
-                startActivity(Intent.createChooser(share, getString(R.string.title_share)
-
-                ));
+                startActivity(Intent.createChooser(share, getString(R.string.title_share)));
                 break;
             case R.id.debug:
-                throw new
-
-                        RuntimeException("This crash was intended");
-
+                throw new RuntimeException("This crash was intended");
             default:
-                return super.
-
-                        onOptionsItemSelected(item);
+                return super.onOptionsItemSelected(item);
         }
 
         return true;

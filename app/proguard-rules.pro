@@ -25,7 +25,6 @@
 -keep interface com.google.gson.** {*;}
 -keep class dw.xmlrpc.** {*;}
 -keep interface dw.xmlrpc.** {*;}
--keep class org.jsoup.** {*;}
--keep interface org.jsoup.** {*;}
+-keeppackagenames org.jsoup.nodes
 -keep class com.trianguloy.llscript.repository.internal.PageCacheManager$Page {*;}
 -dontwarn **

@@ -60,7 +60,8 @@ public final class ImportUtils {
         }
     }
 
-    private static List<Script> findScripts(Document document) {//Starts searching all scripts
+    @NonNull
+    private static List<Script> findScripts(@NonNull Document document) {//Starts searching all scripts
         Elements elements = document.select(Constants.SCRIPT_SELECTORS);
         ArrayList<Script> list = new ArrayList<>();
         for (Element e : elements) {
@@ -87,7 +88,7 @@ public final class ImportUtils {
         return list;
     }
 
-    private static String generateAboutComment(Document document) {
+    private static String generateAboutComment(@NonNull Document document) {
         //About script: purpose, author, link
         String aboutScript = "";
         Elements aboutElements = document.select("#about_the_script");

@@ -40,18 +40,18 @@ public class Preferences implements SharedPreferences {
         return base.getAll();
     }
 
-    @Nullable
+
     @Override
     public String getString(String key, String defValue) {
         return base.getString(key, defValue);
     }
 
-    @Nullable
+
     public String getString(@StringRes int key, String defValue) {
         return getString(context.getString(key), defValue);
     }
 
-    @Nullable
+
     @Override
     public Set<String> getStringSet(String key, @Nullable Set<String> defValues) {
         if (defValues == null) defValues = new HashSet<>();

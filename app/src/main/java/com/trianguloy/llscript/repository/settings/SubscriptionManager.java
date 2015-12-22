@@ -29,6 +29,7 @@ public class SubscriptionManager {
     private final Preferences sharedPref;
 
     public SubscriptionManager() {
+        context = Utils.getContext();
         sharedPref = Preferences.getDefault(context);
     }
 

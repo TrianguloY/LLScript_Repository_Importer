@@ -18,8 +18,8 @@ public class BootBroadcastReceiver extends BroadcastReceiver {
     public void onReceive(@NonNull Context pContext, @NonNull Intent intent) {
         if (intent.getAction().equals(Intent.ACTION_BOOT_COMPLETED)) {
             Preferences sharedPref = Preferences.getDefault(pContext);
-            if (sharedPref.getBoolean(pContext.getString(R.string.pref_notifications), false)) {
-                WebServiceManager.startService(pContext, Integer.parseInt(sharedPref.getString(pContext.getString(R.string.pref_notificationInterval), String.valueOf(AlarmManager.INTERVAL_HOUR))));
+            if (sharedPref.getBoolean(R.string.pref_notifications, false)) {
+                WebServiceManager.startService(pContext, Integer.parseInt(sharedPref.getString(R.string.pref_notificationInterval, String.valueOf(AlarmManager.INTERVAL_HOUR))));
             }
         }
     }

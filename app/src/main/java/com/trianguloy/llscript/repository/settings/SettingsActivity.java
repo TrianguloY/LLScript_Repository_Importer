@@ -183,7 +183,7 @@ public class SettingsActivity extends PreferenceActivity {
 
     private void startService(@NonNull Preferences pref) {
         WebServiceManager.startService(getApplicationContext(),
-                Integer.parseInt(pref.getString(getString(R.string.pref_notificationInterval),
+                Integer.parseInt(pref.getString(R.string.pref_notificationInterval,
                         String.valueOf(AlarmManager.INTERVAL_HOUR))));
         getPackageManager().setComponentEnabledSetting(new ComponentName(getApplicationContext(), BootBroadcastReceiver.class),
                 PackageManager.COMPONENT_ENABLED_STATE_ENABLED,

@@ -49,7 +49,7 @@ public class EditorActivity extends Activity {
         viewManager.lock();
         String action = intent.getAction();
         if (action != null && !action.equals(getString(R.string.link_repository)) &&
-                action.startsWith(getString(R.string.link_scriptPagePrefix)) && sharedPref.getBoolean(getString(R.string.pref_directEdit), false))
+                action.startsWith(getString(R.string.link_scriptPagePrefix)) && sharedPref.getBoolean(R.string.pref_directEdit, false))
             editManager.setPageId(action.substring(action.indexOf(getString(R.string.prefix_script))));
         else editManager.setPageId(null);
         if (RPCManager.isLoggedIn() >= RPCManager.LOGIN_USER) load();

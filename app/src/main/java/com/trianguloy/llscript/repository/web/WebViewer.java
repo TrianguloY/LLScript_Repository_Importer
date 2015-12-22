@@ -84,7 +84,7 @@ public class WebViewer extends Activity {
         //check for launcher to find the installed one, continue even if not found
         Utils.checkForLauncher(this);
 
-        if ((sharedPref.contains(getString(R.string.pref_version)) && sharedPref.getInt(getString(R.string.pref_version), -1) == BuildConfig.VERSION_CODE) || upgradeFromOldVersion())
+        if ((sharedPref.contains(R.string.pref_version) && sharedPref.getInt(R.string.pref_version, -1) == BuildConfig.VERSION_CODE) || upgradeFromOldVersion())
             init();
     }
 
@@ -106,7 +106,7 @@ public class WebViewer extends Activity {
 
     private void loadSentUrl() {
         if (sentUrl == null) sentUrl = getString(R.string.link_repository);
-        if (!sentUrl.equals(getString(R.string.link_repository)) && !sharedPref.getBoolean(getString(R.string.pref_directReturn), false) && !webView.hasPage()) {
+        if (!sentUrl.equals(getString(R.string.link_repository)) && !sharedPref.getBoolean(R.string.pref_directReturn, false) && !webView.hasPage()) {
             webView.dropOnStackWithoutShowing(getString(R.string.link_repository));
         }
         webView.show(sentUrl);
@@ -180,7 +180,7 @@ public class WebViewer extends Activity {
     @Override
     public void onBackPressed() {
         if (webView.backPossible()) webView.performBack();
-        else if (!close && !sharedPref.getBoolean(getString(R.string.pref_singleClose), false)) {
+        else if (!close && !sharedPref.getBoolean(R.string.pref_singleClose, false)) {
             //Press back while the toast is still displayed to close
             Toast.makeText(getApplicationContext(), R.string.toast_backToClose, Toast.LENGTH_SHORT).show();
             close = true;
@@ -197,7 +197,7 @@ public class WebViewer extends Activity {
 
     @Override
     public boolean onKeyLongPress(int keyCode, KeyEvent event) {
-        if (keyCode == KeyEvent.KEYCODE_BACK && sharedPref.getBoolean(getString(R.string.pref_longPressClose), true)) {
+        if (keyCode == KeyEvent.KEYCODE_BACK && sharedPref.getBoolean(R.string.pref_longPressClose, true)) {
             finish();
             return true;
         }
@@ -258,7 +258,7 @@ public class WebViewer extends Activity {
                 Utils.showNewScriptsIfAny(WebViewer.this, repoDoc, webView);
             }
         });
-        webView.setShowTools(sharedPref.getBoolean(getString(R.string.pref_showTools), false));
+        webView.setShowTools(sharedPref.getBoolean(R.string.pref_showTools, false));
 
         //install cache
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.ICE_CREAM_SANDWICH) {
@@ -318,24 +318,24 @@ public class WebViewer extends Activity {
     //return false to block loading. If blocked has to call init() when finished
     private boolean upgradeFromOldVersion() {
         PreferenceManager.setDefaultValues(this, R.xml.pref_general, false);
-        sharedPref.edit().putInt(getString(R.string.pref_version), BuildConfig.VERSION_CODE).apply();
+        sharedPref.edit().putInt(R.string.pref_version, BuildConfig.VERSION_CODE).apply();
         if (!BuildConfig.DEBUG)
-            sharedPref.edit().putBoolean(getString(R.string.pref_enableAcra), true).apply();
+            sharedPref.edit().putBoolean(R.string.pref_enableAcra, true).apply();
 
-        if (sharedPref.contains(getString(R.string.pref_subs))) {
-            Map<String, Object> map = Utils.getMapFromPref(sharedPref, getString(R.string.pref_subs));
+        if (sharedPref.contains(R.string.pref_subs)) {
+            Map<String, Object> map = Utils.getMapFromPref(sharedPref, R.string.pref_subs);
             HashSet<String> set = new HashSet<>();
             for (String page : map.keySet()) {
                 set.add(Utils.getNameFromUrl(page));
             }
-            sharedPref.edit().putStringSet(getString(R.string.pref_subscriptions), set)
-                    .remove(getString(R.string.pref_subs))
+            sharedPref.edit().putStringSet(R.string.pref_subscriptions, set)
+                    .remove(R.string.pref_subs)
                     .apply();
         }
-        if (sharedPref.contains(getString(R.string.pref_repoHash))) {
-            sharedPref.edit().remove(getString(R.string.pref_repoHash)).apply();
+        if (sharedPref.contains(R.string.pref_repoHash)) {
+            sharedPref.edit().remove(R.string.pref_repoHash).apply();
         }
-        if (!sharedPref.contains(getString(R.string.pref_timestamp))) {
+        if (!sharedPref.contains(R.string.pref_timestamp)) {
             RPCManager.setTimestampToCurrent(sharedPref, new RPCManager.Listener<Integer>() {
                 @Override
                 public void onResult(@NonNull RPCManager.Result<Integer> result) {

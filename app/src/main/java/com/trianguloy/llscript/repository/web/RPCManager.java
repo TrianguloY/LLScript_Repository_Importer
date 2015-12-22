@@ -184,8 +184,8 @@ public final class RPCManager {
     }
 
     public static void getChangedSubscriptions(@NonNull final Preferences sharedPref, Listener<List<String>> listener) {
-        final int timestamp = sharedPref.getInt(Utils.getString(R.string.pref_timestamp), 0);
-        final Set<String> subscriptions = sharedPref.getStringSet(Utils.getString(R.string.pref_subscriptions), Collections.<String>emptySet());
+        final int timestamp = sharedPref.getInt(R.string.pref_timestamp, 0);
+        final Set<String> subscriptions = sharedPref.getStringSet(R.string.pref_subscriptions, Collections.<String>emptySet());
         if (subscriptions.size() > 0) new ListenedTask<List<String>>(listener) {
             @NonNull
             @Override
@@ -222,7 +222,7 @@ public final class RPCManager {
                 try {
                     if (init()) {
                         int timestamp = client.getTime();
-                        sharedPref.edit().putInt(Utils.getString(R.string.pref_timestamp), timestamp).apply();
+                        sharedPref.edit().putInt(R.string.pref_timestamp, timestamp).apply();
                         return new Result<>(RESULT_OK, timestamp);
                     }
                 } catch (DokuException e) {

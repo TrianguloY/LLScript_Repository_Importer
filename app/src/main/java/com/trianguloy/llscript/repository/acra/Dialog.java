@@ -32,7 +32,7 @@ public class Dialog extends CrashReportDialog {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         sharedPref = Preferences.getDefault(this);
-        int reportMode = Integer.valueOf(sharedPref.getString(getString(R.string.pref_reportMode), String.valueOf(MODE_ASK)));
+        int reportMode = Integer.valueOf(sharedPref.getString(R.string.pref_reportMode, String.valueOf(MODE_ASK)));
         switch (reportMode) {
             case MODE_ASK:
                 break;
@@ -42,7 +42,7 @@ public class Dialog extends CrashReportDialog {
                 finish();
                 break;
             case MODE_REPORT_SILENT:
-                sendCrash("", sharedPref.getString(getString(R.string.pref_acraEmail),""));
+                sendCrash("", sharedPref.getString(R.string.pref_acraEmail,""));
                 Toast.makeText(this, R.string.toast_crashReported,Toast.LENGTH_SHORT).show();
                 finish();
                 break;
@@ -67,7 +67,7 @@ public class Dialog extends CrashReportDialog {
     public void onClick(DialogInterface dialog, int which) {
         if (checkBox.isChecked()) {
             int reportMode = which == DialogInterface.BUTTON_POSITIVE ? MODE_REPORT_SILENT : MODE_NO_REPORT;
-            sharedPref.edit().putString(getString(R.string.pref_reportMode), String.valueOf(reportMode)).apply();
+            sharedPref.edit().putString(R.string.pref_reportMode, String.valueOf(reportMode)).apply();
         }
         super.onClick(dialog, which);
     }

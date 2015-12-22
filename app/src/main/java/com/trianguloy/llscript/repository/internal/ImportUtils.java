@@ -171,7 +171,7 @@ public final class ImportUtils {
 
         String code = script.getCode().trim();
 
-        if (Preferences.getDefault(context).getBoolean(context.getString(R.string.pref_aboutScript), true))
+        if (Preferences.getDefault(context).getBoolean(R.string.pref_aboutScript, true))
             code = aboutString + code;
 
         Dialogs.importScript(context, code, script.getName(), new Dialogs.OnImportListener() {

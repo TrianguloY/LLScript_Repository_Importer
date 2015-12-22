@@ -54,7 +54,7 @@ public class AppChooser extends AlertDialog.Builder {
                         activityInfo.name);
                 launch(launch);
                 if (checkBox.isChecked()) {
-                    sharedPref.edit().putString(context.getString(R.string.pref_browser), launch.flattenToString()).apply();
+                    sharedPref.edit().putString(R.string.pref_browser, launch.flattenToString()).apply();
                 }
             }
         });
@@ -73,7 +73,7 @@ public class AppChooser extends AlertDialog.Builder {
             ComponentName browser = null;
             boolean found = false;
             String name = context.getString(R.string.text_browser);
-            if (sharedPref.getBoolean(context.getString(R.string.pref_preferDedicated), false)) {
+            if (sharedPref.getBoolean(R.string.pref_preferDedicated, false)) {
                 Intent testIntent = new Intent(Intent.ACTION_VIEW);
                 testIntent.setData(Uri.parse(context.getString(R.string.link_repository)));
                 List<ResolveInfo> defaultActivities = getAppList(context, testIntent);
@@ -90,7 +90,7 @@ public class AppChooser extends AlertDialog.Builder {
                 }
             }
             if (!found) {
-                String defaultBrowser = Preferences.getDefault(context).getString(context.getString(R.string.pref_browser), "");
+                String defaultBrowser = Preferences.getDefault(context).getString(R.string.pref_browser, "");
                 browser = ComponentName.unflattenFromString(defaultBrowser);
                 if (browser != null) {
                     for (ResolveInfo info : activities) {

@@ -249,7 +249,7 @@ class ViewManager extends Lock {
         new DownloadTask(new DownloadTask.Listener() {
             @Override
             public void onFinish(@NonNull DownloadTask.Result res) {
-                if (!sharedPref.getBoolean(context.getString(R.string.pref_showTools), false)) {
+                if (!sharedPref.getBoolean(R.string.pref_showTools, false)) {
                     //remove tools
                     res.document.select("div.tools.group").remove();
                 }
@@ -297,7 +297,7 @@ class ViewManager extends Lock {
                                 }
                             });
                         } else if (((RadioButton) context.findViewById(R.id.radioCustom)).isChecked()) {
-                            showPageEditor(sharedPref.getString(context.getString(R.string.pref_template), ""));
+                            showPageEditor(sharedPref.getString(R.string.pref_template, ""));
                         } else showPageEditor("");
                     } else {
                         unlock();
@@ -314,7 +314,7 @@ class ViewManager extends Lock {
     void savePage() {
         final String text = editManager.getText();
         if (isTemplate) {
-            sharedPref.edit().putString(context.getString(R.string.pref_template), text).apply();
+            sharedPref.edit().putString(R.string.pref_template, text).apply();
             unlock();
             editManager.saved();
             Dialogs.saved(context, null);
@@ -439,7 +439,7 @@ class ViewManager extends Lock {
 
     void editTemplate() {
         isTemplate = true;
-        showPageEditor(sharedPref.getString(context.getString(R.string.pref_template), ""));
+        showPageEditor(sharedPref.getString(R.string.pref_template, ""));
     }
 
     boolean changedCode() {

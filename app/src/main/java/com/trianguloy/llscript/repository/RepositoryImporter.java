@@ -37,13 +37,13 @@ public class RepositoryImporter extends Application {
     public void onCreate() {
         super.onCreate();
         ACRA.init(this);
-        if (Preferences.getDefault(this).getBoolean(getString(R.string.pref_theme), false))
+        if (Preferences.getDefault(this).getBoolean(R.string.pref_theme, false))
             setTheme(R.style.Theme_Dark);
         Utils.setContext(this);
     }
 
     public static void setTheme(@NonNull Activity context, @NonNull Preferences sharedPref) {
-        if (sharedPref.getBoolean(context.getString(R.string.pref_theme), false))
+        if (sharedPref.getBoolean(R.string.pref_theme, false))
             context.setTheme(R.style.Theme_Dark);
     }
 }

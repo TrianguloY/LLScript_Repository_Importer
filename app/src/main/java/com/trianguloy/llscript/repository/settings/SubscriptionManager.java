@@ -33,17 +33,17 @@ public class SubscriptionManager {
     }
 
     public void subscribe(@NonNull String id) {
-        Set<String> subs = sharedPref.getStringSet(Utils.getString(R.string.pref_subscriptions),new HashSet<String>());
+        Set<String> subs = sharedPref.getStringSet(R.string.pref_subscriptions,new HashSet<String>());
         subs.add(id);
-        sharedPref.edit().putStringSet(Utils.getString(R.string.pref_subscriptions), subs).apply();
+        sharedPref.edit().putStringSet(R.string.pref_subscriptions, subs).apply();
         toast(Utils.getString(R.string.toast_subscribeSuccessful));
         setSubscriptionState(SUBSCRIBED);
     }
 
     public void unsubscribe(@NonNull String id) {
-        Set<String> subs = sharedPref.getStringSet(Utils.getString(R.string.pref_subscriptions),new HashSet<String>());
+        Set<String> subs = sharedPref.getStringSet(R.string.pref_subscriptions,new HashSet<String>());
         subs.remove(id);
-        sharedPref.edit().putStringSet(Utils.getString(R.string.pref_subscriptions), subs).apply();
+        sharedPref.edit().putStringSet(R.string.pref_subscriptions, subs).apply();
         toast(Utils.getString(R.string.toast_unsubscribeSuccessful));
         setSubscriptionState(NOT_SUBSCRIBED);
     }
@@ -57,7 +57,7 @@ public class SubscriptionManager {
     }
 
     public boolean isSubscribed(@NonNull String id) {
-        return sharedPref.getStringSet(Utils.getString(R.string.pref_subscriptions), Collections.<String>emptySet())
+        return sharedPref.getStringSet(R.string.pref_subscriptions, Collections.<String>emptySet())
                 .contains(id);
     }
 

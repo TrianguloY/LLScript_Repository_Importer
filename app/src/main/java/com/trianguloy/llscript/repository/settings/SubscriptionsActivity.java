@@ -30,7 +30,7 @@ public class SubscriptionsActivity extends Activity implements ListView.OnItemCl
         setContentView(R.layout.activity_subscriptions);
         ListView subsList = (ListView) findViewById(R.id.sub_list);
         sharedPref = Preferences.getDefault(this);
-        subsSet = sharedPref.getStringSet(getString(R.string.pref_subscriptions), Collections.<String>emptySet());
+        subsSet = sharedPref.getStringSet(R.string.pref_subscriptions, Collections.<String>emptySet());
         if (subsSet.size() > 0) {
             adapter = new ArrayAdapter<>(this, R.layout.sub_list_item);
             for (String s : subsSet) {
@@ -53,7 +53,7 @@ public class SubscriptionsActivity extends Activity implements ListView.OnItemCl
                 for (String s : subsSet) {
                     if (s.equals(p)) {
                         subsSet.remove(s);
-                        sharedPref.edit().putStringSet(getString(R.string.pref_subscriptions), subsSet).apply();
+                        sharedPref.edit().putStringSet(R.string.pref_subscriptions, subsSet).apply();
                         break;
                     }
                 }

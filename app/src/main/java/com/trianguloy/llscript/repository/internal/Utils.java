@@ -94,12 +94,12 @@ public final class Utils {
         return new valueAndIndex(source.substring(start, end), start - beginning.length(), end + ending.length());
     }
 
-    public static void saveMapToPref(@NonNull Preferences pref, String key, Map<String, Object> map) {
+    public static void saveMapToPref(@NonNull Preferences pref, @StringRes int key, Map<String, Object> map) {
         pref.edit().putString(key, new JSONObject(map).toString()).apply();
     }
 
     @NonNull
-    public static Map<String, Object> getMapFromPref(@NonNull Preferences pref, String key) {
+    public static Map<String, Object> getMapFromPref(@NonNull Preferences pref, @StringRes int key) {
         if (pref.contains(key)) {
             try {
                 HashMap<String, Object> map = new HashMap<>();
@@ -138,7 +138,7 @@ public final class Utils {
     public static String getNameForPageFromPref(@NonNull Preferences pref, @NonNull String page) {
         if (page.startsWith(getString(R.string.prefix_script)))
             page = page.substring(getString(R.string.prefix_script).length());
-        String result = (String) getMapFromPref(pref, getString(R.string.pref_pageNames)).get(page);
+        String result = (String) getMapFromPref(pref, R.string.pref_pageNames).get(page);
         if (result != null) return result.trim();
         if (BuildConfig.DEBUG)
             Log.i(Utils.class.getSimpleName(), "Failed to find script name for " + page);
@@ -223,7 +223,7 @@ public final class Utils {
                         for (String s : updated) {
                             pages.append(Utils.getNameForPageFromPref(sharedPref, s)).append("\n");
                         }
-                        int showAs = Integer.valueOf(sharedPref.getString(getString(R.string.pref_changedSubs), "2"));
+                        int showAs = Integer.valueOf(sharedPref.getString(R.string.pref_changedSubs, "2"));
                         switch (showAs) {
                             case SHOW_NONE:
                                 break;
@@ -249,15 +249,15 @@ public final class Utils {
         for (Map.Entry<String, String> entry : map.entrySet()) {
             temp.put(entry.getKey(), entry.getValue());
         }
-        Utils.saveMapToPref(sharedPref, getString(R.string.pref_pageNames), temp);
+        Utils.saveMapToPref(sharedPref, R.string.pref_pageNames, temp);
         Set<String> currentScripts = map.keySet();
-        if (sharedPref.contains(getString(R.string.pref_Scripts))) {
-            Set<String> oldScripts = sharedPref.getStringSet(getString(R.string.pref_Scripts), Collections.<String>emptySet());
+        if (sharedPref.contains(R.string.pref_Scripts)) {
+            Set<String> oldScripts = sharedPref.getStringSet(R.string.pref_Scripts, Collections.<String>emptySet());
             HashSet<String> newScripts = new HashSet<>(currentScripts);
             newScripts.removeAll(oldScripts);
             if (!newScripts.isEmpty()) {
                 //found new Scripts
-                sharedPref.edit().putStringSet(getString(R.string.pref_Scripts), currentScripts).apply();
+                sharedPref.edit().putStringSet(R.string.pref_Scripts, currentScripts).apply();
                 ArrayList<String> newScriptNames = new ArrayList<>();
                 for (String s : newScripts) {
                     newScriptNames.add(map.get(s));
@@ -267,7 +267,7 @@ public final class Utils {
                     names.append(newScriptNames.get(i)).append("\n");
                 }
                 names.deleteCharAt(names.length() - 1);
-                int showAs = Integer.valueOf(sharedPref.getString(getString(R.string.pref_newScripts), "2"));
+                int showAs = Integer.valueOf(sharedPref.getString(R.string.pref_newScripts, "2"));
                 switch (showAs) {
                     case SHOW_NONE:
                         break;
@@ -282,7 +282,7 @@ public final class Utils {
             }
         } else {
             //No info about previous scripts. Only save the current scripts
-            sharedPref.edit().putStringSet(getString(R.string.pref_Scripts), currentScripts).apply();
+            sharedPref.edit().putStringSet(R.string.pref_Scripts, currentScripts).apply();
         }
     }
 

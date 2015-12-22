@@ -1,6 +1,7 @@
 package com.trianguloy.llscript.repository.settings;
 
 import android.content.Context;
+import android.support.annotation.IntDef;
 import android.support.annotation.NonNull;
 import android.util.Log;
 import android.view.Menu;
@@ -10,6 +11,8 @@ import com.trianguloy.llscript.repository.BuildConfig;
 import com.trianguloy.llscript.repository.R;
 import com.trianguloy.llscript.repository.internal.Utils;
 
+import java.lang.annotation.Retention;
+import java.lang.annotation.RetentionPolicy;
 import java.util.Collections;
 import java.util.HashSet;
 import java.util.Set;
@@ -58,11 +61,15 @@ public class SubscriptionManager {
                 .contains(id);
     }
 
+    @Retention(RetentionPolicy.SOURCE)
+    @IntDef({CANT_SUBSCRIBE,NOT_SUBSCRIBED,SUBSCRIBED})
+    public @interface SubscriptionState {
+    }
     private static final int CANT_SUBSCRIBE = -1;
     private static final int NOT_SUBSCRIBED = 0;
     private static final int SUBSCRIBED = 1;
 
-    private void setSubscriptionState(int state) {
+    private void setSubscriptionState(@SubscriptionState int state) {
         if (menu != null) {
             boolean sub;
             boolean unsub;

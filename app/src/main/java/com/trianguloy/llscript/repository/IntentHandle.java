@@ -41,6 +41,7 @@ public class IntentHandle extends Activity {
                         openWebViewer();
                         break;
                     case Constants.STATUS_UPDATE_CONFIRMATION_REQUIRED:
+                        //noinspection ResourceType
                         Dialogs.confirmUpdate(this, intent.getStringExtra(Constants.EXTRA_NAME), intent.getStringExtra(Constants.EXTRA_CODE), (int) intent.getDoubleExtra(Constants.EXTRA_FLAGS, 0));
                         break;
                     default:

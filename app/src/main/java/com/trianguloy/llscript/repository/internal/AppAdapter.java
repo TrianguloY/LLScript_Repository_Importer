@@ -3,6 +3,7 @@ package com.trianguloy.llscript.repository.internal;
 import android.content.Context;
 import android.content.pm.PackageManager;
 import android.content.pm.ResolveInfo;
+import android.support.annotation.LayoutRes;
 import android.support.annotation.NonNull;
 import android.view.View;
 import android.widget.CheckBox;
@@ -24,7 +25,7 @@ public class AppAdapter extends BaseArrayAdapter<ResolveInfo> {
 
     private int selected = NONE;
 
-    public AppAdapter(Context context, @NonNull List<ResolveInfo> apps, int resource) {
+    public AppAdapter(Context context, @NonNull List<ResolveInfo> apps,@LayoutRes int resource) {
         super(context, resource, apps);
         this.context = context;
     }

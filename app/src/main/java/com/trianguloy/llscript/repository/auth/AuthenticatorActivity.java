@@ -71,6 +71,7 @@ public class AuthenticatorActivity extends AccountAuthenticatorActivity {
                         setAccount(user, savePw ? password : null);
                         AuthenticatorActivity.this.finish();
                         break;
+                    case RPCManager.RESULT_NEED_RW:
                     default:
                         throw new IllegalArgumentException();
                 }

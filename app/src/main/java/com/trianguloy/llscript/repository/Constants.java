@@ -1,7 +1,11 @@
 package com.trianguloy.llscript.repository;
 
 
+import android.support.annotation.IntDef;
 import android.support.annotation.Nullable;
+
+import java.lang.annotation.Retention;
+import java.lang.annotation.RetentionPolicy;
 
 /**
  * Static constants used in the project (like R.strings, but also other types)
@@ -13,9 +17,13 @@ public final class Constants {
     }
 
     //script flags
-    public static final int FLAG_APP_MENU = 2;
-    public static final int FLAG_ITEM_MENU = 4;
-    public static final int FLAG_CUSTOM_MENU = 8;
+    @Retention(RetentionPolicy.SOURCE)
+    @IntDef(flag = true, value = {FLAG_APP_MENU,FLAG_ITEM_MENU,FLAG_CUSTOM_MENU})
+    public @interface ScriptFlag {
+    }
+    public static final int FLAG_APP_MENU = 1 << 1;
+    public static final int FLAG_ITEM_MENU = 1 << 2;
+    public static final int FLAG_CUSTOM_MENU = 1 << 3;
 
     //App constants
     public static final int MANAGER_ID = -3;

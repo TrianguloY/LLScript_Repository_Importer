@@ -4,6 +4,7 @@ import android.app.ActionBar;
 import android.content.DialogInterface;
 import android.os.Build;
 import android.os.Bundle;
+import android.support.annotation.IntDef;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.util.Log;
@@ -26,6 +27,8 @@ import com.trianguloy.llscript.repository.web.DownloadTask;
 import com.trianguloy.llscript.repository.web.RPCManager;
 import com.trianguloy.llscript.repository.web.WebClient;
 
+import java.lang.annotation.Retention;
+import java.lang.annotation.RetentionPolicy;
 import java.util.Comparator;
 import java.util.HashSet;
 import java.util.List;
@@ -38,6 +41,10 @@ import dw.xmlrpc.Page;
  * Manages editorActivities view state
  */
 class ViewManager extends Lock {
+    @Retention(RetentionPolicy.SOURCE)
+    @IntDef({STATE_NONE,STATE_CHOOSE_ACTION,STATE_CREATE,STATE_EDIT,STATE_PREVIEW})
+    public @interface State {
+    }
     public static final int STATE_NONE = -1;
     public static final int STATE_CHOOSE_ACTION = 0;
     public static final int STATE_CREATE = 1;
@@ -45,6 +52,7 @@ class ViewManager extends Lock {
     public static final int STATE_PREVIEW = 3;
 
     private final EditorActivity context;
+    @State
     private int state;
     private final EditManager editManager;
     private boolean isTemplate;
@@ -65,7 +73,7 @@ class ViewManager extends Lock {
         setState(STATE_NONE);
     }
 
-    public void setState(int state) {
+    public void setState(@State int state) {
         this.state = state;
         boolean showActionBar = true;
         switch (state) {
@@ -101,6 +109,7 @@ class ViewManager extends Lock {
         unlock();
     }
 
+    @State
     public int getState() {
         return state;
     }
@@ -203,6 +212,9 @@ class ViewManager extends Lock {
                         break;
                     case RPCManager.RESULT_NETWORK_ERROR:
                         Dialogs.connectionFailed(context);
+                        break;
+                    case RPCManager.RESULT_BAD_LOGIN:
+                        Dialogs.badLogin(context);
                         break;
                 }
             }
@@ -332,6 +344,9 @@ class ViewManager extends Lock {
                                                             case RPCManager.RESULT_NETWORK_ERROR:
                                                                 Dialogs.connectionFailed(context);
                                                                 break;
+                                                            case RPCManager.RESULT_BAD_LOGIN:
+                                                                Dialogs.badLogin(context);
+                                                                break;
                                                         }
                                                     }
                                                 }
@@ -356,6 +371,9 @@ class ViewManager extends Lock {
                                 case RPCManager.RESULT_NETWORK_ERROR:
                                     unlock();
                                     Dialogs.connectionFailed(context);
+                                    break;
+                                case RPCManager.RESULT_BAD_LOGIN:
+                                    Dialogs.badLogin(context);
                                     break;
                             }
                         }

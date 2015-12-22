@@ -245,6 +245,7 @@ public final class Dialogs {
         }
     }
 
+    @Constants.ScriptFlag
     private static int checkBoxToFlag(CheckBox[] flagsBoxes) {
         return (flagsBoxes[0].isChecked() ? Constants.FLAG_APP_MENU : 0) +
                 (flagsBoxes[1].isChecked() ? Constants.FLAG_ITEM_MENU : 0) +
@@ -320,7 +321,7 @@ public final class Dialogs {
                 .show();
     }
 
-    public static void confirmUpdate(@NonNull final IntentHandle context, final String scriptName, final String code, final int flags) {
+    public static void confirmUpdate(@NonNull final IntentHandle context, final String scriptName, final String code,@Constants.ScriptFlag final int flags) {
         new AlertDialog.Builder(context)
                 .setTitle(R.string.title_updateConfirm)
                 .setMessage(R.string.message_updateConfirm)
@@ -366,6 +367,6 @@ public final class Dialogs {
     }
 
     public interface OnImportListener {
-        void onClick(String code, String name, int flags);
+        void onClick(String code, String name,@Constants.ScriptFlag int flags);
     }
 }

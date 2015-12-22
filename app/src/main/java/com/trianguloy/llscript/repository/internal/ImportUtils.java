@@ -87,7 +87,7 @@ public final class ImportUtils {
         return list;
     }
 
-    private static String generateAboutComment(Document document){
+    private static String generateAboutComment(Document document) {
         //About script: purpose, author, link
         String aboutScript = "";
         Elements aboutElements = document.select("#about_the_script");
@@ -190,7 +190,7 @@ public final class ImportUtils {
     }
 
     //Send & share functions
-    private static void sendScriptToLauncher(@NonNull final Context context, String code, String scriptName, int flags) {
+    private static void sendScriptToLauncher(@NonNull final Context context, String code, String scriptName, @Constants.ScriptFlag int flags) {
         // let's import the script
         final Intent intent = new Intent(context, ScriptImporter.class);
         intent.putExtra(Constants.EXTRA_CODE, code);
@@ -204,22 +204,20 @@ public final class ImportUtils {
         });
     }
 
-    private static void shareAsText(@NonNull Context context, String code, String scriptName, int flags) {
+    private static void shareAsText(@NonNull Context context, String code, String scriptName, @Constants.ScriptFlag int flags) {
         //share the code as plain text
 
         StringBuilder text = new StringBuilder("");
 
         //flags
         text.append("//Flags: ");
-        if (flags >= Constants.FLAG_CUSTOM_MENU) {
+        if ((flags & Constants.FLAG_CUSTOM_MENU) != 0) {
             text.append("app ");
-            flags -= Constants.FLAG_CUSTOM_MENU;
         }
-        if (flags >= Constants.FLAG_ITEM_MENU) {
+        if ((flags & Constants.FLAG_ITEM_MENU) != 0) {
             text.append("item ");
-            flags -= Constants.FLAG_ITEM_MENU;
         }
-        if (flags >= Constants.FLAG_APP_MENU) {
+        if ((flags & Constants.FLAG_APP_MENU) != 0) {
             text.append("custom ");
         }
         text.append("\n");

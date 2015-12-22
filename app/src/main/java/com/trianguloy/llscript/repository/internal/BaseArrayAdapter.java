@@ -1,6 +1,7 @@
 package com.trianguloy.llscript.repository.internal;
 
 import android.content.Context;
+import android.support.annotation.LayoutRes;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.view.LayoutInflater;
@@ -17,9 +18,10 @@ import java.util.List;
 public abstract class BaseArrayAdapter<T> extends ArrayAdapter<T> {
 
     private final Context context;
+    @LayoutRes
     private final int resource;
 
-    protected BaseArrayAdapter(Context context, int resource, @NonNull List<T> objects) {
+    protected BaseArrayAdapter(Context context, @LayoutRes int resource, @NonNull List<T> objects) {
         super(context, resource, objects);
         this.context = context;
         this.resource = resource;

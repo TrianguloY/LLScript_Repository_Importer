@@ -1,6 +1,7 @@
 package com.trianguloy.llscript.repository.web;
 
 import android.os.AsyncTask;
+import android.support.annotation.IntDef;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 
@@ -8,6 +9,8 @@ import com.trianguloy.llscript.repository.R;
 import com.trianguloy.llscript.repository.internal.Utils;
 import com.trianguloy.llscript.repository.settings.Preferences;
 
+import java.lang.annotation.Retention;
+import java.lang.annotation.RetentionPolicy;
 import java.net.MalformedURLException;
 import java.util.ArrayList;
 import java.util.Collections;
@@ -26,11 +29,19 @@ import dw.xmlrpc.exception.DokuException;
 public final class RPCManager {
 
     //internal return values in AsyncTasks
+    @Retention(RetentionPolicy.SOURCE)
+    @IntDef({RESULT_OK, RESULT_NETWORK_ERROR,RESULT_BAD_LOGIN,RESULT_NEED_RW})
+    public @interface RPCResult {
+    }
     public static final int RESULT_OK = 1;
     public static final int RESULT_NETWORK_ERROR = -1;
     public static final int RESULT_BAD_LOGIN = -2;
     public static final int RESULT_NEED_RW = -3;
 
+    @Retention(RetentionPolicy.SOURCE)
+    @IntDef({NOT_LOGGED_IN,LOGIN_RO,LOGIN_USER})
+    public @interface RPCLoginState {
+    }
     public static final int NOT_LOGGED_IN = 0;
     public static final int LOGIN_RO = 1;
     public static final int LOGIN_USER = 2;
@@ -38,6 +49,7 @@ public final class RPCManager {
     private static final int ACL_WRITE = 4;
 
     private static DokuJClient client;
+    @RPCLoginState
     private static int login = NOT_LOGGED_IN;
     private static String username;
 
@@ -64,6 +76,7 @@ public final class RPCManager {
         return true;
     }
 
+    @RPCLoginState
     public static int isLoggedIn() {
         return login;
     }
@@ -244,19 +257,21 @@ public final class RPCManager {
     }
 
     public static class Result<T> {
+        @RPCResult
         private final int status;
         @Nullable
         private final T result;
 
-        public Result(int status) {
+        public Result(@RPCResult int status) {
             this(status, null);
         }
 
-        public Result(int status, @Nullable T result) {
+        public Result(@RPCResult int status, @Nullable T result) {
             this.status = status;
             this.result = result;
         }
 
+        @RPCResult
         public int getStatus() {
             return status;
         }

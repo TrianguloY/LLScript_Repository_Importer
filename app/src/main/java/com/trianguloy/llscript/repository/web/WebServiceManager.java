@@ -6,6 +6,7 @@ import android.app.PendingIntent;
 import android.content.Context;
 import android.content.Intent;
 import android.os.SystemClock;
+import android.support.annotation.IntRange;
 import android.support.annotation.NonNull;
 
 /**
@@ -16,7 +17,7 @@ public final class WebServiceManager {
     private WebServiceManager() {
     }
 
-    public static void startService(@NonNull Context context, int interval) {
+    public static void startService(@NonNull Context context,@IntRange(from = 0) int interval) {
         getManager(context).setInexactRepeating(AlarmManager.ELAPSED_REALTIME, SystemClock.elapsedRealtime(), interval, getIntent(context));
     }
 

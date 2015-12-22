@@ -62,6 +62,7 @@ public final class AuthenticationUtils {
                             case RPCManager.RESULT_OK:
                                 listener.onComplete();
                                 break;
+                            case RPCManager.RESULT_NEED_RW:
                             default:
                                 throw new IllegalArgumentException();
                         }

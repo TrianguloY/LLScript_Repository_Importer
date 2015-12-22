@@ -2,6 +2,7 @@ package com.trianguloy.llscript.repository.editor;
 
 import android.content.Context;
 import android.support.annotation.NonNull;
+import android.support.annotation.Nullable;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
@@ -27,7 +28,7 @@ public class CategoryAdapter extends BaseArrayAdapter<Repository.RepositoryCateg
         ((TextView) row.findViewById(android.R.id.text1)).setText(getItem(position).name);
     }
 
-    @org.jetbrains.annotations.Nullable
+    @Nullable
     @Override
     public View getDropDownView(int position, View convertView, ViewGroup parent) {
         return getView(position, convertView, parent);

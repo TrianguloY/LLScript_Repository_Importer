@@ -30,6 +30,7 @@ public class ScriptImporter extends Service {
                     componentName = new ComponentName(this, IntentHandle.class);
                 }
                 boolean forceUpdate = intent.getBooleanExtra(Constants.EXTRA_FORCE_UPDATE, false);
+                //noinspection ResourceType
                 installScript(intent.getStringExtra(Constants.EXTRA_CODE), intent.getStringExtra(Constants.EXTRA_NAME), intent.getIntExtra(Constants.EXTRA_FLAGS, 0), componentName, forceUpdate);
             } else if (componentName != null) {
                 //callback for other apps
@@ -41,10 +42,9 @@ public class ScriptImporter extends Service {
             }
         } else if (intent.hasExtra(Constants.EXTRA_FORWARD)) {
             Intent forward = intent.getParcelableExtra(Constants.EXTRA_FORWARD);
-            if(forward.hasExtra(Constants.EXTRA_BACKGROUND) && forward.getBooleanExtra(Constants.EXTRA_BACKGROUND,false)){
+            if (forward.hasExtra(Constants.EXTRA_BACKGROUND) && forward.getBooleanExtra(Constants.EXTRA_BACKGROUND, false)) {
                 runScriptInBackground(forward.getStringExtra(Constants.EXTRA_DATA));
-            }
-            else {
+            } else {
                 forward.setPackage(Constants.installedPackage);
                 forward.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
                 startActivity(forward);
@@ -60,7 +60,7 @@ public class ScriptImporter extends Service {
     }
 
 
-    private void installScript(String code, String name, int flags, @NonNull ComponentName answerTo, boolean forceUpdate) {
+    private void installScript(String code, String name, @Constants.ScriptFlag int flags, @NonNull ComponentName answerTo, boolean forceUpdate) {
         JSONObject data = new JSONObject();
         try {
             data.put(Constants.KEY_CODE, code);
@@ -81,7 +81,7 @@ public class ScriptImporter extends Service {
         runScriptInBackground(Constants.MANAGER_ID + "/" + data);
     }
 
-    private void runScriptInBackground(String idAndData){
+    private void runScriptInBackground(String idAndData) {
         Intent i = new Intent(getString(R.string.intent_actionBackgroundReceiver));
         i.setClassName(Constants.installedPackage, getString(R.string.intent_backgroundReceiverClass));
         Bundle bundle = new Bundle();

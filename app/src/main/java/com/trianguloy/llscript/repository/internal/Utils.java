@@ -5,6 +5,7 @@ import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
+import android.support.annotation.StringRes;
 import android.util.Log;
 import android.widget.Toast;
 
@@ -195,7 +196,7 @@ public final class Utils {
         Utils.context = context;
     }
 
-    public static String getString(int resId) {
+    public static String getString(@StringRes int resId) {
         if (context == null) throw new NoContextException();
         return context.getString(resId);
     }

@@ -29,6 +29,13 @@ https://github.com/TrianguloY/LLScript_Repository_Importer
 
 
 _Changes_
+V 1.10
+Neu: Bug reports erfordern nun keine Email mehr.
+Verbessert: Läuft nun auf Android Marshmallow (6.0) und Froyo (2.2)
+Verbessert: Seiten werden etwas schneller geladen
+Fix: Manche Scripts wurden fehlerhaft importiert ("<" entfernt)
+Mehr kleine Veränderungen
+
 V 1.9.5
 Fix: Crash bei Fehleranzeige
 Fix: Zwischenlösung für häufigen Crash

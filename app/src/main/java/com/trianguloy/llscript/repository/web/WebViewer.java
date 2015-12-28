@@ -33,6 +33,7 @@ import com.trianguloy.llscript.repository.settings.Preferences;
 import com.trianguloy.llscript.repository.settings.SettingsActivity;
 import com.trianguloy.llscript.repository.settings.SubscriptionManager;
 
+import org.acra.ACRA;
 import org.jsoup.nodes.Document;
 
 import java.io.File;
@@ -132,23 +133,45 @@ public class WebViewer extends Activity {
         // automatically handle clicks on the Home/Up button, so long
         // as you specify a parent activity in AndroidManifest.xml.
 
+        if(webView==null){
+            Toast.makeText(getApplicationContext(), R.string.toast_internalError, Toast.LENGTH_SHORT).show();
+            ACRA.getErrorReporter().handleSilentException(new Throwable("webView is null"));
+            return true;
+        }
+
         switch (item.getItemId()) {
             case R.id.action_mainPage:
                 //load the main page
                 webView.show(getString(R.string.link_repository));
                 break;
             case R.id.action_openInBrowser:
+                if (!webView.hasPage()) {
+                    Toast.makeText(getApplicationContext(), R.string.toast_noPageError, Toast.LENGTH_SHORT).show();
+                    break;
+                }
+
                 new AppChooser(this, Uri.parse(webView.getUrl()), getString(R.string.title_appChooserNormal), getString(R.string.message_noBrowser), null).show();
+
                 break;
             case R.id.action_settings:
                 startActivity(new Intent(this, SettingsActivity.class));
                 break;
             case R.id.action_subscribe: {
+                if (!webView.hasPage()) {
+                    Toast.makeText(getApplicationContext(), R.string.toast_noPageError, Toast.LENGTH_SHORT).show();
+                    break;
+                }
+
                 String page = webView.getPageId();
                 if (page != null) subscriptionManager.subscribe(page);
                 break;
             }
             case R.id.action_unsubscribe: {
+                if (!webView.hasPage()) {
+                    Toast.makeText(getApplicationContext(), R.string.toast_noPageError, Toast.LENGTH_SHORT).show();
+                    break;
+                }
+
                 String page = webView.getPageId();
                 if (page != null)
                     subscriptionManager.unsubscribe(page);
@@ -158,11 +181,21 @@ public class WebViewer extends Activity {
                 onBackPressed();
                 break;
             case R.id.editor:
+                if (!webView.hasPage()) {
+                    Toast.makeText(getApplicationContext(), R.string.toast_noPageError, Toast.LENGTH_SHORT).show();
+                    break;
+                }
+
                 Intent i = new Intent(this, EditorActivity.class);
                 i.setAction(webView.getUrl());
                 startActivity(i);
                 break;
             case R.id.action_share:
+                if (!webView.hasPage()) {
+                    Toast.makeText(getApplicationContext(), R.string.toast_noPageError, Toast.LENGTH_SHORT).show();
+                    break;
+                }
+
                 Intent share = new Intent(Intent.ACTION_SEND);
                 share.setType("text/plain");
                 share.putExtra(Intent.EXTRA_TEXT, webView.getUrl());

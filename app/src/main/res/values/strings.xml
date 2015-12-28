@@ -343,6 +343,8 @@
     </string>
     <string name="toast_externalLink">"External link. Opening in "</string>
     <string name="toast_tripleDot">…</string>
+    <string name="toast_internalError">There was an internal error. Try again. \nIf the error persist contact the developers</string>
+    <string name="toast_noPageError">Could\'t get the current page</string>
 
     <!-- alert (other / generic) -->
     <string name="title_error">Error</string>

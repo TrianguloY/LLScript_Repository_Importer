@@ -127,87 +127,90 @@ public class WebViewer extends Activity {
         return true;
     }
 
+    /**
+     * an item in the action bar is pressed
+     *
+     * Handle action bar item clicks here. The action bar will
+     * automatically handle clicks on the Home/Up button, so long
+     * as you specify a parent activity in AndroidManifest.xml.
+     *
+     * @param item the pressed item
+     * @return true to consume the event, false otherwise
+     */
     @Override
     public boolean onOptionsItemSelected(@NonNull MenuItem item) {
-        // Handle action bar item clicks here. The action bar will
-        // automatically handle clicks on the Home/Up button, so long
-        // as you specify a parent activity in AndroidManifest.xml.
 
         if(webView==null){
+            //no webview, bad bad
             Toast.makeText(getApplicationContext(), R.string.toast_internalError, Toast.LENGTH_SHORT).show();
             ACRA.getErrorReporter().handleSilentException(new Throwable("webView is null"));
             return true;
         }
 
+
+        //no page-dependent buttons
         switch (item.getItemId()) {
             case R.id.action_mainPage:
                 //load the main page
                 webView.show(getString(R.string.link_repository));
-                break;
-            case R.id.action_openInBrowser:
-                if (!webView.hasPage()) {
-                    Toast.makeText(getApplicationContext(), R.string.toast_noPageError, Toast.LENGTH_SHORT).show();
-                    break;
-                }
-
-                new AppChooser(this, Uri.parse(webView.getUrl()), getString(R.string.title_appChooserNormal), getString(R.string.message_noBrowser), null).show();
-
-                break;
+                return true;
             case R.id.action_settings:
+                //open the settings
                 startActivity(new Intent(this, SettingsActivity.class));
-                break;
-            case R.id.action_subscribe: {
-                if (!webView.hasPage()) {
-                    Toast.makeText(getApplicationContext(), R.string.toast_noPageError, Toast.LENGTH_SHORT).show();
-                    break;
-                }
+                return true;
+            case android.R.id.home:
+                //the button that appears at the left of the bar with an arrow
+                onBackPressed();
+                return true;
+            case R.id.debug:
+                //intended crash
+                throw new RuntimeException("This crash was intended");
+        }
 
+
+        //check for page
+        if (!webView.hasPage()) {
+            //no page, error
+            Toast.makeText(getApplicationContext(), R.string.toast_noPageError, Toast.LENGTH_SHORT).show();
+            return true;
+        }
+
+        //page-dependent buttons
+        switch (item.getItemId()) {
+            case R.id.action_openInBrowser:
+                //open the current page in the browser
+                new AppChooser(this, Uri.parse(webView.getUrl()), getString(R.string.title_appChooserNormal), getString(R.string.message_noBrowser), null).show();
+                return true;
+            case R.id.action_subscribe: {
+                //subscribe to the current page
                 String page = webView.getPageId();
                 if (page != null) subscriptionManager.subscribe(page);
-                break;
+                return true;
             }
             case R.id.action_unsubscribe: {
-                if (!webView.hasPage()) {
-                    Toast.makeText(getApplicationContext(), R.string.toast_noPageError, Toast.LENGTH_SHORT).show();
-                    break;
-                }
-
+                //unsubscribe from the current page
                 String page = webView.getPageId();
                 if (page != null)
                     subscriptionManager.unsubscribe(page);
-                break;
+                return true;
             }
-            case android.R.id.home:
-                onBackPressed();
-                break;
             case R.id.editor:
-                if (!webView.hasPage()) {
-                    Toast.makeText(getApplicationContext(), R.string.toast_noPageError, Toast.LENGTH_SHORT).show();
-                    break;
-                }
-
+                //open the page in the editor
                 Intent i = new Intent(this, EditorActivity.class);
                 i.setAction(webView.getUrl());
                 startActivity(i);
-                break;
+                return true;
             case R.id.action_share:
-                if (!webView.hasPage()) {
-                    Toast.makeText(getApplicationContext(), R.string.toast_noPageError, Toast.LENGTH_SHORT).show();
-                    break;
-                }
-
+                //share the current page
                 Intent share = new Intent(Intent.ACTION_SEND);
                 share.setType("text/plain");
                 share.putExtra(Intent.EXTRA_TEXT, webView.getUrl());
                 startActivity(Intent.createChooser(share, getString(R.string.title_share)));
-                break;
-            case R.id.debug:
-                throw new RuntimeException("This crash was intended");
-            default:
-                return super.onOptionsItemSelected(item);
+                return true;
         }
 
-        return true;
+        
+        return super.onOptionsItemSelected(item);
     }
 
     @Override

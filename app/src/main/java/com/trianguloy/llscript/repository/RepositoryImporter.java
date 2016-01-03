@@ -20,7 +20,7 @@ import org.acra.sender.HttpSender;
 @ReportsCrashes(
         httpMethod = HttpSender.Method.PUT,
         reportType = HttpSender.Type.JSON,
-        formUri = "http://acra-c56dce.smileupps.com/acra-repository-importer/_design/acra-storage/_update/report",
+        formUri = "https://faendir.smileupps.com/acra-repository-importer/_design/acra-storage/_update/report",
         formUriBasicAuthLogin = "importer",
         formUriBasicAuthPassword = "riR3p0rt",
         mode = ReportingInteractionMode.DIALOG,

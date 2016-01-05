@@ -41,6 +41,7 @@ public class ScriptImporter extends Service {
                 startActivity(response);
             }
         } else if (intent.hasExtra(Constants.EXTRA_FORWARD)) {
+            Utils.checkForLauncher(this);
             Intent forward = intent.getParcelableExtra(Constants.EXTRA_FORWARD);
             if (forward.hasExtra(Constants.EXTRA_BACKGROUND) && forward.getBooleanExtra(Constants.EXTRA_BACKGROUND, false)) {
                 runScriptInBackground(forward.getStringExtra(Constants.EXTRA_DATA));

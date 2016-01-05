@@ -359,6 +359,7 @@
     <!-- unsorted-->
     <string name="dummy" tools:ignore="UnusedResources">Dummy string to force new ones to be below
     </string>
+    <string name="toast_noEmptyUser">Username must not be empty</string>
 
 
 </resources>

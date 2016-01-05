@@ -11,6 +11,7 @@ import android.support.annotation.Nullable;
 import android.view.View;
 import android.widget.CheckBox;
 import android.widget.EditText;
+import android.widget.Toast;
 
 import com.trianguloy.llscript.repository.R;
 import com.trianguloy.llscript.repository.internal.AppChooser;
@@ -42,8 +43,8 @@ public class AuthenticatorActivity extends AccountAuthenticatorActivity {
 
     }
 
-    public void button(@NonNull View v){
-        switch (v.getId()){
+    public void button(@NonNull View v) {
+        switch (v.getId()) {
             case R.id.button_login:
                 login();
                 break;
@@ -55,6 +56,10 @@ public class AuthenticatorActivity extends AccountAuthenticatorActivity {
 
     private void login() {
         final String user = ((EditText) findViewById(R.id.username)).getText().toString();
+        if (user.length() == 0) {
+            Toast.makeText(this, R.string.toast_noEmptyUser, Toast.LENGTH_SHORT).show();
+            return;
+        }
         final String password = ((EditText) findViewById(R.id.password)).getText().toString();
         final boolean savePw = ((CheckBox) findViewById(R.id.checkRemember)).isChecked();
         RPCManager.login(user, password, new RPCManager.Listener<Void>() {
@@ -79,7 +84,7 @@ public class AuthenticatorActivity extends AccountAuthenticatorActivity {
         });
     }
 
-    private void setAccount(@NonNull String user,@Nullable String password) {
+    private void setAccount(@NonNull String user, @Nullable String password) {
         AuthenticationUtils.set(this, account, accountType, user, password);
         Intent intent = new Intent();
         intent.putExtra(AccountManager.KEY_ACCOUNT_NAME, user);

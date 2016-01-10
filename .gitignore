@@ -3,7 +3,7 @@ gradle/
 local.properties
 .idea/*
 !.idea/.name
-build/
+build/*
 *.iml
 *.apk
 gradlew

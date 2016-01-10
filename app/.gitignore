@@ -1,9 +1,8 @@
-/build/intermediates
-/build/generated
-/build/tmp
-/build/outputs/apk
-/build/outputs/logs
-/build/outputs/mapping/debug
-/build/outputs/mapping/release/dump.txt
-/build/outputs/mapping/release/seeds.txt
-/build/outputs/mapping/release/usage.txt
+/build/*
+!/build/outputs
+/build/outputs/*
+!/build/outputs/mapping
+/build/outputs/mapping/*
+!/build/outputs/mapping/release
+/build/outputs/mapping/release/*
+!/build/outputs/mapping/release/mapping.txt

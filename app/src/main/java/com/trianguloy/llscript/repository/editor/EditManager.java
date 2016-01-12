@@ -1,6 +1,7 @@
 package com.trianguloy.llscript.repository.editor;
 
 import android.annotation.TargetApi;
+import android.content.Context;
 import android.os.Build;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
@@ -12,13 +13,14 @@ import android.widget.EditText;
 
 import com.trianguloy.llscript.repository.BuildConfig;
 import com.trianguloy.llscript.repository.R;
-import com.trianguloy.llscript.repository.internal.Utils;
 
 /**
  * Created by Lukas on 06.09.2015.
  * manages the content of the editText
  */
 class EditManager {
+
+    private final Context context;
 
     @Nullable
     private EditText editText;
@@ -30,6 +32,10 @@ class EditManager {
     private String pageName;
     @Nullable
     private String pageId;
+
+    EditManager(Context context) {
+        this.context = context;
+    }
 
     public void assign(@NonNull EditText editText) {
         this.editText = editText;
@@ -92,18 +98,18 @@ class EditManager {
     }
 
     public void toBundle(@NonNull Bundle bundle) {
-        bundle.putString(Utils.getString(R.string.key_pageText), getText());
-        bundle.putString(Utils.getString(R.string.key_pageName), pageName);
-        bundle.putString(Utils.getString(R.string.key_pageId), pageId);
-        bundle.putInt(Utils.getString(R.string.key_textHash), textHash);
+        bundle.putString(context.getString(R.string.key_pageText), getText());
+        bundle.putString(context.getString(R.string.key_pageName), pageName);
+        bundle.putString(context.getString(R.string.key_pageId), pageId);
+        bundle.putInt(context.getString(R.string.key_textHash), textHash);
 
     }
 
     public void fromBundle(@NonNull Bundle bundle) {
-        text = bundle.getString(Utils.getString(R.string.key_pageText));
-        pageName = bundle.getString(Utils.getString(R.string.key_pageName));
-        pageId = bundle.getString(Utils.getString(R.string.key_pageId));
-        textHash = bundle.getInt(Utils.getString(R.string.key_textHash));
+        text = bundle.getString(context.getString(R.string.key_pageText));
+        pageName = bundle.getString(context.getString(R.string.key_pageName));
+        pageId = bundle.getString(context.getString(R.string.key_pageId));
+        textHash = bundle.getInt(context.getString(R.string.key_textHash));
     }
 
 
@@ -132,22 +138,22 @@ class EditManager {
     public void action(int id){
         switch (id) {
             case R.id.action_bold:
-                surroundOrAdd("**", "**", Utils.getString(R.string.text_bold));
+                surroundOrAdd("**", "**", context.getString(R.string.text_bold));
                 break;
             case R.id.action_italic:
-                surroundOrAdd("//", "//", Utils.getString(R.string.text_italic));
+                surroundOrAdd("//", "//", context.getString(R.string.text_italic));
                 break;
             case R.id.action_underline:
-                surroundOrAdd("__", "__", Utils.getString(R.string.text_underline));
+                surroundOrAdd("__", "__", context.getString(R.string.text_underline));
                 break;
             case R.id.action_code:
-                surroundOrAdd("<sxh javascript;>", "</sxh>", Utils.getString(R.string.text_code));
+                surroundOrAdd("<sxh javascript;>", "</sxh>", context.getString(R.string.text_code));
                 break;
             case R.id.action_unorderedList:
-                surroundOrAdd("  * ", "", Utils.getString(R.string.text_unorderedList));
+                surroundOrAdd("  * ", "", context.getString(R.string.text_unorderedList));
                 break;
             case R.id.action_orderedList:
-                surroundOrAdd("  - ", "", Utils.getString(R.string.text_orderedList));
+                surroundOrAdd("  - ", "", context.getString(R.string.text_orderedList));
                 break;
             default:
                 if (BuildConfig.DEBUG)

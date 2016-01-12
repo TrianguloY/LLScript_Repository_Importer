@@ -1,12 +1,12 @@
 package com.trianguloy.llscript.repository.web;
 
+import android.content.Context;
 import android.os.AsyncTask;
 import android.support.annotation.IntDef;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 
 import com.trianguloy.llscript.repository.R;
-import com.trianguloy.llscript.repository.internal.Utils;
 import com.trianguloy.llscript.repository.settings.Preferences;
 
 import java.lang.annotation.Retention;
@@ -26,40 +26,51 @@ import dw.xmlrpc.exception.DokuException;
  * Created by Lukas on 02.08.2015.
  * Performs all DokuJClient jobs
  */
-public final class RPCManager {
+public class RPCManager {
 
     //internal return values in AsyncTasks
     @Retention(RetentionPolicy.SOURCE)
-    @IntDef({RESULT_OK, RESULT_NETWORK_ERROR,RESULT_BAD_LOGIN,RESULT_NEED_RW})
+    @IntDef({RESULT_OK, RESULT_NETWORK_ERROR, RESULT_BAD_LOGIN, RESULT_NEED_RW})
     public @interface RPCResult {
     }
+
     public static final int RESULT_OK = 1;
     public static final int RESULT_NETWORK_ERROR = -1;
     public static final int RESULT_BAD_LOGIN = -2;
     public static final int RESULT_NEED_RW = -3;
 
     @Retention(RetentionPolicy.SOURCE)
-    @IntDef({NOT_LOGGED_IN,LOGIN_RO,LOGIN_USER})
+    @IntDef({NOT_LOGGED_IN, LOGIN_RO, LOGIN_USER})
     public @interface RPCLoginState {
     }
+
     public static final int NOT_LOGGED_IN = 0;
     public static final int LOGIN_RO = 1;
     public static final int LOGIN_USER = 2;
-
     private static final int ACL_WRITE = 4;
 
-    private static DokuJClient client;
-    @RPCLoginState
-    private static int login = NOT_LOGGED_IN;
-    private static String username;
+    private static RPCManager instance;
 
-    private RPCManager() {
+    private Context context;
+    private DokuJClient client;
+    @RPCLoginState
+    private int login = NOT_LOGGED_IN;
+    private String username;
+
+    private RPCManager(Context context) {
+        this.context = context;
     }
 
-    private static boolean init() {
+    public static RPCManager getInstance(Context context) {
+        if (instance == null) instance = new RPCManager(context);
+        else instance.context = context;
+        return instance;
+    }
+
+    private boolean init() {
         if (client == null) {
             try {
-                client = new DokuJClient(Utils.getString(R.string.link_xmlrpc));
+                client = new DokuJClient(context.getString(R.string.link_xmlrpc));
             } catch (MalformedURLException e) {
                 //should never happen
                 throw new RuntimeException("Unable to create client: Malformed Url", e);
@@ -77,11 +88,11 @@ public final class RPCManager {
     }
 
     @RPCLoginState
-    public static int isLoggedIn() {
+    public int isLoggedIn() {
         return login;
     }
 
-    public static void login(final String user, final String password, @Nullable Listener<Void> listener) {
+    public void login(final String user, final String password, @Nullable Listener<Void> listener) {
         new ListenedTask<Void>(listener) {
             @NonNull
             @Override
@@ -104,7 +115,7 @@ public final class RPCManager {
         }.execute();
     }
 
-    public static void logout() {
+    public void logout() {
         new AsyncTask<Void, Void, Void>() {
 
             @Nullable
@@ -123,7 +134,7 @@ public final class RPCManager {
         }.execute();
     }
 
-    public static void getPage(final String id, Listener<String> listener) {
+    public void getPage(final String id, Listener<String> listener) {
         new ListenedTask<String>(listener) {
             @NonNull
             @Override
@@ -140,7 +151,7 @@ public final class RPCManager {
         }.execute();
     }
 
-    public static void getAllPages(Listener<List<Page>> listener) {
+    public void getAllPages(Listener<List<Page>> listener) {
         new ListenedTask<List<Page>>(listener) {
             @NonNull
             @Override
@@ -158,11 +169,11 @@ public final class RPCManager {
     }
 
     @NonNull
-    public static String getUser() {
-        return login == LOGIN_USER ? username : Utils.getString(R.string.text_defaultUser);
+    public String getUser() {
+        return login == LOGIN_USER ? username : context.getString(R.string.text_defaultUser);
     }
 
-    public static void putPage(final String id, final String text, Listener<Void> listener) {
+    public void putPage(final String id, final String text, Listener<Void> listener) {
         new ListenedTask<Void>(listener) {
             @NonNull
             @Override
@@ -183,7 +194,8 @@ public final class RPCManager {
         }.execute();
     }
 
-    public static void getChangedSubscriptions(@NonNull final Preferences sharedPref, Listener<List<String>> listener) {
+    public void getChangedSubscriptions(@NonNull final Context context, Listener<List<String>> listener) {
+        Preferences sharedPref = Preferences.getDefault(context);
         final int timestamp = sharedPref.getInt(R.string.pref_timestamp, 0);
         final Set<String> subscriptions = sharedPref.getStringSet(R.string.pref_subscriptions, Collections.<String>emptySet());
         if (subscriptions.size() > 0) new ListenedTask<List<String>>(listener) {
@@ -196,8 +208,8 @@ public final class RPCManager {
                         List<String> changedSubs = new ArrayList<>();
                         for (PageChange change : changes) {
                             String page = change.pageId();
-                            if (page.startsWith(Utils.getString(R.string.prefix_script))) {
-                                page = page.substring(Utils.getString(R.string.prefix_script).length());
+                            if (page.startsWith(context.getString(R.string.prefix_script))) {
+                                page = page.substring(context.getString(R.string.prefix_script).length());
                             }
                             if (subscriptions.contains(page)) {
                                 changedSubs.add(page);
@@ -213,7 +225,7 @@ public final class RPCManager {
         }.execute();
     }
 
-    public static void setTimestampToCurrent(@NonNull final Preferences sharedPref, Listener<Integer> listener) {
+    public void setTimestampToCurrent(@NonNull final Preferences sharedPref, Listener<Integer> listener) {
         new ListenedTask<Integer>(listener) {
 
             @NonNull
@@ -233,7 +245,7 @@ public final class RPCManager {
         }.execute();
     }
 
-    public static AsyncTask getPageTimestamp(final String id, Listener<Integer> listener) {
+    public AsyncTask getPageTimestamp(final String id, Listener<Integer> listener) {
         return new ListenedTask<Integer>(listener) {
 
             @NonNull

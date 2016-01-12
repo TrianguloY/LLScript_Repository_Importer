@@ -7,7 +7,6 @@ import android.util.AttributeSet;
 import android.widget.TextView;
 
 import com.trianguloy.llscript.repository.R;
-import com.trianguloy.llscript.repository.settings.Preferences;
 
 /**
  * Created by Lukas on 28.02.2015.
@@ -35,7 +34,7 @@ public class SubTextView extends TextView {
             key = (String) text;
             String prefix = context.getString(R.string.prefix_script);
             if(key.startsWith(prefix))key = key.substring(prefix.length());
-            super.setText(Utils.getNameForPageFromPref(Preferences.getDefault(context), key), type);
+            super.setText(Utils.getNameForPage(context, key), type);
         }
     }
 

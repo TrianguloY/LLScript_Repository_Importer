@@ -46,7 +46,7 @@ public class WebService extends Service {
     }
 
     private void check() {
-        RPCManager.getChangedSubscriptions(sharedPref, new RPCManager.Listener<List<String>>() {
+        RPCManager.getInstance(this).getChangedSubscriptions(this, new RPCManager.Listener<List<String>>() {
             @Override
             public void onResult(@NonNull RPCManager.Result<List<String>> result) {
                 if (result.getStatus() == RPCManager.RESULT_OK) {
@@ -66,7 +66,7 @@ public class WebService extends Service {
             builder.setContentText(getStringUpdated(updated));
             Notification.InboxStyle inboxStyle = new Notification.InboxStyle();
             for (String s : updated) {
-                inboxStyle.addLine(Utils.getNameForPageFromPref(sharedPref, s));
+                inboxStyle.addLine(Utils.getNameForPage(this, s));
             }
             builder.setStyle(inboxStyle);
             builder.setSmallIcon(R.drawable.ic_notification);
@@ -91,6 +91,6 @@ public class WebService extends Service {
 
     @NonNull
     private String getStringUpdated(@NonNull List<String> updated) {
-        return updated.size() == 1 ? Utils.getNameForPageFromPref(sharedPref, updated.get(0)) : updated.size() + " " + getString(R.string.text_updatedPages);
+        return updated.size() == 1 ? Utils.getNameForPage(this, updated.get(0)) : updated.size() + " " + getString(R.string.text_updatedPages);
     }
 }

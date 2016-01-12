@@ -9,7 +9,6 @@ import android.widget.Toast;
 
 import com.trianguloy.llscript.repository.BuildConfig;
 import com.trianguloy.llscript.repository.R;
-import com.trianguloy.llscript.repository.internal.Utils;
 
 import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
@@ -28,8 +27,8 @@ public class SubscriptionManager {
     @NonNull
     private final Preferences sharedPref;
 
-    public SubscriptionManager() {
-        context = Utils.getContext();
+    public SubscriptionManager(Context context) {
+        this.context = context;
         sharedPref = Preferences.getDefault(context);
     }
 
@@ -37,7 +36,7 @@ public class SubscriptionManager {
         Set<String> subs = sharedPref.getStringSet(R.string.pref_subscriptions,new HashSet<String>());
         subs.add(id);
         sharedPref.edit().putStringSet(R.string.pref_subscriptions, subs).apply();
-        toast(Utils.getString(R.string.toast_subscribeSuccessful));
+        toast(context.getString(R.string.toast_subscribeSuccessful));
         setSubscriptionState(SUBSCRIBED);
     }
 
@@ -45,7 +44,7 @@ public class SubscriptionManager {
         Set<String> subs = sharedPref.getStringSet(R.string.pref_subscriptions,new HashSet<String>());
         subs.remove(id);
         sharedPref.edit().putStringSet(R.string.pref_subscriptions, subs).apply();
-        toast(Utils.getString(R.string.toast_unsubscribeSuccessful));
+        toast(context.getString(R.string.toast_unsubscribeSuccessful));
         setSubscriptionState(NOT_SUBSCRIBED);
     }
 
@@ -104,7 +103,7 @@ public class SubscriptionManager {
     }
 
     public void updateState(@NonNull String id) {
-        if (Utils.getString(R.string.id_scriptRepository).equals(Utils.getString(R.string.prefix_script) + id)) {
+        if (context.getString(R.string.id_scriptRepository).equals(context.getString(R.string.prefix_script) + id)) {
             setSubscriptionState(CANT_SUBSCRIBE);
         } else {
             setSubscriptionState(isSubscribed(id) ? SUBSCRIBED : NOT_SUBSCRIBED);

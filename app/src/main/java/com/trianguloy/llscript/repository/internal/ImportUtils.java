@@ -35,7 +35,7 @@ public final class ImportUtils {
 
     public static void startImport(@NonNull final Activity context, @NonNull final ManagedWebView webView, @NonNull final Listener listener) {
         Document document = Jsoup.parse(webView.getCurrentDocument().outerHtml(), context.getString(R.string.link_server));
-        final List<Script> scripts = findScripts(document);
+        final List<Script> scripts = findScripts(context, document);
         //TODO search the flags
         String aboutScript = generateAboutComment(document);
         //switch based on the number of scripts found
@@ -61,7 +61,7 @@ public final class ImportUtils {
     }
 
     @NonNull
-    private static List<Script> findScripts(@NonNull Document document) {//Starts searching all scripts
+    private static List<Script> findScripts(@NonNull Context context, @NonNull Document document) {//Starts searching all scripts
         Elements elements = document.select(Constants.SCRIPT_SELECTORS);
         ArrayList<Script> list = new ArrayList<>();
         for (Element e : elements) {
@@ -81,7 +81,7 @@ public final class ImportUtils {
                 index = parent.elementSiblingIndex();
             }
             if (name == null) {
-                name = Utils.getString(R.string.text_nameNotFound);
+                name = context.getString(R.string.text_nameNotFound);
             }
             list.add(new Script(code, name));
         }

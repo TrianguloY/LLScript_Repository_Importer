@@ -62,7 +62,7 @@ public class AuthenticatorActivity extends AccountAuthenticatorActivity {
         }
         final String password = ((EditText) findViewById(R.id.password)).getText().toString();
         final boolean savePw = ((CheckBox) findViewById(R.id.checkRemember)).isChecked();
-        RPCManager.login(user, password, new RPCManager.Listener<Void>() {
+        RPCManager.getInstance(this).login(user, password, new RPCManager.Listener<Void>() {
             @Override
             public void onResult(@NonNull RPCManager.Result<Void> result) {
                 switch (result.getStatus()) {

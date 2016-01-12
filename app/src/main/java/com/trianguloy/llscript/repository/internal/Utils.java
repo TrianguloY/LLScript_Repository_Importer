@@ -5,7 +5,6 @@ import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
-import android.support.annotation.StringRes;
 import android.util.Log;
 import android.widget.Toast;
 
@@ -40,7 +39,12 @@ public final class Utils {
     private Utils() {
     }
 
-    //This function returns the string between beginning and ending in source
+    /**
+     * @param source    the base string
+     * @param beginning the prefix
+     * @param ending    the suffix
+     * @return first string between beginning and ending
+     */
     @Nullable
     public static String findBetween(@NonNull String source, @NonNull String beginning, @NonNull String ending) {
         int start = source.indexOf(beginning, 0);
@@ -53,11 +57,15 @@ public final class Utils {
         return source.substring(start, end);
     }
 
+    /**
+     * @param document should be the repository
+     * @return all script names in the repository mapped to their pages
+     */
     @NonNull
-    public static Map<String, String> getAllScriptPagesAndNames(@NonNull Document document) {
+    public static Map<String, String> getAllScriptPagesAndNames(@NonNull Context context, @NonNull Document document) {
         HashMap<String, String> scripts = new HashMap<>();
         //find all scripts in the repository
-        String prefix = getString(R.string.prefix_script);
+        String prefix = context.getString(R.string.prefix_script);
         Elements temp = document.select("[title^=" + prefix + "]");
         for (Element e : temp) {
             String title = e.attr("title").substring(prefix.length());
@@ -70,10 +78,16 @@ public final class Utils {
         return scripts;
     }
 
+    /**
+     * @param context a context
+     * @param page    page id
+     * @return page name if found, otherwise page id
+     */
     @NonNull
-    public static String getNameForPageFromPref(@NonNull Preferences pref, @NonNull String page) {
-        if (page.startsWith(getString(R.string.prefix_script)))
-            page = page.substring(getString(R.string.prefix_script).length());
+    public static String getNameForPage(@NonNull Context context, @NonNull String page) {
+        Preferences pref = Preferences.getDefault(context);
+        if (page.startsWith(context.getString(R.string.prefix_script)))
+            page = page.substring(context.getString(R.string.prefix_script).length());
         String result = pref.getStringMap(R.string.pref_pageNames, Collections.<String, String>emptyMap()).get(page);
         if (result != null) return result.trim();
         if (BuildConfig.DEBUG)
@@ -81,74 +95,97 @@ public final class Utils {
         return page;
     }
 
+    /**
+     * @param url url of a script page
+     * @return id of the page or, if not found url of the page
+     */
     @NonNull
-    public static String getNameFromUrl(@NonNull String url) {
+    public static String getIdFromUrl(@NonNull String url) {
         final String idScript = "?id=script_";
         int index = url.indexOf(idScript);
         if (index == -1) return url;
         return url.substring(index + idScript.length());
     }
 
-    //Checks for the launcher installed and sets it in the Constants variable. Returns false if no launcher was found
-    public static boolean checkForLauncher(@NonNull Context context) {
-
-        //checks the installed package, extreme or not
+    /**
+     * @param context a context
+     * @return the launcher package, if any
+     */
+    @Nullable
+    private static PackageInfo getInstalledLauncher(@NonNull Context context) {
         PackageManager pm = context.getPackageManager();
-        PackageInfo pi = null;
-        Constants.installedPackage = null;
 
         for (String p : Constants.PACKAGES) {
             try {
-                pi = pm.getPackageInfo(p, PackageManager.GET_ACTIVITIES);
-                Constants.installedPackage = p;
-                break;
+                PackageInfo info = pm.getPackageInfo(p, PackageManager.GET_ACTIVITIES);
+                pkg = info.packageName;
+                return info;
             } catch (PackageManager.NameNotFoundException ignored) {
-                //empty, it just don't breaks and go to next iteration
+                //empty, it just doesn't break and go to next iteration
             }
         }
+        return null;
+    }
 
-        if (Constants.installedPackage == null || pi == null) {
-            //Non of the apps were found
-            Constants.installedPackage = null;
+    /**
+     * used for caching the package
+     */
+    private static String pkg = null;
+
+    /**
+     * @param context a context
+     * @return the package name of the installed launcher, if any
+     */
+    @Nullable
+    public static String getLauncherPackage(@NonNull Context context) {
+        if (pkg == null) {
+            PackageInfo info = getInstalledLauncher(context);
+            if (info != null) pkg = info.packageName;
+        }
+        return pkg;
+    }
+
+    /**
+     * @param context a context
+     * @return if LL was found and is of sufficient version
+     */
+    public static boolean hasValidLauncher(@NonNull Context context) {
+        PackageInfo pi = getInstalledLauncher(context);
+        return pi != null && (pi.versionCode % Constants.VERSIONCODE_MODULO) >= Constants.MINIMUM_NECESSARY_VERSION;
+    }
+
+    /**
+     * alerts the user of potential Launcher problems
+     *
+     * @param context a context
+     */
+    public static void alertLauncherProblemsIfAny(@NonNull Context context) {
+        PackageInfo pi = getInstalledLauncher(context);
+
+        if (pi == null) {
+            //None of the apps were found
             Dialogs.launcherNotFound(context);
-            return false;
         }
-
-
         //Checks the version of the launcher
-
-        if ((pi.versionCode % Constants.VERSIONCODE_MODULO) < Constants.MINIMUM_NECESSARY_VERSION) {
-            Constants.installedPackage = null;
+        else if ((pi.versionCode % Constants.VERSIONCODE_MODULO) < Constants.MINIMUM_NECESSARY_VERSION) {
             Dialogs.launcherOutdated(context);
-            return false;
         }
-
-
-        return true;
     }
 
-    //Methods for retrieving strings in a non-context-environment
-    public static void setContext(Context context) {
-        Utils.context = context;
-    }
-
-    public static String getString(@StringRes int resId) {
-        if (context == null) throw new NoContextException();
-        return context.getString(resId);
-    }
-
-    public static Context getContext() {
-        if (context == null) throw new NoContextException();
-        return context;
-    }
-
+    //matches values_notify resource
     private static final int SHOW_NONE = 0;
     private static final int SHOW_TOAST = 1;
     private static final int SHOW_DIALOG = 2;
 
+    /**
+     * loads and shows changes to subscriptions
+     *
+     * @param context a context able to show dialogs
+     * @param webView the webView to load clicked pages in
+     */
     public static void showChangedSubscriptionsIfAny(@NonNull final Context context, @NonNull final ManagedWebView webView) {
         final Preferences sharedPref = Preferences.getDefault(context);
-        RPCManager.getChangedSubscriptions(sharedPref, new RPCManager.Listener<List<String>>() {
+        RPCManager.getInstance(context).getChangedSubscriptions(context, new RPCManager.Listener<List<String>>() {
             @Override
             public void onResult(@NonNull RPCManager.Result<List<String>> result) {
                 if (result.getStatus() == RPCManager.RESULT_OK) {
@@ -157,7 +194,7 @@ public final class Utils {
                     if (updated.size() > 0) {
                         StringBuilder pages = new StringBuilder();
                         for (String s : updated) {
-                            pages.append(Utils.getNameForPageFromPref(sharedPref, s)).append("\n");
+                            pages.append(Utils.getNameForPage(context, s)).append("\n");
                         }
                         int showAs = Integer.valueOf(sharedPref.getString(R.string.pref_changedSubs, "2"));
                         switch (showAs) {
@@ -170,17 +207,24 @@ public final class Utils {
                                 Dialogs.changedSubscriptions(context, webView, updated);
                                 break;
                         }
-                        RPCManager.setTimestampToCurrent(sharedPref, null);
+                        RPCManager.getInstance(context).setTimestampToCurrent(sharedPref, null);
                     }
                 }
             }
         });
     }
 
+    /**
+     * loads and shows new scripts
+     *
+     * @param context      a context able to show dialogs
+     * @param repoDocument the repository (data loaded from it)
+     * @param webView      the webView to load clicked pages in
+     */
     public static void showNewScriptsIfAny(@NonNull Context context, @NonNull Document repoDocument, @NonNull final ManagedWebView webView) {
         final Preferences sharedPref = Preferences.getDefault(context);
         //new method: based on the scripts found
-        Map<String, String> map = Utils.getAllScriptPagesAndNames(repoDocument);
+        Map<String, String> map = Utils.getAllScriptPagesAndNames(context, repoDocument);
         sharedPref.edit().putStringMap(R.string.pref_pageNames, map).apply();
         Set<String> currentScripts = map.keySet();
         if (sharedPref.contains(R.string.pref_Scripts)) {
@@ -204,7 +248,11 @@ public final class Utils {
                     case SHOW_NONE:
                         break;
                     case SHOW_TOAST:
-                        Toast.makeText(context, (newScriptNames.size() == 1 ? getString(R.string.toast_oneNewScript) : getString(R.string.toast_severalNewScripts)) + names.toString(), Toast.LENGTH_LONG);
+                        Toast.makeText(context,
+                                (newScriptNames.size() == 1 ?
+                                        context.getString(R.string.toast_oneNewScript) :
+                                        context.getString(R.string.toast_severalNewScripts)) + names.toString(),
+                                Toast.LENGTH_LONG).show();
                         break;
                     case SHOW_DIALOG:
                         Dialogs.newScripts(context, webView, Arrays.asList(newScripts.toArray(new String[newScripts.size()])));
@@ -217,12 +265,4 @@ public final class Utils {
             sharedPref.edit().putStringSet(R.string.pref_Scripts, currentScripts).apply();
         }
     }
-
-    public static class NoContextException extends RuntimeException {
-        public NoContextException() {
-            super("Context not initialized");
-        }
-    }
-
-
 }

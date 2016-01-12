@@ -65,7 +65,7 @@ public class ManagedWebView extends WebView {
      *
      * @param context View context
      */
-    private void init(Context context) {
+    private void init(final Context context) {
         this.context = context;
         backStack = new Stack<>();
         showTools = false;
@@ -95,9 +95,9 @@ public class ManagedWebView extends WebView {
                 if (ManagedWebView.this.context.getString(R.string.link_repository).equals(result.url)) {
                     listener.repoDocumentUpdated(result.document);
                 }
-                final String id = Utils.getNameFromUrl(result.url);
+                final String id = Utils.getIdFromUrl(result.url);
                 final String html = result.document.outerHtml();
-                RPCManager.getPageTimestamp(ManagedWebView.this.context.getString(R.string.prefix_script) + id, new RPCManager.Listener<Integer>() {
+                RPCManager.getInstance(context).getPageTimestamp(ManagedWebView.this.context.getString(R.string.prefix_script) + id, new RPCManager.Listener<Integer>() {
                     @Override
                     public void onResult(@NonNull RPCManager.Result<Integer> result) {
                         if (result.getStatus() == RPCManager.RESULT_OK) {
@@ -115,7 +115,7 @@ public class ManagedWebView extends WebView {
                 Dialogs.noPageLoaded(ManagedWebView.this.context, new DialogInterface.OnClickListener() {
                     public void onClick(DialogInterface dialog, int which) {
                         loading(true);
-                        new DownloadTask(downloadTaskListener).execute(backStack.peek().url);
+                        new DownloadTask(ManagedWebView.this.context, downloadTaskListener).execute(backStack.peek().url);
                     }
                 });
             }
@@ -138,14 +138,14 @@ public class ManagedWebView extends WebView {
      */
     public void show(@NonNull final String url) {
         if (url.startsWith(context.getString(R.string.link_scriptPagePrefix))) {
-            final String id = Utils.getNameFromUrl(url);
+            final String id = Utils.getIdFromUrl(url);
             if (!id.equals(loadingId)) cancel();
             loadingId = id;
             if (PageCacheManager.hasPage(id)) {
                 final PageCacheManager.Page page = PageCacheManager.getPage(id);
                 assert page != null;
                 showPage(url, Jsoup.parse(page.html, context.getString(R.string.link_server)));
-                ongoingTask = RPCManager.getPageTimestamp(context.getString(R.string.prefix_script) + id, new RPCManager.Listener<Integer>() {
+                ongoingTask = RPCManager.getInstance(context).getPageTimestamp(context.getString(R.string.prefix_script) + id, new RPCManager.Listener<Integer>() {
                     @Override
                     public void onResult(@NonNull RPCManager.Result<Integer> result) {
                         if (result.getStatus() == RPCManager.RESULT_OK) {
@@ -171,7 +171,7 @@ public class ManagedWebView extends WebView {
      * @param document Jsoup document of the page
      */
     private void showPage(@NonNull String url, @NonNull Document document) {
-        if (Utils.getNameFromUrl(url).equals(loadingId)) {
+        if (Utils.getIdFromUrl(url).equals(loadingId)) {
             if (!showTools) {
                 //remove tools
                 document.select("div.tools.group").remove();
@@ -201,7 +201,7 @@ public class ManagedWebView extends WebView {
      */
     private void downloadPage(final String url) {
         loading(true);
-        ongoingTask = new DownloadTask(downloadTaskListener).execute(url);
+        ongoingTask = new DownloadTask(context, downloadTaskListener).execute(url);
     }
 
     /**
@@ -240,7 +240,7 @@ public class ManagedWebView extends WebView {
     @Nullable
     public String getPageId() {
         if (backStack.empty()) return null;
-        return Utils.getNameFromUrl(backStack.peek().url);
+        return Utils.getIdFromUrl(backStack.peek().url);
     }
 
     public boolean hasPage() {

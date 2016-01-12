@@ -44,7 +44,7 @@ public class SubscriptionsActivity extends Activity implements ListView.OnItemCl
 
     @Override
     public void onItemClick(AdapterView<?> parent, View view, final int position, long id) {
-        Dialogs.removeSubscription(this, Utils.getNameForPageFromPref(sharedPref, adapter.getItem(position)), new DialogInterface.OnClickListener() {
+        Dialogs.removeSubscription(this, Utils.getNameForPage(this, adapter.getItem(position)), new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialog, int which) {
                 String p = adapter.getItem(position);

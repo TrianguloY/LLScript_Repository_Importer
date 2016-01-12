@@ -27,7 +27,6 @@ import com.trianguloy.llscript.repository.IntentHandle;
 import com.trianguloy.llscript.repository.Manifest;
 import com.trianguloy.llscript.repository.R;
 import com.trianguloy.llscript.repository.ScriptImporter;
-import com.trianguloy.llscript.repository.settings.Preferences;
 import com.trianguloy.llscript.repository.web.ManagedWebView;
 
 import java.util.ArrayList;
@@ -184,10 +183,9 @@ public final class Dialogs {
     }
 
     private static void baseScriptList(@NonNull final Context context, @NonNull final ManagedWebView webView, @NonNull final List<String> ids, String title){
-        Preferences sharedPref = Preferences.getDefault(context);
         List<String> names = new ArrayList<>();
         for (String id: ids){
-            names.add(Utils.getNameForPageFromPref(sharedPref,id));
+            names.add(Utils.getNameForPage(context,id));
         }
         new AlertDialog.Builder(context)
                 .setTitle(title)
@@ -240,7 +238,7 @@ public final class Dialogs {
 
         ad.show();
 
-        if(Constants.installedPackage==null){
+        if(Utils.hasValidLauncher(context)){
             ad.getButton(AlertDialog.BUTTON_POSITIVE).setEnabled(false);
         }
     }

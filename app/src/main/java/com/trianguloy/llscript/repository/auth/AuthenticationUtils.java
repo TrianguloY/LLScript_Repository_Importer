@@ -38,7 +38,7 @@ public final class AuthenticationUtils {
         findAccount(context, new InternalListener() {
             @Override
             public void onComplete(String user, String password) {
-                RPCManager.login(user, password, new RPCManager.Listener<Void>() {
+                RPCManager.getInstance(context).login(user, password, new RPCManager.Listener<Void>() {
 
                     @Override
                     public void onResult(@NonNull RPCManager.Result<Void> result) {

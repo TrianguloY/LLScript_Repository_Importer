@@ -1,11 +1,11 @@
 package com.trianguloy.llscript.repository.web;
 
+import android.content.Context;
 import android.os.AsyncTask;
 import android.support.annotation.Nullable;
 
 import com.google.common.base.Charsets;
 import com.trianguloy.llscript.repository.R;
-import com.trianguloy.llscript.repository.internal.Utils;
 
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
@@ -21,10 +21,12 @@ import java.net.URL;
  */
 public class DownloadTask extends AsyncTask<String, Void, DownloadTask.Result> {
     private final Listener listener;
+    private final String server;
 
-    public DownloadTask(Listener listener) {
+    public DownloadTask(Context context, Listener listener) {
         super();
         this.listener = listener;
+        server = context.getString(R.string.link_server);
     }
 
 
@@ -39,7 +41,7 @@ public class DownloadTask extends AsyncTask<String, Void, DownloadTask.Result> {
             InputStream inputStream = null;
             try {
                 inputStream = connection.getInputStream();
-                Document document = Jsoup.parse(inputStream, Charsets.UTF_8.name(), Utils.getString(R.string.link_server));
+                Document document = Jsoup.parse(inputStream, Charsets.UTF_8.name(), server);
                 return new Result(urls[0], document);
             } finally {
                 connection.disconnect();

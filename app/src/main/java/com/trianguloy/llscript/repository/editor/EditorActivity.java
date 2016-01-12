@@ -29,7 +29,7 @@ public class EditorActivity extends Activity {
     private Preferences sharedPref;
     private Bundle savedInstanceState;
     private EditManager editManager;
-    ViewManager viewManager;
+    private ViewManager viewManager;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -37,7 +37,7 @@ public class EditorActivity extends Activity {
         this.savedInstanceState = savedInstanceState;
         sharedPref = Preferences.getDefault(this);
         RepositoryImporter.setTheme(this, sharedPref);
-        editManager = new EditManager();
+        editManager = new EditManager(this);
         viewManager = new ViewManager(this, editManager);
 
         onNewIntent(getIntent());
@@ -52,7 +52,7 @@ public class EditorActivity extends Activity {
                 action.startsWith(getString(R.string.link_scriptPagePrefix)) && sharedPref.getBoolean(R.string.pref_directEdit, false))
             editManager.setPageId(action.substring(action.indexOf(getString(R.string.prefix_script))));
         else editManager.setPageId(null);
-        if (RPCManager.isLoggedIn() >= RPCManager.LOGIN_USER) load();
+        if (RPCManager.getInstance(this).isLoggedIn() >= RPCManager.LOGIN_USER) load();
         else {
             AuthenticationUtils.login(this, new AuthenticationUtils.Listener() {
                 @Override
@@ -75,7 +75,7 @@ public class EditorActivity extends Activity {
                 onBackPressed();
                 break;
             case R.id.action_logout:
-                RPCManager.logout();
+                RPCManager.getInstance(this).logout();
                 finish();
                 break;
             case R.id.action_settings:

@@ -2,7 +2,6 @@ package com.trianguloy.llscript.repository;
 
 
 import android.support.annotation.IntDef;
-import android.support.annotation.Nullable;
 
 import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
@@ -33,8 +32,6 @@ public final class Constants {
 
     //package constants
     public static final String[] PACKAGES = {"net.pierrox.lightning_launcher_extreme", "net.pierrox.lightning_launcher"};
-    @Nullable
-    public static String installedPackage = null;
     public static final int MINIMUM_NECESSARY_VERSION = 225; // valid for both packages. Number module 1000
 
     //Intent Extras

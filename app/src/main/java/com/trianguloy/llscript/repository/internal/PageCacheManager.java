@@ -1,6 +1,5 @@
 package com.trianguloy.llscript.repository.internal;
 
-import android.content.Context;
 import android.support.annotation.NonNull;
 
 import com.google.gson.Gson;
@@ -24,8 +23,7 @@ public final class PageCacheManager {
 
     private static void init() {
         initialized = true;
-        Context context = Utils.getContext();
-        directory = new File(context.getCacheDir(),"html");
+        directory = new File(System.getProperty("java.io.tmpdir", "/cache"),"html");
         gson = new Gson();
     }
 

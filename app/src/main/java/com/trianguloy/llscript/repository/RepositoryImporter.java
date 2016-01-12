@@ -5,7 +5,6 @@ import android.app.Application;
 import android.support.annotation.NonNull;
 
 import com.trianguloy.llscript.repository.acra.Dialog;
-import com.trianguloy.llscript.repository.internal.Utils;
 import com.trianguloy.llscript.repository.settings.Preferences;
 
 import org.acra.ACRA;
@@ -39,7 +38,6 @@ public class RepositoryImporter extends Application {
         ACRA.init(this);
         if (Preferences.getDefault(this).getBoolean(R.string.pref_theme, false))
             setTheme(R.style.Theme_Dark);
-        Utils.setContext(this);
     }
 
     public static void setTheme(@NonNull Activity context, @NonNull Preferences sharedPref) {

@@ -23,33 +23,32 @@ public class ScriptImporter extends Service {
     @Override
     public int onStartCommand(@NonNull Intent intent, int flags, int startId) {
 
-        if (intent.hasExtra(Constants.EXTRA_CODE) && intent.hasExtra(Constants.EXTRA_NAME)) {
-            ComponentName componentName = intent.hasExtra(Constants.EXTRA_RECEIVER) ? ComponentName.unflattenFromString(intent.getStringExtra(Constants.EXTRA_RECEIVER)) : null;
-            if (Utils.checkForLauncher(this)) {
+        ComponentName componentName = intent.hasExtra(Constants.EXTRA_RECEIVER) ? ComponentName.unflattenFromString(intent.getStringExtra(Constants.EXTRA_RECEIVER)) : null;
+        if (Utils.hasValidLauncher(this)) {
+            if (intent.hasExtra(Constants.EXTRA_CODE) && intent.hasExtra(Constants.EXTRA_NAME)) {
                 if (componentName == null) {
                     componentName = new ComponentName(this, IntentHandle.class);
                 }
                 boolean forceUpdate = intent.getBooleanExtra(Constants.EXTRA_FORCE_UPDATE, false);
                 //noinspection ResourceType
                 installScript(intent.getStringExtra(Constants.EXTRA_CODE), intent.getStringExtra(Constants.EXTRA_NAME), intent.getIntExtra(Constants.EXTRA_FLAGS, 0), componentName, forceUpdate);
-            } else if (componentName != null) {
-                //callback for other apps
-                Intent response = new Intent(Intent.ACTION_VIEW);
-                response.setComponent(componentName);
-                response.putExtra(Constants.EXTRA_STATUS, Constants.STATUS_LAUNCHER_PROBLEM);
-                response.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-                startActivity(response);
+            } else if (intent.hasExtra(Constants.EXTRA_FORWARD)) {
+                Intent forward = intent.getParcelableExtra(Constants.EXTRA_FORWARD);
+                if (forward.hasExtra(Constants.EXTRA_BACKGROUND) && forward.getBooleanExtra(Constants.EXTRA_BACKGROUND, false)) {
+                    runScriptInBackground(forward.getStringExtra(Constants.EXTRA_DATA));
+                } else {
+                    forward.setPackage(Utils.getLauncherPackage(this));
+                    forward.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+                    startActivity(forward);
+                }
             }
-        } else if (intent.hasExtra(Constants.EXTRA_FORWARD)) {
-            Utils.checkForLauncher(this);
-            Intent forward = intent.getParcelableExtra(Constants.EXTRA_FORWARD);
-            if (forward.hasExtra(Constants.EXTRA_BACKGROUND) && forward.getBooleanExtra(Constants.EXTRA_BACKGROUND, false)) {
-                runScriptInBackground(forward.getStringExtra(Constants.EXTRA_DATA));
-            } else {
-                forward.setPackage(Constants.installedPackage);
-                forward.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-                startActivity(forward);
-            }
+        } else if (componentName != null) {
+            //callback for other apps
+            Intent response = new Intent(Intent.ACTION_VIEW);
+            response.setComponent(componentName);
+            response.putExtra(Constants.EXTRA_STATUS, Constants.STATUS_LAUNCHER_PROBLEM);
+            response.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+            startActivity(response);
         }
         stopSelf();
         return START_NOT_STICKY;
@@ -84,7 +83,7 @@ public class ScriptImporter extends Service {
 
     private void runScriptInBackground(String idAndData) {
         Intent i = new Intent(getString(R.string.intent_actionBackgroundReceiver));
-        i.setClassName(Constants.installedPackage, getString(R.string.intent_backgroundReceiverClass));
+        i.setClassName(Utils.getLauncherPackage(this), getString(R.string.intent_backgroundReceiverClass));
         Bundle bundle = new Bundle();
         bundle.putInt(Constants.EXTRA_TARGET, Constants.TARGET_BACKGROUND);
         bundle.putInt(Constants.EXTRA_ACTION, Constants.ACTION_RUN);

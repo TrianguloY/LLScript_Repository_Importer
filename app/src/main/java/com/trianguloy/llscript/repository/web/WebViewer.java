@@ -68,7 +68,7 @@ public class WebViewer extends Activity {
     private Bundle savedInstanceState;
 
     public WebViewer() {
-        subscriptionManager = new SubscriptionManager();
+        subscriptionManager = new SubscriptionManager(this);
     }
 
     //Application functions
@@ -84,7 +84,7 @@ public class WebViewer extends Activity {
         super.onCreate(savedInstanceState);
 
         //check for launcher to find the installed one, continue even if not found
-        Utils.checkForLauncher(this);
+        Utils.alertLauncherProblemsIfAny(this);
 
         if ((sharedPref.contains(R.string.pref_version) && sharedPref.getInt(R.string.pref_version, -1) == BuildConfig.VERSION_CODE) || upgradeFromOldVersion())
             init();
@@ -323,14 +323,14 @@ public class WebViewer extends Activity {
             }
         } else {
             button.setVisibility(View.VISIBLE);
-            setTitle(Utils.getNameForPageFromPref(sharedPref, Utils.getNameFromUrl(url)));
+            setTitle(Utils.getNameForPage(this, Utils.getIdFromUrl(url)));
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.HONEYCOMB) {
                 ActionBar bar = getActionBar();
                 assert bar != null;
                 bar.setDisplayHomeAsUpEnabled(true);
             }
         }
-        subscriptionManager.updateState(Utils.getNameFromUrl(url));
+        subscriptionManager.updateState(Utils.getIdFromUrl(url));
     }
 
     //Script importer
@@ -363,7 +363,7 @@ public class WebViewer extends Activity {
             Map<String, String> map = sharedPref.getStringMap(R.string.pref_subs, Collections.<String, String>emptyMap());
             HashSet<String> set = new HashSet<>();
             for (String page : map.keySet()) {
-                set.add(Utils.getNameFromUrl(page));
+                set.add(Utils.getIdFromUrl(page));
             }
             sharedPref.edit().putStringSet(R.string.pref_subscriptions, set)
                     .remove(R.string.pref_subs)
@@ -373,7 +373,7 @@ public class WebViewer extends Activity {
             sharedPref.edit().remove(R.string.pref_repoHash).apply();
         }
         if (!sharedPref.contains(R.string.pref_timestamp)) {
-            RPCManager.setTimestampToCurrent(sharedPref, new RPCManager.Listener<Integer>() {
+            RPCManager.getInstance(this).setTimestampToCurrent(sharedPref, new RPCManager.Listener<Integer>() {
                 @Override
                 public void onResult(@NonNull RPCManager.Result<Integer> result) {
                     if (result.getStatus() == RPCManager.RESULT_OK) {

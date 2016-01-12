@@ -55,6 +55,7 @@ class ViewManager extends Lock {
     @State
     private int state;
     private final EditManager editManager;
+    private final RPCManager rpcManager;
     private boolean isTemplate;
     @NonNull
     private final Random random;
@@ -67,6 +68,7 @@ class ViewManager extends Lock {
         super(context);
         this.context = context;
         this.editManager = editManager;
+        this.rpcManager = RPCManager.getInstance(context);
         isTemplate = false;
         random = new Random();
         sharedPref = Preferences.getDefault(context);
@@ -79,8 +81,8 @@ class ViewManager extends Lock {
         switch (state) {
             case STATE_CHOOSE_ACTION:
                 context.setContentView(R.layout.activity_select_action);
-                if (RPCManager.isLoggedIn() > RPCManager.NOT_LOGGED_IN) {
-                    ((TextView) context.findViewById(R.id.textUser)).setText(context.getString(R.string.text_LoggedInAs) + " " + RPCManager.getUser());
+                if (rpcManager.isLoggedIn() > RPCManager.NOT_LOGGED_IN) {
+                    ((TextView) context.findViewById(R.id.textUser)).setText(context.getString(R.string.text_LoggedInAs) + " " + rpcManager.getUser());
                 }
                 break;
             case STATE_CREATE:
@@ -131,13 +133,13 @@ class ViewManager extends Lock {
                     setState(ViewManager.STATE_CHOOSE_ACTION);
                     break;
                 case STATE_CREATE:
-                    context.viewManager.createPage();
+                    createPage();
                     break;
                 case STATE_EDIT:
                 case STATE_PREVIEW:
                     editManager.fromBundle(bundle);
                     isTemplate = bundle.getBoolean(context.getString(R.string.key_isTemplate));
-                    context.viewManager.showPageEditor(null);
+                    showPageEditor(null);
                     break;
             }
         }
@@ -153,7 +155,7 @@ class ViewManager extends Lock {
     }
 
     void loadPageToEdit(final String id) {
-        RPCManager.getPage(id, new RPCManager.Listener<String>() {
+        rpcManager.getPage(id, new RPCManager.Listener<String>() {
             @Override
             public void onResult(@NonNull RPCManager.Result<String> result) {
                 unlock();
@@ -175,7 +177,7 @@ class ViewManager extends Lock {
         adapter.sort(new Comparator<String>() {
             @Override
             public int compare(@NonNull String lhs, @NonNull String rhs) {
-                return Utils.getNameForPageFromPref(sharedPref, lhs).toLowerCase().compareTo(Utils.getNameForPageFromPref(sharedPref, rhs).toLowerCase());
+                return Utils.getNameForPage(context, lhs).toLowerCase().compareTo(Utils.getNameForPage(context, rhs).toLowerCase());
             }
         });
         Dialogs.selectPageToEdit(context, adapter, new DialogInterface.OnClickListener() {
@@ -190,7 +192,7 @@ class ViewManager extends Lock {
 
     void preview() {
         final String tempId = context.getString(R.string.prefix_temp) + random.nextInt();
-        RPCManager.putPage(context.getString(R.string.prefix_script) + tempId, editManager.getText(), new RPCManager.Listener<Void>() {
+        rpcManager.putPage(context.getString(R.string.prefix_script) + tempId, editManager.getText(), new RPCManager.Listener<Void>() {
             @Override
             public void onResult(@NonNull RPCManager.Result<Void> result) {
                 unlock();
@@ -231,7 +233,7 @@ class ViewManager extends Lock {
             @Override
             public void onPageFinished(WebView view, String url) {
                 super.onPageFinished(view, url);
-                RPCManager.putPage("script_" + tempId, "", null);
+                rpcManager.putPage("script_" + tempId, "", null);
             }
 
             @Override
@@ -246,7 +248,7 @@ class ViewManager extends Lock {
                 return true;
             }
         });
-        new DownloadTask(new DownloadTask.Listener() {
+        new DownloadTask(context, new DownloadTask.Listener() {
             @Override
             public void onFinish(@NonNull DownloadTask.Result res) {
                 if (!sharedPref.getBoolean(R.string.pref_showTools, false)) {
@@ -274,7 +276,7 @@ class ViewManager extends Lock {
         editManager.setPageId(context.getString(R.string.prefix_script) + ((EditText) context.findViewById(R.id.editId)).getText());
         Spinner spinner = (Spinner) context.findViewById(R.id.spinner);
         final Repository.RepositoryCategory selected = ((Repository.RepositoryCategory) spinner.getSelectedItem());
-        RPCManager.getPage(editManager.getPageId(), new RPCManager.Listener<String>() {
+        rpcManager.getPage(editManager.getPageId(), new RPCManager.Listener<String>() {
             @Override
             public void onResult(@NonNull RPCManager.Result<String> result) {
                 if (result.getStatus() == RPCManager.RESULT_OK) {
@@ -285,7 +287,7 @@ class ViewManager extends Lock {
                             editManager.setPageName(((EditText) context.findViewById(R.id.editName)).getText().toString());
                         }
                         if (((RadioButton) context.findViewById(R.id.radioDefault)).isChecked()) {
-                            RPCManager.getPage(context.getString(R.string.id_scriptTemplate), new RPCManager.Listener<String>() {
+                            rpcManager.getPage(context.getString(R.string.id_scriptTemplate), new RPCManager.Listener<String>() {
                                 @Override
                                 public void onResult(@NonNull RPCManager.Result<String> result) {
                                     unlock();
@@ -323,7 +325,7 @@ class ViewManager extends Lock {
             Dialogs.cantSaveEmpty(context);
         } else {
             final String pageId = editManager.getPageId();
-            RPCManager.putPage(pageId, text, new RPCManager.Listener<Void>() {
+            rpcManager.putPage(pageId, text, new RPCManager.Listener<Void>() {
                         @Override
                         public void onResult(@NonNull RPCManager.Result<Void> result) {
                             switch (result.getStatus()) {
@@ -331,7 +333,7 @@ class ViewManager extends Lock {
                                     editManager.saved();
                                     if (addTo != null) {
                                         repository.addScript(addTo, pageId, editManager.getPageName());
-                                        RPCManager.putPage(context.getString(R.string.id_scriptRepository), repository.getText(), new RPCManager.Listener<Void>() {
+                                        rpcManager.putPage(context.getString(R.string.id_scriptRepository), repository.getText(), new RPCManager.Listener<Void>() {
                                                     @Override
                                                     public void onResult(@NonNull RPCManager.Result<Void> result) {
                                                         unlock();
@@ -398,7 +400,7 @@ class ViewManager extends Lock {
     }
 
     void editPage() {
-        RPCManager.getAllPages(new RPCManager.Listener<List<Page>>() {
+        rpcManager.getAllPages(new RPCManager.Listener<List<Page>>() {
             @Override
             public void onResult(@NonNull RPCManager.Result<List<Page>> result) {
                 unlock();
@@ -419,7 +421,7 @@ class ViewManager extends Lock {
     }
 
     void createPage() {
-        RPCManager.getPage(context.getString(R.string.id_scriptRepository), new RPCManager.Listener<String>() {
+        rpcManager.getPage(context.getString(R.string.id_scriptRepository), new RPCManager.Listener<String>() {
             @Override
             public void onResult(@NonNull RPCManager.Result<String> result) {
                 unlock();

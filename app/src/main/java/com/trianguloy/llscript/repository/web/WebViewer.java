@@ -68,7 +68,7 @@ public class WebViewer extends Activity {
     private Bundle savedInstanceState;
 
     public WebViewer() {
-        subscriptionManager = new SubscriptionManager(this);
+        subscriptionManager = new SubscriptionManager();
     }
 
     //Application functions

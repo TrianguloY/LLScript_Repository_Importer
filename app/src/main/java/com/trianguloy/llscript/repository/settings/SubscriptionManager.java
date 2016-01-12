@@ -24,13 +24,7 @@ public class SubscriptionManager {
 
     private Context context;
     private Menu menu;
-    @NonNull
-    private final Preferences sharedPref;
-
-    public SubscriptionManager(Context context) {
-        this.context = context;
-        sharedPref = Preferences.getDefault(context);
-    }
+    private Preferences sharedPref;
 
     public void subscribe(@NonNull String id) {
         Set<String> subs = sharedPref.getStringSet(R.string.pref_subscriptions,new HashSet<String>());
@@ -100,6 +94,7 @@ public class SubscriptionManager {
 
     public void setContext(@NonNull Context context) {
         this.context = context;
+        sharedPref = Preferences.getDefault(context);
     }
 
     public void updateState(@NonNull String id) {

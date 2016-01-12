@@ -26,7 +26,6 @@ public final class PageCacheManager {
         initialized = true;
         Context context = Utils.getContext();
         directory = new File(context.getCacheDir(),"html");
-        directory.mkdirs();
         gson = new Gson();
     }
 
@@ -34,7 +33,6 @@ public final class PageCacheManager {
         if (!initialized) init();
         File file = new File(directory, id);
         try {
-            file.createNewFile();
             FileUtils.writeStringToFile(file, gson.toJson(page, Page.class));
         } catch (IOException e) {
             e.printStackTrace();

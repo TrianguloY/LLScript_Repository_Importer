@@ -16,8 +16,6 @@ import com.trianguloy.llscript.repository.settings.Preferences;
 import com.trianguloy.llscript.repository.web.ManagedWebView;
 import com.trianguloy.llscript.repository.web.RPCManager;
 
-import org.json.JSONException;
-import org.json.JSONObject;
 import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
 import org.jsoup.select.Elements;
@@ -27,7 +25,6 @@ import java.util.Arrays;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.HashSet;
-import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
@@ -94,29 +91,6 @@ public final class Utils {
         return new valueAndIndex(source.substring(start, end), start - beginning.length(), end + ending.length());
     }
 
-    public static void saveMapToPref(@NonNull Preferences pref, @StringRes int key, Map<String, Object> map) {
-        pref.edit().putString(key, new JSONObject(map).toString()).apply();
-    }
-
-    @NonNull
-    public static Map<String, Object> getMapFromPref(@NonNull Preferences pref, @StringRes int key) {
-        if (pref.contains(key)) {
-            try {
-                HashMap<String, Object> map = new HashMap<>();
-                JSONObject object = new JSONObject(pref.getString(key, ""));
-                Iterator<String> iterator = object.keys();
-                while (iterator.hasNext()) {
-                    String k = iterator.next();
-                    map.put(k, object.get(k));
-                }
-                return map;
-            } catch (JSONException e) {
-                e.printStackTrace();
-            }
-        }
-        return new HashMap<>();
-    }
-
     @NonNull
     public static Map<String, String> getAllScriptPagesAndNames(@NonNull Document document) {
         HashMap<String, String> scripts = new HashMap<>();
@@ -138,7 +112,7 @@ public final class Utils {
     public static String getNameForPageFromPref(@NonNull Preferences pref, @NonNull String page) {
         if (page.startsWith(getString(R.string.prefix_script)))
             page = page.substring(getString(R.string.prefix_script).length());
-        String result = (String) getMapFromPref(pref, R.string.pref_pageNames).get(page);
+        String result = pref.getStringMap(R.string.pref_pageNames, Collections.<String, String>emptyMap()).get(page);
         if (result != null) return result.trim();
         if (BuildConfig.DEBUG)
             Log.i(Utils.class.getSimpleName(), "Failed to find script name for " + page);
@@ -245,11 +219,7 @@ public final class Utils {
         final Preferences sharedPref = Preferences.getDefault(context);
         //new method: based on the scripts found
         Map<String, String> map = Utils.getAllScriptPagesAndNames(repoDocument);
-        HashMap<String, Object> temp = new HashMap<>();
-        for (Map.Entry<String, String> entry : map.entrySet()) {
-            temp.put(entry.getKey(), entry.getValue());
-        }
-        Utils.saveMapToPref(sharedPref, R.string.pref_pageNames, temp);
+        sharedPref.edit().putStringMap(R.string.pref_pageNames, map).apply();
         Set<String> currentScripts = map.keySet();
         if (sharedPref.contains(R.string.pref_Scripts)) {
             Set<String> oldScripts = sharedPref.getStringSet(R.string.pref_Scripts, Collections.<String>emptySet());

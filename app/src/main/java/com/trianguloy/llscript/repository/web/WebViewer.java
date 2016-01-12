@@ -38,6 +38,7 @@ import org.jsoup.nodes.Document;
 
 import java.io.File;
 import java.io.IOException;
+import java.util.Collections;
 import java.util.HashSet;
 import java.util.Map;
 import java.util.Timer;
@@ -359,7 +360,7 @@ public class WebViewer extends Activity {
             sharedPref.edit().putBoolean(R.string.pref_enableAcra, true).apply();
 
         if (sharedPref.contains(R.string.pref_subs)) {
-            Map<String, Object> map = Utils.getMapFromPref(sharedPref, R.string.pref_subs);
+            Map<String, String> map = sharedPref.getStringMap(R.string.pref_subs, Collections.<String, String>emptyMap());
             HashSet<String> set = new HashSet<>();
             for (String page : map.keySet()) {
                 set.add(Utils.getNameFromUrl(page));

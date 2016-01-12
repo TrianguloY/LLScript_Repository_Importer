@@ -11,8 +11,11 @@ import android.support.annotation.StringRes;
 
 import org.json.JSONArray;
 import org.json.JSONException;
+import org.json.JSONObject;
 
+import java.util.HashMap;
 import java.util.HashSet;
+import java.util.Iterator;
 import java.util.Map;
 import java.util.Set;
 
@@ -40,6 +43,7 @@ public class Preferences implements SharedPreferences {
         return base.getAll();
     }
 
+    //TODO: Create more overloaded methods accepting resource ids
 
     @Override
     public String getString(String key, String defValue) {
@@ -54,18 +58,18 @@ public class Preferences implements SharedPreferences {
 
     @Override
     public Set<String> getStringSet(String key, @Nullable Set<String> defValues) {
-        if (defValues == null) defValues = new HashSet<>();
         if (base.contains(key)) {
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.HONEYCOMB)
                 return base.getStringSet(key, defValues);
             JSONArray array;
             try {
-                defValues.clear();
+                HashSet<String> set = new HashSet<>();
                 array = new JSONArray(base.getString(key, ""));
-                for (int i = 0; i < array.length(); i++) {
-                    defValues.add(array.getString(i));
+                int length = array.length();
+                for (int i = 0; i < length; i++) {
+                    set.add(array.getString(i));
                 }
-                return defValues;
+                return set;
             } catch (JSONException e) {
                 e.printStackTrace();
             }
@@ -75,6 +79,28 @@ public class Preferences implements SharedPreferences {
 
     public Set<String> getStringSet(@StringRes int key, @Nullable Set<String> defValues) {
         return getStringSet(context.getString(key), defValues);
+    }
+
+    public Map<String, String> getStringMap(String key, Map<String, String> defValues) {
+        if (contains(key)) {
+            try {
+                HashMap<String, String> map = new HashMap<>();
+                JSONObject object = new JSONObject(getString(key, ""));
+                Iterator<String> iterator = object.keys();
+                while (iterator.hasNext()) {
+                    String k = iterator.next();
+                    map.put(k, (String) object.get(k));
+                }
+                return map;
+            } catch (JSONException e) {
+                e.printStackTrace();
+            }
+        }
+        return defValues;
+    }
+
+    public Map<String, String> getStringMap(@StringRes int key, Map<String, String> defValues) {
+        return getStringMap(context.getString(key), defValues);
     }
 
     @Override
@@ -170,6 +196,16 @@ public class Preferences implements SharedPreferences {
         }
 
         @NonNull
+        public Editor putStringMap(String key, Map<String, String> value) {
+            return putString(key, new JSONObject(value).toString());
+        }
+
+        @NonNull
+        public Editor putStringMap(@StringRes int key, Map<String, String> value) {
+            return putStringMap(context.getString(key), value);
+        }
+
+        @NonNull
         @Override
         public Editor putInt(String key, int value) {
             base.putInt(key, value);
@@ -226,6 +262,7 @@ public class Preferences implements SharedPreferences {
             return this;
         }
 
+        @Deprecated
         @Override
         public boolean commit() {
             return base.commit();
@@ -236,7 +273,7 @@ public class Preferences implements SharedPreferences {
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.GINGERBREAD) {
                 base.apply();
             } else {
-                commit();
+                base.commit();
             }
         }
     }

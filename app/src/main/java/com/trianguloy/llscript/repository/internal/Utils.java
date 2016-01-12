@@ -40,55 +40,17 @@ public final class Utils {
     private Utils() {
     }
 
-    //class used in findBetween
-    public static class valueAndIndex {
-        @Nullable
-        public final String value;
-        public final int from;
-        public final int to;
+    //This function returns the string between beginning and ending in source
+    @Nullable
+    public static String findBetween(@NonNull String source, @NonNull String beginning, @NonNull String ending) {
+        int start = source.indexOf(beginning, 0);
+        if (start == -1) return null;
+        start += beginning.length();
 
-        public valueAndIndex(@Nullable String v, int f, int t) {
-            value = v;
-            from = f;
-            to = t;
-        }
+        int end = source.indexOf(ending, start);
+        if (end == -1) return null;
 
-        public valueAndIndex() {
-            value = null;
-            from = -1;
-            to = -1;
-        }
-    }
-
-    //This function returns the string between beginning and ending in source starting from index, and the position o the matches (including the searched strings). If backwards is true it uses lastIndexOf
-    @NonNull
-    public static valueAndIndex findBetween(@NonNull String source, @NonNull String beginning, @NonNull String ending, int index, boolean backwards) {
-        int start;
-        int end;
-        valueAndIndex notFound = new valueAndIndex();
-
-
-        if (!backwards) {
-
-            start = source.indexOf(beginning, index == -1 ? 0 : index);
-            if (start == -1) return notFound;
-            start += beginning.length();
-
-            end = source.indexOf(ending, start);
-            if (end == -1) return notFound;
-
-        } else {
-
-            end = source.lastIndexOf(ending, index == -1 ? source.length() : index);
-            if (end == -1) return notFound;
-
-            start = source.lastIndexOf(beginning, end - beginning.length());
-            if (start == -1) return notFound;
-            start += beginning.length();
-
-        }
-
-        return new valueAndIndex(source.substring(start, end), start - beginning.length(), end + ending.length());
+        return source.substring(start, end);
     }
 
     @NonNull

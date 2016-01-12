@@ -45,9 +45,9 @@ class Repository {
             }
             if (tableStartLine == -1) tableStartLine = i;
             else if (line.startsWith(circumflex))
-                categories.add(new RepositoryCategory(Utils.findBetween(line, circumflex, "^^^", 0, false).value, i, 0));
+                categories.add(new RepositoryCategory(Utils.findBetween(line, circumflex, "^^^"), i, 0));
             else if (line.startsWith("|//**"))
-                categories.add(new RepositoryCategory(Utils.findBetween(line, "|//**", "**//||\\\\ |", 0, false).value, i, 1));
+                categories.add(new RepositoryCategory(Utils.findBetween(line, "|//**", "**//||\\\\ |"), i, 1));
         }
     }
 

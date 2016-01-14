@@ -115,7 +115,8 @@ public class ManagedWebView extends WebView {
                 Dialogs.noPageLoaded(ManagedWebView.this.context, new DialogInterface.OnClickListener() {
                     public void onClick(DialogInterface dialog, int which) {
                         loading(true);
-                        new DownloadTask(ManagedWebView.this.context, downloadTaskListener).execute(backStack.peek().url);
+                        String url = backStack.empty() ? ManagedWebView.this.context.getString(R.string.link_repository) : backStack.peek().url;
+                        new DownloadTask(ManagedWebView.this.context, downloadTaskListener).execute(url);
                     }
                 });
             }

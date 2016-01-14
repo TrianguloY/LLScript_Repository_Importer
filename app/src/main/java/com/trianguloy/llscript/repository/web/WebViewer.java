@@ -130,7 +130,7 @@ public class WebViewer extends Activity {
 
     /**
      * an item in the action bar is pressed
-     *
+     * <p/>
      * Handle action bar item clicks here. The action bar will
      * automatically handle clicks on the Home/Up button, so long
      * as you specify a parent activity in AndroidManifest.xml.
@@ -141,9 +141,18 @@ public class WebViewer extends Activity {
     @Override
     public boolean onOptionsItemSelected(@NonNull MenuItem item) {
 
-        if(webView==null){
+        if (webView == null) {
             //no webview, bad bad
             Toast.makeText(getApplicationContext(), R.string.toast_internalError, Toast.LENGTH_SHORT).show();
+            //collect as much data as possible
+            ACRA.getErrorReporter().putCustomData("MenuItem", item.getTitle().toString());
+            ACRA.getErrorReporter().putCustomData("HasSharedPref", String.valueOf(sharedPref != null));
+            ACRA.getErrorReporter().putCustomData("HasSavedState", String.valueOf(savedInstanceState != null));
+            ACRA.getErrorReporter().putCustomData("SentUrl", sentUrl);
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN_MR1) {
+                ACRA.getErrorReporter().putCustomData("isDestroyed", String.valueOf(isDestroyed()));
+            }
+            ACRA.getErrorReporter().putCustomData("isFinishing", String.valueOf(isFinishing()));
             ACRA.getErrorReporter().handleSilentException(new Throwable("webView is null"));
             return true;
         }

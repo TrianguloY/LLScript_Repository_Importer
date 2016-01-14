@@ -29,7 +29,8 @@ import org.acra.sender.HttpSender;
         resDialogPositiveButtonText = R.string.button_send,
         resDialogNegativeButtonText = R.string.button_dont_send,
         resDialogCommentPrompt = R.string.text_commentPrompt,
-        resDialogEmailPrompt = R.string.text_emailPrompt
+        resDialogEmailPrompt = R.string.text_emailPrompt,
+        buildConfigClass = BuildConfig.class
 )
 public class RepositoryImporter extends Application {
     @Override

@@ -26,13 +26,18 @@ public class PermissionActivity extends Activity {
     private static final HashMap<Integer, PermissionCallback> callbacks = new HashMap<>();
     private static int nextId = 0;
 
-    public static void checkForPermission(@NonNull Context context, String permission, PermissionCallback callback){
-        int id = nextId++;
-        callbacks.put(id, callback);
-        Intent intent = new Intent(context, PermissionActivity.class);
-        intent.putExtra(ID, id);
-        intent.putExtra(PERMISSION, permission);
-        context.startActivity(intent);
+    public static void checkForPermission(@NonNull Context context, String permission, PermissionCallback callback) {
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M && context.checkSelfPermission(permission) != PackageManager.PERMISSION_GRANTED) {
+            int id = nextId++;
+            callbacks.put(id, callback);
+            Intent intent = new Intent(context, PermissionActivity.class);
+            intent.putExtra(ID, id);
+            intent.putExtra(PERMISSION, permission);
+            context.startActivity(intent);
+        } else {
+            //pre-Marshmallow Android grants all permissions on install.
+            callback.handlePermissionResult(true);
+        }
     }
 
     private int id;
@@ -42,38 +47,31 @@ public class PermissionActivity extends Activity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         Intent intent = getIntent();
-        if(intent.hasExtra(ID) && intent.hasExtra(PERMISSION)){
-            id = intent.getIntExtra(ID,-1);
+        if (intent.hasExtra(ID) && intent.hasExtra(PERMISSION)) {
+            id = intent.getIntExtra(ID, -1);
             permission = intent.getStringExtra(PERMISSION);
             checkForPermission();
         }
-        finish();
+        else finish();
     }
 
-    private void checkForPermission(){
-        if(Build.VERSION.SDK_INT >= Build.VERSION_CODES.M && checkSelfPermission(permission) != PackageManager.PERMISSION_GRANTED){
-            if(shouldShowRequestPermissionRationale(Manifest.permission.IMPORT_SCRIPTS)){
-                Dialogs.explainScriptPermission(this, new DialogInterface.OnClickListener() {
+    @TargetApi(Build.VERSION_CODES.M)
+    private void checkForPermission() {
+        if (shouldShowRequestPermissionRationale(Manifest.permission.IMPORT_SCRIPTS)) {
+            Dialogs.explainScriptPermission(this, new DialogInterface.OnClickListener() {
 
-                    @Override
-                    public void onClick(DialogInterface dialog, int which) {
-                        requestPermission();
-                    }
-                });
-            }
-            else {
-                requestPermission();
-            }
-        }
-        else {
-            //pre-Marshmallow Android grants all permissions on install.
-            callbacks.get(id).handlePermissionResult(true);
-            callbacks.remove(id);
+                @Override
+                public void onClick(DialogInterface dialog, int which) {
+                    requestPermission();
+                }
+            });
+        } else {
+            requestPermission();
         }
     }
 
     @TargetApi(Build.VERSION_CODES.M)
-    private void requestPermission(){
+    private void requestPermission() {
         requestPermissions(new String[]{permission}, 0);
     }
 
@@ -82,9 +80,10 @@ public class PermissionActivity extends Activity {
         super.onRequestPermissionsResult(requestCode, permissions, grantResults);
         callbacks.get(id).handlePermissionResult(grantResults.length == 1 && grantResults[0] == PackageManager.PERMISSION_GRANTED);
         callbacks.remove(id);
+        finish();
     }
 
-    public interface PermissionCallback{
-        void handlePermissionResult(boolean isGranted);
-    }
+public interface PermissionCallback {
+    void handlePermissionResult(boolean isGranted);
+}
 }

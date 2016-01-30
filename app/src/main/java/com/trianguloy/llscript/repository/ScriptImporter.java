@@ -68,7 +68,7 @@ public class ScriptImporter extends Service {
      */
     @Deprecated
     public void onStartCommand(@NonNull Intent intent) {
-        ComponentName componentName = intent.hasExtra(Constants.EXTRA_RECEIVER) ? ComponentName.unflattenFromString(intent.getStringExtra(Constants.EXTRA_RECEIVER)) : null;
+        final ComponentName componentName = intent.hasExtra(Constants.EXTRA_RECEIVER) ? ComponentName.unflattenFromString(intent.getStringExtra(Constants.EXTRA_RECEIVER)) : null;
         if (Utils.hasValidLauncher(this)) {
             if (intent.hasExtra(Constants.EXTRA_CODE) && intent.hasExtra(Constants.EXTRA_NAME)) {
                 boolean forceUpdate = intent.getBooleanExtra(Constants.EXTRA_FORCE_UPDATE, false);
@@ -80,6 +80,7 @@ public class ScriptImporter extends Service {
                         @Override
                         public void onImportFinished(int scriptId) throws RemoteException {
                             Intent response = new Intent(Intent.ACTION_VIEW);
+                            response.setComponent(componentName);
                             response.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_REORDER_TO_FRONT);
                             response.putExtra(Constants.EXTRA_LOADED_SCRIPT_ID, scriptId);
                             response.putExtra(Constants.EXTRA_STATUS, Constants.STATUS_OK);
@@ -91,6 +92,7 @@ public class ScriptImporter extends Service {
                         public void onImportFailed(Failure failure) throws RemoteException {
                             if (failure == Failure.SCRIPT_ALREADY_EXISTS) {
                                 Intent response = new Intent(Intent.ACTION_VIEW);
+                                response.setComponent(componentName);
                                 response.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_REORDER_TO_FRONT);
                                 response.putExtra(Constants.EXTRA_STATUS, Constants.STATUS_UPDATE_CONFIRMATION_REQUIRED);
                                 response.putExtra(Constants.EXTRA_NAME, name);

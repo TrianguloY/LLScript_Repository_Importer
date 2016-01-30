@@ -263,13 +263,13 @@ public final class ImportUtils {
         //flags
         text.append("//Flags: ");
         int flags = script.getFlags();
-        if ((flags & Constants.FLAG_CUSTOM_MENU) != 0) {
+        if ((flags & Script.FLAG_CUSTOM_MENU) != 0) {
             text.append("app ");
         }
-        if ((flags & Constants.FLAG_ITEM_MENU) != 0) {
+        if ((flags & Script.FLAG_ITEM_MENU) != 0) {
             text.append("item ");
         }
-        if ((flags & Constants.FLAG_APP_MENU) != 0) {
+        if ((flags & Script.FLAG_APP_MENU) != 0) {
             text.append("custom ");
         }
         text.append("\n");

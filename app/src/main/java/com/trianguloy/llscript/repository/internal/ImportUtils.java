@@ -1,9 +1,13 @@
 package com.trianguloy.llscript.repository.internal;
 
 import android.app.Activity;
+import android.content.ComponentName;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.ServiceConnection;
+import android.os.IBinder;
+import android.os.RemoteException;
 import android.support.annotation.NonNull;
 import android.text.Html;
 
@@ -11,6 +15,10 @@ import com.trianguloy.llscript.repository.Constants;
 import com.trianguloy.llscript.repository.Manifest;
 import com.trianguloy.llscript.repository.R;
 import com.trianguloy.llscript.repository.ScriptImporter;
+import com.trianguloy.llscript.repository.aidl.Failure;
+import com.trianguloy.llscript.repository.aidl.ICallback;
+import com.trianguloy.llscript.repository.aidl.ILightningService;
+import com.trianguloy.llscript.repository.aidl.Script;
 import com.trianguloy.llscript.repository.settings.Preferences;
 import com.trianguloy.llscript.repository.web.ManagedWebView;
 
@@ -83,7 +91,7 @@ public final class ImportUtils {
             if (name == null) {
                 name = context.getString(R.string.text_nameNotFound);
             }
-            list.add(new Script(code, name));
+            list.add(new Script(code, name, 0));
         }
         return list;
     }
@@ -160,7 +168,7 @@ public final class ImportUtils {
     }
 
     /**
-     * call to {@link Dialogs#importScript(Activity, String, String, Dialogs.OnImportListener, Dialogs.OnImportListener)}
+     * call to {@link Dialogs#importScript(Activity, Script, Dialogs.OnImportListener, Dialogs.OnImportListener)}
      * to import a single script
      *
      * @param context     the context used
@@ -168,50 +176,93 @@ public final class ImportUtils {
      * @param script      the script
      * @param aboutString the header of the imported script
      */
-    private static void showImportScript(@NonNull final Activity context, @NonNull final Listener listener, @NonNull Script script, String aboutString) {
+    private static void showImportScript(@NonNull final Activity context, @NonNull final Listener listener, @NonNull final Script script, String aboutString) {
 
         String code = script.getCode().trim();
 
-        if (Preferences.getDefault(context).getBoolean(R.string.pref_aboutScript, true))
+        if (Preferences.getDefault(context).getBoolean(R.string.pref_aboutScript, true)) {
             code = aboutString + code;
+        }
+        script.setCode(code);
 
-        Dialogs.importScript(context, code, script.getName(), new Dialogs.OnImportListener() {
+        Dialogs.importScript(context, script, new Dialogs.OnImportListener() {
             @Override
-            public void onClick(String code, String name, int flags) {
-                sendScriptToLauncher(context, code, name, flags);
+            public void onClick(Script script) {
+                sendScriptToLauncher(context, script);
                 listener.importFinished();
             }
         }, new Dialogs.OnImportListener() {
             @Override
-            public void onClick(String code, String name, int flags) {
-                shareAsText(context, code, name, flags);
+            public void onClick(Script script) {
+                shareAsText(context, script);
             }
         });
 
     }
 
     //Send & share functions
-    private static void sendScriptToLauncher(@NonNull final Context context, String code, String scriptName, @Constants.ScriptFlag int flags) {
-        // let's import the script
-        final Intent intent = new Intent(context, ScriptImporter.class);
-        intent.putExtra(Constants.EXTRA_CODE, code);
-        intent.putExtra(Constants.EXTRA_NAME, scriptName);
-        intent.putExtra(Constants.EXTRA_FLAGS, flags);
+
+    /**
+     * sends a script to LL for import
+     * @param context a context
+     * @param script the script
+     */
+    private static void sendScriptToLauncher(@NonNull final Context context, final Script script) {
         PermissionActivity.checkForPermission(context, Manifest.permission.IMPORT_SCRIPTS, new PermissionActivity.PermissionCallback() {
             @Override
             public void handlePermissionResult(boolean isGranted) {
-                if (isGranted) context.startService(intent);
+                if (isGranted) {
+                    // let's import the script
+                    context.bindService(new Intent(context, ScriptImporter.class), new ServiceConnection() {
+                        ServiceConnection connection = this;
+
+                        @Override
+                        public void onServiceConnected(ComponentName name, IBinder service) {
+                            final ILightningService lightningService = ILightningService.Stub.asInterface(service);
+                            try {
+                                lightningService.importScript(script, false, new ICallback.Stub() {
+                                    @Override
+                                    public void onImportFinished(int scriptId) throws RemoteException {
+                                        context.unbindService(connection);
+                                    }
+
+                                    @Override
+                                    public void onImportFailed(Failure failure) throws RemoteException {
+                                        if (failure == Failure.SCRIPT_ALREADY_EXISTS) {
+                                            Dialogs.confirmUpdate(context, script, lightningService, new Runnable() {
+                                                @Override
+                                                public void run() {
+                                                    context.unbindService(connection);
+                                                }
+                                            });
+                                        } else {
+                                            context.unbindService(connection);
+                                        }
+                                    }
+                                });
+                            } catch (RemoteException e) {
+                                e.printStackTrace();
+                            }
+                        }
+
+                        @Override
+                        public void onServiceDisconnected(ComponentName name) {
+
+                        }
+                    }, Context.BIND_AUTO_CREATE);
+                }
             }
         });
     }
 
-    private static void shareAsText(@NonNull Context context, String code, String scriptName, @Constants.ScriptFlag int flags) {
+    private static void shareAsText(@NonNull Context context, Script script) {
         //share the code as plain text
 
         StringBuilder text = new StringBuilder("");
 
         //flags
         text.append("//Flags: ");
+        int flags = script.getFlags();
         if ((flags & Constants.FLAG_CUSTOM_MENU) != 0) {
             text.append("app ");
         }
@@ -225,9 +276,9 @@ public final class ImportUtils {
 
         //name
         text.append("//Name: ")
-                .append(scriptName)
+                .append(script.getName())
                 .append("\n")
-                .append(code);
+                .append(script.getCode());
 
         text.append("\n");
 
@@ -239,27 +290,5 @@ public final class ImportUtils {
 
     public interface Listener {
         void importFinished();
-    }
-
-    private static class Script {
-        private String name;
-        private String code;
-
-        public Script(String code, String name) {
-            this.code = code;
-            this.name = name;
-        }
-
-        public String getName() {
-            return name;
-        }
-
-        public void setName(String name) {
-            this.name = name;
-        }
-
-        public String getCode() {
-            return code;
-        }
     }
 }

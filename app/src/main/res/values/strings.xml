@@ -323,6 +323,7 @@
     <string name="intent_actionBackgroundReceiver">com.twofortyfouram.locale.intent.action.FIRE_SETTING</string>
     <string name="intent_backgroundReceiverClass">net.pierrox.lightning_launcher.util.FireReceiver</string>
     <string name="intent_backgroundReceiverExtraBundle">com.twofortyfouram.locale.intent.extra.BUNDLE</string>
+    <string name="intent_foregroundReceiverClass">net.pierrox.lightning_launcher.activities.Dashboard</string>
 
     <!-- generic buttons -->
     <string name="button_cancel">Cancel</string>

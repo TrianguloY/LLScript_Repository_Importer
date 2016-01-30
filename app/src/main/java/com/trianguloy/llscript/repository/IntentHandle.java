@@ -8,7 +8,6 @@ import android.support.annotation.Nullable;
 import android.widget.Toast;
 
 import com.trianguloy.llscript.repository.internal.AppChooser;
-import com.trianguloy.llscript.repository.internal.Dialogs;
 import com.trianguloy.llscript.repository.web.WebViewer;
 
 
@@ -33,21 +32,7 @@ public class IntentHandle extends Activity {
                         finish();
                     }
                 }).show();
-            } else if (intent.hasExtra(Constants.EXTRA_STATUS)) {
-                int status = (int) intent.getDoubleExtra(Constants.EXTRA_STATUS, 0);
-                switch (status) {
-                    case Constants.STATUS_OK:
-                        //loaded a script, return to page
-                        openWebViewer();
-                        break;
-                    case Constants.STATUS_UPDATE_CONFIRMATION_REQUIRED:
-                        //noinspection ResourceType
-                        Dialogs.confirmUpdate(this, intent.getStringExtra(Constants.EXTRA_NAME), intent.getStringExtra(Constants.EXTRA_CODE), (int) intent.getDoubleExtra(Constants.EXTRA_FLAGS, 0));
-                        break;
-                    default:
-                        throw new IllegalArgumentException("Invalid status code returned from script: " + status);
-                }
-            } else {
+            }  else {
                 Toast.makeText(getApplicationContext(), getString(R.string.toast_badString), Toast.LENGTH_LONG).show();
                 finish();
             }

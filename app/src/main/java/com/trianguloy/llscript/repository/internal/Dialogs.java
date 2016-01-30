@@ -11,6 +11,7 @@ import android.content.Intent;
 import android.graphics.Color;
 import android.net.Uri;
 import android.os.Build;
+import android.os.RemoteException;
 import android.provider.Settings;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
@@ -26,7 +27,10 @@ import com.trianguloy.llscript.repository.Constants;
 import com.trianguloy.llscript.repository.IntentHandle;
 import com.trianguloy.llscript.repository.Manifest;
 import com.trianguloy.llscript.repository.R;
-import com.trianguloy.llscript.repository.ScriptImporter;
+import com.trianguloy.llscript.repository.aidl.Failure;
+import com.trianguloy.llscript.repository.aidl.ICallback;
+import com.trianguloy.llscript.repository.aidl.ILightningService;
+import com.trianguloy.llscript.repository.aidl.Script;
 import com.trianguloy.llscript.repository.web.ManagedWebView;
 
 import java.util.ArrayList;
@@ -47,7 +51,7 @@ public final class Dialogs {
     }
 
     private static void error(@Nullable Context context, @Nullable DialogInterface.OnClickListener onClose, String message) {
-        if(context==null){
+        if (context == null) {
             return;
         }
         new AlertDialog.Builder(context)
@@ -139,17 +143,18 @@ public final class Dialogs {
      * Two buttons:
      * - Ok -> opens play store
      * - Continue -> closes the message
+     *
      * @param context the context to use
      * @param message the message to attach in the alert
      */
     private static void baseLauncherProblem(final Context context, String message) {
         if ((context instanceof Service) && Build.VERSION.SDK_INT >= Build.VERSION_CODES.M && !Settings.canDrawOverlays(context)) {
-            Toast.makeText(context,message,Toast.LENGTH_LONG).show();
+            Toast.makeText(context, message, Toast.LENGTH_LONG).show();
         } else {
             AlertDialog ad = new AlertDialog.Builder(context)
                     .setCancelable(false)
                     .setTitle(R.string.title_warning)
-                    .setMessage(message+"\n\n"+context.getString(R.string.messageSuffix_launcherProblem))
+                    .setMessage(message + "\n\n" + context.getString(R.string.messageSuffix_launcherProblem))
                     .setPositiveButton(R.string.button_ok, new DialogInterface.OnClickListener() {
                         @Override
                         public void onClick(DialogInterface dialog, int which) {
@@ -182,17 +187,17 @@ public final class Dialogs {
         baseScriptList(context, webView, ids, context.getString(R.string.title_updatedSubs));
     }
 
-    private static void baseScriptList(@NonNull final Context context, @NonNull final ManagedWebView webView, @NonNull final List<String> ids, String title){
+    private static void baseScriptList(@NonNull final Context context, @NonNull final ManagedWebView webView, @NonNull final List<String> ids, String title) {
         List<String> names = new ArrayList<>();
-        for (String id: ids){
-            names.add(Utils.getNameForPage(context,id));
+        for (String id : ids) {
+            names.add(Utils.getNameForPage(context, id));
         }
         new AlertDialog.Builder(context)
                 .setTitle(title)
                 .setItems(names.toArray(new String[names.size()]), new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
-                        webView.show(context.getString(R.string.link_scriptPagePrefix)+ ids.get(which));
+                        webView.show(context.getString(R.string.link_scriptPagePrefix) + ids.get(which));
                     }
                 })
                 .setNeutralButton(context.getString(R.string.button_ok), null)
@@ -203,16 +208,24 @@ public final class Dialogs {
         baseScriptList(context, webView, ids, context.getString(R.string.title_newScripts2));
     }
 
-    public static void importScript(@NonNull Activity context, final String code, String scriptName, @NonNull final OnImportListener onImport, @NonNull final OnImportListener onShare) {
+    /**
+     * shows a dialog with options to import or share a script
+     *
+     * @param context  an activity
+     * @param script   the script to import
+     * @param onImport if import button clicked
+     * @param onShare  if share button clicked
+     */
+    public static void importScript(@NonNull Activity context, final Script script, @NonNull final OnImportListener onImport, @NonNull final OnImportListener onShare) {
 
         View layout = context.getLayoutInflater().inflate(R.layout.confirm_alert, (ViewGroup) context.findViewById(R.id.webView).getRootView(), false);
         if (Build.VERSION.SDK_INT < Build.VERSION_CODES.HONEYCOMB) {
             layout.setBackgroundColor(Color.WHITE);
         }
         final EditText contentText = ((EditText) layout.findViewById(R.id.editText2));
-        contentText.setText(code);
+        contentText.setText(script.getCode());
         final EditText nameText = ((EditText) layout.findViewById(R.id.editText));
-        nameText.setText(scriptName);
+        nameText.setText(script.getName());
         final CheckBox[] flagsBoxes = {
                 (CheckBox) layout.findViewById(R.id.checkBox1),
                 (CheckBox) layout.findViewById(R.id.checkBox2),
@@ -224,13 +237,19 @@ public final class Dialogs {
                 .setView(layout)
                 .setPositiveButton(R.string.button_import, new DialogInterface.OnClickListener() {
                     public void onClick(DialogInterface dialog, int which) {
-                        onImport.onClick(contentText.getText().toString(), nameText.getText().toString(), checkBoxToFlag(flagsBoxes));
+                        script.setCode(contentText.getText().toString());
+                        script.setName(nameText.getText().toString());
+                        script.setFlags(checkBoxToFlag(flagsBoxes));
+                        onImport.onClick(script);
                     }
                 })
                 .setNeutralButton(R.string.button_share, new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialogInterface, int i) {
-                        onShare.onClick(contentText.getText().toString(), nameText.getText().toString(), checkBoxToFlag(flagsBoxes));
+                        script.setCode(contentText.getText().toString());
+                        script.setName(nameText.getText().toString());
+                        script.setFlags(checkBoxToFlag(flagsBoxes));
+                        onShare.onClick(script);
                     }
                 })
                 .setNegativeButton(R.string.button_exit, null)
@@ -238,16 +257,24 @@ public final class Dialogs {
 
         ad.show();
 
-        if(Utils.hasValidLauncher(context)){
+        if (!Utils.hasValidLauncher(context)) {
             ad.getButton(AlertDialog.BUTTON_POSITIVE).setEnabled(false);
         }
     }
 
-    @Constants.ScriptFlag
+    /**
+     * convert checkboxes to the combination of flags which are represented by it
+     * used in {@link #importScript(Activity, Script, OnImportListener, OnImportListener)}
+     * {@link R.layout#confirm_alert}
+     *
+     * @param flagsBoxes the checkboxes
+     * @return a flag combination
+     */
+    @Script.ScriptFlag
     private static int checkBoxToFlag(CheckBox[] flagsBoxes) {
-        return (flagsBoxes[0].isChecked() ? Constants.FLAG_APP_MENU : 0) +
-                (flagsBoxes[1].isChecked() ? Constants.FLAG_ITEM_MENU : 0) +
-                (flagsBoxes[2].isChecked() ? Constants.FLAG_CUSTOM_MENU : 0);
+        return (flagsBoxes[0].isChecked() ? Script.FLAG_APP_MENU : 0) +
+                (flagsBoxes[1].isChecked() ? Script.FLAG_ITEM_MENU : 0) +
+                (flagsBoxes[2].isChecked() ? Script.FLAG_CUSTOM_MENU : 0);
     }
 
     public static void themeChanged(@NonNull final Context context) {
@@ -319,28 +346,47 @@ public final class Dialogs {
                 .show();
     }
 
-    public static void confirmUpdate(@NonNull final IntentHandle context, final String scriptName, final String code,@Constants.ScriptFlag final int flags) {
+    /**
+     * ask the user if an already existing script should be overwritten
+     *
+     * @param context          a context
+     * @param script           the script
+     * @param lightningService an active service
+     * @param onFinish         runnable which is run when the action is finished
+     */
+    public static void confirmUpdate(@NonNull final Context context, final Script script, final ILightningService lightningService, final Runnable onFinish) {
         new AlertDialog.Builder(context)
                 .setTitle(R.string.title_updateConfirm)
                 .setMessage(R.string.message_updateConfirm)
                 .setNegativeButton(R.string.button_no, new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
-                        context.openWebViewer();
+                        onFinish.run();
                     }
                 })
                 .setPositiveButton(R.string.button_yes, new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
-                        final Intent intent = new Intent(context, ScriptImporter.class);
-                        intent.putExtra(Constants.EXTRA_CODE, code);
-                        intent.putExtra(Constants.EXTRA_NAME, scriptName);
-                        intent.putExtra(Constants.EXTRA_FLAGS, flags);
-                        intent.putExtra(Constants.EXTRA_FORCE_UPDATE, true);
                         PermissionActivity.checkForPermission(context, Manifest.permission.IMPORT_SCRIPTS, new PermissionActivity.PermissionCallback() {
                             @Override
                             public void handlePermissionResult(boolean isGranted) {
-                                if (isGranted)context.startService(intent);
+                                if (isGranted) {
+                                    try {
+                                        lightningService.importScript(script, true, new ICallback.Stub() {
+                                            @Override
+                                            public void onImportFinished(int scriptId) throws RemoteException {
+                                                onFinish.run();
+                                            }
+
+                                            @Override
+                                            public void onImportFailed(Failure failure) throws RemoteException {
+                                                onFinish.run();
+                                            }
+                                        });
+                                    } catch (RemoteException e) {
+                                        e.printStackTrace();
+                                    }
+                                }
                             }
                         });
                     }
@@ -360,11 +406,11 @@ public final class Dialogs {
         new AlertDialog.Builder(context)
                 .setTitle(R.string.title_permissionMissing)
                 .setMessage(R.string.message_permissionSystemWindowMissing)
-                .setNeutralButton(R.string.button_ok,onClickListener)
+                .setNeutralButton(R.string.button_ok, onClickListener)
                 .show();
     }
 
     public interface OnImportListener {
-        void onClick(String code, String name,@Constants.ScriptFlag int flags);
+        void onClick(Script script);
     }
 }

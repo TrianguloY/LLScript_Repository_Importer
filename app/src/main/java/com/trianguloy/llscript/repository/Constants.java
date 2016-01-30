@@ -1,11 +1,6 @@
 package com.trianguloy.llscript.repository;
 
 
-import android.support.annotation.IntDef;
-
-import java.lang.annotation.Retention;
-import java.lang.annotation.RetentionPolicy;
-
 /**
  * Static constants used in the project (like R.strings, but also other types)
  */
@@ -14,15 +9,6 @@ public final class Constants {
 
     private Constants() {
     }
-
-    //script flags
-    @Retention(RetentionPolicy.SOURCE)
-    @IntDef(flag = true, value = {FLAG_APP_MENU,FLAG_ITEM_MENU,FLAG_CUSTOM_MENU})
-    public @interface ScriptFlag {
-    }
-    public static final int FLAG_APP_MENU = 1 << 1;
-    public static final int FLAG_ITEM_MENU = 1 << 2;
-    public static final int FLAG_CUSTOM_MENU = 1 << 3;
 
     //App constants
     public static final int MANAGER_ID = -3;
@@ -46,6 +32,7 @@ public final class Constants {
     public static final String EXTRA_FORWARD = "forward";
     public static final String EXTRA_BACKGROUND = "background";
     public static final String EXTRA_STATUS = "status";
+    public static final String EXTRA_LOADED_SCRIPT_ID = "loadedScriptId";
 
     public static final int STATUS_LAUNCHER_PROBLEM = 3;
     public static final int STATUS_UPDATE_CONFIRMATION_REQUIRED = 2;
@@ -64,6 +51,7 @@ public final class Constants {
     public static final String KEY_FORCE_UPDATE = "forceUpdate";
     public static final String KEY_CODE = "code";
     public static final String KEY_RETURN_RESULT_TO = "returnTo";
+    public static final String KEY_CALLBACK_ID = "callbackId";;
 
     public static final int TEN_MEGABYTE = 10 * 1024 * 1024;
     public static final int HUNDRED_MILLISECONDS = 100;

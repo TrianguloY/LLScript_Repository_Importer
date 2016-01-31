@@ -34,8 +34,6 @@ import java.util.Set;
  */
 public final class Utils {
 
-    private static Context context;
-
     private Utils() {
     }
 

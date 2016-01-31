@@ -1,1 +1,1 @@
-include ':app', ':aidl_library'
+include ':app'

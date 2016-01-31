@@ -1,9 +1,15 @@
 package com.trianguloy.llscript.repository.aidl;
 
+import android.content.Context;
 import android.os.Parcel;
 import android.os.Parcelable;
 import android.support.annotation.IntDef;
+import android.support.annotation.NonNull;
+import android.support.annotation.Nullable;
+import android.support.annotation.RawRes;
 
+import java.io.IOException;
+import java.io.InputStream;
 import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
 import java.util.regex.Matcher;
@@ -12,6 +18,8 @@ import java.util.regex.Pattern;
 /**
  * Represents an LL script
  * Created by Lukas on 30.01.2016.
+ * <p/>
+ * SHARED CLASS, BE CAREFUL WHEN MODIFYING
  */
 public class Script implements Parcelable {
 
@@ -33,7 +41,11 @@ public class Script implements Parcelable {
     public Script(String code, String name, @ScriptFlag int flags) {
         this.code = code;
         this.name = name;
-        this.flags = flags;
+        this.flags = ensureFlags(flags);
+    }
+
+    public Script(Context context, @RawRes int codeRes, String name, @ScriptFlag int flags) {
+        this(rawResourceToString(context, codeRes), name, flags);
     }
 
     public String getCode() {
@@ -50,7 +62,7 @@ public class Script implements Parcelable {
     }
 
     public void setFlags(@ScriptFlag int flags) {
-        this.flags = flags;
+        this.flags = ensureFlags(flags);
     }
 
     public String getName() {
@@ -90,11 +102,7 @@ public class Script implements Parcelable {
             String code = in.readString();
             String name = in.readString();
             int flagsInsecure = in.readInt();
-            int flags = 0;
-            if ((flagsInsecure & FLAG_APP_MENU) != 0) flags |= FLAG_APP_MENU;
-            if ((flagsInsecure & FLAG_ITEM_MENU) != 0) flags |= FLAG_ITEM_MENU;
-            if ((flagsInsecure & FLAG_CUSTOM_MENU) != 0) flags |= FLAG_CUSTOM_MENU;
-            return new Script(code, name, flags);
+            return new Script(code, name, ensureFlags(flagsInsecure));
         }
 
         @Override
@@ -102,4 +110,31 @@ public class Script implements Parcelable {
             return new Script[size];
         }
     };
+
+    @Nullable
+    private static String rawResourceToString(@NonNull Context context, @RawRes int rawRes) {
+        try {
+            InputStream inputStream = context.getResources().openRawResource(rawRes);
+            byte[] bytes = new byte[1024];
+            StringBuilder builder = new StringBuilder(inputStream.available());
+            int count;
+            while ((count = inputStream.read(bytes)) > 0) {
+                builder.append(new String(bytes, 0, count));
+            }
+            inputStream.close();
+            return builder.toString();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        return null;
+    }
+
+    @Script.ScriptFlag
+    private static int ensureFlags(int flagsInsecure) {
+        int flags = 0;
+        if ((flagsInsecure & FLAG_APP_MENU) != 0) flags |= FLAG_APP_MENU;
+        if ((flagsInsecure & FLAG_ITEM_MENU) != 0) flags |= FLAG_ITEM_MENU;
+        if ((flagsInsecure & FLAG_CUSTOM_MENU) != 0) flags |= FLAG_CUSTOM_MENU;
+        return flags;
+    }
 }

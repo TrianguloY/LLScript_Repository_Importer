@@ -6,6 +6,8 @@ import android.os.Parcelable;
 /**
  * Represents an issue while importing a script
  * Created by Lukas on 30.01.2016.
+ * <p/>
+ * SHARED CLASS, BE CAREFUL WHEN MODIFYING
  */
 public enum Failure implements Parcelable {
 

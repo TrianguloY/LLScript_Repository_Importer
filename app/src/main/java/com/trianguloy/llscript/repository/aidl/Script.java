@@ -18,7 +18,6 @@ import java.util.regex.Pattern;
 /**
  * Represents an LL script
  * Created by Lukas on 30.01.2016.
- * <p/>
  * SHARED CLASS, BE CAREFUL WHEN MODIFYING
  */
 public class Script implements Parcelable {

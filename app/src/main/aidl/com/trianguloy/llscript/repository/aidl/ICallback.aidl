@@ -1,4 +1,3 @@
-// ICallback.aidl
 package com.trianguloy.llscript.repository.aidl;
 
 // Declare any non-default types here with import statements

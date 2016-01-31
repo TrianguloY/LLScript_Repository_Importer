@@ -169,7 +169,7 @@ public class ScriptImporter extends Service {
      * @param background if the script should be run in background
      */
     private void runScript(int id, String data, boolean background) {
-        sendAction(Constants.ACTION_RUN, id + "/" + data, background);
+        sendAction(Constants.ACTION_RUN, id + (data == null ? "" : "/" + data), background);
     }
 
     /**

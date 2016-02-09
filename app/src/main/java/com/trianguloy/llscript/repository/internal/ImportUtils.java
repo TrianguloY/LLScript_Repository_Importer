@@ -16,7 +16,7 @@ import com.trianguloy.llscript.repository.Manifest;
 import com.trianguloy.llscript.repository.R;
 import com.trianguloy.llscript.repository.ScriptImporter;
 import com.trianguloy.llscript.repository.aidl.Failure;
-import com.trianguloy.llscript.repository.aidl.ICallback;
+import com.trianguloy.llscript.repository.aidl.IImportCallback;
 import com.trianguloy.llscript.repository.aidl.ILightningService;
 import com.trianguloy.llscript.repository.aidl.Script;
 import com.trianguloy.llscript.repository.settings.Preferences;
@@ -204,8 +204,9 @@ public final class ImportUtils {
 
     /**
      * sends a script to LL for import
+     *
      * @param context a context
-     * @param script the script
+     * @param script  the script
      */
     private static void sendScriptToLauncher(@NonNull final Context context, final Script script) {
         PermissionActivity.checkForPermission(context, Manifest.permission.IMPORT_SCRIPTS, new PermissionActivity.PermissionCallback() {
@@ -220,14 +221,14 @@ public final class ImportUtils {
                         public void onServiceConnected(ComponentName name, IBinder service) {
                             final ILightningService lightningService = ILightningService.Stub.asInterface(service);
                             try {
-                                lightningService.importScript(script, false, new ICallback.Stub() {
+                                lightningService.importScript(script, false, new IImportCallback.Stub() {
                                     @Override
-                                    public void onImportFinished(int scriptId) throws RemoteException {
+                                    public void onFinish(int scriptId) throws RemoteException {
                                         context.unbindService(connection);
                                     }
 
                                     @Override
-                                    public void onImportFailed(Failure failure) throws RemoteException {
+                                    public void onFailure(Failure failure) throws RemoteException {
                                         if (failure == Failure.SCRIPT_ALREADY_EXISTS) {
                                             Dialogs.confirmUpdate(context, script, lightningService, new Runnable() {
                                                 @Override

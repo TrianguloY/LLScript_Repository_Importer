@@ -3,9 +3,9 @@ package com.trianguloy.llscript.repository.aidl;
 // Declare any non-default types here with import statements
 import com.trianguloy.llscript.repository.aidl.Failure;
 
-interface ICallback {
+interface IImportCallback {
 
-     void onImportFinished(int scriptId);
+     void onFinish(int scriptId);
 
-     void onImportFailed(in Failure failure);
+     void onFailure(in Failure failure);
 }

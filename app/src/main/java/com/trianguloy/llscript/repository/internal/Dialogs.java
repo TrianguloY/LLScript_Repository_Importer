@@ -28,7 +28,7 @@ import com.trianguloy.llscript.repository.IntentHandle;
 import com.trianguloy.llscript.repository.Manifest;
 import com.trianguloy.llscript.repository.R;
 import com.trianguloy.llscript.repository.aidl.Failure;
-import com.trianguloy.llscript.repository.aidl.ICallback;
+import com.trianguloy.llscript.repository.aidl.IImportCallback;
 import com.trianguloy.llscript.repository.aidl.ILightningService;
 import com.trianguloy.llscript.repository.aidl.Script;
 import com.trianguloy.llscript.repository.web.ManagedWebView;
@@ -372,14 +372,14 @@ public final class Dialogs {
                             public void handlePermissionResult(boolean isGranted) {
                                 if (isGranted) {
                                     try {
-                                        lightningService.importScript(script, true, new ICallback.Stub() {
+                                        lightningService.importScript(script, true, new IImportCallback.Stub() {
                                             @Override
-                                            public void onImportFinished(int scriptId) throws RemoteException {
+                                            public void onFinish(int scriptId) throws RemoteException {
                                                 onFinish.run();
                                             }
 
                                             @Override
-                                            public void onImportFailed(Failure failure) throws RemoteException {
+                                            public void onFailure(Failure failure) throws RemoteException {
                                                 onFinish.run();
                                             }
                                         });

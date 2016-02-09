@@ -33,7 +33,10 @@ public final class Constants {
     public static final String EXTRA_BACKGROUND = "background";
     public static final String EXTRA_STATUS = "status";
     public static final String EXTRA_LOADED_SCRIPT_ID = "loadedScriptId";
+    public static final String EXTRA_RUN_ONLY = "runOnly";
+    public static final String EXTRA_RESULT = "result";
 
+    public static final int STATUS_EVAL_FAILED = 4;
     public static final int STATUS_LAUNCHER_PROBLEM = 3;
     public static final int STATUS_UPDATE_CONFIRMATION_REQUIRED = 2;
     public static final int STATUS_OK = 1;

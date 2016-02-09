@@ -12,7 +12,8 @@ public enum Failure implements Parcelable {
 
     LAUNCHER_INVALID,
     INVALID_INPUT,
-    SCRIPT_ALREADY_EXISTS;
+    SCRIPT_ALREADY_EXISTS,
+    EVAL_FAILED;
 
 
     @Override

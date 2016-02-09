@@ -13,8 +13,9 @@ import android.support.annotation.NonNull;
 import android.widget.Toast;
 
 import com.trianguloy.llscript.repository.aidl.Failure;
-import com.trianguloy.llscript.repository.aidl.ICallback;
+import com.trianguloy.llscript.repository.aidl.IImportCallback;
 import com.trianguloy.llscript.repository.aidl.ILightningService;
+import com.trianguloy.llscript.repository.aidl.IResultCallback;
 import com.trianguloy.llscript.repository.aidl.Script;
 import com.trianguloy.llscript.repository.internal.Utils;
 
@@ -30,7 +31,7 @@ import java.util.Map;
  */
 public class ScriptImporter extends Service {
 
-    private Map<Integer, ICallback> callbackMap = new HashMap<>();
+    private Map<Integer, Object> callbackMap = new HashMap<>();
     private int nextRequestId = 0;
 
     /**
@@ -76,9 +77,9 @@ public class ScriptImporter extends Service {
                 final String name = intent.getStringExtra(Constants.EXTRA_NAME);
                 @Script.ScriptFlag final int flags = intent.getIntExtra(Constants.EXTRA_FLAGS, 0);
                 try {
-                    lightningService.importScript(new Script(code, name, flags), forceUpdate, new ICallback.Stub() {
+                    lightningService.importScript(new Script(code, name, flags), forceUpdate, new IImportCallback.Stub() {
                         @Override
-                        public void onImportFinished(int scriptId) throws RemoteException {
+                        public void onFinish(int scriptId) throws RemoteException {
                             Intent response = new Intent(Intent.ACTION_VIEW);
                             response.setComponent(componentName);
                             response.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_REORDER_TO_FRONT);
@@ -89,7 +90,7 @@ public class ScriptImporter extends Service {
                         }
 
                         @Override
-                        public void onImportFailed(Failure failure) throws RemoteException {
+                        public void onFailure(Failure failure) throws RemoteException {
                             if (failure == Failure.SCRIPT_ALREADY_EXISTS) {
                                 Intent response = new Intent(Intent.ACTION_VIEW);
                                 response.setComponent(componentName);
@@ -223,21 +224,35 @@ public class ScriptImporter extends Service {
      * the interface exposed to callers
      */
     private ILightningService lightningService = new ILightningService.Stub() {
+        /**
+         * import a script into LL
+         * @param script the script
+         * @param overwriteIfExists if it should be replaced if already existing
+         * @param callback callback receiving result and errors
+         * @throws RemoteException
+         */
         @Override
-        public synchronized void importScript(Script script, boolean overwriteIfExists, ICallback callback) throws RemoteException {
+        public synchronized void importScript(Script script, boolean overwriteIfExists, IImportCallback callback) throws RemoteException {
             if (script.isValid()) {
                 if (Utils.hasValidLauncher(ScriptImporter.this)) {
                     int requestId = nextRequestId++;
                     callbackMap.put(requestId, callback);
                     installScript(script, requestId, overwriteIfExists);
                 } else if (callback != null) {
-                    callback.onImportFailed(Failure.LAUNCHER_INVALID);
+                    callback.onFailure(Failure.LAUNCHER_INVALID);
                 }
             } else if (callback != null) {
-                callback.onImportFailed(Failure.INVALID_INPUT);
+                callback.onFailure(Failure.INVALID_INPUT);
             }
         }
 
+        /**
+         * run a script in LL
+         * @param id script id
+         * @param data optional data
+         * @param background if it should be run in background
+         * @throws RemoteException
+         */
         @Override
         public synchronized void runScript(int id, String data, boolean background) throws RemoteException {
             if (Utils.hasValidLauncher(ScriptImporter.this)) {
@@ -245,6 +260,40 @@ public class ScriptImporter extends Service {
             }
         }
 
+        /**
+         * run a script once for a result.
+         * Script can't use timeouts etc and has to return a string
+         * @param code the script code
+         * @param callback callback receiving result and errors
+         * @throws RemoteException
+         */
+        @Override
+        public void runScriptForResult(String code, IResultCallback callback) throws RemoteException {
+            if (Utils.hasValidLauncher(ScriptImporter.this)) {
+                int requestId = nextRequestId++;
+                callbackMap.put(requestId, callback);
+                JSONObject data = new JSONObject();
+                try {
+                    data.put(Constants.KEY_CODE, code);
+                    data.put(Constants.KEY_CALLBACK_ID, requestId);
+                    data.put(Constants.EXTRA_RUN_ONLY, true);
+                } catch (JSONException e) {
+                    Toast.makeText(getApplicationContext(), getString(R.string.toast_managerError), Toast.LENGTH_LONG).show();
+                    return;
+                }
+                ScriptImporter.this.runScript(Constants.MANAGER_ID, data.toString(), true);
+            } else if (callback != null) {
+                callback.onFailure(Failure.LAUNCHER_INVALID);
+            }
+        }
+
+        /**
+         * run any LL action
+         * @param action the action id
+         * @param data optional data
+         * @param background if it should be executed in background
+         * @throws RemoteException
+         */
         @Override
         public synchronized void runAction(int action, String data, boolean background) throws RemoteException {
             if (Utils.hasValidLauncher(ScriptImporter.this)) {
@@ -262,15 +311,16 @@ public class ScriptImporter extends Service {
             if (intent.hasExtra(Constants.KEY_CALLBACK_ID) && intent.hasExtra(Constants.EXTRA_STATUS)) {
                 int status = (int) intent.getDoubleExtra(Constants.EXTRA_STATUS, 0);
                 int callbackId = (int) intent.getDoubleExtra(Constants.KEY_CALLBACK_ID, -1);
-                ICallback callback = callbackMap.get(callbackId);
-                if (callback != null) {
+                Object callbackObj = callbackMap.get(callbackId);
+                if (callbackObj instanceof IImportCallback) {
+                    IImportCallback callback = (IImportCallback) callbackObj;
                     try {
                         switch (status) {
                             case Constants.STATUS_OK:
-                                callback.onImportFinished((int) intent.getDoubleExtra(Constants.EXTRA_LOADED_SCRIPT_ID, 0));
+                                callback.onFinish((int) intent.getDoubleExtra(Constants.EXTRA_LOADED_SCRIPT_ID, 0));
                                 break;
                             case Constants.STATUS_UPDATE_CONFIRMATION_REQUIRED:
-                                callback.onImportFailed(Failure.SCRIPT_ALREADY_EXISTS);
+                                callback.onFailure(Failure.SCRIPT_ALREADY_EXISTS);
                                 break;
                             default:
                                 throw new IllegalArgumentException("Invalid status code returned from script: " + status);
@@ -278,6 +328,23 @@ public class ScriptImporter extends Service {
                     } catch (RemoteException e) {
                         e.printStackTrace();
                     }
+                } else if (callbackObj instanceof IResultCallback) {
+                    IResultCallback callback = (IResultCallback) callbackObj;
+                    try {
+                        switch (status) {
+                            case Constants.STATUS_OK:
+                                callback.onResult(intent.getStringExtra(Constants.EXTRA_RESULT));
+                                break;
+                            case Constants.STATUS_EVAL_FAILED:
+                                callback.onFailure(Failure.EVAL_FAILED);
+                                break;
+                            default:
+                                throw new IllegalArgumentException("Invalid status code returned from script: " + status);
+                        }
+                    } catch (RemoteException e) {
+                        e.printStackTrace();
+                    }
+
                 }
             }
         }

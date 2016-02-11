@@ -19,12 +19,10 @@
 -keepattributes Signature,RuntimeVisibleAnnotations,AnnotationDefault,*Annotation*,InnerClasses,SourceFile,LineNumberTable
 
 -keep public class * extends android.content.Context
--keep class org.acra.** {*;}
--keep interface org.acra.** {*;}
 -keep class com.google.gson.** {*;}
 -keep interface com.google.gson.** {*;}
 -keep class dw.xmlrpc.** {*;}
 -keep interface dw.xmlrpc.** {*;}
 -keeppackagenames org.jsoup.nodes
 -keep class com.trianguloy.llscript.repository.internal.PageCacheManager$Page {*;}
--dontwarn **
+#-dontwarn **

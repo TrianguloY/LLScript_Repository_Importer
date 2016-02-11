@@ -5,14 +5,12 @@ import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.view.View;
 import android.widget.CheckBox;
-import android.widget.LinearLayout;
-import android.widget.ScrollView;
 import android.widget.Toast;
 
 import com.trianguloy.llscript.repository.R;
 import com.trianguloy.llscript.repository.settings.Preferences;
 
-import org.acra.CrashReportDialog;
+import org.acra.dialog.CrashReportDialog;
 
 /**
  * Created by Lukas on 14.12.2015.
@@ -29,12 +27,12 @@ public class Dialog extends CrashReportDialog {
 
 
     @Override
-    protected void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
+    protected void buildAndShowDialog(Bundle savedInstanceState) {
         sharedPref = Preferences.getDefault(this);
         int reportMode = Integer.valueOf(sharedPref.getString(R.string.pref_reportMode, String.valueOf(MODE_ASK)));
         switch (reportMode) {
             case MODE_ASK:
+                super.buildAndShowDialog(savedInstanceState);
                 break;
             case MODE_NO_REPORT:
                 cancelReports();
@@ -47,20 +45,17 @@ public class Dialog extends CrashReportDialog {
                 finish();
                 break;
         }
-        // ACRA might leak a window, but we can't prevent that currently, because we need the method that creates the dialog.
     }
 
 
     @NonNull
     @Override
     protected View buildCustomView(Bundle savedInstanceState) {
-        //this uses knowledge about acra's internal dialog structure and might not be compatible with future versions.
-        LinearLayout layout = (LinearLayout) super.buildCustomView(savedInstanceState);
-        LinearLayout scrollable = (LinearLayout) ((ScrollView) layout.getChildAt(0)).getChildAt(0);
+        View view = super.buildCustomView(savedInstanceState);
         checkBox = new CheckBox(this);
         checkBox.setText(R.string.checkbox_rememberChoice);
-        scrollable.addView(checkBox);
-        return layout;
+        addViewToDialog(checkBox);
+        return view;
     }
 
     @Override

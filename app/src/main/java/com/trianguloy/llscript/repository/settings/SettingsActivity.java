@@ -61,18 +61,16 @@ public class SettingsActivity extends PreferenceActivity {
             public void run() {
                 startService(pref);
             }
-        });
+        }, false);
         final CheckBoxPreference checkBoxPreference = (CheckBoxPreference) findPreference(getString(R.string.pref_notifications));
-        intervalPreference.setEnabled(checkBoxPreference.isChecked());
         listener.addPreference(checkBoxPreference, new Runnable() {
             @Override
             public void run() {
-                if (checkBoxPreference.isChecked())
-                    startService(pref);
+                if (checkBoxPreference.isChecked()) startService(pref);
                 else stopService();
                 intervalPreference.setEnabled(checkBoxPreference.isChecked());
             }
-        });
+        }, true);
         Preference resetPwPref = findPreference(getString(R.string.pref_resetPw));
         resetPwPref.setEnabled(AuthenticationUtils.hasPassword(this));
         resetPwPref.setOnPreferenceClickListener(new Preference.OnPreferenceClickListener() {
@@ -88,9 +86,20 @@ public class SettingsActivity extends PreferenceActivity {
             public void run() {
                 Dialogs.themeChanged(SettingsActivity.this);
             }
-        });
+        }, false);
         listener.addPreferenceForSummary(getString(R.string.pref_newScripts));
         listener.addPreferenceForSummary(getString(R.string.pref_changedSubs));
+        final CheckBoxPreference enableAcra = (CheckBoxPreference) findPreference(getString(R.string.pref_enableAcra));
+        final CheckBoxPreference silentReports = (CheckBoxPreference) findPreference(getString(R.string.pref_alwaysSendReports));
+        listener.addPreference(enableAcra, new Runnable() {
+            @Override
+            public void run() {
+                if (!enableAcra.isChecked()) {
+                    silentReports.setChecked(false);
+                }
+                silentReports.setEnabled(enableAcra.isChecked());
+            }
+        }, true);
         if (!BuildConfig.DEBUG) {
             removeDebugOptions();
         }

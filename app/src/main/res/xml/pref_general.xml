@@ -2,10 +2,6 @@
 
     <PreferenceCategory android:title="@string/title_general">
         <CheckBoxPreference
-            android:defaultValue="false"
-            android:key="@string/pref_enableAcra"
-            android:title="@string/title_enableAcra"/>
-        <CheckBoxPreference
             android:defaultValue="true"
             android:key="@string/pref_aboutScript"
             android:title="@string/title_attachAboutScript"/>
@@ -89,13 +85,15 @@
             android:summary="@string/summary_directEdit"
             android:title="@string/title_directEdit"/>
     </PreferenceCategory>
-    <PreferenceCategory android:title="Crash Reports">
-        <ListPreference
-            android:defaultValue="@string/default_reportMode"
-            android:entries="@array/entries_reportMode"
-            android:entryValues="@array/values_reportMode"
-            android:key="@string/pref_reportMode"
-            android:title="@string/title_reportMode"/>
+    <PreferenceCategory android:title="@string/title_crashReports">
+        <CheckBoxPreference
+            android:defaultValue="true"
+            android:key="@string/pref_enableAcra"
+            android:title="@string/title_allowReports"/>
+        <CheckBoxPreference
+            android:defaultValue="false"
+            android:key="@string/pref_alwaysSendReports"
+            android:title="@string/title_sendSilent"/>
         <EditTextPreference
             android:key="@string/pref_acraEmail"
             android:summary="@string/summary_acraEmail"

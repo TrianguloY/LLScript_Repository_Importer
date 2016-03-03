@@ -14,7 +14,6 @@ import android.support.annotation.NonNull;
 import com.trianguloy.llscript.repository.IntentHandle;
 import com.trianguloy.llscript.repository.R;
 import com.trianguloy.llscript.repository.internal.Utils;
-import com.trianguloy.llscript.repository.settings.Preferences;
 
 import org.acra.ACRA;
 
@@ -26,12 +25,10 @@ import java.util.List;
  */
 public class WebService extends Service {
 
-    private Preferences sharedPref;
 
     @Override
     public void onCreate() {
         super.onCreate();
-        sharedPref = Preferences.getDefault(this);
     }
 
     @Override

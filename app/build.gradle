@@ -17,8 +17,8 @@ android {
         applicationId "com.trianguloy.llscript.repository"
         minSdkVersion 8
         targetSdkVersion 23
-        versionCode 30
-        versionName "1.11b"
+        versionCode 31
+        versionName "1.11b2"
     }
     buildTypes {
         release {
@@ -37,7 +37,7 @@ android {
 dependencies {
     compile 'ch.acra:acra:4.8.2'
     compile 'fr.turri:dokujclient:3.3.0'
-    compile 'com.google.code.gson:gson:2.5'
+    compile 'com.google.code.gson:gson:2.6.1'
     compile 'org.jsoup:jsoup:1.8.3'
     compile 'commons-io:commons-io:2.4'
 }

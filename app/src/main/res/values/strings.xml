@@ -120,19 +120,6 @@
     <string name="default_newItem">1</string>
     <string name="default_changedSub">2</string>
 
-    <!-- matches values in acra.Dialog-->
-    <string-array name="entries_reportMode">
-        <item>Ask</item>
-        <item>Never send</item>
-        <item>Send always</item>
-    </string-array>
-    <string-array name="values_reportMode">
-        <item>0</item>
-        <item>1</item>
-        <item>2</item>
-    </string-array>
-    <string name="default_reportMode">0</string>
-
     <!--ACRA-->
     <string name="title_crash">Repository Importer has crashed</string>
     <string name="text_crash">Please send the log to the developers.</string>
@@ -361,6 +348,10 @@
     <string name="dummy" tools:ignore="UnusedResources">Dummy string to force new ones to be below
     </string>
     <string name="toast_noEmptyUser">Username must not be empty</string>
+    <string name="title_crashReports">Crash Reports</string>
+    <string name="pref_alwaysSendReports">acra.alwaysaccept</string>
+    <string name="title_allowReports">Allow send Reports</string>
+    <string name="title_sendSilent">Always send Reports silently</string>
 
 
 </resources>

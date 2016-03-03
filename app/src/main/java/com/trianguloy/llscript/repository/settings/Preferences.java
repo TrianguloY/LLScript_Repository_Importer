@@ -33,6 +33,11 @@ public class Preferences implements SharedPreferences {
         return new Preferences(PreferenceManager.getDefaultSharedPreferences(context), context);
     }
 
+    @NonNull
+    public static Preferences.Editor editDefault(Context context) {
+        return getDefault(context).edit();
+    }
+
     public Preferences(SharedPreferences base, Context context) {
         this.base = base;
         this.context = context;

@@ -364,9 +364,16 @@ public class WebViewer extends Activity {
     //return false to block loading. If blocked has to call init() when finished
     private boolean upgradeFromOldVersion() {
         PreferenceManager.setDefaultValues(this, R.xml.pref_general, false);
-        sharedPref.edit().putInt(R.string.pref_version, BuildConfig.VERSION_CODE).apply();
-        if (!BuildConfig.DEBUG)
-            sharedPref.edit().putBoolean(R.string.pref_enableAcra, true).apply();
+        Preferences.Editor editor = sharedPref.edit();
+        boolean result = true;
+        editor.putInt(R.string.pref_version, BuildConfig.VERSION_CODE);
+        if (sharedPref.contains(R.string.pref_reportMode)){
+            int reportMode = Integer.valueOf(sharedPref.getString(R.string.pref_reportMode, "0"));
+            boolean enable = reportMode != 1;
+            boolean silent = reportMode == 2;
+            editor.putBoolean(R.string.pref_enableAcra,enable).putBoolean(R.string.pref_alwaysSendReports, silent);
+            editor.remove(R.string.pref_reportMode);
+        }
 
         if (sharedPref.contains(R.string.pref_subs)) {
             Map<String, String> map = sharedPref.getStringMap(R.string.pref_subs, Collections.<String, String>emptyMap());
@@ -374,12 +381,10 @@ public class WebViewer extends Activity {
             for (String page : map.keySet()) {
                 set.add(Utils.getIdFromUrl(page));
             }
-            sharedPref.edit().putStringSet(R.string.pref_subscriptions, set)
-                    .remove(R.string.pref_subs)
-                    .apply();
+            editor.putStringSet(R.string.pref_subscriptions, set).remove(R.string.pref_subs);
         }
         if (sharedPref.contains(R.string.pref_repoHash)) {
-            sharedPref.edit().remove(R.string.pref_repoHash).apply();
+            editor.remove(R.string.pref_repoHash);
         }
         if (!sharedPref.contains(R.string.pref_timestamp)) {
             RPCManager.getInstance(this).setTimestampToCurrent(sharedPref, new RPCManager.Listener<Integer>() {
@@ -397,7 +402,7 @@ public class WebViewer extends Activity {
                     }
                 }
             });
-            return false;
+            result = false;
         }
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M && !Settings.canDrawOverlays(this)) {
             Dialogs.explainSystemWindowPermission(this, new DialogInterface.OnClickListener() {
@@ -408,9 +413,10 @@ public class WebViewer extends Activity {
                     init();
                 }
             });
-            return false;
+            result = false;
         }
-        return true;
+        editor.apply();
+        return result;
     }
 
 }

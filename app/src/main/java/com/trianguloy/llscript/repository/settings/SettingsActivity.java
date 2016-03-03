@@ -91,7 +91,6 @@ public class SettingsActivity extends PreferenceActivity {
         });
         listener.addPreferenceForSummary(getString(R.string.pref_newScripts));
         listener.addPreferenceForSummary(getString(R.string.pref_changedSubs));
-        listener.addPreferenceForSummary(getString(R.string.pref_reportMode));
         if (!BuildConfig.DEBUG) {
             removeDebugOptions();
         }
@@ -202,9 +201,5 @@ public class SettingsActivity extends PreferenceActivity {
         entryValues.remove(0);
         intervalPreference.setEntries(entries.toArray(new CharSequence[entries.size()]));
         intervalPreference.setEntryValues(entryValues.toArray(new CharSequence[entryValues.size()]));
-        //remove enable acra preference
-        CheckBoxPreference acraPref = (CheckBoxPreference) findPreference(getString(R.string.pref_enableAcra));
-        acraPref.setChecked(true);
-        getPreferenceScreen().removePreference(acraPref);
     }
 }

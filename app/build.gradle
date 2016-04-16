@@ -12,7 +12,7 @@ android {
         }
     }
     compileSdkVersion 23
-    buildToolsVersion '23.0.2'
+    buildToolsVersion '23.0.3'
     defaultConfig {
         applicationId "com.trianguloy.llscript.repository"
         minSdkVersion 8
@@ -35,9 +35,9 @@ android {
 }
 
 dependencies {
-    compile 'ch.acra:acra:4.8.2'
-    compile 'fr.turri:dokujclient:3.3.0'
-    compile 'com.google.code.gson:gson:2.6.1'
+    compile 'ch.acra:acra:4.8.5'
+    compile 'fr.turri:dokujclient:3.8.0'
+    compile 'com.google.code.gson:gson:2.6.2'
     compile 'org.jsoup:jsoup:1.8.3'
     compile 'commons-io:commons-io:2.4'
 }

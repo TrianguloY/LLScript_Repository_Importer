@@ -38,6 +38,10 @@ public final class AuthenticationUtils {
         findAccount(context, new InternalListener() {
             @Override
             public void onComplete(String user, String password) {
+                if(RPCManager.getInstance(context).isLoggedIn() >= RPCManager.LOGIN_USER){
+                    listener.onComplete();
+                    return;
+                }
                 RPCManager.getInstance(context).login(user, password, new RPCManager.Listener<Void>() {
 
                     @Override

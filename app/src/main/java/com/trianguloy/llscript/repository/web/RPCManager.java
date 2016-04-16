@@ -78,8 +78,7 @@ public class RPCManager {
         }
         if (login < LOGIN_RO) {
             try {
-                Object[] parameters = new Object[]{"remote_ro", "remote_ro"};
-                login = ((boolean) client.genericQuery("dokuwiki.login", parameters)) ? LOGIN_RO : NOT_LOGGED_IN;
+                login = client.login("remote_ro", "remote_ro") ? LOGIN_RO : NOT_LOGGED_IN;
             } catch (DokuException e) {
                 return false;
             }
@@ -93,6 +92,12 @@ public class RPCManager {
     }
 
     public void login(final String user, final String password, @Nullable Listener<Void> listener) {
+        if(user == null || password == null) {
+            if (listener != null) {
+                listener.onResult(new Result<Void>(RESULT_BAD_LOGIN));
+            }
+            return;
+        }
         new ListenedTask<Void>(listener) {
             @NonNull
             @Override
@@ -100,8 +105,7 @@ public class RPCManager {
                 int result = RESULT_NETWORK_ERROR;
                 try {
                     if (init()) {
-                        Object[] parameters = new Object[]{user, password};
-                        login = ((boolean) client.genericQuery("dokuwiki.login", parameters)) ? LOGIN_USER : NOT_LOGGED_IN;
+                        login = client.login(user, password) ? LOGIN_USER : NOT_LOGGED_IN;
                         if (login == LOGIN_USER) {
                             result = RESULT_OK;
                             username = user;

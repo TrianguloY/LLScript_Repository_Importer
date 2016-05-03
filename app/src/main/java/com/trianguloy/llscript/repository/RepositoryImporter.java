@@ -2,6 +2,7 @@ package com.trianguloy.llscript.repository;
 
 import android.app.Activity;
 import android.app.Application;
+import android.content.Context;
 import android.support.annotation.NonNull;
 
 import com.trianguloy.llscript.repository.acra.Dialog;
@@ -34,10 +35,16 @@ import org.acra.sender.HttpSender;
         buildConfigClass = BuildConfig.class
 )
 public class RepositoryImporter extends Application {
+
+    @Override
+    protected void attachBaseContext(Context base) {
+        super.attachBaseContext(base);
+        ACRA.init(this);
+    }
+
     @Override
     public void onCreate() {
         super.onCreate();
-        ACRA.init(this);
         if (Preferences.getDefault(this).getBoolean(R.string.pref_theme, false))
             setTheme(R.style.Theme_Dark);
     }

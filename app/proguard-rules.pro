@@ -16,7 +16,7 @@
 #   public *;
 #}
 
--keepattributes Signature,RuntimeVisibleAnnotations,AnnotationDefault,*Annotation*,InnerClasses,SourceFile,LineNumberTable
+-keepattributes Signature,RuntimeVisibleAnnotations,AnnotationDefault,*Annotation*,InnerClasses,SourceFile,LineNumberTable,EnclosingMethod
 
 -keep public class * extends android.content.Context
 -keep class com.google.gson.** {*;}
@@ -24,5 +24,12 @@
 -keep class dw.xmlrpc.** {*;}
 -keep interface dw.xmlrpc.** {*;}
 -keeppackagenames org.jsoup.nodes
+-keep class com.martiansoftware.jsap.** {*;}
+-keep interface com.martiansoftware.jsap.** {*;}
+-keep class com.google.common.** {*;}
+-keep interface com.google.common.** {*;}
 -keep class com.trianguloy.llscript.repository.internal.PageCacheManager$Page {*;}
+-dontwarn android.support.**
+-dontwarn com.google.common.**
+-dontwarn com.martiansoftware.jsap.**
 #-dontwarn **

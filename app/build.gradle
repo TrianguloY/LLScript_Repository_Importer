@@ -35,7 +35,7 @@ android {
 }
 
 dependencies {
-    compile 'ch.acra:acra:4.9.0-RC-1'
+    compile 'ch.acra:acra:4.8.5'
     compile 'fr.turri:dokujclient:3.8.0'
     compile 'com.google.code.gson:gson:2.6.2'
     compile 'org.jsoup:jsoup:1.8.3'

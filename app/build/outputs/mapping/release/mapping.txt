@@ -28,49 +28,49 @@ android.support.v4.app.BackStackRecord -> android.support.v4.app.d:
     java.lang.CharSequence mBreadCrumbShortTitleText -> t
     java.util.ArrayList mSharedElementSourceNames -> u
     java.util.ArrayList mSharedElementTargetNames -> v
-    245:257:java.lang.String toString() -> toString
-    261:262:void dump(java.lang.String,java.io.FileDescriptor,java.io.PrintWriter,java.lang.String[]) -> a
-    265:355:void dump(java.lang.String,java.io.PrintWriter,boolean) -> a
-    230:359:void <init>(android.support.v4.app.FragmentManagerImpl) -> <init>
-    388:400:void addOp(android.support.v4.app.BackStackRecord$Op) -> a
-    592:614:void bumpBackStackNesting(int) -> a
-    643:747:void run() -> run
-    751:763:void setFirstOut(android.util.SparseArray,android.util.SparseArray,android.support.v4.app.Fragment) -> a
-    767:778:void setLastIn(android.util.SparseArray,android.util.SparseArray,android.support.v4.app.Fragment) -> b
-    791:837:void calculateFragments(android.util.SparseArray,android.util.SparseArray) -> b
-    850:886:void calculateBackFragments(android.util.SparseArray,android.util.SparseArray) -> a
-    890:984:android.support.v4.app.BackStackRecord$TransitionState popFromBackStack(boolean,android.support.v4.app.BackStackRecord$TransitionState,android.util.SparseArray,android.util.SparseArray) -> a
-    988:988:java.lang.String getName() -> a
-    1036:1068:android.support.v4.app.BackStackRecord$TransitionState beginTransition(android.util.SparseArray,android.util.SparseArray,boolean) -> a
-    1076:1084:void ensureFragmentsAreInitialized(android.util.SparseArray) -> a
-    1087:1090:java.lang.Object getEnterTransition(android.support.v4.app.Fragment,boolean) -> a
-    1095:1098:java.lang.Object getExitTransition(android.support.v4.app.Fragment,boolean) -> b
-    1104:1107:java.lang.Object getSharedElementTransition(android.support.v4.app.Fragment,android.support.v4.app.Fragment,boolean) -> a
-    1114:1118:java.lang.Object captureExitingViews(java.lang.Object,android.support.v4.app.Fragment,java.util.ArrayList,android.support.v4.util.ArrayMap,android.view.View) -> a
-    1123:1148:android.support.v4.util.ArrayMap remapSharedElements(android.support.v4.app.BackStackRecord$TransitionState,android.support.v4.app.Fragment,boolean) -> a
-    1165:1259:boolean configureTransitions(int,android.support.v4.app.BackStackRecord$TransitionState,boolean,android.util.SparseArray,android.util.SparseArray) -> a
-    1266:1291:void prepareSharedElementTransition(android.support.v4.app.BackStackRecord$TransitionState,android.view.View,java.lang.Object,android.support.v4.app.Fragment,android.support.v4.app.Fragment,boolean,java.util.ArrayList) -> a
-    1295:1303:void callSharedElementEnd(android.support.v4.app.BackStackRecord$TransitionState,android.support.v4.app.Fragment,android.support.v4.app.Fragment,boolean,android.support.v4.util.ArrayMap) -> a
-    1306:1314:void setEpicenterIn(android.support.v4.util.ArrayMap,android.support.v4.app.BackStackRecord$TransitionState) -> a
-    1319:1336:android.support.v4.util.ArrayMap mapSharedElementsIn(android.support.v4.app.BackStackRecord$TransitionState,boolean,android.support.v4.app.Fragment) -> a
-    1349:1360:android.support.v4.util.ArrayMap remapNames(java.util.ArrayList,java.util.ArrayList,android.support.v4.util.ArrayMap) -> a
-    1374:1387:android.support.v4.util.ArrayMap mapEnteringSharedElements(android.support.v4.app.BackStackRecord$TransitionState,android.support.v4.app.Fragment,boolean) -> b
-    1392:1400:void excludeHiddenFragmentsAfterEnter(android.view.View,android.support.v4.app.BackStackRecord$TransitionState,int,java.lang.Object) -> a
-    1403:1422:void excludeHiddenFragments(android.support.v4.app.BackStackRecord$TransitionState,int,java.lang.Object) -> a
-    1426:1435:void setNameOverride(android.support.v4.util.ArrayMap,java.lang.String,java.lang.String) -> a
-    1439:1446:void setNameOverrides(android.support.v4.app.BackStackRecord$TransitionState,java.util.ArrayList,java.util.ArrayList) -> a
-    1450:1464:void setBackNameOverrides(android.support.v4.app.BackStackRecord$TransitionState,android.support.v4.util.ArrayMap,boolean) -> a
-    1468:1478:void setNameOverrides(android.support.v4.app.BackStackRecord$TransitionState,android.support.v4.util.ArrayMap,boolean) -> b
-    192:192:android.support.v4.util.ArrayMap access$000(android.support.v4.app.BackStackRecord,android.support.v4.app.BackStackRecord$TransitionState,boolean,android.support.v4.app.Fragment) -> a
-    192:192:void access$100(android.support.v4.app.BackStackRecord,android.support.v4.util.ArrayMap,android.support.v4.app.BackStackRecord$TransitionState) -> a
-    192:192:void access$200(android.support.v4.app.BackStackRecord,android.support.v4.app.BackStackRecord$TransitionState,android.support.v4.app.Fragment,android.support.v4.app.Fragment,boolean,android.support.v4.util.ArrayMap) -> a
-    192:192:void access$300(android.support.v4.app.BackStackRecord,android.support.v4.app.BackStackRecord$TransitionState,int,java.lang.Object) -> a
-    195:195:void <clinit>() -> <clinit>
+    241:253:java.lang.String toString() -> toString
+    257:258:void dump(java.lang.String,java.io.FileDescriptor,java.io.PrintWriter,java.lang.String[]) -> a
+    261:351:void dump(java.lang.String,java.io.PrintWriter,boolean) -> a
+    226:355:void <init>(android.support.v4.app.FragmentManagerImpl) -> <init>
+    384:396:void addOp(android.support.v4.app.BackStackRecord$Op) -> a
+    588:610:void bumpBackStackNesting(int) -> a
+    639:743:void run() -> run
+    747:759:void setFirstOut(android.util.SparseArray,android.util.SparseArray,android.support.v4.app.Fragment) -> a
+    763:774:void setLastIn(android.util.SparseArray,android.util.SparseArray,android.support.v4.app.Fragment) -> b
+    787:833:void calculateFragments(android.util.SparseArray,android.util.SparseArray) -> b
+    846:882:void calculateBackFragments(android.util.SparseArray,android.util.SparseArray) -> a
+    886:980:android.support.v4.app.BackStackRecord$TransitionState popFromBackStack(boolean,android.support.v4.app.BackStackRecord$TransitionState,android.util.SparseArray,android.util.SparseArray) -> a
+    984:984:java.lang.String getName() -> a
+    1032:1064:android.support.v4.app.BackStackRecord$TransitionState beginTransition(android.util.SparseArray,android.util.SparseArray,boolean) -> a
+    1072:1080:void ensureFragmentsAreInitialized(android.util.SparseArray) -> a
+    1083:1086:java.lang.Object getEnterTransition(android.support.v4.app.Fragment,boolean) -> a
+    1091:1094:java.lang.Object getExitTransition(android.support.v4.app.Fragment,boolean) -> b
+    1100:1103:java.lang.Object getSharedElementTransition(android.support.v4.app.Fragment,android.support.v4.app.Fragment,boolean) -> a
+    1110:1114:java.lang.Object captureExitingViews(java.lang.Object,android.support.v4.app.Fragment,java.util.ArrayList,android.support.v4.util.ArrayMap,android.view.View) -> a
+    1119:1144:android.support.v4.util.ArrayMap remapSharedElements(android.support.v4.app.BackStackRecord$TransitionState,android.support.v4.app.Fragment,boolean) -> a
+    1161:1255:boolean configureTransitions(int,android.support.v4.app.BackStackRecord$TransitionState,boolean,android.util.SparseArray,android.util.SparseArray) -> a
+    1262:1287:void prepareSharedElementTransition(android.support.v4.app.BackStackRecord$TransitionState,android.view.View,java.lang.Object,android.support.v4.app.Fragment,android.support.v4.app.Fragment,boolean,java.util.ArrayList) -> a
+    1291:1299:void callSharedElementEnd(android.support.v4.app.BackStackRecord$TransitionState,android.support.v4.app.Fragment,android.support.v4.app.Fragment,boolean,android.support.v4.util.ArrayMap) -> a
+    1302:1310:void setEpicenterIn(android.support.v4.util.ArrayMap,android.support.v4.app.BackStackRecord$TransitionState) -> a
+    1315:1332:android.support.v4.util.ArrayMap mapSharedElementsIn(android.support.v4.app.BackStackRecord$TransitionState,boolean,android.support.v4.app.Fragment) -> a
+    1345:1356:android.support.v4.util.ArrayMap remapNames(java.util.ArrayList,java.util.ArrayList,android.support.v4.util.ArrayMap) -> a
+    1370:1383:android.support.v4.util.ArrayMap mapEnteringSharedElements(android.support.v4.app.BackStackRecord$TransitionState,android.support.v4.app.Fragment,boolean) -> b
+    1388:1396:void excludeHiddenFragmentsAfterEnter(android.view.View,android.support.v4.app.BackStackRecord$TransitionState,int,java.lang.Object) -> a
+    1399:1418:void excludeHiddenFragments(android.support.v4.app.BackStackRecord$TransitionState,int,java.lang.Object) -> a
+    1422:1431:void setNameOverride(android.support.v4.util.ArrayMap,java.lang.String,java.lang.String) -> a
+    1435:1442:void setNameOverrides(android.support.v4.app.BackStackRecord$TransitionState,java.util.ArrayList,java.util.ArrayList) -> a
+    1446:1460:void setBackNameOverrides(android.support.v4.app.BackStackRecord$TransitionState,android.support.v4.util.ArrayMap,boolean) -> a
+    1464:1474:void setNameOverrides(android.support.v4.app.BackStackRecord$TransitionState,android.support.v4.util.ArrayMap,boolean) -> b
+    188:188:android.support.v4.util.ArrayMap access$000(android.support.v4.app.BackStackRecord,android.support.v4.app.BackStackRecord$TransitionState,boolean,android.support.v4.app.Fragment) -> a
+    188:188:void access$100(android.support.v4.app.BackStackRecord,android.support.v4.util.ArrayMap,android.support.v4.app.BackStackRecord$TransitionState) -> a
+    188:188:void access$200(android.support.v4.app.BackStackRecord,android.support.v4.app.BackStackRecord$TransitionState,android.support.v4.app.Fragment,android.support.v4.app.Fragment,boolean,android.support.v4.util.ArrayMap) -> a
+    188:188:void access$300(android.support.v4.app.BackStackRecord,android.support.v4.app.BackStackRecord$TransitionState,int,java.lang.Object) -> a
+    191:191:void <clinit>() -> <clinit>
 android.support.v4.app.BackStackRecord$1 -> android.support.v4.app.d$1:
     android.support.v4.app.Fragment val$inFragment -> a
     android.support.v4.app.BackStackRecord this$0 -> b
-    1221:1221:void <init>(android.support.v4.app.BackStackRecord,android.support.v4.app.Fragment) -> <init>
-    1224:1224:android.view.View getView() -> a
+    1217:1217:void <init>(android.support.v4.app.BackStackRecord,android.support.v4.app.Fragment) -> <init>
+    1220:1220:android.view.View getView() -> a
 android.support.v4.app.BackStackRecord$2 -> android.support.v4.app.d$2:
     android.view.View val$sceneRoot -> a
     java.lang.Object val$sharedElementTransition -> b
@@ -80,16 +80,16 @@ android.support.v4.app.BackStackRecord$2 -> android.support.v4.app.d$2:
     android.support.v4.app.Fragment val$inFragment -> f
     android.support.v4.app.Fragment val$outFragment -> g
     android.support.v4.app.BackStackRecord this$0 -> h
-    1267:1267:void <init>(android.support.v4.app.BackStackRecord,android.view.View,java.lang.Object,java.util.ArrayList,android.support.v4.app.BackStackRecord$TransitionState,boolean,android.support.v4.app.Fragment,android.support.v4.app.Fragment) -> <init>
-    1270:1288:boolean onPreDraw() -> onPreDraw
+    1263:1263:void <init>(android.support.v4.app.BackStackRecord,android.view.View,java.lang.Object,java.util.ArrayList,android.support.v4.app.BackStackRecord$TransitionState,boolean,android.support.v4.app.Fragment,android.support.v4.app.Fragment) -> <init>
+    1266:1284:boolean onPreDraw() -> onPreDraw
 android.support.v4.app.BackStackRecord$3 -> android.support.v4.app.d$3:
     android.view.View val$sceneRoot -> a
     android.support.v4.app.BackStackRecord$TransitionState val$state -> b
     int val$containerId -> c
     java.lang.Object val$transition -> d
     android.support.v4.app.BackStackRecord this$0 -> e
-    1393:1393:void <init>(android.support.v4.app.BackStackRecord,android.view.View,android.support.v4.app.BackStackRecord$TransitionState,int,java.lang.Object) -> <init>
-    1395:1397:boolean onPreDraw() -> onPreDraw
+    1389:1389:void <init>(android.support.v4.app.BackStackRecord,android.view.View,android.support.v4.app.BackStackRecord$TransitionState,int,java.lang.Object) -> <init>
+    1391:1393:boolean onPreDraw() -> onPreDraw
 android.support.v4.app.BackStackRecord$Op -> android.support.v4.app.d$a:
     android.support.v4.app.BackStackRecord$Op next -> a
     android.support.v4.app.BackStackRecord$Op prev -> b
@@ -100,14 +100,14 @@ android.support.v4.app.BackStackRecord$Op -> android.support.v4.app.d$a:
     int popEnterAnim -> g
     int popExitAnim -> h
     java.util.ArrayList removed -> i
-    208:208:void <init>() -> <init>
+    204:204:void <init>() -> <init>
 android.support.v4.app.BackStackRecord$TransitionState -> android.support.v4.app.d$b:
     android.support.v4.util.ArrayMap nameOverrides -> a
     java.util.ArrayList hiddenFragmentViews -> b
     android.support.v4.app.FragmentTransitionCompat21$EpicenterView enteringEpicenterView -> c
     android.view.View nonExistentView -> d
     android.support.v4.app.BackStackRecord this$0 -> e
-    1480:1484:void <init>(android.support.v4.app.BackStackRecord) -> <init>
+    1476:1480:void <init>(android.support.v4.app.BackStackRecord) -> <init>
 android.support.v4.app.BackStackState -> android.support.v4.app.e:
     int[] mOps -> a
     int mTransition -> b
@@ -123,16 +123,16 @@ android.support.v4.app.BackStackState -> android.support.v4.app.e:
     android.os.Parcelable$Creator CREATOR -> CREATOR
     48:91:void <init>(android.support.v4.app.BackStackRecord) -> <init>
     93:105:void <init>(android.os.Parcel) -> <init>
-    108:156:android.support.v4.app.BackStackRecord instantiate(android.support.v4.app.FragmentManagerImpl) -> a
-    160:160:int describeContents() -> describeContents
-    164:175:void writeToParcel(android.os.Parcel,int) -> writeToParcel
-    177:177:void <clinit>() -> <clinit>
+    108:152:android.support.v4.app.BackStackRecord instantiate(android.support.v4.app.FragmentManagerImpl) -> a
+    156:156:int describeContents() -> describeContents
+    160:171:void writeToParcel(android.os.Parcel,int) -> writeToParcel
+    173:173:void <clinit>() -> <clinit>
 android.support.v4.app.BackStackState$1 -> android.support.v4.app.e$1:
-    178:178:void <init>() -> <init>
-    180:180:android.support.v4.app.BackStackState createFromParcel(android.os.Parcel) -> a
-    184:184:android.support.v4.app.BackStackState[] newArray(int) -> a
-    178:178:java.lang.Object[] newArray(int) -> newArray
-    178:178:java.lang.Object createFromParcel(android.os.Parcel) -> createFromParcel
+    174:174:void <init>() -> <init>
+    176:176:android.support.v4.app.BackStackState createFromParcel(android.os.Parcel) -> a
+    180:180:android.support.v4.app.BackStackState[] newArray(int) -> a
+    174:174:java.lang.Object[] newArray(int) -> newArray
+    174:174:java.lang.Object createFromParcel(android.os.Parcel) -> createFromParcel
 android.support.v4.app.BaseFragmentActivityDonut -> android.support.v4.app.f:
     29:29:void <init>() -> <init>
     33:40:void onCreate(android.os.Bundle) -> onCreate
@@ -291,7 +291,7 @@ android.support.v4.app.FragmentActivity -> android.support.v4.app.FragmentActivi
     int mNextCandidateRequestIndex -> i
     boolean mStartedActivityFromFragment -> j
     android.support.v4.util.SparseArrayCompat mPendingFragmentActivityResults -> k
-    80:972:void <init>() -> <init>
+    80:970:void <init>() -> <init>
     161:182:void onActivityResult(int,int,android.content.Intent) -> onActivityResult
     189:192:void onBackPressed() -> onBackPressed
     237:238:void supportFinishAfterTransition() -> a
@@ -325,7 +325,7 @@ android.support.v4.app.FragmentActivity -> android.support.v4.app.FragmentActivi
     802:805:void onReallyStop() -> e
     816:816:void onAttachFragment(android.support.v4.app.Fragment) -> a
     838:844:void startActivityForResult(android.content.Intent,int) -> startActivityForResult
-    880:897:void onRequestPermissionsResult(int,java.lang.String[],int[]) -> onRequestPermissionsResult
+    881:900:void onRequestPermissionsResult(int,java.lang.String[],int[]) -> onRequestPermissionsResult
     80:80:android.view.View onCreateView(android.view.View,java.lang.String,android.content.Context,android.util.AttributeSet) -> onCreateView
     80:80:android.view.View onCreateView(java.lang.String,android.content.Context,android.util.AttributeSet) -> onCreateView
 android.support.v4.app.FragmentActivity$1 -> android.support.v4.app.FragmentActivity$1:
@@ -334,16 +334,16 @@ android.support.v4.app.FragmentActivity$1 -> android.support.v4.app.FragmentActi
     100:113:void handleMessage(android.os.Message) -> handleMessage
 android.support.v4.app.FragmentActivity$HostCallbacks -> android.support.v4.app.FragmentActivity$a:
     android.support.v4.app.FragmentActivity this$0 -> a
-    973:975:void <init>(android.support.v4.app.FragmentActivity) -> <init>
-    979:980:void onDump(java.lang.String,java.io.FileDescriptor,java.io.PrintWriter,java.lang.String[]) -> a
-    984:984:boolean onShouldSaveFragmentState(android.support.v4.app.Fragment) -> a
-    989:989:android.view.LayoutInflater onGetLayoutInflater() -> b
-    999:1000:void onSupportInvalidateOptionsMenu() -> c
-    1028:1028:boolean onHasWindowAnimations() -> d
-    1033:1034:int onGetWindowAnimations() -> e
-    1039:1040:void onAttachFragment(android.support.v4.app.Fragment) -> b
-    1045:1045:android.view.View onFindViewById(int) -> a
-    1050:1051:boolean onHasView() -> a
+    971:973:void <init>(android.support.v4.app.FragmentActivity) -> <init>
+    977:978:void onDump(java.lang.String,java.io.FileDescriptor,java.io.PrintWriter,java.lang.String[]) -> a
+    982:982:boolean onShouldSaveFragmentState(android.support.v4.app.Fragment) -> a
+    987:987:android.view.LayoutInflater onGetLayoutInflater() -> b
+    997:998:void onSupportInvalidateOptionsMenu() -> c
+    1026:1026:boolean onHasWindowAnimations() -> d
+    1031:1032:int onGetWindowAnimations() -> e
+    1037:1038:void onAttachFragment(android.support.v4.app.Fragment) -> b
+    1043:1043:android.view.View onFindViewById(int) -> a
+    1048:1049:boolean onHasView() -> a
 android.support.v4.app.FragmentActivity$NonConfigurationInstances -> android.support.v4.app.FragmentActivity$b:
     java.lang.Object custom -> a
     java.util.List fragments -> b
@@ -359,33 +359,35 @@ android.support.v4.app.FragmentController -> android.support.v4.app.j:
     51:53:void <init>(android.support.v4.app.FragmentHostCallback) -> <init>
     59:59:android.support.v4.app.FragmentManager getSupportFragmentManager() -> a
     74:74:android.support.v4.app.Fragment findFragmentByWho(java.lang.String) -> a
+    81:82:int getActiveFragmentsCount() -> b
+    89:96:java.util.List getActiveFragments(java.util.List) -> a
     104:106:void attachHost(android.support.v4.app.Fragment) -> a
     120:120:android.view.View onCreateView(android.view.View,java.lang.String,android.content.Context,android.util.AttributeSet) -> a
-    127:128:void noteStateNotSaved() -> b
-    134:134:android.os.Parcelable saveAllState() -> c
+    127:128:void noteStateNotSaved() -> c
+    134:134:android.os.Parcelable saveAllState() -> d
     144:145:void restoreAllState(android.os.Parcelable,java.util.List) -> a
-    152:152:java.util.List retainNonConfig() -> d
-    163:164:void dispatchCreate() -> e
-    174:175:void dispatchActivityCreated() -> f
-    185:186:void dispatchStart() -> g
-    196:197:void dispatchResume() -> h
-    207:208:void dispatchPause() -> i
-    218:219:void dispatchStop() -> j
-    222:223:void dispatchReallyStop() -> k
-    244:245:void dispatchDestroy() -> l
+    152:152:java.util.List retainNonConfig() -> e
+    163:164:void dispatchCreate() -> f
+    174:175:void dispatchActivityCreated() -> g
+    185:186:void dispatchStart() -> h
+    196:197:void dispatchResume() -> i
+    207:208:void dispatchPause() -> j
+    218:219:void dispatchStop() -> k
+    222:223:void dispatchReallyStop() -> l
+    244:245:void dispatchDestroy() -> m
     255:256:void dispatchConfigurationChanged(android.content.res.Configuration) -> a
-    267:268:void dispatchLowMemory() -> m
+    267:268:void dispatchLowMemory() -> n
     279:279:boolean dispatchCreateOptionsMenu(android.view.Menu,android.view.MenuInflater) -> a
     291:291:boolean dispatchPrepareOptionsMenu(android.view.Menu) -> a
     304:304:boolean dispatchOptionsItemSelected(android.view.MenuItem) -> a
     317:317:boolean dispatchContextItemSelected(android.view.MenuItem) -> b
     328:329:void dispatchOptionsMenuClosed(android.view.Menu) -> b
-    339:339:boolean execPendingActions() -> n
-    346:347:void doLoaderStart() -> o
+    339:339:boolean execPendingActions() -> o
+    346:347:void doLoaderStart() -> p
     357:358:void doLoaderStop(boolean) -> a
-    371:372:void doLoaderDestroy() -> p
-    378:379:void reportLoaderStart() -> q
-    386:386:android.support.v4.util.SimpleArrayMap retainLoaderNonConfig() -> r
+    371:372:void doLoaderDestroy() -> q
+    378:379:void reportLoaderStart() -> r
+    386:386:android.support.v4.util.SimpleArrayMap retainLoaderNonConfig() -> s
     396:397:void restoreLoaderNonConfig(android.support.v4.util.SimpleArrayMap) -> a
     403:404:void dumpLoaders(java.lang.String,java.io.FileDescriptor,java.io.PrintWriter,java.lang.String[]) -> a
 android.support.v4.app.FragmentHostCallback -> android.support.v4.app.k:
@@ -997,16 +999,16 @@ android.support.v4.media.MediaBrowserServiceCompat -> android.support.v4.media.M
     android.support.v4.util.ArrayMap mConnections -> b
     android.support.v4.media.MediaBrowserServiceCompat$ServiceHandler mHandler -> c
     android.support.v4.media.session.MediaSessionCompat$Token mSession -> a
-    73:947:void <init>() -> <init>
+    73:933:void <init>() -> <init>
     android.support.v4.media.MediaBrowserServiceCompat$BrowserRoot onGetRoot(java.lang.String,int,android.os.Bundle) -> a
     void onLoadChildren(java.lang.String,android.support.v4.media.MediaBrowserServiceCompat$Result) -> a
-    684:686:void onLoadChildren(java.lang.String,android.support.v4.media.MediaBrowserServiceCompat$Result,android.os.Bundle) -> a
-    705:706:void onLoadItem(java.lang.String,android.support.v4.media.MediaBrowserServiceCompat$Result) -> b
-    807:818:boolean isValidPackage(java.lang.String,int) -> a
-    826:839:void addSubscription(java.lang.String,android.support.v4.media.MediaBrowserServiceCompat$ConnectionRecord,android.os.Bundle) -> a
-    845:859:boolean removeSubscription(java.lang.String,android.support.v4.media.MediaBrowserServiceCompat$ConnectionRecord,android.os.Bundle) -> b
-    869:904:void performLoadChildren(java.lang.String,android.support.v4.media.MediaBrowserServiceCompat$ConnectionRecord,android.os.Bundle) -> c
-    925:941:void performLoadItem(java.lang.String,android.support.v4.os.ResultReceiver) -> a
+    670:672:void onLoadChildren(java.lang.String,android.support.v4.media.MediaBrowserServiceCompat$Result,android.os.Bundle) -> a
+    691:692:void onLoadItem(java.lang.String,android.support.v4.media.MediaBrowserServiceCompat$Result) -> b
+    793:804:boolean isValidPackage(java.lang.String,int) -> a
+    812:825:void addSubscription(java.lang.String,android.support.v4.media.MediaBrowserServiceCompat$ConnectionRecord,android.os.Bundle) -> a
+    831:845:boolean removeSubscription(java.lang.String,android.support.v4.media.MediaBrowserServiceCompat$ConnectionRecord,android.os.Bundle) -> b
+    855:890:void performLoadChildren(java.lang.String,android.support.v4.media.MediaBrowserServiceCompat$ConnectionRecord,android.os.Bundle) -> c
+    911:927:void performLoadItem(java.lang.String,android.support.v4.os.ResultReceiver) -> a
     73:73:android.support.v4.media.MediaBrowserServiceCompat$ServiceHandler access$100(android.support.v4.media.MediaBrowserServiceCompat) -> a
     73:73:boolean access$400(android.support.v4.media.MediaBrowserServiceCompat,java.lang.String,int) -> a
     73:73:android.support.v4.util.ArrayMap access$500(android.support.v4.media.MediaBrowserServiceCompat) -> b
@@ -1016,26 +1018,26 @@ android.support.v4.media.MediaBrowserServiceCompat -> android.support.v4.media.M
 android.support.v4.media.MediaBrowserServiceCompat$1 -> android.support.v4.media.MediaBrowserServiceCompat$1:
     android.support.v4.media.session.MediaSessionCompat$Token val$token -> a
     android.support.v4.media.MediaBrowserServiceCompat this$0 -> b
-    727:737:void run() -> run
+    713:723:void run() -> run
 android.support.v4.media.MediaBrowserServiceCompat$3 -> android.support.v4.media.MediaBrowserServiceCompat$2:
     android.support.v4.media.MediaBrowserServiceCompat$ConnectionRecord val$connection -> a
     java.lang.String val$parentId -> b
     android.os.Bundle val$options -> c
     android.support.v4.media.MediaBrowserServiceCompat this$0 -> d
-    870:870:void <init>(android.support.v4.media.MediaBrowserServiceCompat,java.lang.Object,android.support.v4.media.MediaBrowserServiceCompat$ConnectionRecord,java.lang.String,android.os.Bundle) -> <init>
-    873:891:void onResultSent(java.util.List,int) -> a
-    870:870:void onResultSent(java.lang.Object,int) -> a
+    856:856:void <init>(android.support.v4.media.MediaBrowserServiceCompat,java.lang.Object,android.support.v4.media.MediaBrowserServiceCompat$ConnectionRecord,java.lang.String,android.os.Bundle) -> <init>
+    859:877:void onResultSent(java.util.List,int) -> a
+    856:856:void onResultSent(java.lang.Object,int) -> a
 android.support.v4.media.MediaBrowserServiceCompat$4 -> android.support.v4.media.MediaBrowserServiceCompat$3:
     android.support.v4.os.ResultReceiver val$receiver -> a
     android.support.v4.media.MediaBrowserServiceCompat this$0 -> b
-    926:926:void <init>(android.support.v4.media.MediaBrowserServiceCompat,java.lang.Object,android.support.v4.os.ResultReceiver) -> <init>
-    929:932:void onResultSent(android.support.v4.media.MediaBrowserCompat$MediaItem,int) -> a
-    926:926:void onResultSent(java.lang.Object,int) -> a
+    912:912:void <init>(android.support.v4.media.MediaBrowserServiceCompat,java.lang.Object,android.support.v4.os.ResultReceiver) -> <init>
+    915:918:void onResultSent(android.support.v4.media.MediaBrowserCompat$MediaItem,int) -> a
+    912:912:void onResultSent(java.lang.Object,int) -> a
 android.support.v4.media.MediaBrowserServiceCompat$BrowserRoot -> android.support.v4.media.MediaBrowserServiceCompat$a:
     java.lang.String mRootId -> a
     android.os.Bundle mExtras -> b
-    1022:1022:java.lang.String getRootId() -> a
-    1029:1029:android.os.Bundle getExtras() -> b
+    1008:1008:java.lang.String getRootId() -> a
+    1015:1015:android.os.Bundle getExtras() -> b
 android.support.v4.media.MediaBrowserServiceCompat$ConnectionRecord -> android.support.v4.media.MediaBrowserServiceCompat$b:
     java.lang.String pkg -> a
     android.os.Bundle rootHints -> b
@@ -1043,18 +1045,18 @@ android.support.v4.media.MediaBrowserServiceCompat$ConnectionRecord -> android.s
     android.support.v4.media.MediaBrowserServiceCompat$BrowserRoot root -> d
     java.util.HashMap subscriptions -> e
     android.support.v4.media.MediaBrowserServiceCompat this$0 -> f
-    220:225:void <init>(android.support.v4.media.MediaBrowserServiceCompat) -> <init>
-    220:220:void <init>(android.support.v4.media.MediaBrowserServiceCompat,android.support.v4.media.MediaBrowserServiceCompat$1) -> <init>
+    217:222:void <init>(android.support.v4.media.MediaBrowserServiceCompat) -> <init>
+    217:217:void <init>(android.support.v4.media.MediaBrowserServiceCompat,android.support.v4.media.MediaBrowserServiceCompat$1) -> <init>
 android.support.v4.media.MediaBrowserServiceCompat$Result -> android.support.v4.media.MediaBrowserServiceCompat$c:
     java.lang.Object mDebug -> a
     boolean mDetachCalled -> b
     boolean mSendResultCalled -> c
     int mFlags -> d
-    247:249:void <init>(java.lang.Object) -> <init>
-    255:260:void sendResult(java.lang.Object) -> a
-    279:279:boolean isDone() -> a
-    283:284:void setFlags(int) -> a
-    291:291:void onResultSent(java.lang.Object,int) -> a
+    244:246:void <init>(java.lang.Object) -> <init>
+    252:257:void sendResult(java.lang.Object) -> a
+    276:276:boolean isDone() -> a
+    280:281:void setFlags(int) -> a
+    288:288:void onResultSent(java.lang.Object,int) -> a
 android.support.v4.media.MediaBrowserServiceCompat$ServiceCallbacks -> android.support.v4.media.MediaBrowserServiceCompat$d:
     android.os.IBinder asBinder() -> a
     void onConnect(java.lang.String,android.support.v4.media.session.MediaSessionCompat$Token,android.os.Bundle) -> a
@@ -1063,74 +1065,68 @@ android.support.v4.media.MediaBrowserServiceCompat$ServiceCallbacks -> android.s
 android.support.v4.media.MediaBrowserServiceCompat$ServiceCallbacksCompat -> android.support.v4.media.MediaBrowserServiceCompat$e:
     android.os.Messenger mCallbacks -> a
     android.support.v4.media.MediaBrowserServiceCompat this$0 -> b
-    510:512:void <init>(android.support.v4.media.MediaBrowserServiceCompat,android.os.Messenger) -> <init>
-    515:515:android.os.IBinder asBinder() -> a
-    520:529:void onConnect(java.lang.String,android.support.v4.media.session.MediaSessionCompat$Token,android.os.Bundle) -> a
-    532:533:void onConnectFailed() -> b
-    537:545:void onLoadChildren(java.lang.String,java.util.List,android.os.Bundle) -> a
-    548:553:void sendRequest(int,android.os.Bundle) -> a
+    496:498:void <init>(android.support.v4.media.MediaBrowserServiceCompat,android.os.Messenger) -> <init>
+    501:501:android.os.IBinder asBinder() -> a
+    506:515:void onConnect(java.lang.String,android.support.v4.media.session.MediaSessionCompat$Token,android.os.Bundle) -> a
+    518:519:void onConnectFailed() -> b
+    523:531:void onLoadChildren(java.lang.String,java.util.List,android.os.Bundle) -> a
+    534:539:void sendRequest(int,android.os.Bundle) -> a
 android.support.v4.media.MediaBrowserServiceCompat$ServiceHandler -> android.support.v4.media.MediaBrowserServiceCompat$f:
     android.support.v4.media.MediaBrowserServiceCompat$ServiceImpl mServiceImpl -> b
     android.support.v4.media.MediaBrowserServiceCompat this$0 -> a
     154:155:void <init>(android.support.v4.media.MediaBrowserServiceCompat) -> <init>
-    159:192:void handleMessage(android.os.Message) -> handleMessage
-    198:201:boolean sendMessageAtTime(android.os.Message,long) -> sendMessageAtTime
-    205:210:void postOrRun(java.lang.Runnable) -> a
+    159:189:void handleMessage(android.os.Message) -> handleMessage
+    195:198:boolean sendMessageAtTime(android.os.Message,long) -> sendMessageAtTime
+    202:207:void postOrRun(java.lang.Runnable) -> a
     154:154:void <init>(android.support.v4.media.MediaBrowserServiceCompat,android.support.v4.media.MediaBrowserServiceCompat$1) -> <init>
 android.support.v4.media.MediaBrowserServiceCompat$ServiceImpl -> android.support.v4.media.MediaBrowserServiceCompat$g:
     android.support.v4.media.MediaBrowserServiceCompat this$0 -> a
-    294:294:void <init>(android.support.v4.media.MediaBrowserServiceCompat) -> <init>
-    298:344:void connect(java.lang.String,int,android.os.Bundle,android.support.v4.media.MediaBrowserServiceCompat$ServiceCallbacks) -> a
-    347:359:void disconnect(android.support.v4.media.MediaBrowserServiceCompat$ServiceCallbacks) -> a
-    363:379:void addSubscription(java.lang.String,android.os.Bundle,android.support.v4.media.MediaBrowserServiceCompat$ServiceCallbacks) -> a
-    383:401:void removeSubscription(java.lang.String,android.os.Bundle,android.support.v4.media.MediaBrowserServiceCompat$ServiceCallbacks) -> b
-    404:414:void getMediaItem(java.lang.String,android.support.v4.os.ResultReceiver) -> a
-    418:430:void registerCallbacks(android.support.v4.media.MediaBrowserServiceCompat$ServiceCallbacks) -> b
-    434:441:void unregisterCallbacks(android.support.v4.media.MediaBrowserServiceCompat$ServiceCallbacks) -> c
-    294:294:void <init>(android.support.v4.media.MediaBrowserServiceCompat,android.support.v4.media.MediaBrowserServiceCompat$1) -> <init>
+    291:291:void <init>(android.support.v4.media.MediaBrowserServiceCompat) -> <init>
+    295:341:void connect(java.lang.String,int,android.os.Bundle,android.support.v4.media.MediaBrowserServiceCompat$ServiceCallbacks) -> a
+    344:356:void disconnect(android.support.v4.media.MediaBrowserServiceCompat$ServiceCallbacks) -> a
+    360:376:void addSubscription(java.lang.String,android.os.Bundle,android.support.v4.media.MediaBrowserServiceCompat$ServiceCallbacks) -> a
+    380:398:void removeSubscription(java.lang.String,android.os.Bundle,android.support.v4.media.MediaBrowserServiceCompat$ServiceCallbacks) -> b
+    401:411:void getMediaItem(java.lang.String,android.support.v4.os.ResultReceiver) -> a
+    415:427:void registerCallbacks(android.support.v4.media.MediaBrowserServiceCompat$ServiceCallbacks) -> b
+    291:291:void <init>(android.support.v4.media.MediaBrowserServiceCompat,android.support.v4.media.MediaBrowserServiceCompat$1) -> <init>
 android.support.v4.media.MediaBrowserServiceCompat$ServiceImpl$1 -> android.support.v4.media.MediaBrowserServiceCompat$g$1:
     android.support.v4.media.MediaBrowserServiceCompat$ServiceCallbacks val$callbacks -> a
     java.lang.String val$pkg -> b
     android.os.Bundle val$rootHints -> c
     int val$uid -> d
     android.support.v4.media.MediaBrowserServiceCompat$ServiceImpl this$1 -> e
-    303:303:void <init>(android.support.v4.media.MediaBrowserServiceCompat$ServiceImpl,android.support.v4.media.MediaBrowserServiceCompat$ServiceCallbacks,java.lang.String,android.os.Bundle,int) -> <init>
-    306:342:void run() -> run
+    300:300:void <init>(android.support.v4.media.MediaBrowserServiceCompat$ServiceImpl,android.support.v4.media.MediaBrowserServiceCompat$ServiceCallbacks,java.lang.String,android.os.Bundle,int) -> <init>
+    303:339:void run() -> run
 android.support.v4.media.MediaBrowserServiceCompat$ServiceImpl$2 -> android.support.v4.media.MediaBrowserServiceCompat$g$2:
     android.support.v4.media.MediaBrowserServiceCompat$ServiceCallbacks val$callbacks -> a
     android.support.v4.media.MediaBrowserServiceCompat$ServiceImpl this$1 -> b
-    347:347:void <init>(android.support.v4.media.MediaBrowserServiceCompat$ServiceImpl,android.support.v4.media.MediaBrowserServiceCompat$ServiceCallbacks) -> <init>
-    350:357:void run() -> run
+    344:344:void <init>(android.support.v4.media.MediaBrowserServiceCompat$ServiceImpl,android.support.v4.media.MediaBrowserServiceCompat$ServiceCallbacks) -> <init>
+    347:354:void run() -> run
 android.support.v4.media.MediaBrowserServiceCompat$ServiceImpl$3 -> android.support.v4.media.MediaBrowserServiceCompat$g$3:
     android.support.v4.media.MediaBrowserServiceCompat$ServiceCallbacks val$callbacks -> a
     java.lang.String val$id -> b
     android.os.Bundle val$options -> c
     android.support.v4.media.MediaBrowserServiceCompat$ServiceImpl this$1 -> d
-    363:363:void <init>(android.support.v4.media.MediaBrowserServiceCompat$ServiceImpl,android.support.v4.media.MediaBrowserServiceCompat$ServiceCallbacks,java.lang.String,android.os.Bundle) -> <init>
-    366:377:void run() -> run
+    360:360:void <init>(android.support.v4.media.MediaBrowserServiceCompat$ServiceImpl,android.support.v4.media.MediaBrowserServiceCompat$ServiceCallbacks,java.lang.String,android.os.Bundle) -> <init>
+    363:374:void run() -> run
 android.support.v4.media.MediaBrowserServiceCompat$ServiceImpl$4 -> android.support.v4.media.MediaBrowserServiceCompat$g$4:
     android.support.v4.media.MediaBrowserServiceCompat$ServiceCallbacks val$callbacks -> a
     java.lang.String val$id -> b
     android.os.Bundle val$options -> c
     android.support.v4.media.MediaBrowserServiceCompat$ServiceImpl this$1 -> d
-    383:383:void <init>(android.support.v4.media.MediaBrowserServiceCompat$ServiceImpl,android.support.v4.media.MediaBrowserServiceCompat$ServiceCallbacks,java.lang.String,android.os.Bundle) -> <init>
-    386:399:void run() -> run
+    380:380:void <init>(android.support.v4.media.MediaBrowserServiceCompat$ServiceImpl,android.support.v4.media.MediaBrowserServiceCompat$ServiceCallbacks,java.lang.String,android.os.Bundle) -> <init>
+    383:396:void run() -> run
 android.support.v4.media.MediaBrowserServiceCompat$ServiceImpl$5 -> android.support.v4.media.MediaBrowserServiceCompat$g$5:
     java.lang.String val$mediaId -> a
     android.support.v4.os.ResultReceiver val$receiver -> b
     android.support.v4.media.MediaBrowserServiceCompat$ServiceImpl this$1 -> c
-    408:408:void <init>(android.support.v4.media.MediaBrowserServiceCompat$ServiceImpl,java.lang.String,android.support.v4.os.ResultReceiver) -> <init>
-    411:412:void run() -> run
+    405:405:void <init>(android.support.v4.media.MediaBrowserServiceCompat$ServiceImpl,java.lang.String,android.support.v4.os.ResultReceiver) -> <init>
+    408:409:void run() -> run
 android.support.v4.media.MediaBrowserServiceCompat$ServiceImpl$6 -> android.support.v4.media.MediaBrowserServiceCompat$g$6:
     android.support.v4.media.MediaBrowserServiceCompat$ServiceCallbacks val$callbacks -> a
     android.support.v4.media.MediaBrowserServiceCompat$ServiceImpl this$1 -> b
-    418:418:void <init>(android.support.v4.media.MediaBrowserServiceCompat$ServiceImpl,android.support.v4.media.MediaBrowserServiceCompat$ServiceCallbacks) -> <init>
-    421:428:void run() -> run
-android.support.v4.media.MediaBrowserServiceCompat$ServiceImpl$7 -> android.support.v4.media.MediaBrowserServiceCompat$g$7:
-    android.support.v4.media.MediaBrowserServiceCompat$ServiceCallbacks val$callbacks -> a
-    android.support.v4.media.MediaBrowserServiceCompat$ServiceImpl this$1 -> b
-    434:434:void <init>(android.support.v4.media.MediaBrowserServiceCompat$ServiceImpl,android.support.v4.media.MediaBrowserServiceCompat$ServiceCallbacks) -> <init>
-    437:439:void run() -> run
+    415:415:void <init>(android.support.v4.media.MediaBrowserServiceCompat$ServiceImpl,android.support.v4.media.MediaBrowserServiceCompat$ServiceCallbacks) -> <init>
+    418:425:void run() -> run
 android.support.v4.media.MediaDescriptionCompat -> android.support.v4.media.c:
     java.lang.String mMediaId -> a
     java.lang.CharSequence mTitle -> b
@@ -1485,11 +1481,11 @@ android.support.v4.view.LayoutInflaterFactory -> android.support.v4.d.e:
     android.view.View onCreateView(android.view.View,java.lang.String,android.content.Context,android.util.AttributeSet) -> a
 android.support.v4.view.ViewCompat -> android.support.v4.d.f:
     android.support.v4.view.ViewCompat$ViewCompatImpl IMPL -> a
-    2124:2125:void setLayerType(android.view.View,int,android.graphics.Paint) -> a
-    2145:2145:int getLayerType(android.view.View) -> a
-    2873:2874:void setSaveFromParentEnabled(android.view.View,boolean) -> a
-    2904:2904:boolean hasOverlappingRendering(android.view.View) -> b
-    1692:1716:void <clinit>() -> <clinit>
+    2114:2115:void setLayerType(android.view.View,int,android.graphics.Paint) -> a
+    2135:2135:int getLayerType(android.view.View) -> a
+    2863:2864:void setSaveFromParentEnabled(android.view.View,boolean) -> a
+    2894:2894:boolean hasOverlappingRendering(android.view.View) -> b
+    1682:1706:void <clinit>() -> <clinit>
 android.support.v4.view.ViewCompat$BaseViewCompatImpl -> android.support.v4.d.f$a:
     java.util.WeakHashMap mViewPropertyAnimatorCompatMap -> a
     462:466:void <init>() -> <init>
@@ -1524,7 +1520,7 @@ android.support.v4.view.ViewCompat$KitKatViewCompatImpl -> android.support.v4.d.
 android.support.v4.view.ViewCompat$LollipopViewCompatImpl -> android.support.v4.d.f$k:
     1520:1520:void <init>() -> <init>
 android.support.v4.view.ViewCompat$MarshmallowViewCompatImpl -> android.support.v4.d.f$l:
-    1662:1662:void <init>() -> <init>
+    1652:1652:void <init>() -> <init>
 android.support.v4.view.ViewCompat$ViewCompatImpl -> android.support.v4.d.f$m:
     void setLayerType(android.view.View,int,android.graphics.Paint) -> a
     int getLayerType(android.view.View) -> a
@@ -23671,25 +23667,24 @@ org.acra.ACRA -> org.acra.ACRA:
     org.acra.config.ACRAConfiguration configProxy -> configProxy
     org.acra.ErrorReporter errorReporterSingleton -> errorReporterSingleton
     android.content.SharedPreferences$OnSharedPreferenceChangeListener mPrefListener -> mPrefListener
-    53:53:void <init>() -> <init>
-    138:148:void init(android.app.Application) -> init
-    164:165:void init(android.app.Application,org.acra.config.ConfigurationBuilder) -> init
-    180:184:void init(android.app.Application,org.acra.config.ConfigurationBuilder,boolean) -> init
-    200:201:void init(android.app.Application,org.acra.config.ACRAConfiguration) -> init
-    217:294:void init(android.app.Application,org.acra.config.ACRAConfiguration,boolean) -> init
-    301:301:boolean isInitialised() -> isInitialised
-    309:312:boolean isACRASenderServiceProcess() -> isACRASenderServiceProcess
-    318:320:java.lang.String getCurrentProcessName() -> getCurrentProcessName
-    330:333:org.acra.ErrorReporter getErrorReporter() -> getErrorReporter
-    349:356:boolean shouldDisableACRA(android.content.SharedPreferences) -> shouldDisableACRA
-    366:369:android.content.SharedPreferences getACRASharedPreferences() -> getACRASharedPreferences
-    380:383:org.acra.config.ACRAConfiguration getConfig() -> getConfig
-    388:392:void setLog(org.acra.log.ACRALog) -> setLog
-    52:52:boolean access$000(android.content.SharedPreferences) -> access$000
-    55:60:void <clinit>() -> <clinit>
+    49:49:void <init>() -> <init>
+    134:140:void init(android.app.Application) -> init
+    156:157:void init(android.app.Application,org.acra.config.ACRAConfiguration) -> init
+    173:256:void init(android.app.Application,org.acra.config.ACRAConfiguration,boolean) -> init
+    263:263:boolean isInitialised() -> isInitialised
+    270:272:boolean isACRASenderServiceProcess(android.app.Application) -> isACRASenderServiceProcess
+    277:284:java.lang.String getCurrentProcessName(android.app.Application) -> getCurrentProcessName
+    293:296:org.acra.ErrorReporter getErrorReporter() -> getErrorReporter
+    312:319:boolean shouldDisableACRA(android.content.SharedPreferences) -> shouldDisableACRA
+    329:332:android.content.SharedPreferences getACRASharedPreferences() -> getACRASharedPreferences
+    344:347:org.acra.config.ACRAConfiguration getConfig() -> getConfig
+    358:358:org.acra.config.ACRAConfiguration getNewDefaultConfig(android.app.Application) -> getNewDefaultConfig
+    363:367:void setLog(org.acra.log.ACRALog) -> setLog
+    48:48:boolean access$000(android.content.SharedPreferences) -> access$000
+    53:56:void <clinit>() -> <clinit>
 org.acra.ACRA$1 -> org.acra.ACRA$1:
-    279:279:void <init>() -> <init>
-    283:287:void onSharedPreferenceChanged(android.content.SharedPreferences,java.lang.String) -> onSharedPreferenceChanged
+    241:241:void <init>() -> <init>
+    245:249:void onSharedPreferenceChanged(android.content.SharedPreferences,java.lang.String) -> onSharedPreferenceChanged
 org.acra.ACRAConstants -> org.acra.ACRAConstants:
     java.lang.String REPORTFILE_EXTENSION -> REPORTFILE_EXTENSION
     java.lang.String APPROVED_SUFFIX -> APPROVED_SUFFIX
@@ -23703,7 +23698,7 @@ org.acra.ACRAConstants -> org.acra.ACRAConstants:
     int NOTIF_CRASH_ID -> NOTIF_CRASH_ID
     int TOAST_WAIT_DURATION -> TOAST_WAIT_DURATION
     java.lang.String NULL_VALUE -> NULL_VALUE
-    boolean DEFAULT_REPORT_TO_ANDROID_FRAMEWORK -> DEFAULT_REPORT_TO_ANDROID_FRAMEWORK
+    boolean DEFAULT_FORCE_CLOSE_DIALOG_AFTER_TOAST -> DEFAULT_FORCE_CLOSE_DIALOG_AFTER_TOAST
     int DEFAULT_SOCKET_TIMEOUT -> DEFAULT_SOCKET_TIMEOUT
     int DEFAULT_CONNECTION_TIMEOUT -> DEFAULT_CONNECTION_TIMEOUT
     boolean DEFAULT_DELETE_UNAPPROVED_REPORTS_ON_APPLICATION_START -> DEFAULT_DELETE_UNAPPROVED_REPORTS_ON_APPLICATION_START
@@ -23726,12 +23721,11 @@ org.acra.ACRAConstants -> org.acra.ACRAConstants:
     org.acra.ReportField[] DEFAULT_MAIL_REPORT_FIELDS -> DEFAULT_MAIL_REPORT_FIELDS
     org.acra.ReportField[] DEFAULT_REPORT_FIELDS -> DEFAULT_REPORT_FIELDS
     java.lang.String DATE_TIME_FORMAT_STRING -> DATE_TIME_FORMAT_STRING
-    java.lang.String DEFAULT_CERTIFICATE_TYPE -> DEFAULT_CERTIFICATE_TYPE
     33:33:void <init>() -> <init>
     46:153:void <clinit>() -> <clinit>
 org.acra.CrashReportDialog -> org.acra.CrashReportDialog:
     13:13:void <init>() -> <init>
-    17:19:void buildAndShowDialog(android.os.Bundle) -> buildAndShowDialog
+    16:18:void buildAndShowDialog(android.os.Bundle) -> buildAndShowDialog
 org.acra.ErrorReporter -> org.acra.ErrorReporter:
     boolean supportedAndroidVersion -> supportedAndroidVersion
     android.app.Application context -> context
@@ -23747,13 +23741,13 @@ org.acra.ErrorReporter -> org.acra.ErrorReporter:
     220:221:void clearCustomData() -> clearCustomData
     234:234:java.lang.String getCustomData(java.lang.String) -> getCustomData
     248:271:void uncaughtException(java.lang.Thread,java.lang.Throwable) -> uncaughtException
-    281:286:void handleSilentException(java.lang.Throwable) -> handleSilentException
-    296:302:void setEnabled(boolean) -> setEnabled
-    311:321:void checkReportsOnApplicationStart() -> checkReportsOnApplicationStart
-    336:343:void handleException(java.lang.Throwable,boolean) -> handleException
-    356:357:void handleException(java.lang.Throwable) -> handleException
-    365:369:void performDeprecatedReportPriming() -> performDeprecatedReportPriming
-    374:381:org.acra.builder.ReportPrimer getReportPrimer(org.acra.config.ACRAConfiguration) -> getReportPrimer
+    280:285:void handleSilentException(java.lang.Throwable) -> handleSilentException
+    295:301:void setEnabled(boolean) -> setEnabled
+    310:320:void checkReportsOnApplicationStart() -> checkReportsOnApplicationStart
+    335:342:void handleException(java.lang.Throwable,boolean) -> handleException
+    355:356:void handleException(java.lang.Throwable) -> handleException
+    364:368:void performDeprecatedReportPriming() -> performDeprecatedReportPriming
+    373:380:org.acra.builder.ReportPrimer getReportPrimer(org.acra.config.ACRAConfiguration) -> getReportPrimer
 org.acra.ErrorReporter$1 -> org.acra.ErrorReporter$1:
     org.acra.ErrorReporter this$0 -> this$0
     74:74:void <init>(org.acra.ErrorReporter) -> <init>
@@ -23870,7 +23864,6 @@ org.acra.annotation.ReportsCrashes -> org.acra.annotation.ReportsCrashes:
     int resDialogOkToast() -> resDialogOkToast
     int resDialogText() -> resDialogText
     int resDialogTitle() -> resDialogTitle
-    int resDialogTheme() -> resDialogTheme
     int resNotifIcon() -> resNotifIcon
     int resNotifText() -> resNotifText
     int resNotifTickerText() -> resNotifTickerText
@@ -23890,7 +23883,7 @@ org.acra.annotation.ReportsCrashes -> org.acra.annotation.ReportsCrashes:
     boolean deleteOldUnsentReportsOnApplicationStart() -> deleteOldUnsentReportsOnApplicationStart
     int connectionTimeout() -> connectionTimeout
     int socketTimeout() -> socketTimeout
-    boolean alsoReportToAndroidFramework() -> alsoReportToAndroidFramework
+    boolean forceCloseDialogAfterToast() -> forceCloseDialogAfterToast
     java.lang.String[] additionalSharedPreferences() -> additionalSharedPreferences
     boolean logcatFilterByPid() -> logcatFilterByPid
     boolean sendReportsInDevMode() -> sendReportsInDevMode
@@ -23905,10 +23898,6 @@ org.acra.annotation.ReportsCrashes -> org.acra.annotation.ReportsCrashes:
     java.lang.Class reportPrimerClass() -> reportPrimerClass
     org.acra.sender.HttpSender$Method httpMethod() -> httpMethod
     org.acra.sender.HttpSender$Type reportType() -> reportType
-    java.lang.Class keyStoreFactoryClass() -> keyStoreFactoryClass
-    java.lang.String certificatePath() -> certificatePath
-    int resCertificate() -> resCertificate
-    java.lang.String certificateType() -> certificateType
 org.acra.builder.LastActivityManager -> org.acra.builder.LastActivityManager:
     java.lang.ref.WeakReference lastActivityCreated -> lastActivityCreated
     24:73:void <init>(android.app.Application) -> <init>
@@ -23918,13 +23907,13 @@ org.acra.builder.LastActivityManager -> org.acra.builder.LastActivityManager:
 org.acra.builder.LastActivityManager$1 -> org.acra.builder.LastActivityManager$1:
     org.acra.builder.LastActivityManager this$0 -> this$0
     31:31:void <init>(org.acra.builder.LastActivityManager) -> <init>
-    34:40:void onActivityCreated(android.app.Activity,android.os.Bundle) -> onActivityCreated
-    44:45:void onActivityStarted(android.app.Activity) -> onActivityStarted
-    49:50:void onActivityResumed(android.app.Activity) -> onActivityResumed
-    54:55:void onActivityPaused(android.app.Activity) -> onActivityPaused
-    59:60:void onActivityStopped(android.app.Activity) -> onActivityStopped
-    64:65:void onActivitySaveInstanceState(android.app.Activity,android.os.Bundle) -> onActivitySaveInstanceState
-    69:70:void onActivityDestroyed(android.app.Activity) -> onActivityDestroyed
+    35:40:void onActivityCreated(android.app.Activity,android.os.Bundle) -> onActivityCreated
+    45:45:void onActivityStarted(android.app.Activity) -> onActivityStarted
+    50:50:void onActivityResumed(android.app.Activity) -> onActivityResumed
+    55:55:void onActivityPaused(android.app.Activity) -> onActivityPaused
+    60:60:void onActivityStopped(android.app.Activity) -> onActivityStopped
+    65:65:void onActivitySaveInstanceState(android.app.Activity,android.os.Bundle) -> onActivitySaveInstanceState
+    70:70:void onActivityDestroyed(android.app.Activity) -> onActivityDestroyed
 org.acra.builder.NoOpReportPrimer -> org.acra.builder.NoOpReportPrimer:
     10:10:void <init>() -> <init>
     15:15:void primeReport(android.content.Context,org.acra.builder.ReportBuilder) -> primeReport
@@ -23949,7 +23938,7 @@ org.acra.builder.ReportBuilder -> org.acra.builder.ReportBuilder:
     122:122:boolean isSendSilently() -> isSendSilently
     132:133:org.acra.builder.ReportBuilder endApplication() -> endApplication
     137:137:boolean isEndApplication() -> isEndApplication
-    146:151:void build(org.acra.builder.ReportExecutor) -> build
+    144:149:void build(org.acra.builder.ReportExecutor) -> build
 org.acra.builder.ReportExecutor -> org.acra.builder.ReportExecutor:
     int THREAD_SLEEP_INTERVAL_MILLIS -> THREAD_SLEEP_INTERVAL_MILLIS
     android.content.Context context -> context
@@ -23964,17 +23953,17 @@ org.acra.builder.ReportExecutor -> org.acra.builder.ReportExecutor:
     93:102:void handReportToDefaultExceptionHandler(java.lang.Thread,java.lang.Throwable) -> handReportToDefaultExceptionHandler
     105:105:boolean isEnabled() -> isEnabled
     109:110:void setEnabled(boolean) -> setEnabled
-    119:223:void execute(org.acra.builder.ReportBuilder) -> execute
-    226:241:void dialogAndEnd(org.acra.builder.ReportBuilder,java.io.File,boolean) -> dialogAndEnd
-    247:273:void endApplication(java.lang.Thread,java.lang.Throwable) -> endApplication
-    281:287:void startSendingReports(boolean) -> startSendingReports
-    299:336:void createNotification(java.io.File,org.acra.builder.ReportBuilder) -> createNotification
-    340:346:java.io.File getReportFileName(org.acra.collector.CrashReportData) -> getReportFileName
-    366:372:void saveCrashReportFile(java.io.File,org.acra.collector.CrashReportData) -> saveCrashReportFile
-    383:388:android.content.Intent createCrashReportDialogIntent(java.io.File,org.acra.builder.ReportBuilder) -> createCrashReportDialogIntent
+    119:224:void execute(org.acra.builder.ReportBuilder) -> execute
+    227:242:void dialogAndEnd(org.acra.builder.ReportBuilder,java.io.File,boolean) -> dialogAndEnd
+    250:279:void endApplication(java.lang.Thread,java.lang.Throwable) -> endApplication
+    288:294:void startSendingReports(boolean,boolean) -> startSendingReports
+    306:343:void createNotification(java.io.File,org.acra.builder.ReportBuilder) -> createNotification
+    347:354:java.io.File getReportFileName(org.acra.collector.CrashReportData) -> getReportFileName
+    375:380:void saveCrashReportFile(java.io.File,org.acra.collector.CrashReportData) -> saveCrashReportFile
+    392:396:android.content.Intent createCrashReportDialogIntent(java.io.File,org.acra.builder.ReportBuilder) -> createCrashReportDialogIntent
     41:41:android.content.Context access$100(org.acra.builder.ReportExecutor) -> access$100
     41:41:org.acra.config.ACRAConfiguration access$200(org.acra.builder.ReportExecutor) -> access$200
-    41:41:void access$400(org.acra.builder.ReportExecutor,org.acra.builder.ReportBuilder,java.io.File,boolean) -> access$400
+    41:41:void access$300(org.acra.builder.ReportExecutor,org.acra.builder.ReportBuilder,java.io.File,boolean) -> access$300
     61:61:void <clinit>() -> <clinit>
 org.acra.builder.ReportExecutor$1 -> org.acra.builder.ReportExecutor$1:
     org.acra.builder.ReportExecutor$TimeHelper val$sentToastTimeMillis -> val$sentToastTimeMillis
@@ -23988,117 +23977,18 @@ org.acra.builder.ReportExecutor$2 -> org.acra.builder.ReportExecutor$2:
     boolean val$showDirectDialog -> val$showDirectDialog
     org.acra.builder.ReportExecutor this$0 -> this$0
     200:200:void <init>(org.acra.builder.ReportExecutor,org.acra.builder.ReportExecutor$TimeHelper,org.acra.builder.ReportBuilder,java.io.File,boolean) -> <init>
-    204:218:void run() -> run
+    208:219:void run() -> run
 org.acra.builder.ReportExecutor$TimeHelper -> org.acra.builder.ReportExecutor$TimeHelper:
     java.lang.Long initialTimeMillis -> initialTimeMillis
     76:76:void <init>() -> <init>
     81:82:void setInitialTimeMillis(long) -> setInitialTimeMillis
     88:88:long getElapsedTime() -> getElapsedTime
     76:76:void <init>(org.acra.builder.ReportExecutor$1) -> <init>
-    76:76:java.lang.Long access$300(org.acra.builder.ReportExecutor$TimeHelper) -> access$300
 org.acra.builder.ReportPrimer -> org.acra.builder.ReportPrimer:
     void primeReport(android.content.Context,org.acra.builder.ReportBuilder) -> primeReport
-org.acra.collections.BoundedLinkedList -> org.acra.collections.BoundedLinkedList:
-    int maxSize -> maxSize
-    35:37:void <init>(int) -> <init>
-    46:49:boolean add(java.lang.Object) -> add
-    59:63:void add(int,java.lang.Object) -> add
-    72:85:boolean addAll(java.util.Collection) -> addAll
-    101:104:boolean addAll(int,java.util.Collection) -> addAll
-    115:115:void addFirst(java.lang.Object) -> addFirst
-    125:126:void addLast(java.lang.Object) -> addLast
-    136:140:java.lang.String toString() -> toString
-    145:145:boolean offer(java.lang.Object) -> offer
-    150:151:boolean offerFirst(java.lang.Object) -> offerFirst
-    156:156:boolean offerLast(java.lang.Object) -> offerLast
-    161:162:void push(java.lang.Object) -> push
-org.acra.collections.ImmutableList -> org.acra.collections.ImmutableList:
-    java.util.List mList -> mList
-    37:39:void <init>(java.util.Collection) -> <init>
-    43:43:void add(int,java.lang.Object) -> add
-    48:48:boolean add(java.lang.Object) -> add
-    53:53:boolean addAll(int,java.util.Collection) -> addAll
-    58:58:boolean addAll(java.util.Collection) -> addAll
-    63:63:void clear() -> clear
-    68:68:boolean contains(java.lang.Object) -> contains
-    73:73:boolean containsAll(java.util.Collection) -> containsAll
-    78:78:java.lang.Object get(int) -> get
-    83:83:int indexOf(java.lang.Object) -> indexOf
-    88:88:boolean isEmpty() -> isEmpty
-    94:94:java.util.Iterator iterator() -> iterator
-    99:99:int lastIndexOf(java.lang.Object) -> lastIndexOf
-    104:104:java.util.ListIterator listIterator() -> listIterator
-    110:110:java.util.ListIterator listIterator(int) -> listIterator
-    115:115:java.lang.Object remove(int) -> remove
-    120:120:boolean remove(java.lang.Object) -> remove
-    125:125:boolean removeAll(java.util.Collection) -> removeAll
-    130:130:boolean retainAll(java.util.Collection) -> retainAll
-    135:135:java.lang.Object set(int,java.lang.Object) -> set
-    140:140:int size() -> size
-    146:146:java.util.List subList(int,int) -> subList
-    152:152:java.lang.Object[] toArray() -> toArray
-    159:159:java.lang.Object[] toArray(java.lang.Object[]) -> toArray
-org.acra.collections.ImmutableMap -> org.acra.collections.ImmutableMap:
-    java.util.Map mMap -> mMap
-    36:38:void <init>(java.util.Map) -> <init>
-    42:42:void clear() -> clear
-    47:47:boolean containsKey(java.lang.Object) -> containsKey
-    52:52:boolean containsValue(java.lang.Object) -> containsValue
-    58:63:java.util.Set entrySet() -> entrySet
-    68:68:java.lang.Object get(java.lang.Object) -> get
-    73:73:boolean isEmpty() -> isEmpty
-    79:79:java.util.Set keySet() -> keySet
-    84:84:java.lang.Object put(java.lang.Object,java.lang.Object) -> put
-    89:89:void putAll(java.util.Map) -> putAll
-    94:94:java.lang.Object remove(java.lang.Object) -> remove
-    99:99:int size() -> size
-    105:105:java.util.Collection values() -> values
-org.acra.collections.ImmutableMap$ImmutableEntryWrapper -> org.acra.collections.ImmutableMap$ImmutableEntryWrapper:
-    java.util.Map$Entry mEntry -> mEntry
-    111:113:void <init>(java.util.Map$Entry) -> <init>
-    117:117:java.lang.Object getKey() -> getKey
-    122:122:java.lang.Object getValue() -> getValue
-    127:127:java.lang.Object setValue(java.lang.Object) -> setValue
-org.acra.collections.ImmutableSet -> org.acra.collections.ImmutableSet:
-    java.util.Set mSet -> mSet
-    38:39:void <init>(java.lang.Object[]) -> <init>
-    41:43:void <init>(java.util.Collection) -> <init>
-    47:47:boolean add(java.lang.Object) -> add
-    52:52:boolean addAll(java.util.Collection) -> addAll
-    57:57:void clear() -> clear
-    62:62:boolean contains(java.lang.Object) -> contains
-    67:67:boolean containsAll(java.util.Collection) -> containsAll
-    72:72:boolean isEmpty() -> isEmpty
-    78:78:java.util.Iterator iterator() -> iterator
-    83:83:boolean remove(java.lang.Object) -> remove
-    88:88:boolean removeAll(java.util.Collection) -> removeAll
-    93:93:boolean retainAll(java.util.Collection) -> retainAll
-    98:98:int size() -> size
-    104:104:java.lang.Object[] toArray() -> toArray
-    111:111:java.lang.Object[] toArray(java.lang.Object[]) -> toArray
-org.acra.collections.ImmutableSet$Builder -> org.acra.collections.ImmutableSet$Builder:
-    java.util.Set mSet -> mSet
-    117:119:void <init>() -> <init>
-    122:123:void add(java.lang.Object) -> add
-    126:126:org.acra.collections.ImmutableSet build() -> build
-org.acra.collections.UnmodifiableIteratorWrapper -> org.acra.collections.UnmodifiableIteratorWrapper:
-    java.util.Iterator mIterator -> mIterator
-    29:31:void <init>(java.util.Iterator) -> <init>
-    35:35:boolean hasNext() -> hasNext
-    40:40:java.lang.Object next() -> next
-    45:45:void remove() -> remove
-org.acra.collections.UnmodifiableListIteratorWrapper -> org.acra.collections.UnmodifiableListIteratorWrapper:
-    java.util.ListIterator mIterator -> mIterator
-    29:31:void <init>(java.util.ListIterator) -> <init>
-    35:35:void add(java.lang.Object) -> add
-    40:40:boolean hasNext() -> hasNext
-    45:45:boolean hasPrevious() -> hasPrevious
-    50:50:java.lang.Object next() -> next
-    55:55:int nextIndex() -> nextIndex
-    60:60:java.lang.Object previous() -> previous
-    65:65:int previousIndex() -> previousIndex
-    70:70:void remove() -> remove
-    75:75:void set(java.lang.Object) -> set
+org.acra.collector.CollectorUtil -> org.acra.collector.CollectorUtil:
+    9:9:void <init>() -> <init>
+    17:24:void safeClose(java.io.Reader) -> safeClose
 org.acra.collector.ConfigurationCollector -> org.acra.collector.ConfigurationCollector:
     java.lang.String SUFFIX_MASK -> SUFFIX_MASK
     java.lang.String FIELD_SCREENLAYOUT -> FIELD_SCREENLAYOUT
@@ -24137,11 +24027,11 @@ org.acra.collector.CrashReportDataFactory -> org.acra.collector.CrashReportDataF
     141:141:java.lang.String removeCustomData(java.lang.String) -> removeCustomData
     148:149:void clearCustomData() -> clearCustomData
     158:158:java.lang.String getCustomData(java.lang.String) -> getCustomData
-    169:544:org.acra.collector.CrashReportData createCrashData(org.acra.builder.ReportBuilder) -> createCrashData
-    555:577:java.lang.String createCustomInfoString(java.util.Map) -> createCustomInfoString
-    582:599:java.lang.String getStackTrace(java.lang.String,java.lang.Throwable) -> getStackTrace
-    604:615:java.lang.String getStackTraceHash(java.lang.Throwable) -> getStackTraceHash
-    620:632:java.lang.Class getBuildConfigClass() -> getBuildConfigClass
+    168:543:org.acra.collector.CrashReportData createCrashData(org.acra.builder.ReportBuilder) -> createCrashData
+    554:576:java.lang.String createCustomInfoString(java.util.Map) -> createCustomInfoString
+    581:598:java.lang.String getStackTrace(java.lang.String,java.lang.Throwable) -> getStackTrace
+    603:614:java.lang.String getStackTraceHash(java.lang.Throwable) -> getStackTraceHash
+    619:631:java.lang.Class getBuildConfigClass() -> getBuildConfigClass
 org.acra.collector.DeviceFeaturesCollector -> org.acra.collector.DeviceFeaturesCollector:
     33:33:void <init>() -> <init>
     38:57:java.lang.String getFeatures(android.content.Context) -> getFeatures
@@ -24149,50 +24039,44 @@ org.acra.collector.DisplayManagerCollector -> org.acra.collector.DisplayManagerC
     android.util.SparseArray mFlagsNames -> mFlagsNames
     18:18:void <init>() -> <init>
     25:44:java.lang.String collectDisplays(android.content.Context) -> collectDisplays
-    49:67:java.lang.Object collectDisplayData(android.view.Display) -> collectDisplayData
+    49:53:java.lang.Object collectDisplayData(android.view.Display) -> collectDisplayData
     72:75:java.lang.String collectIsValid(android.view.Display) -> collectIsValid
     80:80:java.lang.String collectRotation(android.view.Display) -> collectRotation
     85:95:java.lang.String rotationToString(int) -> rotationToString
     101:107:java.lang.String collectRectSize(android.view.Display) -> collectRectSize
     112:118:java.lang.String collectSize(android.view.Display) -> collectSize
     122:128:java.lang.String collectRealSize(android.view.Display) -> collectRealSize
-    133:140:java.lang.String collectCurrentSizeRange(android.view.Display) -> collectCurrentSizeRange
-    145:157:java.lang.String collectFlags(android.view.Display) -> collectFlags
-    162:165:java.lang.String collectName(android.view.Display) -> collectName
-    170:172:java.lang.String collectMetrics(android.view.Display) -> collectMetrics
-    177:182:java.lang.String collectRealMetrics(android.view.Display) -> collectRealMetrics
-    187:187:java.lang.String collectMetrics(java.lang.String,android.util.DisplayMetrics) -> collectMetrics
-    209:222:java.lang.String activeFlags(android.util.SparseArray,int) -> activeFlags
+    133:139:java.lang.String collectCurrentSizeRange(android.view.Display) -> collectCurrentSizeRange
+    144:156:java.lang.String collectFlags(android.view.Display) -> collectFlags
+    161:164:java.lang.String collectName(android.view.Display) -> collectName
+    169:171:java.lang.String collectMetrics(android.view.Display) -> collectMetrics
+    176:181:java.lang.String collectRealMetrics(android.view.Display) -> collectRealMetrics
+    186:186:java.lang.String collectMetrics(java.lang.String,android.util.DisplayMetrics) -> collectMetrics
+    208:221:java.lang.String activeFlags(android.util.SparseArray,int) -> activeFlags
     20:20:void <clinit>() -> <clinit>
 org.acra.collector.DropBoxCollector -> org.acra.collector.DropBoxCollector:
     java.lang.String[] SYSTEM_TAGS -> SYSTEM_TAGS
     java.lang.String NO_RESULT -> NO_RESULT
     java.text.SimpleDateFormat dateFormat -> dateFormat
-    44:52:void <init>() -> <init>
-    65:113:java.lang.String read(android.content.Context,org.acra.config.ACRAConfiguration) -> read
-    46:46:void <clinit>() -> <clinit>
+    43:51:void <init>() -> <init>
+    64:112:java.lang.String read(android.content.Context,org.acra.config.ACRAConfiguration) -> read
+    45:45:void <clinit>() -> <clinit>
 org.acra.collector.DumpSysCollector -> org.acra.collector.DumpSysCollector:
-    36:36:void <init>() -> <init>
-    47:61:java.lang.String collectMemInfo() -> collectMemInfo
+    38:38:void <init>() -> <init>
+    49:75:java.lang.String collectMemInfo() -> collectMemInfo
 org.acra.collector.LogCatCollector -> org.acra.collector.LogCatCollector:
     int DEFAULT_TAIL_COUNT -> DEFAULT_TAIL_COUNT
-    44:44:void <init>() -> <init>
-    65:127:java.lang.String collectLogCat(org.acra.config.ACRAConfiguration,java.lang.String) -> collectLogCat
+    46:46:void <init>() -> <init>
+    67:139:java.lang.String collectLogCat(org.acra.config.ACRAConfiguration,java.lang.String) -> collectLogCat
 org.acra.collector.LogCatCollector$1 -> org.acra.collector.LogCatCollector$1:
     java.lang.Process val$process -> val$process
     org.acra.collector.LogCatCollector this$0 -> this$0
-    105:105:void <init>(org.acra.collector.LogCatCollector,java.lang.Process) -> <init>
-    109:112:void run() -> run
-org.acra.collector.LogCatCollector$2 -> org.acra.collector.LogCatCollector$2:
-    java.lang.String val$finalMyPidStr -> val$finalMyPidStr
-    org.acra.collector.LogCatCollector this$0 -> this$0
-    116:116:void <init>(org.acra.collector.LogCatCollector,java.lang.String) -> <init>
-    119:119:boolean apply(java.lang.String) -> apply
-    116:116:boolean apply(java.lang.Object) -> apply
+    110:110:void <init>(org.acra.collector.LogCatCollector,java.lang.Process) -> <init>
+    113:120:void run() -> run
 org.acra.collector.LogFileCollector -> org.acra.collector.LogFileCollector:
     37:37:void <init>() -> <init>
-    53:53:java.lang.String collectLogFile(android.content.Context,java.lang.String,int) -> collectLogFile
-    60:73:java.io.InputStream getStream(android.content.Context,java.lang.String) -> getStream
+    53:64:java.lang.String collectLogFile(android.content.Context,java.lang.String,int) -> collectLogFile
+    71:84:java.io.BufferedReader getReader(android.content.Context,java.lang.String) -> getReader
 org.acra.collector.MediaCodecListCollector -> org.acra.collector.MediaCodecListCollector:
     java.lang.String COLOR_FORMAT_PREFIX -> COLOR_FORMAT_PREFIX
     java.lang.String[] MPEG4_TYPES -> MPEG4_TYPES
@@ -24234,34 +24118,39 @@ org.acra.collector.SettingsCollector -> org.acra.collector.SettingsCollector:
     java.lang.String ERROR -> ERROR
     android.content.Context context -> context
     org.acra.config.ACRAConfiguration config -> config
-    48:51:void <init>(android.content.Context,org.acra.config.ACRAConfiguration) -> <init>
-    62:82:java.lang.String collectSystemSettings() -> collectSystemSettings
-    94:111:java.lang.String collectSecureSettings() -> collectSecureSettings
-    123:145:java.lang.String collectGlobalSettings() -> collectGlobalSettings
-    149:157:boolean isAuthorized(java.lang.reflect.Field) -> isAuthorized
+    51:54:void <init>(android.content.Context,org.acra.config.ACRAConfiguration) -> <init>
+    65:85:java.lang.String collectSystemSettings() -> collectSystemSettings
+    97:114:java.lang.String collectSecureSettings() -> collectSecureSettings
+    126:157:java.lang.String collectGlobalSettings() -> collectGlobalSettings
+    161:169:boolean isAuthorized(java.lang.reflect.Field) -> isAuthorized
 org.acra.collector.SharedPreferencesCollector -> org.acra.collector.SharedPreferencesCollector:
     android.content.Context context -> context
     org.acra.config.ACRAConfiguration config -> config
     42:45:void <init>(android.content.Context,org.acra.config.ACRAConfiguration) -> <init>
-    58:96:java.lang.String collect() -> collect
-    107:112:boolean filteredKey(java.lang.String) -> filteredKey
+    58:97:java.lang.String collect() -> collect
+    108:113:boolean filteredKey(java.lang.String) -> filteredKey
 org.acra.collector.ThreadCollector -> org.acra.collector.ThreadCollector:
     29:29:void <init>() -> <init>
     40:51:java.lang.String collect(java.lang.Thread) -> collect
+org.acra.config.ACRAConfig -> org.acra.config.ACRAConfig:
+    java.util.Map getHttpHeaders() -> getHttpHeaders
+    java.security.KeyStore keyStore() -> keyStore
+    java.util.List getReportFields() -> getReportFields
 org.acra.config.ACRAConfiguration -> org.acra.config.ACRAConfiguration:
-    org.acra.collections.ImmutableSet additionalDropBoxTags -> additionalDropBoxTags
-    org.acra.collections.ImmutableSet additionalSharedPreferences -> additionalSharedPreferences
+    java.lang.Class annotationType -> annotationType
+    java.lang.String[] additionalDropBoxTags -> additionalDropBoxTags
+    java.lang.String[] additionalSharedPreferences -> additionalSharedPreferences
     int connectionTimeout -> connectionTimeout
-    org.acra.collections.ImmutableSet reportContent -> reportContent
+    org.acra.ReportField[] customReportContent -> customReportContent
     boolean deleteUnapprovedReportsOnApplicationStart -> deleteUnapprovedReportsOnApplicationStart
     boolean deleteOldUnsentReportsOnApplicationStart -> deleteOldUnsentReportsOnApplicationStart
     int dropboxCollectionMinutes -> dropboxCollectionMinutes
-    boolean alsoReportToAndroidFramework -> alsoReportToAndroidFramework
+    boolean forceCloseDialogAfterToast -> forceCloseDialogAfterToast
     java.lang.String formUri -> formUri
     java.lang.String formUriBasicAuthLogin -> formUriBasicAuthLogin
     java.lang.String formUriBasicAuthPassword -> formUriBasicAuthPassword
     boolean includeDropBoxSystemTags -> includeDropBoxSystemTags
-    org.acra.collections.ImmutableSet logcatArguments -> logcatArguments
+    java.lang.String[] logcatArguments -> logcatArguments
     java.lang.String mailTo -> mailTo
     org.acra.ReportingInteractionMode reportingInteractionMode -> reportingInteractionMode
     java.lang.Class reportDialogClass -> reportDialogClass
@@ -24274,7 +24163,6 @@ org.acra.config.ACRAConfiguration -> org.acra.config.ACRAConfiguration:
     int resDialogOkToast -> resDialogOkToast
     int resDialogText -> resDialogText
     int resDialogTitle -> resDialogTitle
-    int resDialogTheme -> resDialogTheme
     int resNotifIcon -> resNotifIcon
     int resNotifText -> resNotifText
     int resNotifTickerText -> resNotifTickerText
@@ -24285,83 +24173,130 @@ org.acra.config.ACRAConfiguration -> org.acra.config.ACRAConfiguration:
     int socketTimeout -> socketTimeout
     boolean logcatFilterByPid -> logcatFilterByPid
     boolean sendReportsInDevMode -> sendReportsInDevMode
-    org.acra.collections.ImmutableSet excludeMatchingSharedPreferencesKeys -> excludeMatchingSharedPreferencesKeys
-    org.acra.collections.ImmutableSet excludeMatchingSettingsKeys -> excludeMatchingSettingsKeys
+    java.lang.String[] excludeMatchingSharedPreferencesKeys -> excludeMatchingSharedPreferencesKeys
+    java.lang.String[] excludeMatchingSettingsKeys -> excludeMatchingSettingsKeys
     java.lang.Class buildConfigClass -> buildConfigClass
     java.lang.String applicationLogFile -> applicationLogFile
     int applicationLogFileLines -> applicationLogFileLines
     org.acra.sender.HttpSender$Method httpMethod -> httpMethod
     org.acra.sender.HttpSender$Type reportType -> reportType
-    org.acra.collections.ImmutableMap httpHeaders -> httpHeaders
-    java.lang.Class keyStoreFactoryClass -> keyStoreFactoryClass
-    org.acra.collections.ImmutableSet reportSenderFactoryClasses -> reportSenderFactoryClasses
-    int resCertificate -> resCertificate
-    java.lang.String certificatePath -> certificatePath
-    java.lang.String certificateType -> certificateType
-    118:168:void <init>(org.acra.config.ConfigurationBuilder) -> <init>
-    179:179:org.acra.collections.ImmutableMap getHttpHeaders() -> getHttpHeaders
-    187:187:org.acra.collections.ImmutableSet getReportFields() -> getReportFields
-    192:192:org.acra.collections.ImmutableSet additionalDropBoxTags() -> additionalDropBoxTags
-    197:197:org.acra.collections.ImmutableSet additionalSharedPreferences() -> additionalSharedPreferences
-    201:201:int connectionTimeout() -> connectionTimeout
-    205:205:boolean deleteUnapprovedReportsOnApplicationStart() -> deleteUnapprovedReportsOnApplicationStart
-    209:209:boolean deleteOldUnsentReportsOnApplicationStart() -> deleteOldUnsentReportsOnApplicationStart
-    213:213:int dropboxCollectionMinutes() -> dropboxCollectionMinutes
-    217:217:boolean alsoReportToAndroidFramework() -> alsoReportToAndroidFramework
-    222:222:java.lang.String formUri() -> formUri
-    227:227:java.lang.String formUriBasicAuthLogin() -> formUriBasicAuthLogin
-    232:232:java.lang.String formUriBasicAuthPassword() -> formUriBasicAuthPassword
-    236:236:boolean includeDropBoxSystemTags() -> includeDropBoxSystemTags
-    241:241:org.acra.collections.ImmutableSet logcatArguments() -> logcatArguments
-    246:246:java.lang.String mailTo() -> mailTo
-    251:251:org.acra.ReportingInteractionMode mode() -> mode
-    256:256:int resDialogPositiveButtonText() -> resDialogPositiveButtonText
-    261:261:int resDialogNegativeButtonText() -> resDialogNegativeButtonText
-    266:266:int resDialogCommentPrompt() -> resDialogCommentPrompt
-    271:271:int resDialogEmailPrompt() -> resDialogEmailPrompt
-    276:276:int resDialogIcon() -> resDialogIcon
-    281:281:int resDialogOkToast() -> resDialogOkToast
-    286:286:int resDialogText() -> resDialogText
-    291:291:int resDialogTitle() -> resDialogTitle
-    296:296:int resDialogTheme() -> resDialogTheme
-    301:301:int resNotifIcon() -> resNotifIcon
-    306:306:int resNotifText() -> resNotifText
-    311:311:int resNotifTickerText() -> resNotifTickerText
-    316:316:int resNotifTitle() -> resNotifTitle
-    321:321:int resToastText() -> resToastText
-    325:325:int sharedPreferencesMode() -> sharedPreferencesMode
-    330:330:java.lang.String sharedPreferencesName() -> sharedPreferencesName
-    334:334:int socketTimeout() -> socketTimeout
-    338:338:boolean logcatFilterByPid() -> logcatFilterByPid
-    342:342:boolean sendReportsInDevMode() -> sendReportsInDevMode
-    347:347:org.acra.collections.ImmutableSet excludeMatchingSharedPreferencesKeys() -> excludeMatchingSharedPreferencesKeys
-    352:352:org.acra.collections.ImmutableSet excludeMatchingSettingsKeys() -> excludeMatchingSettingsKeys
-    363:363:java.lang.Class buildConfigClass() -> buildConfigClass
-    368:368:java.lang.String applicationLogFile() -> applicationLogFile
-    372:372:int applicationLogFileLines() -> applicationLogFileLines
-    377:377:java.lang.Class reportDialogClass() -> reportDialogClass
-    382:382:java.lang.Class reportPrimerClass() -> reportPrimerClass
-    387:387:org.acra.sender.HttpSender$Method httpMethod() -> httpMethod
-    392:392:org.acra.sender.HttpSender$Type reportType() -> reportType
-    397:397:org.acra.collections.ImmutableSet reportSenderFactoryClasses() -> reportSenderFactoryClasses
-    402:402:java.lang.Class keyStoreFactoryClass() -> keyStoreFactoryClass
-    407:407:int resCertificate() -> resCertificate
-    411:411:java.lang.String certificatePath() -> certificatePath
-    415:415:java.lang.String certificateType() -> certificateType
+    java.util.Map httpHeaders -> httpHeaders
+    org.acra.security.KeyStoreFactory keyStoreFactory -> keyStoreFactory
+    java.lang.Class[] reportSenderFactoryClasses -> reportSenderFactoryClasses
+    125:185:void <init>(org.acra.config.ConfigurationBuilder) -> <init>
+    201:203:org.acra.config.ACRAConfiguration setHttpHeaders(java.util.Map) -> setHttpHeaders
+    216:216:java.util.Map getHttpHeaders() -> getHttpHeaders
+    225:238:java.util.List getReportFields() -> getReportFields
+    249:250:org.acra.config.ACRAConfiguration setAdditionalDropboxTags(java.lang.String[]) -> setAdditionalDropboxTags
+    261:262:org.acra.config.ACRAConfiguration setAdditionalSharedPreferences(java.lang.String[]) -> setAdditionalSharedPreferences
+    273:274:org.acra.config.ACRAConfiguration setConnectionTimeout(int) -> setConnectionTimeout
+    285:286:org.acra.config.ACRAConfiguration setCustomReportContent(org.acra.ReportField[]) -> setCustomReportContent
+    297:298:org.acra.config.ACRAConfiguration setDeleteUnapprovedReportsOnApplicationStart(boolean) -> setDeleteUnapprovedReportsOnApplicationStart
+    309:310:org.acra.config.ACRAConfiguration setDeleteOldUnsentReportsOnApplicationStart(boolean) -> setDeleteOldUnsentReportsOnApplicationStart
+    321:322:org.acra.config.ACRAConfiguration setDropboxCollectionMinutes(int) -> setDropboxCollectionMinutes
+    333:334:org.acra.config.ACRAConfiguration setForceCloseDialogAfterToast(boolean) -> setForceCloseDialogAfterToast
+    347:348:org.acra.config.ACRAConfiguration setFormUri(java.lang.String) -> setFormUri
+    359:360:org.acra.config.ACRAConfiguration setFormUriBasicAuthLogin(java.lang.String) -> setFormUriBasicAuthLogin
+    371:372:org.acra.config.ACRAConfiguration setFormUriBasicAuthPassword(java.lang.String) -> setFormUriBasicAuthPassword
+    383:384:org.acra.config.ACRAConfiguration setIncludeDropboxSystemTags(boolean) -> setIncludeDropboxSystemTags
+    395:396:org.acra.config.ACRAConfiguration setLogcatArguments(java.lang.String[]) -> setLogcatArguments
+    409:410:org.acra.config.ACRAConfiguration setMailTo(java.lang.String) -> setMailTo
+    425:427:org.acra.config.ACRAConfiguration setMode(org.acra.ReportingInteractionMode) -> setMode
+    436:437:org.acra.config.ACRAConfiguration setResDialogPositiveButtonText(int) -> setResDialogPositiveButtonText
+    446:447:org.acra.config.ACRAConfiguration setResDialogNegativeButtonText(int) -> setResDialogNegativeButtonText
+    456:457:org.acra.config.ACRAConfiguration setReportDialogClass(java.lang.Class) -> setReportDialogClass
+    473:474:org.acra.config.ACRAConfiguration setResDialogCommentPrompt(int) -> setResDialogCommentPrompt
+    490:491:org.acra.config.ACRAConfiguration setResDialogEmailPrompt(int) -> setResDialogEmailPrompt
+    506:507:org.acra.config.ACRAConfiguration setResDialogIcon(int) -> setResDialogIcon
+    522:523:org.acra.config.ACRAConfiguration setResDialogOkToast(int) -> setResDialogOkToast
+    538:539:org.acra.config.ACRAConfiguration setResDialogText(int) -> setResDialogText
+    554:555:org.acra.config.ACRAConfiguration setResDialogTitle(int) -> setResDialogTitle
+    570:571:org.acra.config.ACRAConfiguration setResNotifIcon(int) -> setResNotifIcon
+    586:587:org.acra.config.ACRAConfiguration setResNotifText(int) -> setResNotifText
+    603:604:org.acra.config.ACRAConfiguration setResNotifTickerText(int) -> setResNotifTickerText
+    619:620:org.acra.config.ACRAConfiguration setResNotifTitle(int) -> setResNotifTitle
+    635:636:org.acra.config.ACRAConfiguration setResToastText(int) -> setResToastText
+    647:648:org.acra.config.ACRAConfiguration setSharedPreferenceMode(int) -> setSharedPreferenceMode
+    659:660:org.acra.config.ACRAConfiguration setSharedPreferenceName(java.lang.String) -> setSharedPreferenceName
+    672:673:org.acra.config.ACRAConfiguration setSocketTimeout(int) -> setSocketTimeout
+    688:689:org.acra.config.ACRAConfiguration setLogcatFilterByPid(boolean) -> setLogcatFilterByPid
+    703:704:org.acra.config.ACRAConfiguration setSendReportsInDevMode(boolean) -> setSendReportsInDevMode
+    713:713:org.acra.config.ACRAConfiguration setSendReportsAtShutdown(boolean) -> setSendReportsAtShutdown
+    729:730:org.acra.config.ACRAConfiguration setExcludeMatchingSharedPreferencesKeys(java.lang.String[]) -> setExcludeMatchingSharedPreferencesKeys
+    745:746:org.acra.config.ACRAConfiguration setExcludeMatchingSettingsKeys(java.lang.String[]) -> setExcludeMatchingSettingsKeys
+    755:756:org.acra.config.ACRAConfiguration setBuildConfigClass(java.lang.Class) -> setBuildConfigClass
+    768:769:org.acra.config.ACRAConfiguration setApplicationLogFile(java.lang.String) -> setApplicationLogFile
+    782:783:org.acra.config.ACRAConfiguration setApplicationLogFileLines(int) -> setApplicationLogFileLines
+    794:795:org.acra.config.ACRAConfiguration setHttpMethod(org.acra.sender.HttpSender$Method) -> setHttpMethod
+    806:807:org.acra.config.ACRAConfiguration setReportType(org.acra.sender.HttpSender$Type) -> setReportType
+    816:816:void setKeyStore(java.security.KeyStore) -> setKeyStore
+    824:825:void setReportSenderFactoryClasses(java.lang.Class[]) -> setReportSenderFactoryClasses
+    830:830:java.lang.String[] additionalDropBoxTags() -> additionalDropBoxTags
+    836:836:java.lang.String[] additionalSharedPreferences() -> additionalSharedPreferences
+    845:845:java.lang.Class annotationType() -> annotationType
+    850:850:int connectionTimeout() -> connectionTimeout
+    856:856:org.acra.ReportField[] customReportContent() -> customReportContent
+    861:861:boolean deleteUnapprovedReportsOnApplicationStart() -> deleteUnapprovedReportsOnApplicationStart
+    866:866:boolean deleteOldUnsentReportsOnApplicationStart() -> deleteOldUnsentReportsOnApplicationStart
+    871:871:int dropboxCollectionMinutes() -> dropboxCollectionMinutes
+    876:876:boolean forceCloseDialogAfterToast() -> forceCloseDialogAfterToast
+    882:882:java.lang.String formUri() -> formUri
+    888:888:java.lang.String formUriBasicAuthLogin() -> formUriBasicAuthLogin
+    894:894:java.lang.String formUriBasicAuthPassword() -> formUriBasicAuthPassword
+    899:899:boolean includeDropBoxSystemTags() -> includeDropBoxSystemTags
+    905:905:java.lang.String[] logcatArguments() -> logcatArguments
+    911:911:java.lang.String mailTo() -> mailTo
+    917:917:org.acra.ReportingInteractionMode mode() -> mode
+    923:923:int resDialogPositiveButtonText() -> resDialogPositiveButtonText
+    929:929:int resDialogNegativeButtonText() -> resDialogNegativeButtonText
+    935:935:int resDialogCommentPrompt() -> resDialogCommentPrompt
+    941:941:int resDialogEmailPrompt() -> resDialogEmailPrompt
+    947:947:int resDialogIcon() -> resDialogIcon
+    953:953:int resDialogOkToast() -> resDialogOkToast
+    959:959:int resDialogText() -> resDialogText
+    965:965:int resDialogTitle() -> resDialogTitle
+    971:971:int resNotifIcon() -> resNotifIcon
+    977:977:int resNotifText() -> resNotifText
+    983:983:int resNotifTickerText() -> resNotifTickerText
+    989:989:int resNotifTitle() -> resNotifTitle
+    995:995:int resToastText() -> resToastText
+    1000:1000:int sharedPreferencesMode() -> sharedPreferencesMode
+    1006:1006:java.lang.String sharedPreferencesName() -> sharedPreferencesName
+    1011:1011:int socketTimeout() -> socketTimeout
+    1016:1016:boolean logcatFilterByPid() -> logcatFilterByPid
+    1021:1021:boolean sendReportsInDevMode() -> sendReportsInDevMode
+    1027:1027:java.lang.String[] excludeMatchingSharedPreferencesKeys() -> excludeMatchingSharedPreferencesKeys
+    1033:1033:java.lang.String[] excludeMatchingSettingsKeys() -> excludeMatchingSettingsKeys
+    1043:1043:java.lang.Class buildConfigClass() -> buildConfigClass
+    1049:1049:java.lang.String applicationLogFile() -> applicationLogFile
+    1054:1054:int applicationLogFileLines() -> applicationLogFileLines
+    1060:1060:java.lang.Class reportDialogClass() -> reportDialogClass
+    1066:1066:java.lang.Class reportPrimerClass() -> reportPrimerClass
+    1072:1072:org.acra.sender.HttpSender$Method httpMethod() -> httpMethod
+    1078:1078:org.acra.sender.HttpSender$Type reportType() -> reportType
+    1084:1084:java.lang.Class[] reportSenderFactoryClasses() -> reportSenderFactoryClasses
+    1090:1090:org.acra.security.KeyStoreFactory keyStoreFactory() -> keyStoreFactory
+    1099:1125:void checkCrashResources() -> checkCrashResources
+    1129:1135:java.lang.Object[] copyArray(java.lang.Object[]) -> copyArray
+org.acra.config.ACRAConfiguration$1 -> org.acra.config.ACRAConfiguration$1:
+    int[] $SwitchMap$org$acra$ReportingInteractionMode -> $SwitchMap$org$acra$ReportingInteractionMode
+    1099:1099:void <clinit>() -> <clinit>
 org.acra.config.ACRAConfigurationException -> org.acra.config.ACRAConfigurationException:
     long serialVersionUID -> serialVersionUID
     28:29:void <init>(java.lang.String) -> <init>
+org.acra.config.ACRAConfigurationFactory -> org.acra.config.ACRAConfigurationFactory:
+    13:13:void <init>() -> <init>
+    23:23:org.acra.config.ACRAConfiguration create(android.app.Application) -> create
 org.acra.config.ConfigurationBuilder -> org.acra.config.ConfigurationBuilder:
     java.lang.Class annotationType -> annotationType
     java.lang.String[] additionalDropBoxTags -> additionalDropBoxTags
     java.lang.String[] additionalSharedPreferences -> additionalSharedPreferences
     java.lang.Integer connectionTimeout -> connectionTimeout
     org.acra.ReportField[] customReportContent -> customReportContent
-    java.util.Map reportContentChanges -> reportContentChanges
     java.lang.Boolean deleteUnapprovedReportsOnApplicationStart -> deleteUnapprovedReportsOnApplicationStart
     java.lang.Boolean deleteOldUnsentReportsOnApplicationStart -> deleteOldUnsentReportsOnApplicationStart
     java.lang.Integer dropboxCollectionMinutes -> dropboxCollectionMinutes
-    java.lang.Boolean alsoReportToAndroidFramework -> alsoReportToAndroidFramework
+    java.lang.Boolean forceCloseDialogAfterToast -> forceCloseDialogAfterToast
     java.lang.String formUri -> formUri
     java.lang.String formUriBasicAuthLogin -> formUriBasicAuthLogin
     java.lang.String formUriBasicAuthPassword -> formUriBasicAuthPassword
@@ -24379,7 +24314,6 @@ org.acra.config.ConfigurationBuilder -> org.acra.config.ConfigurationBuilder:
     java.lang.Integer resDialogOkToast -> resDialogOkToast
     java.lang.Integer resDialogText -> resDialogText
     java.lang.Integer resDialogTitle -> resDialogTitle
-    java.lang.Integer resDialogTheme -> resDialogTheme
     java.lang.Integer resNotifIcon -> resNotifIcon
     java.lang.Integer resNotifText -> resNotifText
     java.lang.Integer resNotifTickerText -> resNotifTickerText
@@ -24398,129 +24332,113 @@ org.acra.config.ConfigurationBuilder -> org.acra.config.ConfigurationBuilder:
     org.acra.sender.HttpSender$Method httpMethod -> httpMethod
     org.acra.sender.HttpSender$Type reportType -> reportType
     java.util.Map httpHeaders -> httpHeaders
-    java.lang.Class keyStoreFactoryClass -> keyStoreFactoryClass
+    org.acra.security.KeyStoreFactory keyStoreFactory -> keyStoreFactory
     java.lang.Class[] reportSenderFactoryClasses -> reportSenderFactoryClasses
-    java.lang.Integer resCertificate -> resCertificate
-    java.lang.String certificatePath -> certificatePath
-    java.lang.String certificateType -> certificateType
-    70:187:void <init>(android.app.Application) -> <init>
-    201:224:org.acra.config.ACRAConfiguration build() -> build
-    236:238:org.acra.config.ConfigurationBuilder setHttpHeaders(java.util.Map) -> setHttpHeaders
-    247:248:org.acra.config.ConfigurationBuilder setAdditionalDropboxTags(java.lang.String[]) -> setAdditionalDropboxTags
-    257:258:org.acra.config.ConfigurationBuilder setAdditionalSharedPreferences(java.lang.String[]) -> setAdditionalSharedPreferences
-    267:268:org.acra.config.ConfigurationBuilder setConnectionTimeout(int) -> setConnectionTimeout
-    277:278:org.acra.config.ConfigurationBuilder setCustomReportContent(org.acra.ReportField[]) -> setCustomReportContent
-    290:291:org.acra.config.ConfigurationBuilder setReportField(org.acra.ReportField,boolean) -> setReportField
-    300:301:org.acra.config.ConfigurationBuilder setDeleteUnapprovedReportsOnApplicationStart(boolean) -> setDeleteUnapprovedReportsOnApplicationStart
-    310:311:org.acra.config.ConfigurationBuilder setDeleteOldUnsentReportsOnApplicationStart(boolean) -> setDeleteOldUnsentReportsOnApplicationStart
-    320:321:org.acra.config.ConfigurationBuilder setDropboxCollectionMinutes(int) -> setDropboxCollectionMinutes
-    332:333:org.acra.config.ConfigurationBuilder setAlsoReportToAndroidFramework(boolean) -> setAlsoReportToAndroidFramework
-    344:345:org.acra.config.ConfigurationBuilder setFormUri(java.lang.String) -> setFormUri
-    354:355:org.acra.config.ConfigurationBuilder setFormUriBasicAuthLogin(java.lang.String) -> setFormUriBasicAuthLogin
-    364:365:org.acra.config.ConfigurationBuilder setFormUriBasicAuthPassword(java.lang.String) -> setFormUriBasicAuthPassword
-    374:375:org.acra.config.ConfigurationBuilder setIncludeDropboxSystemTags(boolean) -> setIncludeDropboxSystemTags
-    384:385:org.acra.config.ConfigurationBuilder setLogcatArguments(java.lang.String[]) -> setLogcatArguments
-    396:397:org.acra.config.ConfigurationBuilder setMailTo(java.lang.String) -> setMailTo
-    409:410:org.acra.config.ConfigurationBuilder setMode(org.acra.ReportingInteractionMode) -> setMode
-    421:422:org.acra.config.ConfigurationBuilder setReportingInteractionMode(org.acra.ReportingInteractionMode) -> setReportingInteractionMode
-    427:428:org.acra.config.ConfigurationBuilder setResDialogPositiveButtonText(int) -> setResDialogPositiveButtonText
-    433:434:org.acra.config.ConfigurationBuilder setResDialogNegativeButtonText(int) -> setResDialogNegativeButtonText
-    439:440:org.acra.config.ConfigurationBuilder setReportDialogClass(java.lang.Class) -> setReportDialogClass
-    453:454:org.acra.config.ConfigurationBuilder setResDialogCommentPrompt(int) -> setResDialogCommentPrompt
-    467:468:org.acra.config.ConfigurationBuilder setResDialogEmailPrompt(int) -> setResDialogEmailPrompt
-    481:482:org.acra.config.ConfigurationBuilder setResDialogIcon(int) -> setResDialogIcon
-    495:496:org.acra.config.ConfigurationBuilder setResDialogOkToast(int) -> setResDialogOkToast
-    509:510:org.acra.config.ConfigurationBuilder setResDialogText(int) -> setResDialogText
-    523:524:org.acra.config.ConfigurationBuilder setResDialogTitle(int) -> setResDialogTitle
-    533:534:org.acra.config.ConfigurationBuilder setResDialogTheme(int) -> setResDialogTheme
-    547:548:org.acra.config.ConfigurationBuilder setResNotifIcon(int) -> setResNotifIcon
-    561:562:org.acra.config.ConfigurationBuilder setResNotifText(int) -> setResNotifText
-    576:577:org.acra.config.ConfigurationBuilder setResNotifTickerText(int) -> setResNotifTickerText
-    590:591:org.acra.config.ConfigurationBuilder setResNotifTitle(int) -> setResNotifTitle
-    604:605:org.acra.config.ConfigurationBuilder setResToastText(int) -> setResToastText
-    614:615:org.acra.config.ConfigurationBuilder setSharedPreferenceMode(int) -> setSharedPreferenceMode
-    624:625:org.acra.config.ConfigurationBuilder setSharedPreferenceName(java.lang.String) -> setSharedPreferenceName
-    634:635:org.acra.config.ConfigurationBuilder setSocketTimeout(int) -> setSocketTimeout
-    645:646:org.acra.config.ConfigurationBuilder setLogcatFilterByPid(boolean) -> setLogcatFilterByPid
-    656:657:org.acra.config.ConfigurationBuilder setSendReportsInDevMode(boolean) -> setSendReportsInDevMode
-    667:667:org.acra.config.ConfigurationBuilder setSendReportsAtShutdown(boolean) -> setSendReportsAtShutdown
-    678:679:org.acra.config.ConfigurationBuilder setExcludeMatchingSharedPreferencesKeys(java.lang.String[]) -> setExcludeMatchingSharedPreferencesKeys
-    690:691:org.acra.config.ConfigurationBuilder setExcludeMatchingSettingsKeys(java.lang.String[]) -> setExcludeMatchingSettingsKeys
-    696:697:org.acra.config.ConfigurationBuilder setBuildConfigClass(java.lang.Class) -> setBuildConfigClass
+    103:167:void <init>(android.app.Application) -> <init>
+    174:174:org.acra.config.ACRAConfiguration build() -> build
+    188:190:org.acra.config.ConfigurationBuilder setHttpHeaders(java.util.Map) -> setHttpHeaders
+    201:202:org.acra.config.ConfigurationBuilder setAdditionalDropboxTags(java.lang.String[]) -> setAdditionalDropboxTags
+    213:214:org.acra.config.ConfigurationBuilder setAdditionalSharedPreferences(java.lang.String[]) -> setAdditionalSharedPreferences
+    225:226:org.acra.config.ConfigurationBuilder setConnectionTimeout(int) -> setConnectionTimeout
+    237:238:org.acra.config.ConfigurationBuilder setCustomReportContent(org.acra.ReportField[]) -> setCustomReportContent
+    248:249:org.acra.config.ConfigurationBuilder setDeleteUnapprovedReportsOnApplicationStart(boolean) -> setDeleteUnapprovedReportsOnApplicationStart
+    259:260:org.acra.config.ConfigurationBuilder setDeleteOldUnsentReportsOnApplicationStart(boolean) -> setDeleteOldUnsentReportsOnApplicationStart
+    271:272:org.acra.config.ConfigurationBuilder setDropboxCollectionMinutes(int) -> setDropboxCollectionMinutes
+    283:284:org.acra.config.ConfigurationBuilder setForceCloseDialogAfterToast(boolean) -> setForceCloseDialogAfterToast
+    296:297:org.acra.config.ConfigurationBuilder setFormUri(java.lang.String) -> setFormUri
+    308:309:org.acra.config.ConfigurationBuilder setFormUriBasicAuthLogin(java.lang.String) -> setFormUriBasicAuthLogin
+    320:321:org.acra.config.ConfigurationBuilder setFormUriBasicAuthPassword(java.lang.String) -> setFormUriBasicAuthPassword
+    332:333:org.acra.config.ConfigurationBuilder setIncludeDropboxSystemTags(boolean) -> setIncludeDropboxSystemTags
+    344:345:org.acra.config.ConfigurationBuilder setLogcatArguments(java.lang.String[]) -> setLogcatArguments
+    357:358:org.acra.config.ConfigurationBuilder setMailTo(java.lang.String) -> setMailTo
+    373:374:org.acra.config.ConfigurationBuilder setMode(org.acra.ReportingInteractionMode) -> setMode
+    387:388:org.acra.config.ConfigurationBuilder setReportingInteractionMode(org.acra.ReportingInteractionMode) -> setReportingInteractionMode
+    394:395:org.acra.config.ConfigurationBuilder setResDialogPositiveButtonText(int) -> setResDialogPositiveButtonText
+    401:402:org.acra.config.ConfigurationBuilder setResDialogNegativeButtonText(int) -> setResDialogNegativeButtonText
+    408:409:org.acra.config.ConfigurationBuilder setReportDialogClass(java.lang.Class) -> setReportDialogClass
+    423:424:org.acra.config.ConfigurationBuilder setResDialogCommentPrompt(int) -> setResDialogCommentPrompt
+    439:440:org.acra.config.ConfigurationBuilder setResDialogEmailPrompt(int) -> setResDialogEmailPrompt
+    455:456:org.acra.config.ConfigurationBuilder setResDialogIcon(int) -> setResDialogIcon
+    471:472:org.acra.config.ConfigurationBuilder setResDialogOkToast(int) -> setResDialogOkToast
+    487:488:org.acra.config.ConfigurationBuilder setResDialogText(int) -> setResDialogText
+    503:504:org.acra.config.ConfigurationBuilder setResDialogTitle(int) -> setResDialogTitle
+    519:520:org.acra.config.ConfigurationBuilder setResNotifIcon(int) -> setResNotifIcon
+    535:536:org.acra.config.ConfigurationBuilder setResNotifText(int) -> setResNotifText
+    552:553:org.acra.config.ConfigurationBuilder setResNotifTickerText(int) -> setResNotifTickerText
+    568:569:org.acra.config.ConfigurationBuilder setResNotifTitle(int) -> setResNotifTitle
+    584:585:org.acra.config.ConfigurationBuilder setResToastText(int) -> setResToastText
+    596:597:org.acra.config.ConfigurationBuilder setSharedPreferenceMode(int) -> setSharedPreferenceMode
+    608:609:org.acra.config.ConfigurationBuilder setSharedPreferenceName(java.lang.String) -> setSharedPreferenceName
+    620:621:org.acra.config.ConfigurationBuilder setSocketTimeout(int) -> setSocketTimeout
+    634:635:org.acra.config.ConfigurationBuilder setLogcatFilterByPid(boolean) -> setLogcatFilterByPid
+    648:649:org.acra.config.ConfigurationBuilder setSendReportsInDevMode(boolean) -> setSendReportsInDevMode
+    658:658:org.acra.config.ConfigurationBuilder setSendReportsAtShutdown(boolean) -> setSendReportsAtShutdown
+    672:673:org.acra.config.ConfigurationBuilder setExcludeMatchingSharedPreferencesKeys(java.lang.String[]) -> setExcludeMatchingSharedPreferencesKeys
+    687:688:org.acra.config.ConfigurationBuilder setExcludeMatchingSettingsKeys(java.lang.String[]) -> setExcludeMatchingSettingsKeys
+    694:695:org.acra.config.ConfigurationBuilder setBuildConfigClass(java.lang.Class) -> setBuildConfigClass
     707:708:org.acra.config.ConfigurationBuilder setApplicationLogFile(java.lang.String) -> setApplicationLogFile
-    719:720:org.acra.config.ConfigurationBuilder setApplicationLogFileLines(int) -> setApplicationLogFileLines
-    729:730:org.acra.config.ConfigurationBuilder setHttpMethod(org.acra.sender.HttpSender$Method) -> setHttpMethod
-    740:741:org.acra.config.ConfigurationBuilder setReportType(org.acra.sender.HttpSender$Type) -> setReportType
-    750:751:org.acra.config.ConfigurationBuilder setKeyStoreFactoryClass(java.lang.Class) -> setKeyStoreFactoryClass
-    760:761:org.acra.config.ConfigurationBuilder setCertificate(int) -> setCertificate
-    770:771:org.acra.config.ConfigurationBuilder setCertificate(java.lang.String) -> setCertificate
-    780:781:org.acra.config.ConfigurationBuilder setCertificateType(java.lang.String) -> setCertificateType
-    787:788:org.acra.config.ConfigurationBuilder setReportSenderFactoryClasses(java.lang.Class[]) -> setReportSenderFactoryClasses
-    793:794:org.acra.config.ConfigurationBuilder setReportPrimerClass(java.lang.Class) -> setReportPrimerClass
-    802:805:java.lang.String[] additionalDropBoxTags() -> additionalDropBoxTags
-    810:813:java.lang.String[] additionalSharedPreferences() -> additionalSharedPreferences
-    821:821:java.lang.Class annotationType() -> annotationType
-    825:828:int connectionTimeout() -> connectionTimeout
-    833:853:java.util.Set reportContent() -> reportContent
-    857:860:boolean deleteUnapprovedReportsOnApplicationStart() -> deleteUnapprovedReportsOnApplicationStart
-    864:867:boolean deleteOldUnsentReportsOnApplicationStart() -> deleteOldUnsentReportsOnApplicationStart
-    871:874:int dropboxCollectionMinutes() -> dropboxCollectionMinutes
-    878:881:boolean alsoReportToAndroidFramework() -> alsoReportToAndroidFramework
-    886:889:java.lang.String formUri() -> formUri
-    894:897:java.lang.String formUriBasicAuthLogin() -> formUriBasicAuthLogin
-    902:905:java.lang.String formUriBasicAuthPassword() -> formUriBasicAuthPassword
-    909:912:boolean includeDropBoxSystemTags() -> includeDropBoxSystemTags
-    917:920:java.lang.String[] logcatArguments() -> logcatArguments
-    925:928:java.lang.String mailTo() -> mailTo
-    933:936:org.acra.ReportingInteractionMode reportingInteractionMode() -> reportingInteractionMode
-    941:944:int resDialogPositiveButtonText() -> resDialogPositiveButtonText
-    949:952:int resDialogNegativeButtonText() -> resDialogNegativeButtonText
-    957:960:int resDialogCommentPrompt() -> resDialogCommentPrompt
-    965:968:int resDialogEmailPrompt() -> resDialogEmailPrompt
-    973:976:int resDialogIcon() -> resDialogIcon
-    981:984:int resDialogOkToast() -> resDialogOkToast
-    989:992:int resDialogText() -> resDialogText
-    997:1000:int resDialogTitle() -> resDialogTitle
-    1005:1008:int resDialogTheme() -> resDialogTheme
-    1013:1016:int resNotifIcon() -> resNotifIcon
-    1021:1024:int resNotifText() -> resNotifText
-    1029:1032:int resNotifTickerText() -> resNotifTickerText
-    1037:1040:int resNotifTitle() -> resNotifTitle
-    1045:1048:int resToastText() -> resToastText
-    1052:1055:int sharedPreferencesMode() -> sharedPreferencesMode
-    1060:1064:java.lang.String sharedPreferencesName() -> sharedPreferencesName
-    1068:1071:int socketTimeout() -> socketTimeout
-    1075:1078:boolean logcatFilterByPid() -> logcatFilterByPid
-    1082:1085:boolean sendReportsInDevMode() -> sendReportsInDevMode
-    1090:1093:java.lang.String[] excludeMatchingSharedPreferencesKeys() -> excludeMatchingSharedPreferencesKeys
-    1098:1101:java.lang.String[] excludeMatchingSettingsKeys() -> excludeMatchingSettingsKeys
-    1110:1110:java.lang.Class buildConfigClass() -> buildConfigClass
-    1115:1118:java.lang.String applicationLogFile() -> applicationLogFile
-    1122:1125:int applicationLogFileLines() -> applicationLogFileLines
-    1130:1133:java.lang.Class reportDialogClass() -> reportDialogClass
-    1138:1141:java.lang.Class reportPrimerClass() -> reportPrimerClass
+    722:723:org.acra.config.ConfigurationBuilder setApplicationLogFileLines(int) -> setApplicationLogFileLines
+    735:736:org.acra.config.ConfigurationBuilder setHttpMethod(org.acra.sender.HttpSender$Method) -> setHttpMethod
+    749:750:org.acra.config.ConfigurationBuilder setReportType(org.acra.sender.HttpSender$Type) -> setReportType
+    761:762:org.acra.config.ConfigurationBuilder setKeyStoreFactory(org.acra.security.KeyStoreFactory) -> setKeyStoreFactory
+    769:770:org.acra.config.ConfigurationBuilder setReportSenderFactoryClasses(java.lang.Class[]) -> setReportSenderFactoryClasses
+    776:777:org.acra.config.ConfigurationBuilder setReportPrimerClass(java.lang.Class) -> setReportPrimerClass
+    786:789:java.lang.String[] additionalDropBoxTags() -> additionalDropBoxTags
+    795:798:java.lang.String[] additionalSharedPreferences() -> additionalSharedPreferences
+    807:807:java.lang.Class annotationType() -> annotationType
+    812:815:int connectionTimeout() -> connectionTimeout
+    821:824:org.acra.ReportField[] customReportContent() -> customReportContent
+    829:832:boolean deleteUnapprovedReportsOnApplicationStart() -> deleteUnapprovedReportsOnApplicationStart
+    837:840:boolean deleteOldUnsentReportsOnApplicationStart() -> deleteOldUnsentReportsOnApplicationStart
+    845:848:int dropboxCollectionMinutes() -> dropboxCollectionMinutes
+    853:856:boolean forceCloseDialogAfterToast() -> forceCloseDialogAfterToast
+    862:865:java.lang.String formUri() -> formUri
+    871:874:java.lang.String formUriBasicAuthLogin() -> formUriBasicAuthLogin
+    880:883:java.lang.String formUriBasicAuthPassword() -> formUriBasicAuthPassword
+    888:891:boolean includeDropBoxSystemTags() -> includeDropBoxSystemTags
+    897:900:java.lang.String[] logcatArguments() -> logcatArguments
+    906:909:java.lang.String mailTo() -> mailTo
+    915:918:org.acra.ReportingInteractionMode reportingInteractionMode() -> reportingInteractionMode
+    924:927:int resDialogPositiveButtonText() -> resDialogPositiveButtonText
+    933:936:int resDialogNegativeButtonText() -> resDialogNegativeButtonText
+    942:945:int resDialogCommentPrompt() -> resDialogCommentPrompt
+    951:954:int resDialogEmailPrompt() -> resDialogEmailPrompt
+    960:963:int resDialogIcon() -> resDialogIcon
+    969:972:int resDialogOkToast() -> resDialogOkToast
+    978:981:int resDialogText() -> resDialogText
+    987:990:int resDialogTitle() -> resDialogTitle
+    996:999:int resNotifIcon() -> resNotifIcon
+    1005:1008:int resNotifText() -> resNotifText
+    1014:1017:int resNotifTickerText() -> resNotifTickerText
+    1023:1026:int resNotifTitle() -> resNotifTitle
+    1032:1035:int resToastText() -> resToastText
+    1040:1043:int sharedPreferencesMode() -> sharedPreferencesMode
+    1049:1053:java.lang.String sharedPreferencesName() -> sharedPreferencesName
+    1058:1061:int socketTimeout() -> socketTimeout
+    1066:1069:boolean logcatFilterByPid() -> logcatFilterByPid
+    1074:1077:boolean sendReportsInDevMode() -> sendReportsInDevMode
+    1083:1086:java.lang.String[] excludeMatchingSharedPreferencesKeys() -> excludeMatchingSharedPreferencesKeys
+    1092:1095:java.lang.String[] excludeMatchingSettingsKeys() -> excludeMatchingSettingsKeys
+    1105:1105:java.lang.Class buildConfigClass() -> buildConfigClass
+    1111:1114:java.lang.String applicationLogFile() -> applicationLogFile
+    1119:1122:int applicationLogFileLines() -> applicationLogFileLines
+    1128:1131:java.lang.Class reportDialogClass() -> reportDialogClass
+    1137:1140:java.lang.Class reportPrimerClass() -> reportPrimerClass
     1146:1149:org.acra.sender.HttpSender$Method httpMethod() -> httpMethod
-    1154:1157:org.acra.sender.HttpSender$Type reportType() -> reportType
-    1162:1166:java.lang.Class[] reportSenderFactoryClasses() -> reportSenderFactoryClasses
-    1171:1174:java.lang.Class keyStoreFactoryClass() -> keyStoreFactoryClass
-    1179:1182:int resCertificate() -> resCertificate
-    1187:1190:java.lang.String certificatePath() -> certificatePath
-    1195:1198:java.lang.String certificateType() -> certificateType
-    1203:1203:java.util.Map httpHeaders() -> httpHeaders
-org.acra.config.ConfigurationBuilder$1 -> org.acra.config.ConfigurationBuilder$1:
-    int[] $SwitchMap$org$acra$ReportingInteractionMode -> $SwitchMap$org$acra$ReportingInteractionMode
-    201:201:void <clinit>() -> <clinit>
+    1155:1158:org.acra.sender.HttpSender$Type reportType() -> reportType
+    1164:1168:java.lang.Class[] reportSenderFactoryClasses() -> reportSenderFactoryClasses
+    1174:1174:org.acra.security.KeyStoreFactory keyStoreFactory() -> keyStoreFactory
+    1179:1179:java.util.Map httpHeaders() -> httpHeaders
 org.acra.dialog.BaseCrashReportDialog -> org.acra.dialog.BaseCrashReportDialog:
     java.io.File reportFile -> reportFile
     org.acra.config.ACRAConfiguration config -> config
     java.lang.Throwable exception -> exception
-    42:42:void <init>() -> <init>
-    50:75:void onCreate(android.os.Bundle) -> onCreate
-    78:78:void init(android.os.Bundle) -> init
-    85:86:void cancelReports() -> cancelReports
-    96:116:void sendCrash(java.lang.String,java.lang.String) -> sendCrash
-    119:119:org.acra.config.ACRAConfiguration getConfig() -> getConfig
-    123:123:java.lang.Throwable getException() -> getException
+    40:40:void <init>() -> <init>
+    49:72:void onCreate(android.os.Bundle) -> onCreate
+    80:81:void cancelReports() -> cancelReports
+    91:111:void sendCrash(java.lang.String,java.lang.String) -> sendCrash
+    114:114:org.acra.config.ACRAConfiguration getConfig() -> getConfig
+    118:118:java.lang.Throwable getException() -> getException
 org.acra.dialog.CrashReportDialog -> org.acra.dialog.CrashReportDialog:
     java.lang.String STATE_EMAIL -> STATE_EMAIL
     java.lang.String STATE_COMMENT -> STATE_COMMENT
@@ -24530,19 +24448,20 @@ org.acra.dialog.CrashReportDialog -> org.acra.dialog.CrashReportDialog:
     android.widget.EditText userEmailView -> userEmailView
     org.acra.prefs.SharedPreferencesFactory sharedPreferencesFactory -> sharedPreferencesFactory
     android.app.AlertDialog mDialog -> mDialog
-    29:29:void <init>() -> <init>
-    45:52:void init(android.os.Bundle) -> init
-    60:76:void buildAndShowDialog(android.os.Bundle) -> buildAndShowDialog
-    80:114:android.view.View buildCustomView(android.os.Bundle) -> buildCustomView
-    123:124:void addViewToDialog(android.view.View) -> addViewToDialog
-    133:138:android.view.View getMainView() -> getMainView
-    148:154:android.view.View getCommentLabel() -> getCommentLabel
-    165:170:android.widget.EditText getCommentPrompt(java.lang.CharSequence) -> getCommentPrompt
-    180:186:android.view.View getEmailLabel() -> getEmailLabel
-    197:207:android.widget.EditText getEmailPrompt(java.lang.CharSequence) -> getEmailPrompt
-    212:233:void onClick(android.content.DialogInterface,int) -> onClick
-    243:250:void onSaveInstanceState(android.os.Bundle) -> onSaveInstanceState
-    256:256:android.app.AlertDialog getDialog() -> getDialog
+    28:28:void <init>() -> <init>
+    44:51:void onCreate(android.os.Bundle) -> onCreate
+    58:75:void buildAndShowDialog(android.os.Bundle) -> buildAndShowDialog
+    79:113:android.view.View buildCustomView(android.os.Bundle) -> buildCustomView
+    122:123:void addViewToDialog(android.view.View) -> addViewToDialog
+    132:137:android.view.View getMainView() -> getMainView
+    146:152:android.view.View getCommentLabel() -> getCommentLabel
+    163:168:android.widget.EditText getCommentPrompt(java.lang.CharSequence) -> getCommentPrompt
+    177:183:android.view.View getEmailLabel() -> getEmailLabel
+    194:204:android.widget.EditText getEmailPrompt(java.lang.CharSequence) -> getEmailPrompt
+    209:230:void onClick(android.content.DialogInterface,int) -> onClick
+    235:236:void onDismiss(android.content.DialogInterface) -> onDismiss
+    246:253:void onSaveInstanceState(android.os.Bundle) -> onSaveInstanceState
+    259:259:android.app.AlertDialog getDialog() -> getDialog
 org.acra.file.BulkReportDeleter -> org.acra.file.BulkReportDeleter:
     org.acra.file.ReportLocator reportLocator -> reportLocator
     21:23:void <init>(android.content.Context) -> <init>
@@ -24560,9 +24479,9 @@ org.acra.file.CrashReportPersister -> org.acra.file.CrashReportPersister:
     int IGNORE -> IGNORE
     java.lang.String LINE_SEPARATOR -> LINE_SEPARATOR
     39:39:void <init>() -> <init>
-    54:58:org.acra.collector.CrashReportData load(java.io.File) -> load
-    73:90:void store(org.acra.collector.CrashReportData,java.io.File) -> store
-    122:290:org.acra.collector.CrashReportData load(java.io.Reader) -> load
+    54:59:org.acra.collector.CrashReportData load(java.io.File) -> load
+    74:94:void store(org.acra.collector.CrashReportData,java.io.File) -> store
+    126:291:org.acra.collector.CrashReportData load(java.io.Reader) -> load
     302:339:void dumpString(java.lang.StringBuilder,java.lang.String,boolean) -> dumpString
 org.acra.file.LastModifiedComparator -> org.acra.file.LastModifiedComparator:
     11:11:void <init>() -> <init>
@@ -24583,11 +24502,11 @@ org.acra.legacy.ReportMigrator -> org.acra.legacy.ReportMigrator:
     org.acra.file.ReportLocator reportLocator -> reportLocator
     22:29:void <init>(android.content.Context) -> <init>
     32:50:void migrate() -> migrate
-    59:75:java.io.File[] getCrashReportFiles() -> getCrashReportFiles
+    59:74:java.io.File[] getCrashReportFiles() -> getCrashReportFiles
 org.acra.legacy.ReportMigrator$1 -> org.acra.legacy.ReportMigrator$1:
     org.acra.legacy.ReportMigrator this$0 -> this$0
     68:68:void <init>(org.acra.legacy.ReportMigrator) -> <init>
-    71:71:boolean accept(java.io.File,java.lang.String) -> accept
+    70:70:boolean accept(java.io.File,java.lang.String) -> accept
 org.acra.log.ACRALog -> org.acra.log.ACRALog:
     int v(java.lang.String,java.lang.String) -> v
     int v(java.lang.String,java.lang.String,java.lang.Throwable) -> v
@@ -24603,89 +24522,71 @@ org.acra.log.ACRALog -> org.acra.log.ACRALog:
     java.lang.String getStackTraceString(java.lang.Throwable) -> getStackTraceString
 org.acra.log.AndroidLogDelegate -> org.acra.log.AndroidLogDelegate:
     12:12:void <init>() -> <init>
-    15:15:int v(java.lang.String,java.lang.String) -> v
-    19:19:int v(java.lang.String,java.lang.String,java.lang.Throwable) -> v
-    23:23:int d(java.lang.String,java.lang.String) -> d
-    27:27:int d(java.lang.String,java.lang.String,java.lang.Throwable) -> d
-    31:31:int i(java.lang.String,java.lang.String) -> i
-    35:35:int i(java.lang.String,java.lang.String,java.lang.Throwable) -> i
-    39:39:int w(java.lang.String,java.lang.String) -> w
-    43:43:int w(java.lang.String,java.lang.String,java.lang.Throwable) -> w
-    48:48:int w(java.lang.String,java.lang.Throwable) -> w
-    52:52:int e(java.lang.String,java.lang.String) -> e
-    56:56:int e(java.lang.String,java.lang.String,java.lang.Throwable) -> e
-    60:60:java.lang.String getStackTraceString(java.lang.Throwable) -> getStackTraceString
-org.acra.log.HollowLog -> org.acra.log.HollowLog:
-    9:9:void <init>() -> <init>
-    12:12:int v(java.lang.String,java.lang.String) -> v
+    14:14:int v(java.lang.String,java.lang.String) -> v
     17:17:int v(java.lang.String,java.lang.String,java.lang.Throwable) -> v
-    22:22:int d(java.lang.String,java.lang.String) -> d
-    27:27:int d(java.lang.String,java.lang.String,java.lang.Throwable) -> d
-    32:32:int i(java.lang.String,java.lang.String) -> i
-    37:37:int i(java.lang.String,java.lang.String,java.lang.Throwable) -> i
-    42:42:int w(java.lang.String,java.lang.String) -> w
-    47:47:int w(java.lang.String,java.lang.String,java.lang.Throwable) -> w
-    52:52:int w(java.lang.String,java.lang.Throwable) -> w
-    57:57:int e(java.lang.String,java.lang.String) -> e
-    62:62:int e(java.lang.String,java.lang.String,java.lang.Throwable) -> e
-    68:68:java.lang.String getStackTraceString(java.lang.Throwable) -> getStackTraceString
+    20:20:int d(java.lang.String,java.lang.String) -> d
+    23:23:int d(java.lang.String,java.lang.String,java.lang.Throwable) -> d
+    26:26:int i(java.lang.String,java.lang.String) -> i
+    29:29:int i(java.lang.String,java.lang.String,java.lang.Throwable) -> i
+    32:32:int w(java.lang.String,java.lang.String) -> w
+    35:35:int w(java.lang.String,java.lang.String,java.lang.Throwable) -> w
+    39:39:int w(java.lang.String,java.lang.Throwable) -> w
+    42:42:int e(java.lang.String,java.lang.String) -> e
+    45:45:int e(java.lang.String,java.lang.String,java.lang.Throwable) -> e
+    48:48:java.lang.String getStackTraceString(java.lang.Throwable) -> getStackTraceString
+org.acra.log.HollowLog -> org.acra.log.HollowLog:
+    8:8:void <init>() -> <init>
+    11:11:int v(java.lang.String,java.lang.String) -> v
+    16:16:int v(java.lang.String,java.lang.String,java.lang.Throwable) -> v
+    21:21:int d(java.lang.String,java.lang.String) -> d
+    26:26:int d(java.lang.String,java.lang.String,java.lang.Throwable) -> d
+    31:31:int i(java.lang.String,java.lang.String) -> i
+    36:36:int i(java.lang.String,java.lang.String,java.lang.Throwable) -> i
+    41:41:int w(java.lang.String,java.lang.String) -> w
+    46:46:int w(java.lang.String,java.lang.String,java.lang.Throwable) -> w
+    51:51:int w(java.lang.String,java.lang.Throwable) -> w
+    56:56:int e(java.lang.String,java.lang.String) -> e
+    61:61:int e(java.lang.String,java.lang.String,java.lang.Throwable) -> e
+    67:67:java.lang.String getStackTraceString(java.lang.Throwable) -> getStackTraceString
 org.acra.prefs.PrefUtils -> org.acra.prefs.PrefUtils:
     8:8:void <init>() -> <init>
     11:16:void save(android.content.SharedPreferences$Editor) -> save
 org.acra.prefs.SharedPreferencesFactory -> org.acra.prefs.SharedPreferencesFactory:
     android.content.Context context -> context
     org.acra.config.ACRAConfiguration config -> config
-    25:28:void <init>(android.content.Context,org.acra.config.ACRAConfiguration) -> <init>
-    36:41:android.content.SharedPreferences create() -> create
+    24:27:void <init>(android.content.Context,org.acra.config.ACRAConfiguration) -> <init>
+    35:40:android.content.SharedPreferences create() -> create
 org.acra.security.AssetKeyStoreFactory -> org.acra.security.AssetKeyStoreFactory:
     java.lang.String assetName -> assetName
-    44:46:void <init>(java.lang.String,java.lang.String) -> <init>
-    51:55:java.io.InputStream getInputStream(android.content.Context) -> getInputStream
+    25:27:void <init>(java.lang.String) -> <init>
+    35:37:void <init>(java.lang.String,java.lang.String) -> <init>
+    42:46:java.io.InputStream getInputStream(android.content.Context) -> getInputStream
 org.acra.security.BaseKeyStoreFactory -> org.acra.security.BaseKeyStoreFactory:
     java.lang.String certificateType -> certificateType
-    58:59:void <init>() -> <init>
-    66:68:void <init>(java.lang.String) -> <init>
+    32:33:void <init>() -> <init>
+    39:41:void <init>(java.lang.String) -> <init>
     java.io.InputStream getInputStream(android.content.Context) -> getInputStream
-    73:73:java.lang.String getKeyStoreType() -> getKeyStoreType
-    77:77:org.acra.security.BaseKeyStoreFactory$Type getStreamType() -> getStreamType
-    81:81:char[] getPassword() -> getPassword
-    87:115:java.security.KeyStore create(android.content.Context) -> create
-org.acra.security.BaseKeyStoreFactory$1 -> org.acra.security.BaseKeyStoreFactory$1:
-    int[] $SwitchMap$org$acra$security$BaseKeyStoreFactory$Type -> $SwitchMap$org$acra$security$BaseKeyStoreFactory$Type
-    92:92:void <clinit>() -> <clinit>
-org.acra.security.BaseKeyStoreFactory$Type -> org.acra.security.BaseKeyStoreFactory$Type:
-    org.acra.security.BaseKeyStoreFactory$Type CERTIFICATE -> CERTIFICATE
-    org.acra.security.BaseKeyStoreFactory$Type KEYSTORE -> KEYSTORE
-    org.acra.security.BaseKeyStoreFactory$Type[] $VALUES -> $VALUES
-    47:47:org.acra.security.BaseKeyStoreFactory$Type[] values() -> values
-    47:47:org.acra.security.BaseKeyStoreFactory$Type valueOf(java.lang.String) -> valueOf
-    47:47:void <init>(java.lang.String,int) -> <init>
-    47:49:void <clinit>() -> <clinit>
+    48:74:java.security.KeyStore create(android.content.Context) -> create
 org.acra.security.FileKeyStoreFactory -> org.acra.security.FileKeyStoreFactory:
     java.lang.String filePath -> filePath
-    45:47:void <init>(java.lang.String,java.lang.String) -> <init>
-    52:56:java.io.InputStream getInputStream(android.content.Context) -> getInputStream
+    26:28:void <init>(java.lang.String) -> <init>
+    36:38:void <init>(java.lang.String,java.lang.String) -> <init>
+    43:47:java.io.InputStream getInputStream(android.content.Context) -> getInputStream
 org.acra.security.KeyStoreFactory -> org.acra.security.KeyStoreFactory:
     java.security.KeyStore create(android.content.Context) -> create
-org.acra.security.KeyStoreHelper -> org.acra.security.KeyStoreHelper:
-    java.lang.String ASSET_PREFIX -> ASSET_PREFIX
-    39:40:void <init>() -> <init>
-    50:74:java.security.KeyStore getKeyStore(android.content.Context,org.acra.config.ACRAConfiguration) -> getKeyStore
-org.acra.security.NoKeyStoreFactory -> org.acra.security.NoKeyStoreFactory:
-    30:30:void <init>() -> <init>
-    34:34:java.security.KeyStore create(android.content.Context) -> create
 org.acra.security.ResourceKeyStoreFactory -> org.acra.security.ResourceKeyStoreFactory:
     int rawRes -> rawRes
-    41:43:void <init>(java.lang.String,int) -> <init>
-    47:47:java.io.InputStream getInputStream(android.content.Context) -> getInputStream
+    22:24:void <init>(int) -> <init>
+    32:34:void <init>(java.lang.String,int) -> <init>
+    38:38:java.io.InputStream getInputStream(android.content.Context) -> getInputStream
 org.acra.sender.DefaultReportSenderFactory -> org.acra.sender.DefaultReportSenderFactory:
     20:20:void <init>() -> <init>
     25:46:org.acra.sender.ReportSender create(android.content.Context,org.acra.config.ACRAConfiguration) -> create
 org.acra.sender.EmailIntentSender -> org.acra.sender.EmailIntentSender:
     org.acra.config.ACRAConfiguration config -> config
-    43:45:void <init>(org.acra.config.ACRAConfiguration) -> <init>
-    50:59:void send(android.content.Context,org.acra.collector.CrashReportData) -> send
-    62:73:java.lang.String buildBody(org.acra.collector.CrashReportData) -> buildBody
+    40:42:void <init>(org.acra.config.ACRAConfiguration) -> <init>
+    47:56:void send(android.content.Context,org.acra.collector.CrashReportData) -> send
+    59:70:java.lang.String buildBody(org.acra.collector.CrashReportData) -> buildBody
 org.acra.sender.EmailIntentSenderFactory -> org.acra.sender.EmailIntentSenderFactory:
     11:11:void <init>() -> <init>
     16:16:org.acra.sender.ReportSender create(android.content.Context,org.acra.config.ACRAConfiguration) -> create
@@ -24697,40 +24598,40 @@ org.acra.sender.HttpSender -> org.acra.sender.HttpSender:
     org.acra.sender.HttpSender$Type mType -> mType
     java.lang.String mUsername -> mUsername
     java.lang.String mPassword -> mPassword
-    139:140:void <init>(org.acra.config.ACRAConfiguration,org.acra.sender.HttpSender$Method,org.acra.sender.HttpSender$Type,java.util.Map) -> <init>
-    168:176:void <init>(org.acra.config.ACRAConfiguration,org.acra.sender.HttpSender$Method,org.acra.sender.HttpSender$Type,java.lang.String,java.util.Map) -> <init>
-    191:193:void setBasicAuth(java.lang.String,java.lang.String) -> setBasicAuth
-    199:244:void send(android.content.Context,org.acra.collector.CrashReportData) -> send
-    249:262:java.util.Map remap(java.util.Map) -> remap
-    266:266:boolean isNull(java.lang.String) -> isNull
+    137:138:void <init>(org.acra.config.ACRAConfiguration,org.acra.sender.HttpSender$Method,org.acra.sender.HttpSender$Type,java.util.Map) -> <init>
+    166:174:void <init>(org.acra.config.ACRAConfiguration,org.acra.sender.HttpSender$Method,org.acra.sender.HttpSender$Type,java.lang.String,java.util.Map) -> <init>
+    189:191:void setBasicAuth(java.lang.String,java.lang.String) -> setBasicAuth
+    197:242:void send(android.content.Context,org.acra.collector.CrashReportData) -> send
+    247:260:java.util.Map remap(java.util.Map) -> remap
+    264:264:boolean isNull(java.lang.String) -> isNull
 org.acra.sender.HttpSender$1 -> org.acra.sender.HttpSender$1:
     int[] $SwitchMap$org$acra$sender$HttpSender$Type -> $SwitchMap$org$acra$sender$HttpSender$Type
     int[] $SwitchMap$org$acra$sender$HttpSender$Method -> $SwitchMap$org$acra$sender$HttpSender$Method
-    214:226:void <clinit>() -> <clinit>
+    212:224:void <clinit>() -> <clinit>
 org.acra.sender.HttpSender$Method -> org.acra.sender.HttpSender$Method:
     org.acra.sender.HttpSender$Method POST -> POST
     org.acra.sender.HttpSender$Method PUT -> PUT
     org.acra.sender.HttpSender$Method[] $VALUES -> $VALUES
-    68:68:org.acra.sender.HttpSender$Method[] values() -> values
-    68:68:org.acra.sender.HttpSender$Method valueOf(java.lang.String) -> valueOf
-    68:68:void <init>(java.lang.String,int) -> <init>
-    68:69:void <clinit>() -> <clinit>
+    66:66:org.acra.sender.HttpSender$Method[] values() -> values
+    66:66:org.acra.sender.HttpSender$Method valueOf(java.lang.String) -> valueOf
+    66:66:void <init>(java.lang.String,int) -> <init>
+    66:67:void <clinit>() -> <clinit>
 org.acra.sender.HttpSender$Type -> org.acra.sender.HttpSender$Type:
     org.acra.sender.HttpSender$Type FORM -> FORM
     org.acra.sender.HttpSender$Type JSON -> JSON
     org.acra.sender.HttpSender$Type[] $VALUES -> $VALUES
-    76:76:org.acra.sender.HttpSender$Type[] values() -> values
-    76:76:org.acra.sender.HttpSender$Type valueOf(java.lang.String) -> valueOf
-    76:76:void <init>(java.lang.String,int) -> <init>
+    74:74:org.acra.sender.HttpSender$Type[] values() -> values
+    74:74:org.acra.sender.HttpSender$Type valueOf(java.lang.String) -> valueOf
+    74:74:void <init>(java.lang.String,int) -> <init>
     java.lang.String getContentType() -> getContentType
-    76:76:void <init>(java.lang.String,int,org.acra.sender.HttpSender$1) -> <init>
-    76:91:void <clinit>() -> <clinit>
+    74:74:void <init>(java.lang.String,int,org.acra.sender.HttpSender$1) -> <init>
+    74:89:void <clinit>() -> <clinit>
 org.acra.sender.HttpSender$Type$1 -> org.acra.sender.HttpSender$Type$1:
-    81:81:void <init>(java.lang.String,int) -> <init>
-    85:85:java.lang.String getContentType() -> getContentType
+    79:79:void <init>(java.lang.String,int) -> <init>
+    83:83:java.lang.String getContentType() -> getContentType
 org.acra.sender.HttpSender$Type$2 -> org.acra.sender.HttpSender$Type$2:
-    91:91:void <init>(java.lang.String,int) -> <init>
-    95:95:java.lang.String getContentType() -> getContentType
+    89:89:void <init>(java.lang.String,int) -> <init>
+    93:93:java.lang.String getContentType() -> getContentType
 org.acra.sender.HttpSenderFactory -> org.acra.sender.HttpSenderFactory:
     11:11:void <init>() -> <init>
     16:16:org.acra.sender.ReportSender create(android.content.Context,org.acra.config.ACRAConfiguration) -> create
@@ -24760,23 +24661,37 @@ org.acra.sender.SenderService -> org.acra.sender.SenderService:
     java.lang.String EXTRA_ACRA_CONFIG -> EXTRA_ACRA_CONFIG
     org.acra.file.ReportLocator locator -> locator
     26:30:void <init>() -> <init>
-    35:77:void onHandleIntent(android.content.Intent) -> onHandleIntent
-    81:93:java.util.List getSenderInstances(org.acra.config.ACRAConfiguration,java.util.List) -> getSenderInstances
-    100:108:void markReportsAsApproved() -> markReportsAsApproved
+    35:76:void onHandleIntent(android.content.Intent) -> onHandleIntent
+    80:92:java.util.List getSenderInstances(org.acra.config.ACRAConfiguration,java.util.List) -> getSenderInstances
+    101:107:void markReportsAsApproved() -> markReportsAsApproved
 org.acra.sender.SenderServiceStarter -> org.acra.sender.SenderServiceStarter:
     android.content.Context context -> context
     org.acra.config.ACRAConfiguration config -> config
-    22:25:void <init>(android.content.Context,org.acra.config.ACRAConfiguration) -> <init>
-    34:43:void startService(boolean,boolean) -> startService
+    23:26:void <init>(android.content.Context,org.acra.config.ACRAConfiguration) -> <init>
+    36:44:void startService(boolean,boolean) -> startService
 org.acra.util.ApplicationStartupProcessor -> org.acra.util.ApplicationStartupProcessor:
     android.content.Context context -> context
     org.acra.config.ACRAConfiguration config -> config
     28:31:void <init>(android.content.Context,org.acra.config.ACRAConfiguration) -> <init>
     37:50:void deleteUnsentReportsFromOldAppVersion() -> deleteUnsentReportsFromOldAppVersion
     60:61:void deleteAllUnapprovedReportsBarOne() -> deleteAllUnapprovedReportsBarOne
-    69:84:void sendApprovedReports() -> sendApprovedReports
-    90:92:int getAppVersion() -> getAppVersion
-    96:102:boolean hasNonSilentApprovedReports(java.io.File[]) -> hasNonSilentApprovedReports
+    69:77:void sendApprovedReports() -> sendApprovedReports
+    83:85:int getAppVersion() -> getAppVersion
+    89:97:boolean hasNonSilentApprovedReports() -> hasNonSilentApprovedReports
+org.acra.util.BoundedLinkedList -> org.acra.util.BoundedLinkedList:
+    int maxSize -> maxSize
+    36:38:void <init>(int) -> <init>
+    47:50:boolean add(java.lang.Object) -> add
+    60:64:void add(int,java.lang.Object) -> add
+    73:86:boolean addAll(java.util.Collection) -> addAll
+    102:105:boolean addAll(int,java.util.Collection) -> addAll
+    116:116:void addFirst(java.lang.Object) -> addFirst
+    126:127:void addLast(java.lang.Object) -> addLast
+    137:141:java.lang.String toString() -> toString
+    146:146:boolean offer(java.lang.Object) -> offer
+    151:152:boolean offerFirst(java.lang.Object) -> offerFirst
+    157:157:boolean offerLast(java.lang.Object) -> offerLast
+    162:163:void push(java.lang.Object) -> push
 org.acra.util.HttpRequest -> org.acra.util.HttpRequest:
     java.lang.String UTF8 -> UTF8
     int HTTP_SUCCESS -> HTTP_SUCCESS
@@ -24791,28 +24706,14 @@ org.acra.util.HttpRequest -> org.acra.util.HttpRequest:
     int connectionTimeOut -> connectionTimeOut
     int socketTimeOut -> socketTimeOut
     java.util.Map headers -> headers
-    51:57:void <init>(org.acra.config.ACRAConfiguration) -> <init>
-    60:61:void setLogin(java.lang.String) -> setLogin
-    64:65:void setPassword(java.lang.String) -> setPassword
-    68:69:void setConnectionTimeOut(int) -> setConnectionTimeOut
-    72:73:void setSocketTimeOut(int) -> setSocketTimeOut
-    76:77:void setHeaders(java.util.Map) -> setHeaders
-    89:177:void send(android.content.Context,java.net.URL,org.acra.sender.HttpSender$Method,java.lang.String,org.acra.sender.HttpSender$Type) -> send
-    189:201:java.lang.String getParamsAsFormString(java.util.Map) -> getParamsAsFormString
-org.acra.util.IOUtils -> org.acra.util.IOUtils:
-    com.android.internal.util.Predicate DEFAULT_FILTER -> DEFAULT_FILTER
-    int NO_LIMIT -> NO_LIMIT
-    49:50:void <init>() -> <init>
-    59:66:void safeClose(java.io.Closeable) -> safeClose
-    77:77:java.lang.String streamToString(java.io.InputStream) -> streamToString
-    90:90:java.lang.String streamToString(java.io.InputStream,com.android.internal.util.Predicate) -> streamToString
-    103:103:java.lang.String streamToString(java.io.InputStream,int) -> streamToString
-    117:128:java.lang.String streamToString(java.io.InputStream,com.android.internal.util.Predicate,int) -> streamToString
-    41:41:void <clinit>() -> <clinit>
-org.acra.util.IOUtils$1 -> org.acra.util.IOUtils$1:
-    41:41:void <init>() -> <init>
-    44:44:boolean apply(java.lang.String) -> apply
-    41:41:boolean apply(java.lang.Object) -> apply
+    49:55:void <init>(org.acra.config.ACRAConfiguration) -> <init>
+    58:59:void setLogin(java.lang.String) -> setLogin
+    62:63:void setPassword(java.lang.String) -> setPassword
+    66:67:void setConnectionTimeOut(int) -> setConnectionTimeOut
+    70:71:void setSocketTimeOut(int) -> setSocketTimeOut
+    74:75:void setHeaders(java.util.Map) -> setHeaders
+    87:173:void send(android.content.Context,java.net.URL,org.acra.sender.HttpSender$Method,java.lang.String,org.acra.sender.HttpSender$Type) -> send
+    185:197:java.lang.String getParamsAsFormString(java.util.Map) -> getParamsAsFormString
 org.acra.util.Installation -> org.acra.util.Installation:
     java.lang.String sID -> sID
     java.lang.String INSTALLATION -> INSTALLATION
@@ -24821,30 +24722,30 @@ org.acra.util.Installation -> org.acra.util.Installation:
     59:66:java.lang.String readInstallationFile(java.io.File) -> readInstallationFile
     70:77:void writeInstallationFile(java.io.File) -> writeInstallationFile
 org.acra.util.JSONReportBuilder -> org.acra.util.JSONReportBuilder:
-    22:22:void <init>() -> <init>
-    72:101:org.json.JSONObject buildJSONReport(org.acra.collector.CrashReportData) -> buildJSONReport
-    143:160:void addJSONFromProperty(org.json.JSONObject,java.lang.String) -> addJSONFromProperty
-    164:177:java.lang.Object guessType(java.lang.String) -> guessType
-    194:228:void addJSONSubTree(org.json.JSONObject,java.lang.String[],java.lang.Object) -> addJSONSubTree
+    23:23:void <init>() -> <init>
+    73:102:org.json.JSONObject buildJSONReport(org.acra.collector.CrashReportData) -> buildJSONReport
+    144:161:void addJSONFromProperty(org.json.JSONObject,java.lang.String) -> addJSONFromProperty
+    165:178:java.lang.Object guessType(java.lang.String) -> guessType
+    195:229:void addJSONSubTree(org.json.JSONObject,java.lang.String[],java.lang.Object) -> addJSONSubTree
 org.acra.util.JSONReportBuilder$JSONReportException -> org.acra.util.JSONReportBuilder$JSONReportException:
     long serialVersionUID -> serialVersionUID
-    234:235:void <init>(java.lang.String,java.lang.Throwable) -> <init>
+    235:236:void <init>(java.lang.String,java.lang.Throwable) -> <init>
 org.acra.util.PackageManagerWrapper -> org.acra.util.PackageManagerWrapper:
     android.content.Context context -> context
     33:35:void <init>(android.content.Context) -> <init>
     42:52:boolean hasPermission(java.lang.String) -> hasPermission
     61:74:android.content.pm.PackageInfo getPackageInfo() -> getPackageInfo
 org.acra.util.ReportUtils -> org.acra.util.ReportUtils:
-    31:31:void <init>() -> <init>
-    40:53:long getAvailableInternalMemorySize() -> getAvailableInternalMemorySize
-    63:77:long getTotalInternalMemorySize() -> getTotalInternalMemorySize
-    89:93:java.lang.String getDeviceId(android.content.Context) -> getDeviceId
-    99:105:java.lang.String getApplicationFilePath(android.content.Context) -> getApplicationFilePath
-    110:129:java.lang.String getLocalIpAddress() -> getLocalIpAddress
-    134:135:java.lang.String getTimeString(java.util.Calendar) -> getTimeString
+    32:32:void <init>() -> <init>
+    41:54:long getAvailableInternalMemorySize() -> getAvailableInternalMemorySize
+    64:78:long getTotalInternalMemorySize() -> getTotalInternalMemorySize
+    90:94:java.lang.String getDeviceId(android.content.Context) -> getDeviceId
+    100:106:java.lang.String getApplicationFilePath(android.content.Context) -> getApplicationFilePath
+    111:130:java.lang.String getLocalIpAddress() -> getLocalIpAddress
+    135:136:java.lang.String getTimeString(java.util.Calendar) -> getTimeString
 org.acra.util.ToastSender -> org.acra.util.ToastSender:
-    20:20:void <init>() -> <init>
-    31:35:void sendToast(android.content.Context,int,int) -> sendToast
+    21:21:void <init>() -> <init>
+    32:36:void sendToast(android.content.Context,int,int) -> sendToast
 org.apache.commons.io.Charsets -> org.a.a.a.a:
     java.nio.charset.Charset ISO_8859_1 -> a
     java.nio.charset.Charset US_ASCII -> b

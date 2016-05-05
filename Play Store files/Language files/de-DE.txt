@@ -29,6 +29,9 @@ https://github.com/TrianguloY/LLScript_Repository_Importer
 
 
 _Changes_
+V 1.11.1
+Hotfix
+
 V 1.11
 Verschiedene interne Anpassungen und Fehlerbehebungen
 

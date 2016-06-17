@@ -44,6 +44,7 @@ public class ManagedWebView extends WebView {
     private String loadingId;
     @Nullable
     private AsyncTask ongoingTask;
+    private PageCacheManager cacheManager;
 
     public ManagedWebView(Context context) {
         super(context);
@@ -69,6 +70,7 @@ public class ManagedWebView extends WebView {
         this.context = context;
         backStack = new Stack<>();
         showTools = false;
+        cacheManager = new PageCacheManager(context);
         setWebViewClient(new WebClient() {
             @Override
             public boolean shouldOverrideUrlLoading(WebView view, @NonNull String url) {
@@ -103,7 +105,7 @@ public class ManagedWebView extends WebView {
                         if (result.getStatus() == RPCManager.RESULT_OK) {
                             Integer timestamp = result.getResult();
                             assert timestamp != null;
-                            PageCacheManager.savePage(id, new PageCacheManager.Page(timestamp, html));
+                            cacheManager.savePage(id, new PageCacheManager.Page(timestamp, html));
                         }
                     }
                 });
@@ -142,8 +144,8 @@ public class ManagedWebView extends WebView {
             final String id = Utils.getIdFromUrl(url);
             if (!id.equals(loadingId)) cancel();
             loadingId = id;
-            if (PageCacheManager.hasPage(id)) {
-                final PageCacheManager.Page page = PageCacheManager.getPage(id);
+            if (cacheManager.hasPage(id)) {
+                final PageCacheManager.Page page = cacheManager.getPage(id);
                 assert page != null;
                 showPage(url, Jsoup.parse(page.html, context.getString(R.string.link_server)));
                 ongoingTask = RPCManager.getInstance(context).getPageTimestamp(context.getString(R.string.prefix_script) + id, new RPCManager.Listener<Integer>() {

@@ -1,6 +1,8 @@
 package com.trianguloy.llscript.repository.internal;
 
+import android.content.Context;
 import android.support.annotation.NonNull;
+import android.support.annotation.Nullable;
 
 import com.google.gson.Gson;
 
@@ -14,21 +16,16 @@ import java.io.IOException;
  * Caches Pages on the filesystem, manages loading and unloading
  */
 public final class PageCacheManager {
-    private PageCacheManager() {
-    }
 
-    private static File directory;
-    private static Gson gson;
-    private static boolean initialized = false;
+    private File directory;
+    private Gson gson;
 
-    private static void init() {
-        initialized = true;
-        directory = new File(System.getProperty("java.io.tmpdir", "/cache"),"html");
+    public PageCacheManager(Context context) {
+        directory = new File(context.getCacheDir(),"html");
         gson = new Gson();
     }
 
-    public static void savePage(@NonNull String id, Page page) {
-        if (!initialized) init();
+    public void savePage(@NonNull String id, @NonNull Page page) {
         File file = new File(directory, id);
         try {
             FileUtils.writeStringToFile(file, gson.toJson(page, Page.class));
@@ -38,8 +35,8 @@ public final class PageCacheManager {
         }
     }
 
-    public static Page getPage(@NonNull String id) {
-        if (!initialized) init();
+    @Nullable
+    public Page getPage(@NonNull String id) {
         File file = new File(directory, id);
         if(file.exists()){
             try {
@@ -52,14 +49,13 @@ public final class PageCacheManager {
         return null;
     }
 
-    public static boolean hasPage(@NonNull String id) {
-        if (!initialized) init();
+    public boolean hasPage(@NonNull String id) {
         File file = new File(directory, id);
         return file.exists();
     }
 
     private static class FatalFileException extends RuntimeException {
-        public FatalFileException(Exception e) {
+        FatalFileException(Exception e) {
             super(e);
         }
     }

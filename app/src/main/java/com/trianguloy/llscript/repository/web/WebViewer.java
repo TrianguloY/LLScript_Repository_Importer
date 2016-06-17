@@ -86,6 +86,9 @@ public class WebViewer extends Activity {
         //check for launcher to find the installed one, continue even if not found
         Utils.alertLauncherProblemsIfAny(this);
 
+        //init views
+        initializeWeb();
+
         if ((sharedPref.contains(R.string.pref_version) && sharedPref.getInt(R.string.pref_version, -1) == BuildConfig.VERSION_CODE) || upgradeFromOldVersion())
             init();
     }
@@ -276,8 +279,9 @@ public class WebViewer extends Activity {
     private void init() {
         //parse the Intent
         onNewIntent(getIntent());
-        //Normal activity
-        initializeWeb();
+        if (savedInstanceState == null || !restore(savedInstanceState)) {
+            loadSentUrl();
+        }
     }
 
     private void initializeWeb() {
@@ -315,9 +319,6 @@ public class WebViewer extends Activity {
             } catch (IOException e) {
                 e.printStackTrace();
             }
-        }
-        if (savedInstanceState == null || !restore(savedInstanceState)) {
-            loadSentUrl();
         }
     }
 
@@ -367,11 +368,11 @@ public class WebViewer extends Activity {
         Preferences.Editor editor = sharedPref.edit();
         boolean result = true;
         editor.putInt(R.string.pref_version, BuildConfig.VERSION_CODE);
-        if (sharedPref.contains(R.string.pref_reportMode)){
+        if (sharedPref.contains(R.string.pref_reportMode)) {
             int reportMode = Integer.valueOf(sharedPref.getString(R.string.pref_reportMode, "0"));
             boolean enable = reportMode != 1;
             boolean silent = reportMode == 2;
-            editor.putBoolean(R.string.pref_enableAcra,enable).putBoolean(R.string.pref_alwaysSendReports, silent);
+            editor.putBoolean(R.string.pref_enableAcra, enable).putBoolean(R.string.pref_alwaysSendReports, silent);
             editor.remove(R.string.pref_reportMode);
         }
 

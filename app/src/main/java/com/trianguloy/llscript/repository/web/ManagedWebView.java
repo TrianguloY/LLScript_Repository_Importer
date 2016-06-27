@@ -15,8 +15,8 @@ import com.google.common.reflect.TypeToken;
 import com.google.gson.Gson;
 import com.trianguloy.llscript.repository.BuildConfig;
 import com.trianguloy.llscript.repository.R;
-import com.trianguloy.llscript.repository.internal.AppChooser;
 import com.trianguloy.llscript.repository.internal.Dialogs;
+import com.trianguloy.llscript.repository.internal.IntentHelper;
 import com.trianguloy.llscript.repository.internal.PageCacheManager;
 import com.trianguloy.llscript.repository.internal.Utils;
 
@@ -163,7 +163,7 @@ public class ManagedWebView extends WebView {
                 });
             } else downloadPage(url);
         } else {
-            new AppChooser(context, Uri.parse(url), context.getString(R.string.title_appChooserExternalClicked), context.getString(R.string.message_noBrowser), null).show();
+            IntentHelper.sendToAllButSelf(context, Uri.parse(url));
         }
     }
 

@@ -25,9 +25,9 @@ import com.trianguloy.llscript.repository.Constants;
 import com.trianguloy.llscript.repository.R;
 import com.trianguloy.llscript.repository.RepositoryImporter;
 import com.trianguloy.llscript.repository.editor.EditorActivity;
-import com.trianguloy.llscript.repository.internal.AppChooser;
 import com.trianguloy.llscript.repository.internal.Dialogs;
 import com.trianguloy.llscript.repository.internal.ImportUtils;
+import com.trianguloy.llscript.repository.internal.IntentHelper;
 import com.trianguloy.llscript.repository.internal.Utils;
 import com.trianguloy.llscript.repository.settings.Preferences;
 import com.trianguloy.llscript.repository.settings.SettingsActivity;
@@ -192,7 +192,7 @@ public class WebViewer extends Activity {
         switch (item.getItemId()) {
             case R.id.action_openInBrowser:
                 //open the current page in the browser
-                new AppChooser(this, Uri.parse(webView.getUrl()), getString(R.string.title_appChooserNormal), getString(R.string.message_noBrowser), null).show();
+                IntentHelper.sendToAllButSelf(this, Uri.parse(webView.getUrl()));
                 return true;
             case R.id.action_subscribe: {
                 //subscribe to the current page

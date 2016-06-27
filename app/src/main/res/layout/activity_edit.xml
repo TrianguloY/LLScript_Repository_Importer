@@ -1,89 +1,129 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-                xmlns:tools="http://schemas.android.com/tools" android:layout_width="match_parent"
-                android:layout_height="match_parent">
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
 
     <EditText
+        android:id="@+id/editor"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:id="@+id/editor"
-        android:layout_alignParentLeft="true"
-        android:layout_alignParentStart="true"
-        android:layout_alignParentRight="true"
+        android:layout_above="@+id/linearLayout"
         android:layout_alignParentEnd="true"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentRight="true"
+        android:layout_alignParentStart="true"
+        android:layout_below="@+id/linearLayout2"
+        android:gravity="start|top"
         android:inputType="textMultiLine|textNoSuggestions"
-        android:singleLine="false"
-        android:gravity="left|top"
-        android:textAlignment="gravity" android:layout_above="@+id/linearLayout"
-        android:layout_below="@+id/linearLayout2"/>
+        android:maxLines="1"
+        android:textAlignment="gravity" />
+
     <LinearLayout
-        android:orientation="horizontal"
+        android:id="@+id/linearLayout"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_alignParentBottom="true" android:layout_alignParentLeft="true"
-        android:layout_alignParentStart="true" android:id="@+id/linearLayout">
+        android:layout_alignParentBottom="true"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentStart="true"
+        android:orientation="horizontal">
+
         <Button
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="@string/button_cancel"
             android:id="@+id/buttonCancel"
-            android:layout_weight="1" android:onClick="button"/>
-        <Button
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="@string/button_preview"
-            android:id="@+id/buttonPreview" android:layout_weight="1" android:onClick="button"/>
+            android:layout_weight="1"
+            android:onClick="button"
+            android:text="@string/button_cancel" />
+
         <Button
+            android:id="@+id/buttonPreview"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="@string/button_save"
+            android:layout_weight="1"
+            android:onClick="button"
+            android:text="@string/button_preview" />
+
+        <Button
             android:id="@+id/buttonSave"
-            android:layout_weight="1" android:onClick="button"/>
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:onClick="button"
+            android:text="@string/button_save" />
     </LinearLayout>
+
     <LinearLayout
-        android:orientation="horizontal"
+        android:id="@+id/linearLayout2"
         android:layout_width="fill_parent"
-        android:layout_height="wrap_content" android:layout_alignParentTop="true"
-        android:layout_alignParentLeft="true" android:layout_alignParentStart="true"
-        android:id="@+id/linearLayout2">
+        android:layout_height="wrap_content"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentStart="true"
+        android:layout_alignParentTop="true"
+        android:orientation="horizontal">
+
         <com.trianguloy.llscript.repository.editor.ThemedImageButton
+            android:id="@+id/action_bold"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:id="@+id/action_bold" android:src="@drawable/ic_bold" android:layout_weight="1"
-            android:onClick="action" tools:ignore="ContentDescription"/>
+            android:layout_weight="1"
+            android:onClick="action"
+            android:src="@drawable/ic_bold"
+            tools:ignore="ContentDescription" />
+
         <com.trianguloy.llscript.repository.editor.ThemedImageButton
+            android:id="@+id/action_italic"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:id="@+id/action_italic" android:src="@drawable/ic_italic"
-            android:layout_weight="1" android:onClick="action" tools:ignore="ContentDescription"/>
+            android:layout_weight="1"
+            android:onClick="action"
+            android:src="@drawable/ic_italic"
+            tools:ignore="ContentDescription" />
+
         <com.trianguloy.llscript.repository.editor.ThemedImageButton
+            android:id="@+id/action_underline"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:id="@+id/action_underline" android:src="@drawable/ic_underline"
-            android:layout_weight="1" android:onClick="action" tools:ignore="ContentDescription"/>
+            android:layout_weight="1"
+            android:onClick="action"
+            android:src="@drawable/ic_underline"
+            tools:ignore="ContentDescription" />
+
         <com.trianguloy.llscript.repository.editor.ThemedImageButton
+            android:id="@+id/action_code"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:id="@+id/action_code" android:src="@drawable/ic_code" android:layout_weight="1"
-            android:onClick="action" tools:ignore="ContentDescription"/>
+            android:layout_weight="1"
+            android:onClick="action"
+            android:src="@drawable/ic_code"
+            tools:ignore="ContentDescription" />
+
         <com.trianguloy.llscript.repository.editor.ThemedImageButton
+            android:id="@+id/action_unorderedList"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:id="@+id/action_unorderedList" android:src="@drawable/ic_unordered_list"
-            android:layout_weight="1" android:onClick="action" tools:ignore="ContentDescription"/>
+            android:layout_weight="1"
+            android:onClick="action"
+            android:src="@drawable/ic_unordered_list"
+            tools:ignore="ContentDescription" />
+
         <com.trianguloy.llscript.repository.editor.ThemedImageButton
+            android:id="@+id/action_orderedList"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:id="@+id/action_orderedList" android:src="@drawable/ic_ordered_list"
-            android:layout_weight="1" android:onClick="action" tools:ignore="ContentDescription"/>
+            android:layout_weight="1"
+            android:onClick="action"
+            android:src="@drawable/ic_ordered_list"
+            tools:ignore="ContentDescription" />
     </LinearLayout>
+
     <ProgressBar
-    style="?android:attr/progressBarStyleLarge"
-    android:layout_width="wrap_content"
-    android:layout_height="wrap_content"
-    android:id="@+id/progressBar"
-    android:layout_alignParentRight="false"
-    android:layout_alignParentEnd="false"
-    android:visibility="gone"
-    android:layout_centerInParent="true" />
+        android:id="@+id/progressBar"
+        style="?android:attr/progressBarStyleLarge"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentEnd="false"
+        android:layout_alignParentRight="false"
+        android:layout_centerInParent="true"
+        android:visibility="gone" />
 </RelativeLayout>

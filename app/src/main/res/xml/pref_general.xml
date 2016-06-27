@@ -13,10 +13,6 @@
                 android:targetClass="com.trianguloy.llscript.repository.settings.SubscriptionsActivity"
                 android:targetPackage="com.trianguloy.llscript.repository"/>
         </Preference>
-        <com.trianguloy.llscript.repository.settings.BrowserPreference
-            android:key="@string/pref_browser"
-            android:summary="@string/summary_browser"
-            android:title="@string/title_browser"/>
         <CheckBoxPreference
             android:defaultValue="true"
             android:key="@string/pref_preferDedicated"

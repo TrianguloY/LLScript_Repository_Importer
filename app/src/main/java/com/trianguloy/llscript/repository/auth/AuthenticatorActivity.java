@@ -14,8 +14,8 @@ import android.widget.EditText;
 import android.widget.Toast;
 
 import com.trianguloy.llscript.repository.R;
-import com.trianguloy.llscript.repository.internal.AppChooser;
 import com.trianguloy.llscript.repository.internal.Dialogs;
+import com.trianguloy.llscript.repository.internal.IntentHelper;
 import com.trianguloy.llscript.repository.web.RPCManager;
 
 /**
@@ -94,6 +94,6 @@ public class AuthenticatorActivity extends AccountAuthenticatorActivity {
     }
 
     private void register() {
-        new AppChooser(this, Uri.parse(getString(R.string.link_register)), getString(R.string.title_appChooserRegister), getString(R.string.message_noBrowser), null).show();
+        IntentHelper.sendToAllButSelf(this, Uri.parse(getString(R.string.link_register)));
     }
 }

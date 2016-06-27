@@ -7,7 +7,7 @@ import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.widget.Toast;
 
-import com.trianguloy.llscript.repository.internal.AppChooser;
+import com.trianguloy.llscript.repository.internal.IntentHelper;
 import com.trianguloy.llscript.repository.web.WebViewer;
 
 
@@ -24,15 +24,11 @@ public class IntentHandle extends Activity {
             Uri uri = intent.getData();
             if (uri != null && getUrl.startsWith(getString(R.string.link_scriptPagePrefix))) {
                 openWebViewer(getUrl, intent.getBooleanExtra(Constants.EXTRA_RELOAD, false));
-            } else if (uri != null) {
-                //pass the bad intent to another app
-                new AppChooser(this, uri, getString(R.string.title_appChooserBad), getString(R.string.toast_badString), new AppChooser.OnCloseListener() {
-                    @Override
-                    public void onClose() {
-                        finish();
-                    }
-                }).show();
-            }  else {
+            } else {
+                if (uri != null) {
+                    //pass the bad intent to another app
+                    IntentHelper.sendToAllButSelf(this, uri);
+                }
                 Toast.makeText(getApplicationContext(), getString(R.string.toast_badString), Toast.LENGTH_LONG).show();
                 finish();
             }

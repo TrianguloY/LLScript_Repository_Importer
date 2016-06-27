@@ -45,18 +45,18 @@ public class RPCManager {
     }
 
     public static final int NOT_LOGGED_IN = 0;
-    public static final int LOGIN_RO = 1;
+    private static final int LOGIN_RO = 1;
     public static final int LOGIN_USER = 2;
     private static final int ACL_WRITE = 4;
 
-    private Context context;
+    private final Context context;
     private static final DokuJClient client;
 
     static {
         try {
             client = new DokuJClient("http://www.lightninglauncher.com/wiki/lib/exe/xmlrpc.php");
         } catch (MalformedURLException e) {
-            throw new RuntimeException();
+            throw new RuntimeException(e);
         }
     }
 

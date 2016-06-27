@@ -38,7 +38,7 @@ public class IntentHandle extends Activity {
         }
     }
 
-    public void openWebViewer() {
+    private void openWebViewer() {
         openWebViewer(null, false);
     }
 

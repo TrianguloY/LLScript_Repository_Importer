@@ -54,7 +54,7 @@ public final class Constants {
     public static final String KEY_FORCE_UPDATE = "forceUpdate";
     public static final String KEY_CODE = "code";
     public static final String KEY_RETURN_RESULT_TO = "returnTo";
-    public static final String KEY_CALLBACK_ID = "callbackId";;
+    public static final String KEY_CALLBACK_ID = "callbackId";
 
     public static final int TEN_MEGABYTE = 10 * 1024 * 1024;
     public static final int HUNDRED_MILLISECONDS = 100;

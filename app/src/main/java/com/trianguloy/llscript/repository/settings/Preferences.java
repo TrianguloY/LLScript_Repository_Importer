@@ -38,7 +38,7 @@ public class Preferences implements SharedPreferences {
         return getDefault(context).edit();
     }
 
-    public Preferences(SharedPreferences base, Context context) {
+    private Preferences(SharedPreferences base, Context context) {
         this.base = base;
         this.context = context;
     }
@@ -86,7 +86,7 @@ public class Preferences implements SharedPreferences {
         return getStringSet(context.getString(key), defValues);
     }
 
-    public Map<String, String> getStringMap(String key, Map<String, String> defValues) {
+    private Map<String, String> getStringMap(String key, Map<String, String> defValues) {
         if (contains(key)) {
             try {
                 HashMap<String, String> map = new HashMap<>();

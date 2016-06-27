@@ -10,6 +10,7 @@ import org.apache.commons.io.FileUtils;
 
 import java.io.File;
 import java.io.IOException;
+import java.nio.charset.Charset;
 
 /**
  * Created by Lukas on 04.08.2015.
@@ -17,18 +18,20 @@ import java.io.IOException;
  */
 public final class PageCacheManager {
 
-    private File directory;
-    private Gson gson;
+    private final File directory;
+    private final Gson gson;
+    private Charset charset;
 
     public PageCacheManager(Context context) {
         directory = new File(context.getCacheDir(),"html");
         gson = new Gson();
+        charset = Charset.forName("UTF-8");
     }
 
     public void savePage(@NonNull String id, @NonNull Page page) {
         File file = new File(directory, id);
         try {
-            FileUtils.writeStringToFile(file, gson.toJson(page, Page.class));
+            FileUtils.writeStringToFile(file, gson.toJson(page, Page.class), charset);
         } catch (IOException e) {
             e.printStackTrace();
             throw new FatalFileException(e);
@@ -40,7 +43,7 @@ public final class PageCacheManager {
         File file = new File(directory, id);
         if(file.exists()){
             try {
-                return gson.fromJson(FileUtils.readFileToString(file), Page.class);
+                return gson.fromJson(FileUtils.readFileToString(file, charset), Page.class);
             } catch (IOException e) {
                 e.printStackTrace();
                 throw new FatalFileException(e);

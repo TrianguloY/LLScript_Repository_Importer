@@ -115,6 +115,7 @@ public final class ImportUtils {
             //join the text adding an asterisk at the beginning of each line and converting the html string into normal code
             StringBuilder buffer = new StringBuilder();
             for (int i = 0; i < prov.length; ++i) {
+                //noinspection deprecation
                 buffer.append((i == 0) ? "" : "\n *  ").append(Html.fromHtml(prov[i]).toString());
             }
             aboutScript = buffer.toString();
@@ -215,7 +216,7 @@ public final class ImportUtils {
                 if (isGranted) {
                     // let's import the script
                     context.bindService(new Intent(context, ScriptImporter.class), new ServiceConnection() {
-                        ServiceConnection connection = this;
+                        final ServiceConnection connection = this;
 
                         @Override
                         public void onServiceConnected(ComponentName name, IBinder service) {

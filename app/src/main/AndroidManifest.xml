@@ -34,7 +34,8 @@
         android:icon="@drawable/ic_launcher"
         android:label="@string/app_name"
         android:supportsRtl="false"
-        android:theme="@style/Theme">
+        android:theme="@style/Theme"
+        tools:ignore="AllowBackup,GoogleAppIndexingWarning,UnusedAttribute">
         <activity
             android:name=".web.WebViewer"
             android:configChanges="orientation|screenSize"
@@ -44,7 +45,8 @@
             android:name=".settings.SettingsActivity"
             android:excludeFromRecents="false"
             android:label="@string/label_settings"
-            android:parentActivityName=".web.WebViewer">
+            android:parentActivityName=".web.WebViewer"
+            tools:ignore="UnusedAttribute">
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value=".web.WebViewer" />
@@ -53,7 +55,8 @@
             android:name=".settings.SubscriptionsActivity"
             android:excludeFromRecents="false"
             android:label="@string/label_subscriptionsDialog"
-            android:parentActivityName=".settings.SettingsActivity">
+            android:parentActivityName=".settings.SettingsActivity"
+            tools:ignore="UnusedAttribute">
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value=".settings.SettingsActivity" />
@@ -87,7 +90,7 @@
         </activity>
 
         <activity-alias
-            android:name="${packageName}.HttpFilter"
+            android:name=".HttpFilter"
             android:enabled="true"
             android:exported="true"
             android:targetActivity=".IntentHandle">

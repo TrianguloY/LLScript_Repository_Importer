@@ -1,5 +1,6 @@
 package com.trianguloy.llscript.repository.editor;
 
+import android.annotation.SuppressLint;
 import android.app.ActionBar;
 import android.content.DialogInterface;
 import android.os.Build;
@@ -45,9 +46,9 @@ class ViewManager extends Lock {
     @IntDef({STATE_NONE,STATE_CHOOSE_ACTION,STATE_CREATE,STATE_EDIT,STATE_PREVIEW})
     public @interface State {
     }
-    public static final int STATE_NONE = -1;
+    private static final int STATE_NONE = -1;
     public static final int STATE_CHOOSE_ACTION = 0;
-    public static final int STATE_CREATE = 1;
+    private static final int STATE_CREATE = 1;
     public static final int STATE_EDIT = 2;
     public static final int STATE_PREVIEW = 3;
 
@@ -223,6 +224,7 @@ class ViewManager extends Lock {
         });
     }
 
+    @SuppressLint("SetJavaScriptEnabled")
     private void showPreview(final String tempId) {
         setState(STATE_PREVIEW);
         lock();

@@ -1,14 +1,18 @@
 package com.trianguloy.llscript.repository.web;
 
+import android.annotation.SuppressLint;
+import android.annotation.TargetApi;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.net.Uri;
 import android.os.AsyncTask;
+import android.os.Build;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.util.AttributeSet;
 import android.util.Log;
+import android.webkit.WebResourceRequest;
 import android.webkit.WebView;
 
 import com.google.common.reflect.TypeToken;
@@ -66,12 +70,14 @@ public class ManagedWebView extends WebView {
      *
      * @param context View context
      */
+    @SuppressLint("SetJavaScriptEnabled")
     private void init(final Context context) {
         this.context = context;
         backStack = new Stack<>();
         showTools = false;
         cacheManager = new PageCacheManager(context);
         setWebViewClient(new WebClient() {
+            @SuppressWarnings("deprecation")
             @Override
             public boolean shouldOverrideUrlLoading(WebView view, @NonNull String url) {
                 //prevent login and register, broken because cookies are missing
@@ -86,6 +92,12 @@ public class ManagedWebView extends WebView {
                 scrollTo(0, posY);
                 loading(false);
                 listener.pageChanged(backStack.peek().url);
+            }
+
+            @TargetApi(Build.VERSION_CODES.N)
+            @Override
+            public boolean shouldOverrideUrlLoading(WebView view, WebResourceRequest request) {
+                return shouldOverrideUrlLoading(view, request.getUrl().toString());
             }
         });
         downloadTaskListener = new DownloadTask.Listener() {

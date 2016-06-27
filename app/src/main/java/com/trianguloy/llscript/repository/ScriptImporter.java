@@ -31,7 +31,7 @@ import java.util.Map;
  */
 public class ScriptImporter extends Service {
 
-    private Map<Integer, Object> callbackMap = new HashMap<>();
+    private final Map<Integer, Object> callbackMap = new HashMap<>();
     private int nextRequestId = 0;
 
     /**
@@ -68,7 +68,7 @@ public class ScriptImporter extends Service {
      * backwards-compatibility
      */
     @Deprecated
-    public void onStartCommand(@NonNull Intent intent) {
+    private void onStartCommand(@NonNull Intent intent) {
         final ComponentName componentName = intent.hasExtra(Constants.EXTRA_RECEIVER) ? ComponentName.unflattenFromString(intent.getStringExtra(Constants.EXTRA_RECEIVER)) : null;
         if (Utils.hasValidLauncher(this)) {
             if (intent.hasExtra(Constants.EXTRA_CODE) && intent.hasExtra(Constants.EXTRA_NAME)) {
@@ -223,7 +223,7 @@ public class ScriptImporter extends Service {
     /**
      * the interface exposed to callers
      */
-    private ILightningService lightningService = new ILightningService.Stub() {
+    private final ILightningService lightningService = new ILightningService.Stub() {
         /**
          * import a script into LL
          * @param script the script
@@ -305,7 +305,7 @@ public class ScriptImporter extends Service {
     /**
      * the receiver for communication with LL
      */
-    private BroadcastReceiver receiver = new BroadcastReceiver() {
+    private final BroadcastReceiver receiver = new BroadcastReceiver() {
         @Override
         public void onReceive(Context context, Intent intent) {
             if (intent.hasExtra(Constants.KEY_CALLBACK_ID) && intent.hasExtra(Constants.EXTRA_STATUS)) {

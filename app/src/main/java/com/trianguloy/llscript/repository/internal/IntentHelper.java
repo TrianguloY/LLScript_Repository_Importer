@@ -8,7 +8,7 @@ import android.net.Uri;
 import android.os.Handler;
 
 /**
- * Created by Lukas on 27.06.2016.
+ * Helps to send urls to all apps but this one
  */
 
 public final class IntentHelper {

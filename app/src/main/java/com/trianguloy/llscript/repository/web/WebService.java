@@ -27,11 +27,6 @@ public class WebService extends Service {
 
 
     @Override
-    public void onCreate() {
-        super.onCreate();
-    }
-
-    @Override
     public int onStartCommand(Intent intent, int flags, int startId) {
         check();
         return START_STICKY;

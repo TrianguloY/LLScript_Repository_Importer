@@ -60,7 +60,7 @@ public final class Utils {
      * @return all script names in the repository mapped to their pages
      */
     @NonNull
-    public static Map<String, String> getAllScriptPagesAndNames(@NonNull Context context, @NonNull Document document) {
+    private static Map<String, String> getAllScriptPagesAndNames(@NonNull Context context, @NonNull Document document) {
         HashMap<String, String> scripts = new HashMap<>();
         //find all scripts in the repository
         String prefix = context.getString(R.string.prefix_script);

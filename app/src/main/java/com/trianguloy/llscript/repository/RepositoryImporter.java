@@ -31,7 +31,7 @@ import org.acra.sender.HttpSender;
         resDialogNegativeButtonText = R.string.button_dont_send,
         resDialogCommentPrompt = R.string.text_commentPrompt,
         resDialogEmailPrompt = R.string.text_emailPrompt,
-        resToastText = R.string.toast_crashReported,
+        resDialogOkToast = R.string.toast_crashReported,
         buildConfigClass = BuildConfig.class
 )
 public class RepositoryImporter extends Application {

@@ -99,7 +99,7 @@ public class ManagedWebView extends WebView {
                 }
                 final String id = Utils.getIdFromUrl(result.url);
                 final String html = result.document.outerHtml();
-                RPCManager.getInstance(context).getPageTimestamp(ManagedWebView.this.context.getString(R.string.prefix_script) + id, new RPCManager.Listener<Integer>() {
+                new RPCManager(context).getPageTimestamp(ManagedWebView.this.context.getString(R.string.prefix_script) + id, new RPCManager.Listener<Integer>() {
                     @Override
                     public void onResult(@NonNull RPCManager.Result<Integer> result) {
                         if (result.getStatus() == RPCManager.RESULT_OK) {
@@ -148,7 +148,7 @@ public class ManagedWebView extends WebView {
                 final PageCacheManager.Page page = cacheManager.getPage(id);
                 assert page != null;
                 showPage(url, Jsoup.parse(page.html, context.getString(R.string.link_server)));
-                ongoingTask = RPCManager.getInstance(context).getPageTimestamp(context.getString(R.string.prefix_script) + id, new RPCManager.Listener<Integer>() {
+                ongoingTask = new RPCManager(context).getPageTimestamp(context.getString(R.string.prefix_script) + id, new RPCManager.Listener<Integer>() {
                     @Override
                     public void onResult(@NonNull RPCManager.Result<Integer> result) {
                         if (result.getStatus() == RPCManager.RESULT_OK) {

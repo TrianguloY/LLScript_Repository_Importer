@@ -52,7 +52,7 @@ public class EditorActivity extends Activity {
                 action.startsWith(getString(R.string.link_scriptPagePrefix)) && sharedPref.getBoolean(R.string.pref_directEdit, false))
             editManager.setPageId(action.substring(action.indexOf(getString(R.string.prefix_script))));
         else editManager.setPageId(null);
-        if (RPCManager.getInstance(this).isLoggedIn() >= RPCManager.LOGIN_USER) load();
+        if (new RPCManager(this).isLoggedIn() >= RPCManager.LOGIN_USER) load();
         else {
             AuthenticationUtils.login(this, new AuthenticationUtils.Listener() {
                 @Override
@@ -75,7 +75,7 @@ public class EditorActivity extends Activity {
                 onBackPressed();
                 break;
             case R.id.action_logout:
-                RPCManager.getInstance(this).logout();
+                new RPCManager(this).logout();
                 finish();
                 break;
             case R.id.action_settings:

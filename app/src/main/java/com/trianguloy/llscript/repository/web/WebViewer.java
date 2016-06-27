@@ -388,7 +388,7 @@ public class WebViewer extends Activity {
             editor.remove(R.string.pref_repoHash);
         }
         if (!sharedPref.contains(R.string.pref_timestamp)) {
-            RPCManager.getInstance(this).setTimestampToCurrent(sharedPref, new RPCManager.Listener<Integer>() {
+            new RPCManager(this).setTimestampToCurrent(sharedPref, new RPCManager.Listener<Integer>() {
                 @Override
                 public void onResult(@NonNull RPCManager.Result<Integer> result) {
                     if (result.getStatus() == RPCManager.RESULT_OK) {

@@ -68,7 +68,7 @@ class ViewManager extends Lock {
         super(context);
         this.context = context;
         this.editManager = editManager;
-        this.rpcManager = RPCManager.getInstance(context);
+        this.rpcManager = new RPCManager(context);
         isTemplate = false;
         random = new Random();
         sharedPref = Preferences.getDefault(context);

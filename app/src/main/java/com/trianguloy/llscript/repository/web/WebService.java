@@ -43,7 +43,7 @@ public class WebService extends Service {
     }
 
     private void check() {
-        RPCManager.getInstance(this).getChangedSubscriptions(this, new RPCManager.Listener<List<String>>() {
+        new RPCManager(this).getChangedSubscriptions(this, new RPCManager.Listener<List<String>>() {
             @Override
             public void onResult(@NonNull RPCManager.Result<List<String>> result) {
                 if (result.getStatus() == RPCManager.RESULT_OK) {

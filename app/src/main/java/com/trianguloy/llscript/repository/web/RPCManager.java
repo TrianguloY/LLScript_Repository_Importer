@@ -31,7 +31,7 @@ public class RPCManager {
     //internal return values in AsyncTasks
     @Retention(RetentionPolicy.SOURCE)
     @IntDef({RESULT_OK, RESULT_NETWORK_ERROR, RESULT_BAD_LOGIN, RESULT_NEED_RW})
-    public @interface RPCResult {
+    @interface RPCResult {
     }
 
     public static final int RESULT_OK = 1;
@@ -41,7 +41,7 @@ public class RPCManager {
 
     @Retention(RetentionPolicy.SOURCE)
     @IntDef({NOT_LOGGED_IN, LOGIN_RO, LOGIN_USER})
-    public @interface RPCLoginState {
+    @interface RPCLoginState {
     }
 
     public static final int NOT_LOGGED_IN = 0;
@@ -49,33 +49,26 @@ public class RPCManager {
     public static final int LOGIN_USER = 2;
     private static final int ACL_WRITE = 4;
 
-    private static RPCManager instance;
-
     private Context context;
-    private DokuJClient client;
-    @RPCLoginState
-    private int login = NOT_LOGGED_IN;
-    private String username;
+    private static final DokuJClient client;
 
-    private RPCManager(Context context) {
+    static {
+        try {
+            client = new DokuJClient("http://www.lightninglauncher.com/wiki/lib/exe/xmlrpc.php");
+        } catch (MalformedURLException e) {
+            throw new RuntimeException();
+        }
+    }
+
+    @RPCLoginState
+    private static int login = NOT_LOGGED_IN;
+    private static String username;
+
+    public RPCManager(Context context) {
         this.context = context;
     }
 
-    public static RPCManager getInstance(Context context) {
-        if (instance == null) instance = new RPCManager(context);
-        else instance.context = context;
-        return instance;
-    }
-
     private boolean init() {
-        if (client == null) {
-            try {
-                client = new DokuJClient(context.getString(R.string.link_xmlrpc));
-            } catch (MalformedURLException e) {
-                //should never happen
-                throw new RuntimeException("Unable to create client: Malformed Url", e);
-            }
-        }
         if (login < LOGIN_RO) {
             try {
                 login = client.login("remote_ro", "remote_ro") ? LOGIN_RO : NOT_LOGGED_IN;
@@ -92,7 +85,7 @@ public class RPCManager {
     }
 
     public void login(final String user, final String password, @Nullable Listener<Void> listener) {
-        if(user == null || password == null) {
+        if (user == null || password == null) {
             if (listener != null) {
                 listener.onResult(new Result<Void>(RESULT_BAD_LOGIN));
             }
@@ -104,12 +97,14 @@ public class RPCManager {
             protected Result<Void> doInBackground(Void... params) {
                 int result = RESULT_NETWORK_ERROR;
                 try {
-                    if (init()) {
-                        login = client.login(user, password) ? LOGIN_USER : NOT_LOGGED_IN;
-                        if (login == LOGIN_USER) {
-                            result = RESULT_OK;
-                            username = user;
-                        } else result = RESULT_BAD_LOGIN;
+                    synchronized (client) {
+                        if (init()) {
+                            login = client.login(user, password) ? LOGIN_USER : NOT_LOGGED_IN;
+                            if (login == LOGIN_USER) {
+                                result = RESULT_OK;
+                                username = user;
+                            } else result = RESULT_BAD_LOGIN;
+                        }
                     }
                 } catch (DokuException e) {
                     e.printStackTrace();
@@ -127,8 +122,10 @@ public class RPCManager {
             protected Void doInBackground(Void... params) {
                 if (login > NOT_LOGGED_IN) {
                     try {
-                        client.logoff();
-                        login = NOT_LOGGED_IN;
+                        synchronized (client) {
+                            client.logoff();
+                            login = NOT_LOGGED_IN;
+                        }
                     } catch (DokuException e) {
                         e.printStackTrace();
                     }
@@ -144,8 +141,10 @@ public class RPCManager {
             @Override
             protected Result<String> doInBackground(Void... voids) {
                 try {
-                    if (init()) {
-                        return new Result<>(RESULT_OK, client.getPage(id));
+                    synchronized (client) {
+                        if (init()) {
+                            return new Result<>(RESULT_OK, client.getPage(id));
+                        }
                     }
                 } catch (DokuException e) {
                     e.printStackTrace();
@@ -161,8 +160,10 @@ public class RPCManager {
             @Override
             protected Result<List<Page>> doInBackground(Void... voids) {
                 try {
-                    if (init()) {
-                        return new Result<>(RESULT_OK, client.getAllPages());
+                    synchronized (client) {
+                        if (init()) {
+                            return new Result<>(RESULT_OK, client.getAllPages());
+                        }
                     }
                 } catch (DokuException e) {
                     e.printStackTrace();
@@ -184,11 +185,13 @@ public class RPCManager {
             protected Result<Void> doInBackground(Void... voids) {
                 int result = RESULT_NETWORK_ERROR;
                 try {
-                    if (init()) {
-                        if (client.aclCheck(id) >= ACL_WRITE) {
-                            client.putPage(id, text);
-                            result = RESULT_OK;
-                        } else result = RESULT_NEED_RW;
+                    synchronized (client) {
+                        if (init()) {
+                            if (client.aclCheck(id) >= ACL_WRITE) {
+                                client.putPage(id, text);
+                                result = RESULT_OK;
+                            } else result = RESULT_NEED_RW;
+                        }
                     }
                 } catch (DokuException e) {
                     e.printStackTrace();
@@ -207,19 +210,21 @@ public class RPCManager {
             @Override
             protected Result<List<String>> doInBackground(Void... voids) {
                 try {
-                    if (init()) {
-                        List<PageChange> changes = client.getRecentChanges(timestamp);
-                        List<String> changedSubs = new ArrayList<>();
-                        for (PageChange change : changes) {
-                            String page = change.pageId();
-                            if (page.startsWith(context.getString(R.string.prefix_script))) {
-                                page = page.substring(context.getString(R.string.prefix_script).length());
+                    synchronized (client) {
+                        if (init()) {
+                            List<PageChange> changes = client.getRecentChanges(timestamp);
+                            List<String> changedSubs = new ArrayList<>();
+                            for (PageChange change : changes) {
+                                String page = change.pageId();
+                                if (page.startsWith(context.getString(R.string.prefix_script))) {
+                                    page = page.substring(context.getString(R.string.prefix_script).length());
+                                }
+                                if (subscriptions.contains(page)) {
+                                    changedSubs.add(page);
+                                }
                             }
-                            if (subscriptions.contains(page)) {
-                                changedSubs.add(page);
-                            }
+                            return new Result<>(RESULT_OK, changedSubs);
                         }
-                        return new Result<>(RESULT_OK, changedSubs);
                     }
                 } catch (DokuException e) {
                     e.printStackTrace();
@@ -236,10 +241,12 @@ public class RPCManager {
             @Override
             protected Result<Integer> doInBackground(Void... params) {
                 try {
-                    if (init()) {
-                        int timestamp = client.getTime();
-                        sharedPref.edit().putInt(R.string.pref_timestamp, timestamp).apply();
-                        return new Result<>(RESULT_OK, timestamp);
+                    synchronized (client) {
+                        if (init()) {
+                            int timestamp = client.getTime();
+                            sharedPref.edit().putInt(R.string.pref_timestamp, timestamp).apply();
+                            return new Result<>(RESULT_OK, timestamp);
+                        }
                     }
                 } catch (DokuException e) {
                     e.printStackTrace();
@@ -256,8 +263,10 @@ public class RPCManager {
             @Override
             protected Result<Integer> doInBackground(Void... params) {
                 try {
-                    if (init()) {
-                        return new Result<>(RESULT_OK, client.getPageInfo(id).version());
+                    synchronized (client) {
+                        if (init()) {
+                            return new Result<>(RESULT_OK, client.getPageInfo(id).version());
+                        }
                     }
                 } catch (DokuException e) {
                     e.printStackTrace();

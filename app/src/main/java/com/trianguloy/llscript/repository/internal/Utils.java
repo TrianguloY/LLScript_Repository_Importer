@@ -183,7 +183,8 @@ public final class Utils {
      */
     public static void showChangedSubscriptionsIfAny(@NonNull final Context context, @NonNull final ManagedWebView webView) {
         final Preferences sharedPref = Preferences.getDefault(context);
-        RPCManager.getInstance(context).getChangedSubscriptions(context, new RPCManager.Listener<List<String>>() {
+        final RPCManager rpcManager = new RPCManager(context);
+        rpcManager.getChangedSubscriptions(context, new RPCManager.Listener<List<String>>() {
             @Override
             public void onResult(@NonNull RPCManager.Result<List<String>> result) {
                 if (result.getStatus() == RPCManager.RESULT_OK) {
@@ -205,7 +206,7 @@ public final class Utils {
                                 Dialogs.changedSubscriptions(context, webView, updated);
                                 break;
                         }
-                        RPCManager.getInstance(context).setTimestampToCurrent(sharedPref, null);
+                        rpcManager.setTimestampToCurrent(sharedPref, null);
                     }
                 }
             }

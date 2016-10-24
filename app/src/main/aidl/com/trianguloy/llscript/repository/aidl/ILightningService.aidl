@@ -14,4 +14,6 @@ interface ILightningService {
     void runScriptForResult(in String code, in IResultCallback callback);
 
     void runAction(int action,in String data, boolean background);
+
+    void returnResult(in Intent intent);
 }

@@ -1,31 +1,31 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:tools="http://schemas.android.com/tools"
-    package="com.trianguloy.llscript.repository">
+          xmlns:tools="http://schemas.android.com/tools"
+          package="com.trianguloy.llscript.repository">
 
-    <uses-permission android:name="android.permission.INTERNET" />
-    <uses-permission android:name="android.permission.SYSTEM_ALERT_WINDOW" />
+    <uses-permission android:name="android.permission.INTERNET"/>
+    <uses-permission android:name="android.permission.SYSTEM_ALERT_WINDOW"/>
 
     <uses-permission
         android:name="android.permission.AUTHENTICATE_ACCOUNTS"
-        android:maxSdkVersion="22" />
+        android:maxSdkVersion="22"/>
     <uses-permission
         android:name="android.permission.MANAGE_ACCOUNTS"
-        android:maxSdkVersion="22" />
+        android:maxSdkVersion="22"/>
     <uses-permission
         android:name="android.permission.USE_CREDENTIALS"
-        android:maxSdkVersion="22" />
+        android:maxSdkVersion="22"/>
     <uses-permission
         android:name="android.permission.GET_ACCOUNTS"
-        android:maxSdkVersion="22" />
-    <uses-permission android:name="net.pierrox.lightning_launcher.IMPORT_SCRIPTS" />
+        android:maxSdkVersion="22"/>
+    <uses-permission android:name="net.pierrox.lightning_launcher.IMPORT_SCRIPTS"/>
 
     <permission
         android:name="net.pierrox.lightning_launcher.IMPORT_SCRIPTS"
         android:description="@string/description_permission"
         android:icon="@drawable/ic_launcher"
         android:label="@string/label_permission"
-        android:protectionLevel="dangerous" />
+        android:protectionLevel="dangerous"/>
 
     <application
         android:name=".RepositoryImporter"
@@ -40,7 +40,7 @@
             android:name=".web.WebViewer"
             android:configChanges="orientation|screenSize"
             android:excludeFromRecents="false"
-            android:label="@string/label_repoImporter" />
+            android:label="@string/label_repoImporter"/>
         <activity
             android:name=".settings.SettingsActivity"
             android:excludeFromRecents="false"
@@ -49,7 +49,7 @@
             tools:ignore="UnusedAttribute">
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
-                android:value=".web.WebViewer" />
+                android:value=".web.WebViewer"/>
         </activity>
         <activity
             android:name=".settings.SubscriptionsActivity"
@@ -59,7 +59,7 @@
             tools:ignore="UnusedAttribute">
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
-                android:value=".settings.SettingsActivity" />
+                android:value=".settings.SettingsActivity"/>
         </activity>
         <activity
             android:name=".acra.Dialog"
@@ -67,25 +67,25 @@
             android:finishOnTaskLaunch="true"
             android:launchMode="singleInstance"
             android:process=":error_report"
-            android:theme="@style/Theme.Dialog" />
+            android:theme="@style/Theme.Dialog"/>
         <activity
             android:name=".internal.PermissionActivity"
-            android:theme="@style/Theme.Transparent" />
+            android:theme="@style/Theme.Transparent"/>
         <activity
             android:name=".editor.EditorActivity"
             android:excludeFromRecents="false"
-            android:windowSoftInputMode="adjustResize" />
+            android:windowSoftInputMode="adjustResize"/>
         <activity
             android:name=".auth.AuthenticatorActivity"
             android:excludeFromRecents="true"
-            android:label="@string/label_login" />
+            android:label="@string/label_login"/>
         <activity
             android:name=".IntentHandle"
             android:label="@string/label_repoImporter"
             android:theme="@style/Theme.Transparent">
             <intent-filter>
-                <action android:name="android.intent.action.MAIN" />
-                <category android:name="android.intent.category.LAUNCHER" />
+                <action android:name="android.intent.action.MAIN"/>
+                <category android:name="android.intent.category.LAUNCHER"/>
             </intent-filter>
         </activity>
 
@@ -95,15 +95,15 @@
             android:exported="true"
             android:targetActivity=".IntentHandle">
             <intent-filter>
-                <action android:name="android.intent.action.VIEW" />
+                <action android:name="android.intent.action.VIEW"/>
 
-                <category android:name="android.intent.category.DEFAULT" />
-                <category android:name="android.intent.category.BROWSABLE" />
+                <category android:name="android.intent.category.DEFAULT"/>
+                <category android:name="android.intent.category.BROWSABLE"/>
 
                 <data
                     android:host="www.lightninglauncher.com"
                     android:pathPattern="/wiki/doku\\.php"
-                    android:scheme="http" />
+                    android:scheme="http"/>
                 <!-- \\?id\\=script\\_.* -->
             </intent-filter>
         </activity-alias>
@@ -115,30 +115,38 @@
             android:label="@string/label_repoImporter"
             android:permission="net.pierrox.lightning_launcher.IMPORT_SCRIPTS">
             <intent-filter>
-                <action android:name="net.pierrox.lightning_launcher.script.IMPORT" />
-                <category android:name="android.intent.category.DEFAULT" />
+                <action android:name="net.pierrox.lightning_launcher.script.IMPORT"/>
+                <category android:name="android.intent.category.DEFAULT"/>
             </intent-filter>
         </service>
         <service
             android:name=".auth.AuthenticationService"
             tools:ignore="ExportedService">
             <intent-filter>
-                <action android:name="android.accounts.AccountAuthenticator" />
+                <action android:name="android.accounts.AccountAuthenticator"/>
             </intent-filter>
             <meta-data
                 android:name="android.accounts.AccountAuthenticator"
-                android:resource="@xml/authenticator" />
+                android:resource="@xml/authenticator"/>
         </service>
         <service
             android:name=".web.WebService"
             android:enabled="true"
-            android:exported="false" />
+            android:exported="false"/>
 
         <receiver
             android:name=".BootBroadcastReceiver"
             android:enabled="false">
             <intent-filter>
-                <action android:name="android.intent.action.BOOT_COMPLETED" />
+                <action android:name="android.intent.action.BOOT_COMPLETED"/>
+            </intent-filter>
+        </receiver>
+        <receiver
+            android:name=".LightningBroadcastReceiver"
+            android:enabled="true"
+            android:exported="true">
+            <intent-filter>
+                <action android:name="net.pierrox.lightning_launcher.script.IMPORT_RESPONSE"/>
             </intent-filter>
         </receiver>
     </application>

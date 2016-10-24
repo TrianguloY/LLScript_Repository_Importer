@@ -1,11 +1,8 @@
 package com.trianguloy.llscript.repository;
 
 import android.app.Service;
-import android.content.BroadcastReceiver;
 import android.content.ComponentName;
-import android.content.Context;
 import android.content.Intent;
-import android.content.IntentFilter;
 import android.os.Bundle;
 import android.os.IBinder;
 import android.os.RemoteException;
@@ -33,22 +30,6 @@ public class ScriptImporter extends Service {
 
     private final Map<Integer, Object> callbackMap = new HashMap<>();
     private int nextRequestId = 0;
-
-    /**
-     * as long as a caller is active, we need to listen for intents from Lightning
-     */
-    @Override
-    public void onCreate() {
-        registerReceiver(receiver, new IntentFilter("net.pierrox.lightning_launcher.script.IMPORT_RESPONSE"));
-    }
-
-    /**
-     * all callers have unbound, we don't need to listen anymore
-     */
-    @Override
-    public void onDestroy() {
-        unregisterReceiver(receiver);
-    }
 
     /**
      * only legacy callers enter through here
@@ -135,6 +116,7 @@ public class ScriptImporter extends Service {
      */
     @Override
     public IBinder onBind(Intent intent) {
+        startService(new Intent(this, ScriptImporter.class));
         return lightningService.asBinder();
     }
 
@@ -268,7 +250,7 @@ public class ScriptImporter extends Service {
          * @throws RemoteException
          */
         @Override
-        public void runScriptForResult(String code, IResultCallback callback) throws RemoteException {
+        public synchronized void runScriptForResult(String code, IResultCallback callback) throws RemoteException {
             if (Utils.hasValidLauncher(ScriptImporter.this)) {
                 int requestId = nextRequestId++;
                 callbackMap.put(requestId, callback);
@@ -300,14 +282,9 @@ public class ScriptImporter extends Service {
                 sendAction(action, data, background);
             }
         }
-    };
 
-    /**
-     * the receiver for communication with LL
-     */
-    private final BroadcastReceiver receiver = new BroadcastReceiver() {
         @Override
-        public void onReceive(Context context, Intent intent) {
+        public void returnResult(Intent intent) throws RemoteException {
             if (intent.hasExtra(Constants.KEY_CALLBACK_ID) && intent.hasExtra(Constants.EXTRA_STATUS)) {
                 int status = (int) intent.getDoubleExtra(Constants.EXTRA_STATUS, 0);
                 int callbackId = (int) intent.getDoubleExtra(Constants.KEY_CALLBACK_ID, -1);
@@ -344,7 +321,10 @@ public class ScriptImporter extends Service {
                     } catch (RemoteException e) {
                         e.printStackTrace();
                     }
-
+                }
+                callbackMap.remove(callbackId);
+                if(callbackMap.isEmpty()){
+                    ScriptImporter.this.stopSelf();
                 }
             }
         }

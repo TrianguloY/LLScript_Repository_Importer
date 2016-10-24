@@ -1,3 +1,5 @@
+LL.bindClass("android.util.Log");
+
 var ScriptName = "name";
 var ScriptFlags = "flags";
 var ScriptCode = "code";
@@ -37,6 +39,7 @@ if(data.runOnly){
         intent.putExtra(extraStatus, STATUS_OK);
     }catch(e){
         intent.putExtra(extraStatus, STATUS_EVAL_FAILED);
+        Log.w("[REPOSITORY IMPORTER]", "Failed to evaluate Script", e.javaException);
     }
 }
 else{

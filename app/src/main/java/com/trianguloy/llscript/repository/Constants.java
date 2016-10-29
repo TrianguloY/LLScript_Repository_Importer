@@ -19,7 +19,7 @@ public final class Constants {
 
     //package constants
     public static final String[] PACKAGES = {"net.pierrox.lightning_launcher_extreme", "net.pierrox.lightning_launcher"};
-    public static final int MINIMUM_NECESSARY_VERSION = 225; // valid for both packages. Number module 1000
+    public static final int MINIMUM_NECESSARY_VERSION = 301; // valid for both packages. Number module 1000
 
     //Intent Extras
     public static final String EXTRA_CODE = "code";
@@ -48,15 +48,14 @@ public final class Constants {
     public static final int ACTION_RUN = 35;
     public static final String EXTRA_TARGET = "t";
     public static final int TARGET_BACKGROUND = 3;
-    public static final String KEY_PATH = "p";
 
     //Script JSON names for script drop
     public static final String KEY_NAME = "name";
     public static final String KEY_FLAGS = "flags";
     public static final String KEY_FORCE_UPDATE = "forceUpdate";
     public static final String KEY_CODE = "code";
-    public static final String KEY_RETURN_RESULT_TO = "returnTo";
     public static final String KEY_CALLBACK_ID = "callbackId";
+    public static final String KEY_PATH = "path";
 
     public static final int TEN_MEGABYTE = 10 * 1024 * 1024;
     public static final int HUNDRED_MILLISECONDS = 100;

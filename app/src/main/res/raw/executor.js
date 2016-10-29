@@ -48,7 +48,7 @@ else{
     var scripts=getAllScriptMatching(Script.FLAG_ALL);
     var match=null;
     for(var t=0;t<scripts.length;++t){
-        var s = scripts.getAt(t);
+        var s = scripts[t];
         if(s.getName()==data.name && s.getPath() == data.path)match=s;
         //if duplicated, only the last one (oldest in most cases)
     }

@@ -136,7 +136,9 @@ public class ScriptImporter extends Service {
             data.put(Constants.KEY_FLAGS, script.getFlags());
             data.put(Constants.KEY_CALLBACK_ID, callBackId);
             data.put(Constants.KEY_FORCE_UPDATE, forceUpdate);
-            data.put(Constants.KEY_PATH, script.getPath());
+            String path = script.getPath();
+            if(!path.startsWith("/")) path = "/" + path;
+            data.put(Constants.KEY_PATH, path);
         } catch (JSONException e) {
             e.printStackTrace();
             Toast.makeText(getApplicationContext(), getString(R.string.toast_managerError), Toast.LENGTH_LONG).show();

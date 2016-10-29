@@ -224,8 +224,9 @@ public final class Dialogs {
         }
         final EditText contentText = ((EditText) layout.findViewById(R.id.editText2));
         contentText.setText(script.getCode());
-        final EditText nameText = ((EditText) layout.findViewById(R.id.editText));
+        final EditText nameText = ((EditText) layout.findViewById(R.id.editTextName));
         nameText.setText(script.getName());
+        final EditText pathText = ((EditText) layout.findViewById(R.id.editTextPath));
         final CheckBox[] flagsBoxes = {
                 (CheckBox) layout.findViewById(R.id.checkBox1),
                 (CheckBox) layout.findViewById(R.id.checkBox2),
@@ -240,6 +241,7 @@ public final class Dialogs {
                         script.setCode(contentText.getText().toString());
                         script.setName(nameText.getText().toString());
                         script.setFlags(checkBoxToFlag(flagsBoxes));
+                        script.setPath(normalizePath(pathText.getText().toString()));
                         onImport.onClick(script);
                     }
                 })
@@ -249,6 +251,7 @@ public final class Dialogs {
                         script.setCode(contentText.getText().toString());
                         script.setName(nameText.getText().toString());
                         script.setFlags(checkBoxToFlag(flagsBoxes));
+                        script.setPath(normalizePath(pathText.getText().toString()));
                         onShare.onClick(script);
                     }
                 })
@@ -260,6 +263,10 @@ public final class Dialogs {
         if (!Utils.hasValidLauncher(context)) {
             ad.getButton(AlertDialog.BUTTON_POSITIVE).setEnabled(false);
         }
+    }
+
+    private static String normalizePath(String path) {
+        return path.startsWith("/") ? path : "/" + path;
     }
 
     /**

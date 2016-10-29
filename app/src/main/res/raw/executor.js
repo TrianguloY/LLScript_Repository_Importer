@@ -1,4 +1,4 @@
-LL.bindClass("android.util.Log");
+bindClass("android.util.Log");
 
 var ScriptName = "name";
 var ScriptFlags = "flags";
@@ -15,7 +15,7 @@ var STATUS_UPDATE_CONFIRMATION_REQUIRED = 2;
 var STATUS_OK = 1;
 
 
-var data=LL.getEvent().getData();
+var data=getEvent().getData();
 try{
     data=JSON.parse(data);
 }catch(e){
@@ -45,17 +45,18 @@ if(data.runOnly){
 else{
     //create script
     var toast="";
-    var scripts=LL.getAllScriptMatching(Script.FLAG_ALL);
+    var scripts=getAllScriptMatching(Script.FLAG_ALL);
     var match=null;
-    for(var t=0;t<scripts.getLength();++t){
-        if(scripts.getAt(t).getName()==data.name)match=scripts.getAt(t);
+    for(var t=0;t<scripts.length;++t){
+        var s = scripts.getAt(t);
+        if(s.getName()==data.name && s.getPath() == data.path)match=s;
         //if duplicated, only the last one (oldest in most cases)
     }
 
     if(match==null){
 
     //Not found. Create
-        match = LL.createScript(data.name,data.code,data.flags);
+        match = createScript(data.path,data.name,data.code,data.flags);
         intent.putExtra(extraStatus,STATUS_OK);
         toast="Script imported successfully.\nAvailable in the launcher";
 
@@ -89,6 +90,6 @@ else{
     }
     intent.putExtra(extraLoadedScriptId,match.getId());
 
-    if(toast!="")Android.makeNewToast(toast, true).show();
+    if(toast!="")Toast.makeText(getActiveScreen().getContext(), toast, Toast.LENGTH_SHORT).show();
 }
-LL.getContext().sendBroadcast(intent);
+getActiveScreen().getContext().sendBroadcast(intent);

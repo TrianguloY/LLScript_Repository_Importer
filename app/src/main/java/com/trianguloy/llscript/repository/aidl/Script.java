@@ -17,8 +17,10 @@ import java.util.regex.Pattern;
 
 /**
  * Represents an LL script
- * Created by Lukas on 30.01.2016.
  * SHARED CLASS, BE CAREFUL WHEN MODIFYING
+ *
+ * @author F43nd1r
+ * @since 30.1.2016
  */
 public class Script implements Parcelable {
 
@@ -35,16 +37,21 @@ public class Script implements Parcelable {
     private String name;
     @ScriptFlag
     private int flags;
+    private String path;
 
+    public Script(String code, String name, @ScriptFlag int flags){
+        this(code, name, flags, "/");
+    }
 
-    public Script(String code, String name, @ScriptFlag int flags) {
+    public Script(String code, String name, @ScriptFlag int flags, String path) {
         this.code = code;
         this.name = name;
         this.flags = ensureFlags(flags);
+        this.path = path;
     }
 
-    public Script(Context context, @RawRes int codeRes, String name, @ScriptFlag int flags) {
-        this(rawResourceToString(context, codeRes), name, flags);
+    public Script(Context context, @RawRes int codeRes, String name, @ScriptFlag int flags, String path) {
+        this(rawResourceToString(context, codeRes), name, flags, path);
     }
 
     public String getCode() {
@@ -72,6 +79,14 @@ public class Script implements Parcelable {
         this.name = name;
     }
 
+    public String getPath() {
+        return path;
+    }
+
+    public void setPath(String path) {
+        this.path = path;
+    }
+
     public boolean isValid() {
         if (code == null || code.equals("") || name == null || name.equals("") || name.length() > 100) {
             return false;
@@ -93,6 +108,7 @@ public class Script implements Parcelable {
         dest.writeString(code);
         dest.writeString(name);
         dest.writeInt(flags);
+        dest.writeString(path);
     }
 
     public static final Creator<Script> CREATOR = new Creator<Script>() {
@@ -101,7 +117,8 @@ public class Script implements Parcelable {
             String code = in.readString();
             String name = in.readString();
             int flagsInsecure = in.readInt();
-            return new Script(code, name, ensureFlags(flagsInsecure));
+            String path = in.readString();
+            return new Script(code, name, ensureFlags(flagsInsecure), path);
         }
 
         @Override

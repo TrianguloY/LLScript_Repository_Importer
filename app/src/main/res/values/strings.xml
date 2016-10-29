@@ -141,6 +141,7 @@
     <!-- alert confirm and import -->
     <string name="title_importer">Script Importer</string>
     <string name="text_scriptName">Name:</string>
+    <string name="text_scriptPath">Path:</string>
     <string name="text_menuFlag">Lightning menu</string>
     <string name="text_itemFlag">Item menu</string>
     <string name="text_customFlag">Custom menu</string>

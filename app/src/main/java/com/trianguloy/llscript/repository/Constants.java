@@ -7,6 +7,7 @@ package com.trianguloy.llscript.repository;
 public final class Constants {
 
 
+
     private Constants() {
     }
 
@@ -47,6 +48,7 @@ public final class Constants {
     public static final int ACTION_RUN = 35;
     public static final String EXTRA_TARGET = "t";
     public static final int TARGET_BACKGROUND = 3;
+    public static final String KEY_PATH = "p";
 
     //Script JSON names for script drop
     public static final String KEY_NAME = "name";

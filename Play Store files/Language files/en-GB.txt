@@ -29,6 +29,13 @@ https://github.com/TrianguloY/LLScript_Repository_Importer
 
 
 _Changes_
+V 1.13
+Added: Support for script paths
+Added: Privacy policy
+Improved: Open in browser now uses the default browser if specified
+Fixed: Script not added due to service death
+Internal changes and fixes
+
 V 1.12
 Fixed: Common crashes
 
